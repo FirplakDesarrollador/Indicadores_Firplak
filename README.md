@@ -1,4 +1,6 @@
-# Indicadores Firplak
+# indicadores-firplak
+
+App de Indicadores Firplak.
 
 Dashboard web en Next.js + TypeScript para migrar las vistas principales de Power BI a una experiencia web propia.
 
