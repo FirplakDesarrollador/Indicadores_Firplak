@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -13,8 +13,8 @@ import {
   Download,
   Filter,
   LayoutDashboard,
+  LogOut,
   Menu,
-  MoreHorizontal,
   Package,
   RefreshCw,
   Search,
@@ -26,6 +26,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import {
   Area,
   AreaChart,
@@ -169,12 +170,23 @@ function NavIcon({ active, children }: { active?: boolean; children: React.React
 }
 
 export default function Dashboard() {
+  const [userEmail, setUserEmail] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("Resumen");
   const [period, setPeriod] = useState<Period>("Este mes");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("Todas las regiones");
+  const supabase = useMemo(() => createClient(), []);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? ""));
+  }, [supabase]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.assign("/login");
+  };
 
   const periodLabel = useMemo(() => {
     if (period === "Últimos 90 días") return "Jul 01 — Sep 30, 2026";
@@ -230,8 +242,8 @@ export default function Dashboard() {
           <button className="nav-item"><NavIcon><Settings2 size={18} /></NavIcon><span>Configuración</span></button>
           <div className="profile-row">
             <div className="profile-avatar">DJ</div>
-            <div className="profile-copy"><strong>Daniel Jiménez</strong><span>Administrador</span></div>
-            <MoreHorizontal size={17} />
+            <div className="profile-copy"><strong>{userEmail || "Usuario Firplak"}</strong><span>Sesión Microsoft 365</span></div>
+            <button className="logout-button" onClick={handleSignOut} aria-label="Cerrar sesión" title="Cerrar sesión"><LogOut size={16} /></button>
           </div>
         </div>
       </aside>

@@ -168,6 +168,41 @@ h2 { color: var(--ink-deep); font-size: 16px; letter-spacing: -.4px; line-height
 .footer-help { color: #748993; font-weight: 600; }
 .sidebar-backdrop { display: none; }
 
+.logout-button { align-items: center; background: transparent; color: #7895a4; display: flex; justify-content: center; padding: 5px; }
+.logout-button:hover { color: #fff; }
+
+.login-shell { background: #f4f7f8; display: flex; min-height: 100vh; }
+.login-brand-panel { background: var(--ink-deep); color: #fff; display: flex; flex: 0 0 47%; flex-direction: column; justify-content: space-between; min-height: 100vh; overflow: hidden; padding: 42px 7%; position: relative; }
+.login-brand-panel::after { background: radial-gradient(circle, rgba(15,159,154,.18) 0, rgba(15,159,154,0) 67%); content: ""; height: 560px; pointer-events: none; position: absolute; right: -210px; top: 16%; width: 560px; }
+.login-brand-lockup, .login-mobile-mark { align-items: center; display: flex; position: relative; z-index: 1; }
+.login-brand-lockup .brand-mark, .login-mobile-mark .brand-mark { margin-right: 9px; }
+.login-brand-content { margin: auto 0; max-width: 500px; position: relative; z-index: 1; }
+.login-kicker, .login-form-kicker { align-items: center; color: #65cbc6; display: flex; font-size: 10px; font-weight: 800; gap: 7px; letter-spacing: 1.2px; }
+.login-brand-content h1 { color: #fff; font-size: clamp(35px, 4vw, 56px); letter-spacing: -2.6px; line-height: 1.08; margin: 18px 0 17px; }
+.login-brand-content h1 em { color: #68d2cd; font-style: normal; }
+.login-brand-content p { color: #aac0cb; font-size: 14px; line-height: 1.7; max-width: 380px; }
+.login-points { display: flex; flex-direction: column; gap: 12px; margin-top: 34px; }
+.login-points span { align-items: center; color: #d5e1e5; display: flex; font-size: 11px; gap: 8px; }
+.login-points svg { color: #65cbc6; }
+.login-brand-footer { color: #7493a3; font-size: 10px; position: relative; z-index: 1; }
+.login-brand-footer span { color: #3e6a81; margin: 0 6px; }
+.login-form-panel { align-items: center; display: flex; flex: 1; justify-content: center; padding: 45px; }
+.login-form-wrap { max-width: 390px; width: 100%; }
+.login-mobile-mark { display: none; }
+.login-form-kicker { color: #98a8af; margin-bottom: 12px; }
+.login-form-wrap h2 { color: var(--ink-deep); font-size: 30px; letter-spacing: -1px; margin: 0; }
+.login-description { color: #82939c; font-size: 13px; line-height: 1.6; margin: 12px 0 30px; }
+.microsoft-button { align-items: center; background: #fff; border: 1px solid #dce7ea; border-radius: 8px; box-shadow: 0 7px 20px rgba(18,53,82,.06); color: var(--ink-deep); display: flex; font-size: 12px; font-weight: 700; gap: 11px; height: 50px; justify-content: center; padding: 0 15px; transition: border-color .2s, box-shadow .2s, transform .2s; width: 100%; }
+.microsoft-button:hover:not(:disabled) { border-color: #a7cbd0; box-shadow: 0 9px 24px rgba(18,53,82,.1); transform: translateY(-1px); }
+.microsoft-button:disabled { cursor: wait; opacity: .65; }
+.microsoft-button > svg { color: #78909d; margin-left: auto; }
+.microsoft-logo { display: grid; flex: 0 0 18px; gap: 2px; grid-template-columns: repeat(2, 8px); grid-template-rows: repeat(2, 8px); }
+.microsoft-logo i:nth-child(1) { background: #f35325; }.microsoft-logo i:nth-child(2) { background: #81bc06; }.microsoft-logo i:nth-child(3) { background: #05a6f0; }.microsoft-logo i:nth-child(4) { background: #ffba08; }
+.login-error { background: #fff0ec; border: 1px solid #f3c4b6; border-radius: 7px; color: #a74d38; font-size: 11px; line-height: 1.5; margin-top: 14px; padding: 10px 12px; }
+.login-security { align-items: flex-start; border-top: 1px solid #e2ebed; color: #8b9ba3; display: flex; font-size: 10px; gap: 9px; line-height: 1.55; margin-top: 31px; padding-top: 18px; }
+.login-security svg { color: var(--teal); flex: 0 0 17px; }
+.login-terms { color: #a7b2b7; font-size: 9px; line-height: 1.5; margin-top: 30px; text-align: center; }
+
 @media (max-width: 1100px) {
   .sidebar { flex-basis: 220px; }
   .metric-card { padding-left: 13px; padding-right: 13px; }
@@ -188,6 +223,12 @@ h2 { color: var(--ink-deep); font-size: 16px; letter-spacing: -.4px; line-height
   .metrics-grid { grid-template-columns: repeat(2, 1fr); }
   .dashboard-grid { grid-template-columns: 1fr; }
   .top-charts .channel-card { min-height: 0; }
+}
+
+@media (max-width: 700px) {
+  .login-brand-panel { display: none; }
+  .login-form-panel { padding: 30px 22px; }
+  .login-mobile-mark { display: flex; margin-bottom: 48px; }
 }
 
 @media (max-width: 560px) {
