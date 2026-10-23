@@ -2,9 +2,13 @@ node_modules/
 .next/
 .npm-cache/
 out/
+reporting-api/dist/
+reporting-api.zip
 .env*
 !.env.example
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+_logs/
+_update-notifier-last-checked
