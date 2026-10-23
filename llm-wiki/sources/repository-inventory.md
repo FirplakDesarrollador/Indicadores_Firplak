@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-22
+updated: 2026-10-23
 source_type: repository-ingestion
 ---
 
@@ -32,17 +32,9 @@ Este documento registra la ingesta del código y de la configuración visible de
 | `lib/supabase/client.ts` | Cliente Supabase para navegador. |
 | `lib/supabase/server.ts` | Cliente Supabase para componentes/server-side. |
 
-## Reporting API
+## Reporting API separada
 
-| Ruta | Rol |
-|---|---|
-| `reporting-api/src/server.ts` | Servidor HTTP, `/health`, endpoint de facturación y Bearer token. |
-| `reporting-api/src/db.ts` | Pool SQL, filtros, consulta paginada, agregados y mapeo de `Informe_ventas`. |
-| `reporting-api/src/types.ts` | Contratos internos de filtros, filas y resumen. |
-| `reporting-api/package.json` | Scripts `dev`, `build` y `start`. |
-| `reporting-api/tsconfig.json` | Compilación TypeScript a `dist/`. |
-| `reporting-api/.env.example` | Variables de SQL Server, tabla, timeout y token sin secretos. |
-| `reporting-api/README.md` | Manual de instalación, HTTPS y conexión con Vercel. |
+La API ya no forma parte del árbol de este repositorio. Su código, configuración de ejemplo, manual y dependencias versionadas viven en el [repositorio Firplak Reporting API](https://github.com/Firplak/firplak-reporting-api).
 
 ## Configuración y herramientas
 
@@ -50,7 +42,6 @@ Este documento registra la ingesta del código y de la configuración visible de
 |---|---|
 | `package.json` | Dependencias y scripts del frontend. |
 | `package-lock.json` | Versiones bloqueadas del frontend. |
-| `reporting-api/package-lock.json` | Versiones bloqueadas de la API. |
 | `tsconfig.json` | TypeScript del frontend. |
 | `next.config.ts` | Configuración Next.js; React Strict Mode. |
 | `eslint.config.mjs` | ESLint para Next.js/TypeScript. |
@@ -70,10 +61,9 @@ Los archivos binarios se registran por uso y ruta; no se convierten a texto dent
 ## Exclusiones deliberadas
 
 - `.env.local` y cualquier `.env`: se ingirieron solo los nombres de variables necesarios; nunca sus valores.
-- `node_modules/`, `.next/`, `reporting-api/dist/` y `.npm-cache/`: artefactos generados o dependencias.
-- `reporting-api.zip`: paquete duplicado; el código fuente en `reporting-api/` es la fuente de verdad.
+- `node_modules/`, `.next/` y `.npm-cache/`: artefactos generados o dependencias.
 - `package-lock.json`: se registra como contrato de dependencias, no se duplica en la wiki.
 
 ## Cobertura
 
-La ingesta cubre todas las rutas de código, configuración, documentación y assets versionables identificados en el repositorio al 2026-10-22. Las afirmaciones de comportamiento se contrastan con el código enlazado, no solo con esta tabla.
+La ingesta cubre todas las rutas de código, configuración, documentación y assets versionables identificados en el repositorio al 2026-10-23. La Reporting API se documenta y versiona en su repositorio separado.

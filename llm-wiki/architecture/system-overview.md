@@ -1,10 +1,10 @@
 ---
 status: active
-updated: 2026-10-22
+updated: 2026-10-23
 sources:
   - ../../middleware.ts
   - ../../app/api/facturacion-diaria/route.ts
-  - ../../reporting-api/src/server.ts
+  - https://github.com/Firplak/firplak-reporting-api/blob/main/src/server.ts
 ---
 
 # Visión general del sistema
@@ -18,7 +18,7 @@ sources:
 | Middleware | Redirige usuarios no autenticados a `/login` | `middleware.ts` |
 | Dashboard | Filtros, KPIs, gráfico, tabla y detalle | `components/FacturacionDashboard.tsx` |
 | Proxy | Oculta token y llama a la API de informes | `app/api/facturacion-diaria/route.ts` |
-| Reporting API | Autenticación Bearer, SQL, paginación y agregados | `reporting-api/src/server.ts` |
+| Reporting API | Autenticación Bearer, SQL, paginación y agregados | [Repositorio separado](https://github.com/Firplak/firplak-reporting-api) |
 | SQL Server | Tabla preparada de facturación | `Planos_Symphony.dbo.Informe_ventas` |
 
 ## Flujo de autenticación

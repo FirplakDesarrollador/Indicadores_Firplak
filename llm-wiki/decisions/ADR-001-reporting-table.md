@@ -1,9 +1,9 @@
 ---
 status: accepted
-updated: 2026-10-22
+updated: 2026-10-23
 sources:
-  - ../../reporting-api/src/db.ts
-  - ../../reporting-api/.env.example
+  - https://github.com/Firplak/firplak-reporting-api/blob/main/src/db.ts
+  - https://github.com/Firplak/firplak-reporting-api/blob/main/.env.example
 ---
 
 # ADR-001: consultar una tabla de reportes
@@ -32,4 +32,4 @@ Costes:
 
 ## Validación pendiente
 
-Medir el tiempo de `GET /api/v1/facturacion-diaria?page=1&pageSize=50` con y sin filtros y revisar índices sobre `DOCDATE`, `Zona`, `GrupoCliente` y las claves de búsqueda.
+Medir el tiempo de `GET /api/v1/facturacion-diaria?page=1&pageSize=50` con y sin filtros y revisar índices sobre `FechaContabilizacion`, `Zona`, `GrupoCliente` y las claves de búsqueda.

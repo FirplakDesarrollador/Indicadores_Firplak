@@ -53,7 +53,7 @@ La clasificación observada fue:
 - `Factura`: 357522 registros.
 - `Nota Crédito`: 22341 registros.
 
-El mapeo vigente está implementado en [`reporting-api/src/db.ts`](../../reporting-api/src/db.ts) y documentado en [`../architecture/data-flow.md`](../architecture/data-flow.md).
+El mapeo vigente está implementado en [`src/db.ts`](https://github.com/Firplak/firplak-reporting-api/blob/main/src/db.ts) y documentado en [`../architecture/data-flow.md`](../architecture/data-flow.md).
 
 ## Despliegue de la API
 
@@ -65,7 +65,7 @@ El mapeo vigente está implementado en [`reporting-api/src/db.ts`](../../reporti
 ## Pendientes derivados de los chats
 
 - Confirmar que el SP de actualización de `Informe_ventas` esté operativo y documentar su frecuencia real.
-- Crear o validar índices sobre `DOCDATE`, `Zona`, `GrupoCliente` y columnas de búsqueda.
+- Crear o validar índices sobre `FechaContabilizacion`, `Zona`, `GrupoCliente` y columnas de búsqueda.
 - Medir tiempos reales del endpoint con página, filtros y resumen.
 - Validar el despliegue final en Vercel después de estabilizar la API local/publicada.
 - Mantener sincronizadas esta síntesis, el runbook y los contratos si cambian las columnas.

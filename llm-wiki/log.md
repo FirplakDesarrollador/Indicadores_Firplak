@@ -38,6 +38,13 @@
 
 Este archivo es cronológico y append-only. Cada entrada registra una ingesta, consulta relevante o revisión de salud de la wiki.
 
+## [2026-10-23] arquitectura | Separación de repositorios
+
+- Se creó el repositorio independiente [Firplak Reporting API](https://github.com/Firplak/firplak-reporting-api).
+- Se publicó la API con historial derivado de `reporting-api/` mediante `git subtree split`; el repositorio nuevo contiene el servicio, su contrato de configuración y su manual.
+- El repositorio del frontend dejará de versionar `reporting-api/`; la documentación y el runbook enlazan ahora al repositorio separado.
+- La documentación de la API se corrigió para reflejar la tabla `Planos_Symphony.dbo.Informe_ventas` y las columnas `FechaContabilizacion`, `DocNum` y `TipoVentas`.
+
 ## [2026-10-22] ingest | Repositorio inicial
 
 - Se documentó el frontend Next.js, la autenticación con Supabase/Azure y el proxy server-side.

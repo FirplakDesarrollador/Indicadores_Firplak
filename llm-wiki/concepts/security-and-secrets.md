@@ -4,7 +4,7 @@ updated: 2026-10-22
 sources:
   - ../../middleware.ts
   - ../../app/api/facturacion-diaria/route.ts
-  - ../../reporting-api/src/server.ts
+  - https://github.com/Firplak/firplak-reporting-api/blob/main/src/server.ts
   - ../../.gitignore
 ---
 

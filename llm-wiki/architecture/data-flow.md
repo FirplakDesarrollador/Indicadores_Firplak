@@ -1,9 +1,9 @@
 ---
 status: active
-updated: 2026-10-22
+updated: 2026-10-23
 sources:
-  - ../../reporting-api/src/db.ts
-  - ../../reporting-api/src/types.ts
+  - https://github.com/Firplak/firplak-reporting-api/blob/main/src/db.ts
+  - https://github.com/Firplak/firplak-reporting-api/blob/main/src/types.ts
   - ../../components/FacturacionDashboard.tsx
 ---
 
@@ -67,4 +67,4 @@ La regla debe revisarse si el SP incorpora nuevos tipos documentales.
 
 ## Rendimiento
 
-La tabla debe ser alimentada por el proceso de actualización periódica y tener índices, como mínimo, sobre `DOCDATE`, `Zona` y `GrupoCliente`. La búsqueda libre usa `CHARINDEX`, por lo que si crece mucho debe evaluarse Full-Text Search o una columna de búsqueda preparada.
+La tabla debe ser alimentada por el proceso de actualización periódica y tener índices, como mínimo, sobre `FechaContabilizacion`, `Zona` y `GrupoCliente`. La búsqueda libre usa `CHARINDEX`, por lo que si crece mucho debe evaluarse Full-Text Search o una columna de búsqueda preparada.

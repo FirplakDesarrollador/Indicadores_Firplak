@@ -1,11 +1,10 @@
 ---
 status: active
-updated: 2026-10-22
+updated: 2026-10-23
 sources:
   - ../README.md
   - ../package.json
-  - ../reporting-api/src/server.ts
-  - ../reporting-api/src/db.ts
+  - https://github.com/Firplak/firplak-reporting-api
 ---
 
 # Índice de la wiki
@@ -23,7 +22,7 @@ Usuario
 Next.js (localhost:3000 o Vercel)
   │ /api/facturacion-diaria + REPORTING_API_TOKEN
   ▼ HTTPS
-Firplak Reporting API (Windows / IIS)
+Firplak Reporting API (repositorio separado, Windows / IIS)
   │ mssql, paginación y resúmenes
   ▼
 Planos_Symphony.dbo.Informe_ventas
@@ -60,8 +59,8 @@ SP o proceso de actualización periódica
 ## Fuentes primarias
 
 - Frontend: [`app/`](../app/), [`components/FacturacionDashboard.tsx`](../components/FacturacionDashboard.tsx) y [`app/api/facturacion-diaria/route.ts`](../app/api/facturacion-diaria/route.ts).
-- API: [`reporting-api/src/server.ts`](../reporting-api/src/server.ts), [`reporting-api/src/db.ts`](../reporting-api/src/db.ts) y [`reporting-api/src/types.ts`](../reporting-api/src/types.ts).
-- Contratos de configuración: [`.env.example`](../.env.example) y [`reporting-api/.env.example`](../reporting-api/.env.example).
+- API: [repositorio Firplak Reporting API](https://github.com/Firplak/firplak-reporting-api), especialmente `src/server.ts`, `src/db.ts` y `src/types.ts`.
+- Contrato de configuración: [`.env.example`](../.env.example) y `.env.example` del [repositorio de la API](https://github.com/Firplak/firplak-reporting-api/blob/main/.env.example).
 
 ## Hechos y pendientes
 

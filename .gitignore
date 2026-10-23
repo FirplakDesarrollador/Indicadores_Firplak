@@ -2,7 +2,8 @@ node_modules/
 .next/
 .npm-cache/
 out/
-reporting-api/dist/
+# La Reporting API tiene su propio repositorio; cualquier checkout local se mantiene fuera del frontend.
+reporting-api/
 reporting-api.zip
 .env*
 !.env.example
