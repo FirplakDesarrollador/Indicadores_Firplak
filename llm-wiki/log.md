@@ -1,5 +1,57 @@
 # Registro de mantenimiento
 
+## [2026-10-26] ux | Resumen diario compacto
+
+- El resumen diario muestra inicialmente solo los 7 registros más recientes.
+- Se agregó el botón `Ver todos los días` para expandir la tabla y `Mostrar menos` para volver a compactarla.
+
+## [2026-10-26] ux | Limpieza de navegación y acciones
+
+- Se eliminó el selector de espacio de trabajo del lateral.
+- Se retiraron `Notas crédito`, `Comparativos`, el estado de conexión SQL Server y `Exportar`.
+- Se conservan `Filtros`, `Facturación` y `Detalle de documentos` como acciones principales.
+
+## [2026-10-26] fix | Ocultar detalle en vista principal
+
+- Se corrigió el selector CSS para que la tabla operativa solo se muestre en `/facturacion-diaria/detalle`.
+- La página principal `/facturacion-diaria` conserva cards, acumulados y análisis sin renderizar visualmente el detalle de facturas.
+
+## [2026-10-26] fix | Respuestas JSON para APIs protegidas
+
+- El middleware ahora devuelve `401` en JSON para llamadas no autenticadas a `/api/*`, en lugar de redirigirlas a HTML.
+- El dashboard valida `Content-Type` antes de ejecutar `response.json()` y distingue sesión expirada de respuesta inválida.
+- Validación: lint, build y diagnóstico sin exponer secretos ni respuestas completas.
+
+## [2026-10-26] ux | Filtro de mercado
+
+- El filtro `Canal` se renombró a `Mercado`.
+- El selector muestra siempre `Nacional` e `Internacional`.
+- El valor seleccionado sigue comparándose contra `row.channel` para filtrar las filas visibles.
+
+## [2026-10-26] ux | Filtros avanzados de documentos
+
+- Se agregó un panel responsive con Cliente, Grupo de cliente, Canal, Zona y Ciudad.
+- Se reorganizó la barra principal para mantener periodo, mes, búsqueda y limpiar separados de los criterios avanzados.
+- Zona y Grupo de cliente conservan el filtrado server-side existente; Cliente, Canal y Ciudad refinan las filas cargadas.
+- Se verificó el frontend con `npm run lint` y `npm run build`.
+
+## [2026-10-26] ux | Resumen diario descendente
+
+- La tabla de facturación y entregas ahora muestra primero la fecha más reciente y continúa hacia atrás.
+- Los acumulados mensuales se calculan en orden cronológico y solo se invierte el resultado visual.
+
+## [2026-10-26] ux | Página independiente para detalle de documentos
+
+- Se agregó la ruta `/facturacion-diaria/detalle` para mostrar únicamente el detalle paginado de documentos.
+- La vista principal ya no muestra la tabla operativa; el menú lateral enlaza directamente a la nueva página.
+- La nueva vista reutiliza los filtros, exportación, paginación y drawer de detalle existentes.
+
+## [2026-10-26] ux | Orden y acceso al detalle de facturas
+
+- La tabla de acumulados se muestra inmediatamente después de las cards de KPIs mediante el orden visual del contenedor principal.
+- `Detalle de documentos` en el menú lateral ahora desplaza hasta la tabla operativa de facturas y cierra el menú en pantallas móviles.
+- Se verificó el cambio con el lint y el build del frontend.
+
 ## [2026-10-23] fix | Fuente SQL de informes
 
 ## [2026-10-23] fix | Contrato vigente de `Informe_ventas`
@@ -37,6 +89,13 @@
 - Se verificó la compilación local con `npm run build`.
 
 Este archivo es cronológico y append-only. Cada entrada registra una ingesta, consulta relevante o revisión de salud de la wiki.
+
+## [2026-10-26] feat | Integración frontend de entregas
+
+- Se agregó el proxy server-side `app/api/entregas/route.ts`.
+- El dashboard solicita facturación y entregas en paralelo y muestra `Ent día` y `Ent mes total` en el resumen diario.
+- Los valores de entrega se toman de `summary.daily[].valueWithoutVat` y se acumulan por mes en el frontend.
+- Se validó el build de Next.js con `npm run build`.
 
 ## [2026-10-26] feat | Endpoint de entregas
 

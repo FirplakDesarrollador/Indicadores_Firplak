@@ -19,6 +19,7 @@ Abre [http://localhost:3000](http://localhost:3000).
 - `app/facturacion-diaria/page.tsx`: acceso al BI de Facturación Diaria.
 - `components/FacturacionDashboard.tsx`: módulo interactivo de facturación con filtros, KPIs, gráficos, tabla y detalle de documentos.
 - `app/api/facturacion-diaria/route.ts`: Route Handler que funciona como proxy seguro hacia la API de informes.
+- `app/api/entregas/route.ts`: Route Handler que funciona como proxy seguro hacia el endpoint de entregas.
 - `lib/facturacion/sql-server.ts`: compatibilidad server-side y normalización de columnas de facturación.
 - API independiente: [Firplak Reporting API](https://github.com/Firplak/firplak-reporting-api), instalada cerca de SQL Server y publicada por IIS con HTTPS.
 - `lib/facturacion/demo-data.ts`: datos de demostración para trabajar la interfaz antes de conectar SQL Server.

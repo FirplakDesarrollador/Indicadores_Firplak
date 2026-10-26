@@ -20,7 +20,7 @@ Usuario
   │ Microsoft 365 / Supabase Auth
   ▼
 Next.js (localhost:3000 o Vercel)
-  │ /api/facturacion-diaria + REPORTING_API_TOKEN
+  │ /api/facturacion-diaria + /api/entregas + REPORTING_API_TOKEN
   ▼ HTTPS
 Firplak Reporting API (repositorio separado, Windows / IIS)
   │ mssql, paginación y resúmenes
@@ -58,7 +58,7 @@ SP o proceso de actualización periódica
 
 ## Fuentes primarias
 
-- Frontend: [`app/`](../app/), [`components/FacturacionDashboard.tsx`](../components/FacturacionDashboard.tsx) y [`app/api/facturacion-diaria/route.ts`](../app/api/facturacion-diaria/route.ts).
+- Frontend: [`app/`](../app/), [`components/FacturacionDashboard.tsx`](../components/FacturacionDashboard.tsx), [`app/api/facturacion-diaria/route.ts`](../app/api/facturacion-diaria/route.ts) y [`app/api/entregas/route.ts`](../app/api/entregas/route.ts).
 - API: [repositorio Firplak Reporting API](https://github.com/Firplak/firplak-reporting-api), especialmente `src/server.ts`, `src/db.ts` y `src/types.ts`.
 - Contrato de configuración: [`.env.example`](../.env.example) y `.env.example` del [repositorio de la API](https://github.com/Firplak/firplak-reporting-api/blob/main/.env.example).
 

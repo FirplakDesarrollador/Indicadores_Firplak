@@ -17,7 +17,7 @@ sources:
 | Autenticación | Inicio de sesión Microsoft 365 mediante Supabase Azure | `app/login/page.tsx`, `app/auth/callback/route.ts` |
 | Middleware | Redirige usuarios no autenticados a `/login` | `middleware.ts` |
 | Dashboard | Filtros, KPIs, gráfico, tabla y detalle | `components/FacturacionDashboard.tsx` |
-| Proxy | Oculta token y llama a la API de informes | `app/api/facturacion-diaria/route.ts` |
+| Proxy | Oculta token y llama a la API de informes | `app/api/facturacion-diaria/route.ts`, `app/api/entregas/route.ts` |
 | Reporting API | Autenticación Bearer, SQL, paginación y agregados | [Repositorio separado](https://github.com/Firplak/firplak-reporting-api) |
 | SQL Server | Tablas preparadas de facturación y entregas | `Planos_Symphony.dbo.Informe_ventas`, `Planos_Symphony.dbo.Informe_entregas` |
 
@@ -38,7 +38,7 @@ sources:
 
 ## Flujo de entregas
 
-1. Un consumidor solicita `GET /api/v1/entregas` con el Bearer token server-to-server.
+1. El dashboard solicita `/api/entregas`; el Route Handler server-side lo reenvía a `GET /api/v1/entregas`.
 2. La Reporting API aplica filtros y paginación sobre `Planos_Symphony.dbo.Informe_entregas`.
 3. La respuesta devuelve filas, años disponibles y agregados de cantidades y valor sin IVA.
 

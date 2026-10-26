@@ -20,7 +20,7 @@ sources:
 
 ## Sesiones
 
-Supabase mantiene la sesión mediante cookies server-side. El middleware protege todas las rutas salvo `/login`, `/auth` y archivos estáticos.
+Supabase mantiene la sesión mediante cookies server-side. El middleware protege todas las rutas salvo `/login`, `/auth` y archivos estáticos. Las rutas `/api/*` responden con JSON `401` cuando no hay sesión, para evitar que una redirección HTML rompa el consumo de datos del dashboard.
 
 ## Diagnóstico seguro
 

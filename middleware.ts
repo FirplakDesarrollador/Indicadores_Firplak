@@ -26,8 +26,12 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
   const pathname = request.nextUrl.pathname;
   const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/auth");
+  const isApiRoute = pathname.startsWith("/api/");
 
   if (!user && !isAuthRoute) {
+    if (isApiRoute) {
+      return NextResponse.json({ error: "Sesión no autorizada." }, { status: 401 });
+    }
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     loginUrl.searchParams.set("next", pathname);
