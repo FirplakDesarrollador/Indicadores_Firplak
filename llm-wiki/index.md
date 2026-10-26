@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-23
+updated: 2026-10-26
 sources:
   - ../README.md
   - ../package.json
@@ -69,5 +69,6 @@ SP o proceso de actualización periódica
 | Tabla de reportes | Confirmado: `Planos_Symphony.dbo.Informe_ventas` | [Flujo de datos](architecture/data-flow.md) |
 | Notas crédito | Confirmado: `TipoDocumento = Nota Crédito` y columnas `CodigoTipoNC`/`TiposNC` | [Flujo de datos](architecture/data-flow.md) |
 | API pública | Configurada mediante `api.firplak.com:8443` | [Reporting API](components/reporting-api.md) |
-| Actualización periódica de la tabla | Dependencia operativa; confirmar proceso y horario | [Runbook](operations/runbook.md) |
+| Actualización periódica de las tablas | Dependencia operativa; confirmar proceso y horario | [Runbook](operations/runbook.md) |
+| Tabla de entregas | Confirmada: `Planos_Symphony.dbo.Informe_entregas` | [Reporting API](components/reporting-api.md) |
 | Índices SQL | Recomendados; validar en SQL Server | [ADR-001](decisions/ADR-001-reporting-table.md) |

@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-23
+updated: 2026-10-26
 sources:
   - ../../middleware.ts
   - ../../app/api/facturacion-diaria/route.ts
@@ -19,7 +19,7 @@ sources:
 | Dashboard | Filtros, KPIs, gráfico, tabla y detalle | `components/FacturacionDashboard.tsx` |
 | Proxy | Oculta token y llama a la API de informes | `app/api/facturacion-diaria/route.ts` |
 | Reporting API | Autenticación Bearer, SQL, paginación y agregados | [Repositorio separado](https://github.com/Firplak/firplak-reporting-api) |
-| SQL Server | Tabla preparada de facturación | `Planos_Symphony.dbo.Informe_ventas` |
+| SQL Server | Tablas preparadas de facturación y entregas | `Planos_Symphony.dbo.Informe_ventas`, `Planos_Symphony.dbo.Informe_entregas` |
 
 ## Flujo de autenticación
 
@@ -35,6 +35,12 @@ sources:
 3. El token `REPORTING_API_TOKEN` se añade solo en el servidor.
 4. La Reporting API valida el Bearer token y consulta SQL Server.
 5. La respuesta contiene filas, paginación, totales diarios y distribución por zona.
+
+## Flujo de entregas
+
+1. Un consumidor solicita `GET /api/v1/entregas` con el Bearer token server-to-server.
+2. La Reporting API aplica filtros y paginación sobre `Planos_Symphony.dbo.Informe_entregas`.
+3. La respuesta devuelve filas, años disponibles y agregados de cantidades y valor sin IVA.
 
 ## Límites de confianza
 

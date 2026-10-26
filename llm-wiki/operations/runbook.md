@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-23
+updated: 2026-10-26
 sources:
   - ../../README.md
   - https://github.com/Firplak/firplak-reporting-api/blob/main/README.md
@@ -32,10 +32,11 @@ npm run dev
 1. Actualizar el checkout del repositorio [Firplak Reporting API](https://github.com/Firplak/firplak-reporting-api) en el servidor Windows.
 2. Conservar el `.env` real del servidor; no reemplazarlo con `.env.example` sin volver a cargar secretos.
 3. Confirmar `REPORT_DB_TABLE_SCHEMA=dbo` y `REPORT_DB_TABLE=Informe_ventas`.
-4. Ejecutar `npm install` si cambiaron dependencias.
-5. Ejecutar `npm run build`.
-6. Reiniciar el servicio que ejecuta `node dist/server.js`.
-7. Probar `/health` y después el endpoint autenticado.
+4. Confirmar `REPORT_DELIVERIES_TABLE_SCHEMA=dbo` y `REPORT_DELIVERIES_TABLE=Informe_entregas`.
+5. Ejecutar `npm install` si cambiaron dependencias.
+6. Ejecutar `npm run build`.
+7. Reiniciar el servicio que ejecuta `node dist/server.js`.
+8. Probar `/health`, `/api/v1/facturacion-diaria` y `/api/v1/entregas` con el token sin imprimirlo.
 
 ## Diagnóstico rápido
 

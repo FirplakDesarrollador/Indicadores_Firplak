@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-23
+updated: 2026-10-26
 sources:
   - https://github.com/Firplak/firplak-reporting-api/blob/main/src/server.ts
   - https://github.com/Firplak/firplak-reporting-api/blob/main/src/db.ts
@@ -37,6 +37,12 @@ Respuestas principales:
 - `502`: error consultando SQL Server.
 - `503`: configuración incompleta.
 
+### `GET /api/v1/entregas`
+
+Consulta `Planos_Symphony.dbo.Informe_entregas` y requiere el mismo Bearer token. Acepta paginación y filtros por `fechaDesde`, `fechaHasta`, `anio`, `mes`, `estadoEntrega`, `estadoItem`, `cancelado` y `search`.
+
+La respuesta incluye el detalle de entregas, los años disponibles y resúmenes diarios/mensuales con `Cantidad`, `CantidadFacturada` y `ValorSinIVA`. La tabla usa `(DocEntry, LineNum)` como clave y `FechaEntrega` como fecha principal.
+
 ## Configuración SQL
 
 ```env
@@ -47,6 +53,8 @@ REPORT_DB_TABLE=Informe_ventas
 REPORT_DB_REQUEST_TIMEOUT_MS=60000
 REPORTING_API_TOKEN=<secreto>
 ```
+
+La tabla de entregas se configura con `REPORT_DELIVERIES_TABLE_SCHEMA=dbo` y `REPORT_DELIVERIES_TABLE=Informe_entregas`.
 
 El contrato SQL vigente usa `FechaContabilizacion`, `DocNum` y `TipoVentas` para fecha, documento y canal, respectivamente.
 

@@ -33,7 +33,7 @@ Los accesos se mantienen como una lista tipada en `app/page.tsx`. Para agregar u
 
 Copia las variables de `.env.example` a `.env.local` y completa la conexión. Las credenciales se quedan únicamente en el servidor; nunca uses el prefijo `NEXT_PUBLIC_` para SQL Server.
 
-La fuente real definida para este módulo es la tabla `[Planos_Symphony].[dbo].[Informe_ventas]`. La API consulta sus columnas `[FechaContabilizacion]`, `[DocNum]`, `[NombreCliente]`, `[GrupoCliente]`, `[TipoVentas]`, `[Zona]`, `[Ciudad]`, `[CodCliente]`, `[CodigoTipoNC]`, `[TiposNC]` y `[ValorTotal]`.
+La fuente real definida para este módulo es la tabla `[Planos_Symphony].[dbo].[Informe_ventas]`. La API consulta sus columnas `[FechaContabilizacion]`, `[DocNum]`, `[NombreCliente]`, `[GrupoCliente]`, `[TipoVentas]`, `[Zona]`, `[Ciudad]`, `[CodCliente]`, `[CodigoTipoNC]`, `[TiposNC]` y `[ValorTotal]`. El reporte de entregas se consulta mediante `GET /api/v1/entregas` sobre `[Planos_Symphony].[dbo].[Informe_entregas]`.
 
 La configuración recomendada es ejecutar [Firplak Reporting API](https://github.com/Firplak/firplak-reporting-api) en el servidor Windows que tiene acceso al SQL Server. Next.js en Vercel solo llama a esa API por HTTPS usando `REPORTING_API_TOKEN`; el token no se entrega al navegador.
 
