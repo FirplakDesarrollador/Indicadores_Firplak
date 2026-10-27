@@ -30,6 +30,7 @@ import BrandPeak from "@/components/BrandPeak";
 import { chartColors, chartTooltipStyle } from "@/lib/brand";
 import { createClient } from "@/lib/supabase/client";
 import type {
+  BillingFilterOptions,
   BillingPayload,
   BillingRow,
   BillingSummary,
@@ -58,7 +59,7 @@ const monthlyTargets: Record<string, { national: number; firplak: number }> = {
   "2026-03": { national: 375_000_000, firplak: 503_000_000 },
   "2026-04": { national: 375_000_000, firplak: 575_000_000 },
 };
-const marketOptions = ["Nacional", "Internacional"];
+type FilterOption = { value: string; label: string };
 const initialPeriod = new Date();
 const initialYear = String(initialPeriod.getFullYear());
 const initialMonth = String(initialPeriod.getMonth() + 1);
@@ -105,16 +106,24 @@ function MetricSkeleton() {
   return <article className="billing-metric-card billing-skeleton-card"><span className="billing-skeleton billing-skeleton-icon" /><div><span className="billing-skeleton billing-skeleton-label" /><span className="billing-skeleton billing-skeleton-value" /><span className="billing-skeleton billing-skeleton-detail" /></div></article>;
 }
 
+function toOptions(values: string[]): FilterOption[] {
+  return values.map((value) => ({ value, label: value }));
+}
+
+function uniqueSorted(values: string[]) {
+  return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b, "es"));
+}
+
 function DocumentFilter({ label, value, emptyValue, emptyLabel, options, onChange, disabled }: {
   label: string;
   value: string;
   emptyValue: string;
   emptyLabel: string;
-  options: string[];
+  options: FilterOption[];
   onChange: (value: string) => void;
   disabled: boolean;
 }) {
-  return <label className="billing-advanced-filter"><span>{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} disabled={disabled}><option value={emptyValue}>{emptyLabel}</option>{options.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>;
+  return <label className="billing-advanced-filter"><span>{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} disabled={disabled}><option value={emptyValue}>{emptyLabel}</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
 }
 
 type FacturacionDashboardProps = {
@@ -125,6 +134,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   const isDetailView = mode === "detail";
   const [rows, setRows] = useState<BillingRow[]>([]);
   const [availableYears, setAvailableYears] = useState<number[]>([]);
+  const [filterOptions, setFilterOptions] = useState<BillingFilterOptions | null>(null);
   const [summary, setSummary] = useState<BillingSummary | null>(null);
   const [deliverySummary, setDeliverySummary] = useState<DeliverySummary | null>(null);
   const [pagination, setPagination] = useState({ page: 1, pageSize: 50, total: 0, totalPages: 1 });
@@ -155,6 +165,9 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
       if (selectedYear !== "Todos") params.set("anio", selectedYear);
       if (selectedMonth !== "Todos") params.set("mes", selectedMonth);
       if (selectedZone !== "Todas") params.set("zona", selectedZone);
+      if (selectedChannel !== "Todos") params.set("mercado", selectedChannel);
+      if (selectedCity !== "Todas") params.set("ciudad", selectedCity);
+      if (selectedCustomer !== "Todos") params.set("cliente", selectedCustomer);
       if (selectedGroup !== "Todos") params.set("grupoCliente", selectedGroup);
       if (search.trim()) params.set("search", search.trim());
 
@@ -172,6 +185,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
 
       setRows(payload.rows);
       setAvailableYears(payload.years ?? []);
+      setFilterOptions(payload.filterOptions ?? null);
       setSummary(payload.summary);
       setDeliverySummary(deliveryPayload.summary);
       setPagination(payload.pagination ?? { page: targetPage, pageSize: 50, total: payload.rows.length, totalPages: 1 });
@@ -180,6 +194,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
     } catch (loadError) {
       setRows([]);
       setAvailableYears([]);
+      setFilterOptions(null);
       setSummary(null);
       setDeliverySummary(null);
       setPagination({ page: 1, pageSize: 50, total: 0, totalPages: 1 });
@@ -188,7 +203,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
       setLoading(false);
       setIsRefreshing(false);
     }
-  }, [search, selectedGroup, selectedMonth, selectedYear, selectedZone]);
+  }, [search, selectedChannel, selectedCity, selectedCustomer, selectedGroup, selectedMonth, selectedYear, selectedZone]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => void loadData(1), 250);
@@ -208,18 +223,17 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
 
   const years = useMemo(() => availableYears.length ? availableYears : Array.from(new Set(rows.map((row) => dateValue(row.date).getFullYear()))).sort((a, b) => b - a), [availableYears, rows]);
   const months = useMemo(() => Array.from({ length: 12 }, (_, index) => index + 1), []);
-  const customers = useMemo(() => Array.from(new Set(rows.map((row) => row.customer).filter(Boolean))).sort(), [rows]);
-  const groups = useMemo(() => Array.from(new Set(rows.map((row) => row.customerGroup).filter(Boolean))).sort(), [rows]);
-  const zones = useMemo(() => Array.from(new Set(rows.map((row) => row.zone).filter(Boolean))).sort(), [rows]);
-  const cities = useMemo(() => Array.from(new Set(rows.map((row) => row.city).filter(Boolean))).sort(), [rows]);
-  const visibleRows = useMemo(() => rows.filter((row) => (
-    (activeView !== "Notas crédito" || row.creditNote > 0)
-    && (selectedCustomer === "Todos" || row.customer === selectedCustomer)
-    && (selectedGroup === "Todos" || row.customerGroup === selectedGroup)
-    && (selectedChannel === "Todos" || row.channel === selectedChannel)
-    && (selectedZone === "Todas" || row.zone === selectedZone)
-    && (selectedCity === "Todas" || row.city === selectedCity)
-  )), [activeView, rows, selectedChannel, selectedCity, selectedCustomer, selectedGroup, selectedZone]);
+  // Las opciones vienen del catálogo de la API para todo el periodo; si la API aún no lo envía, se derivan de la página visible.
+  const customers = useMemo<FilterOption[]>(() => filterOptions
+    ? filterOptions.customers.map((customer) => ({ value: customer.code, label: customer.name }))
+    : toOptions(uniqueSorted(rows.map((row) => row.customer))), [filterOptions, rows]);
+  const groups = useMemo(() => toOptions(filterOptions?.customerGroups ?? uniqueSorted(rows.map((row) => row.customerGroup))), [filterOptions, rows]);
+  const markets = useMemo(() => toOptions(filterOptions?.markets ?? uniqueSorted(rows.map((row) => row.channel))), [filterOptions, rows]);
+  const zones = useMemo(() => toOptions(filterOptions?.zones ?? uniqueSorted(rows.map((row) => row.zone))), [filterOptions, rows]);
+  const cities = useMemo(() => toOptions(filterOptions?.cities ?? uniqueSorted(rows.map((row) => row.city))), [filterOptions, rows]);
+  const hasUnfilteredDeliveryCriteria = selectedChannel !== "Todos" || selectedCity !== "Todas" || selectedZone !== "Todas";
+  // Los filtros de documento se aplican en la API; aquí solo queda la pestaña de notas crédito.
+  const visibleRows = useMemo(() => rows.filter((row) => activeView !== "Notas crédito" || row.creditNote > 0), [activeView, rows]);
   const totals = summary ?? emptySummary;
   const deliveryTotals = deliverySummary ?? emptyDeliverySummary;
   const dailyData = useMemo(() => totals.daily.slice(-14).map((item) => ({ label: formatDate(item.date), facturado: item.invoiced, notas: item.creditNote, sort: item.date })), [totals.daily]);
@@ -290,7 +304,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
             <div className="billing-advanced-filters-heading"><div><Filter size={15} /><span>Filtros del documento</span></div><small>Combina los criterios para afinar la consulta</small></div>
             <DocumentFilter label="Cliente" value={selectedCustomer} emptyValue="Todos" emptyLabel="Todos los clientes" options={customers} onChange={setSelectedCustomer} disabled={loading} />
             <DocumentFilter label="Grupo de cliente" value={selectedGroup} emptyValue="Todos" emptyLabel="Todos los grupos" options={groups} onChange={setSelectedGroup} disabled={loading} />
-            <DocumentFilter label="Mercado" value={selectedChannel} emptyValue="Todos" emptyLabel="Todos los mercados" options={marketOptions} onChange={setSelectedChannel} disabled={loading} />
+            <DocumentFilter label="Mercado" value={selectedChannel} emptyValue="Todos" emptyLabel="Todos los mercados" options={markets} onChange={setSelectedChannel} disabled={loading} />
             <DocumentFilter label="Zona" value={selectedZone} emptyValue="Todas" emptyLabel="Todas las zonas" options={zones} onChange={setSelectedZone} disabled={loading} />
             <DocumentFilter label="Ciudad" value={selectedCity} emptyValue="Todas" emptyLabel="Todas las ciudades" options={cities} onChange={setSelectedCity} disabled={loading} />
           </div>}
@@ -299,7 +313,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
         <div className="billing-metrics-grid">{loading ? Array.from({ length: 4 }, (_, index) => <MetricSkeleton key={index} />) : <><MetricCard label="Facturación bruta" value={formatCompactCurrency(totals.invoiced)} detail={`${number.format(pagination.total)} documentos filtrados`} trend="12,4%" icon={TrendingUp} /><MetricCard label="Facturación neta" value={formatCompactCurrency(totals.net)} detail="Facturado menos notas crédito" icon={ArrowUpRight} /><MetricCard label="Notas crédito" value={formatCompactCurrency(totals.creditNote)} detail={`${percent.format(totals.invoiced ? totals.creditNote / totals.invoiced : 0)} sobre la facturación`} icon={ArrowDownRight} /><MetricCard label="Cumplimiento" value="94,8%" detail="Meta mensual nacional" trend="4,7%" icon={BarChart3} /></>}</div>
         <div className="billing-analysis-grid"><section className="billing-panel billing-chart-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">EVOLUCIÓN DIARIA</span><h2>Facturación y notas crédito</h2></div><span className="billing-period-caption">{dailyData.length ? `${formatDate(dailyData[0].sort)} — ${formatDate(dailyData[dailyData.length - 1].sort)}` : "Sin datos"}</span></div><div className="billing-chart-legend"><span><i className="facturado" /> Facturado</span><span><i className="notas" /> Notas crédito</span></div>{loading ? <div className="billing-chart-skeleton"><span /><span /><span /></div> : <div className="billing-chart"><ResponsiveContainer width="100%" height="100%"><AreaChart data={dailyData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}><defs><linearGradient id="facturadoGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={chartColors.primary} stopOpacity={0.18} /><stop offset="100%" stopColor={chartColors.primary} stopOpacity={0} /></linearGradient></defs><CartesianGrid vertical={false} stroke={chartColors.grid} /><XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} /><YAxis axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} tickFormatter={(value) => `$${number.format(Math.round(Number(value) / 1_000_000))} M`} width={64} /><Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: chartColors.primary, fontWeight: 600 }} formatter={(value) => formatCurrency(Number(value))} /><Area type="monotone" dataKey="facturado" name="Facturado" stroke={chartColors.primary} strokeWidth={2.5} fill="url(#facturadoGradient)" /><Area type="monotone" dataKey="notas" name="Notas crédito" stroke={chartColors.secondary} strokeWidth={2} fill="none" /></AreaChart></ResponsiveContainer></div>}</section><section className="billing-panel billing-zone-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">DISTRIBUCIÓN</span><h2>Facturación neta por zona</h2></div><button className="billing-icon-action" aria-label="Más opciones">···</button></div>{loading ? <div className="billing-zone-skeleton"><span /><span /><span /></div> : <div className="billing-zone-list">{zoneData.length ? zoneData.map((item) => <div className="billing-zone-row" key={item.name}><div className="billing-zone-label"><span>{item.name}</span><strong>{formatCompactCurrency(item.value)}</strong></div><div className="billing-progress"><span style={{ width: `${item.percent}%` }} /></div><small>{item.percent}%</small></div>) : <div className="billing-empty">No hay zonas para los filtros seleccionados.</div>}</div>}</section></div>
         <section className="billing-panel billing-daily-summary-panel">
-          <div className="billing-table-heading"><div><span className="billing-panel-kicker">RESUMEN DIARIO</span><h2>Facturación y entregas por día</h2><p>Acumulado mensual, entregas y metas configuradas</p></div><div className="billing-daily-summary-actions"><span className="billing-daily-summary-count">{dailySummaryRows.length ? `${dailySummaryRows.length} días` : "Sin datos"}</span>{dailySummaryRows.length > 7 && <button className="billing-secondary-button small" type="button" onClick={() => setShowAllDailySummary((visible) => !visible)}>{showAllDailySummary ? "Mostrar menos" : "Ver todos los días"}</button>}</div></div>
+          <div className="billing-table-heading"><div><span className="billing-panel-kicker">RESUMEN DIARIO</span><h2>Facturación y entregas por día</h2><p>Acumulado mensual, entregas y metas configuradas</p>{hasUnfilteredDeliveryCriteria && <p>Las columnas de entregas no se filtran por mercado, zona ni ciudad: esos datos no existen en la tabla de entregas.</p>}</div><div className="billing-daily-summary-actions"><span className="billing-daily-summary-count">{dailySummaryRows.length ? `${dailySummaryRows.length} días` : "Sin datos"}</span>{dailySummaryRows.length > 7 && <button className="billing-secondary-button small" type="button" onClick={() => setShowAllDailySummary((visible) => !visible)}>{showAllDailySummary ? "Mostrar menos" : "Ver todos los días"}</button>}</div></div>
           <div className="billing-table-scroll"><table className="billing-data-table billing-daily-summary-table"><thead><tr><th>Año</th><th>Mes</th><th>Día</th><th className="align-right">Ent día</th><th className="align-right">Ent mes total</th><th className="align-right">Fac día total</th><th className="align-right">Fac mes total</th><th className="align-right">Total NC</th><th className="align-right">Fac - NC</th><th className="align-right">Meta Nacional</th><th className="align-right">Meta Firplak</th></tr></thead><tbody>{loading ? Array.from({ length: 5 }, (_, index) => <tr key={index} className="billing-skeleton-row"><td colSpan={11}><span className="billing-skeleton billing-skeleton-row-fill" /></td></tr>) : dailySummaryRows.length ? displayedDailySummaryRows.map((item) => <tr key={item.date}><td>{item.year}</td><td>{item.month}</td><td>{item.day}</td><td className="align-right delivery-cell">{item.deliveryDay ? formatCurrency(item.deliveryDay) : "—"}</td><td className="align-right delivery-cell">{item.deliveryMonthTotal ? formatCurrency(item.deliveryMonthTotal) : "—"}</td><td className="align-right number-cell">{formatCurrency(item.invoiced)}</td><td className="align-right number-cell">{formatCurrency(item.monthTotal)}</td><td className="align-right credit-cell">{item.creditNote ? formatCurrency(item.creditNote) : "—"}</td><td className="align-right net-cell">{formatCurrency(item.net)}</td><td className="align-right">{item.nationalTarget ? formatCurrency(item.nationalTarget) : "—"}</td><td className="align-right">{item.firplakTarget ? formatCurrency(item.firplakTarget) : "—"}</td></tr>) : <tr><td colSpan={11} className="billing-table-state"><strong>Sin datos diarios</strong></td></tr>}</tbody></table></div>
         </section>
         <section className="billing-panel billing-table-panel"><div className="billing-table-heading"><div><span className="billing-panel-kicker">DETALLE OPERATIVO</span><h2>Documentos de facturación</h2><p>{number.format(pagination.total)} registros encontrados · página {pagination.page} de {pagination.totalPages}</p></div><div className="billing-table-actions"><button className="billing-secondary-button small" onClick={() => void loadData(pagination.page)} disabled={isRefreshing}><RefreshCw size={15} className={isRefreshing ? "billing-spin" : ""} /> Actualizar</button><button className="billing-icon-action" aria-label="Más opciones">···</button></div></div><div className="billing-tabs" role="tablist">{(["Resumen", "Facturación", "Notas crédito"] as View[]).map((view) => <button key={view} className={activeView === view ? "active" : ""} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}{view === "Notas crédito" && <span>{number.format(rows.filter((row) => row.creditNote > 0).length)}</span>}</button>)}</div><div className="billing-table-scroll"><table className="billing-data-table"><thead><tr><th>Fecha</th><th>DOCNUM</th><th>Grupo de cliente</th><th>Canal</th><th>Zona</th><th>Ciudad</th><th className="align-right">Facturado</th><th className="align-right">NC</th><th className="align-right">Neto</th><th aria-label="Abrir detalle" /></tr></thead><tbody>{loading ? Array.from({ length: 6 }, (_, index) => <tr key={index} className="billing-skeleton-row"><td colSpan={10}><span className="billing-skeleton billing-skeleton-row-fill" /></td></tr>) : visibleRows.length ? visibleRows.map((row) => <tr key={row.id} tabIndex={0} onClick={() => setSelectedRow(row)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedRow(row); } }}><td><span className="billing-date-cell">{formatDate(row.date)}</span><small>{dateValue(row.date).getFullYear()}</small></td><td><strong className="billing-docnum">{row.docnum}</strong></td><td><span className="billing-group-cell">{row.customerGroup}</span><small>{row.customer}</small></td><td>{row.channel}</td><td><span className={`billing-zone-tag ${row.zone.toLowerCase().replaceAll(" ", "-")}`}>{row.zone}</span></td><td>{row.city}</td><td className="align-right number-cell">{formatCurrency(row.invoiced)}</td><td className="align-right number-cell credit-cell">{row.creditNote ? formatCurrency(row.creditNote) : "—"}</td><td className="align-right number-cell net-cell">{formatCurrency(row.net)}</td><td><ChevronRight size={16} className="billing-row-chevron" /></td></tr>) : <tr><td colSpan={10} className="billing-table-state"><Search size={22} /><strong>No encontramos documentos</strong><span>Prueba cambiando los filtros o el texto de búsqueda.</span></td></tr>}</tbody></table></div><div className="billing-table-footer"><span>Mostrando {visibleRows.length} de {number.format(pagination.total)} documentos</span><div><button onClick={() => changePage(pagination.page - 1)} disabled={loading || pagination.page <= 1} aria-label="Página anterior"><ChevronLeft size={15} /></button><strong>{pagination.page}</strong><button onClick={() => changePage(pagination.page + 1)} disabled={loading || pagination.page >= pagination.totalPages} aria-label="Página siguiente"><ChevronRight size={15} /></button></div></div></section>

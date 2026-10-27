@@ -28,7 +28,9 @@ Requiere:
 Authorization: Bearer <REPORTING_API_TOKEN>
 ```
 
-Parámetros: `page`, `pageSize`, `fechaDesde`, `fechaHasta`, `anio`, `mes`, `zona`, `grupoCliente` y `search`.
+Parámetros: `page`, `pageSize`, `fechaDesde`, `fechaHasta`, `anio`, `mes`, `zona`, `grupoCliente`, `mercado` (`TipoVentas`), `ciudad` (`Ciudad`), `cliente` (`CodCliente`) y `search`.
+
+La respuesta incluye `filterOptions` (`markets`, `cities`, `zones`, `customerGroups` y `customers` con `code`/`name`): los valores distintos del periodo, calculados solo con los filtros de fecha para que las listas no se reduzcan. Disponible desde la rama `fix/filtros-mercado-ciudad` de la API (`pendiente` de despliegue).
 
 Respuestas principales:
 
@@ -39,7 +41,7 @@ Respuestas principales:
 
 ### `GET /api/v1/entregas`
 
-Consulta `Planos_Symphony.dbo.Informe_entregas` y requiere el mismo Bearer token. Acepta paginación y filtros por `fechaDesde`, `fechaHasta`, `anio`, `mes`, `estadoEntrega`, `estadoItem`, `cancelado` y `search`.
+Consulta `Planos_Symphony.dbo.Informe_entregas` y requiere el mismo Bearer token. Acepta paginación y filtros por `fechaDesde`, `fechaHasta`, `anio`, `mes`, `estadoEntrega`, `estadoItem`, `cancelado`, `grupoCliente`, `cliente` (`CodCliente`) y `search`. La tabla no tiene mercado, zona ni ciudad.
 
 La respuesta incluye el detalle de entregas, los años disponibles y resúmenes diarios/mensuales con `Cantidad`, `CantidadFacturada` y `ValorSinIVA`. La tabla usa `(DocEntry, LineNum)` como clave y `FechaEntrega` como fecha principal.
 
