@@ -35,6 +35,7 @@ export type BillingFilterOptions = {
   zones: string[];
   customerGroups: string[];
   customers: Array<{ code: string; name: string }>;
+  cityZones?: Array<{ zone: string; city: string }>;
 };
 
 export type BillingSummary = {

@@ -64,6 +64,36 @@ const initialPeriod = new Date();
 const initialYear = String(initialPeriod.getFullYear());
 const initialMonth = String(initialPeriod.getMonth() + 1);
 
+type DashboardFilters = {
+  year: string;
+  month: string;
+  search: string;
+  customer: string;
+  group: string;
+  channel: string;
+  zone: string;
+  city: string;
+};
+
+const initialFilters: DashboardFilters = {
+  year: initialYear,
+  month: initialMonth,
+  search: "",
+  customer: "Todos",
+  group: "Todos",
+  channel: "Todos",
+  zone: "Todas",
+  city: "Todas",
+};
+
+function normalizeFilters(filters: DashboardFilters): DashboardFilters {
+  return { ...filters, search: filters.search.trim() };
+}
+
+function sameFilters(a: DashboardFilters, b: DashboardFilters) {
+  return (Object.keys(a) as Array<keyof DashboardFilters>).every((key) => a[key] === b[key]);
+}
+
 function formatCurrency(value: number) { return currency.format(value); }
 function formatCompactCurrency(value: number) {
   if (Math.abs(value) >= 1_000_000) {
@@ -121,7 +151,7 @@ function DocumentFilter({ label, value, emptyValue, emptyLabel, options, onChang
   emptyLabel: string;
   options: FilterOption[];
   onChange: (value: string) => void;
-  disabled: boolean;
+  disabled?: boolean;
 }) {
   return <label className="billing-advanced-filter"><span>{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} disabled={disabled}><option value={emptyValue}>{emptyLabel}</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
 }
@@ -142,16 +172,9 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeView, setActiveView] = useState<View>("Resumen");
-  const [search, setSearch] = useState("");
-  // Texto escrito en el buscador; solo se aplica (y consulta la API) al pulsar la lupa o Enter.
-  const [searchInput, setSearchInput] = useState("");
-  const [selectedYear, setSelectedYear] = useState(initialYear);
-  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
-  const [selectedZone, setSelectedZone] = useState("Todas");
-  const [selectedGroup, setSelectedGroup] = useState("Todos");
-  const [selectedCustomer, setSelectedCustomer] = useState("Todos");
-  const [selectedChannel, setSelectedChannel] = useState("Todos");
-  const [selectedCity, setSelectedCity] = useState("Todas");
+  // Los filtros se editan como borrador y solo consultan la API al aplicarlos (botón, lupa o Enter).
+  const [appliedFilters, setAppliedFilters] = useState<DashboardFilters>(initialFilters);
+  const [draftFilters, setDraftFilters] = useState<DashboardFilters>(initialFilters);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showAllDailySummary, setShowAllDailySummary] = useState(false);
@@ -164,14 +187,15 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
     setIsRefreshing(true);
     try {
       const params = new URLSearchParams({ page: String(targetPage), pageSize: "50" });
-      if (selectedYear !== "Todos") params.set("anio", selectedYear);
-      if (selectedMonth !== "Todos") params.set("mes", selectedMonth);
-      if (selectedZone !== "Todas") params.set("zona", selectedZone);
-      if (selectedChannel !== "Todos") params.set("mercado", selectedChannel);
-      if (selectedCity !== "Todas") params.set("ciudad", selectedCity);
-      if (selectedCustomer !== "Todos") params.set("cliente", selectedCustomer);
-      if (selectedGroup !== "Todos") params.set("grupoCliente", selectedGroup);
-      if (search.trim()) params.set("search", search.trim());
+      const { year, month, zone, channel, city, customer, group, search } = appliedFilters;
+      if (year !== "Todos") params.set("anio", year);
+      if (month !== "Todos") params.set("mes", month);
+      if (zone !== "Todas") params.set("zona", zone);
+      if (channel !== "Todos") params.set("mercado", channel);
+      if (city !== "Todas") params.set("ciudad", city);
+      if (customer !== "Todos") params.set("cliente", customer);
+      if (group !== "Todos") params.set("grupoCliente", group);
+      if (search) params.set("search", search);
 
       const [billingResponse, deliveryResponse] = await Promise.all([
         fetch(`/api/facturacion-diaria?${params.toString()}`, { cache: "no-store" }),
@@ -205,7 +229,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
       setLoading(false);
       setIsRefreshing(false);
     }
-  }, [search, selectedChannel, selectedCity, selectedCustomer, selectedGroup, selectedMonth, selectedYear, selectedZone]);
+  }, [appliedFilters]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => void loadData(1), 250);
@@ -232,8 +256,16 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   const groups = useMemo(() => toOptions(filterOptions?.customerGroups ?? uniqueSorted(rows.map((row) => row.customerGroup))), [filterOptions, rows]);
   const markets = useMemo(() => toOptions(filterOptions?.markets ?? uniqueSorted(rows.map((row) => row.channel))), [filterOptions, rows]);
   const zones = useMemo(() => toOptions(filterOptions?.zones ?? uniqueSorted(rows.map((row) => row.zone))), [filterOptions, rows]);
-  const cities = useMemo(() => toOptions(filterOptions?.cities ?? uniqueSorted(rows.map((row) => row.city))), [filterOptions, rows]);
-  const hasUnfilteredDeliveryCriteria = selectedChannel !== "Todos" || selectedCity !== "Todas" || selectedZone !== "Todas";
+  // Con las parejas zona-ciudad de la API, la lista de ciudades sigue a la zona del borrador sin otra consulta.
+  const cities = useMemo(() => {
+    if (filterOptions?.cityZones) {
+      const pairs = draftFilters.zone === "Todas" ? filterOptions.cityZones : filterOptions.cityZones.filter((pair) => pair.zone === draftFilters.zone);
+      return toOptions(uniqueSorted(pairs.map((pair) => pair.city)));
+    }
+    return toOptions(filterOptions?.cities ?? uniqueSorted(rows.map((row) => row.city)));
+  }, [draftFilters.zone, filterOptions, rows]);
+  const hasUnfilteredDeliveryCriteria = appliedFilters.channel !== "Todos" || appliedFilters.city !== "Todas" || appliedFilters.zone !== "Todas";
+  const hasPendingFilters = !sameFilters(normalizeFilters(draftFilters), appliedFilters);
   // Los filtros de documento se aplican en la API; aquí solo queda la pestaña de notas crédito.
   const visibleRows = useMemo(() => rows.filter((row) => activeView !== "Notas crédito" || row.creditNote > 0), [activeView, rows]);
   const totals = summary ?? emptySummary;
@@ -276,11 +308,17 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
     return totals.zones.map((item) => ({ name: item.name, value: item.net, percent: Math.round((Math.max(item.net, 0) / positiveTotal) * 100) })).slice(0, 5);
   }, [totals.zones]);
 
+  const updateDraft = (key: keyof DashboardFilters) => (value: string) => setDraftFilters((current) => ({ ...current, [key]: value }));
   // La ciudad depende de la zona: al cambiar de zona se limpia, porque puede no pertenecer a la nueva.
-  const handleZoneChange = (zone: string) => { setSelectedZone(zone); setSelectedCity("Todas"); };
+  const handleZoneChange = (zone: string) => setDraftFilters((current) => ({ ...current, zone, city: "Todas" }));
   const handleSignOut = async () => { await supabase.auth.signOut(); window.location.assign("/login"); };
-  const resetFilters = () => { setSelectedYear(initialYear); setSelectedMonth(initialMonth); setSelectedZone("Todas"); setSelectedGroup("Todos"); setSelectedCustomer("Todos"); setSelectedChannel("Todos"); setSelectedCity("Todas"); setSearch(""); setSearchInput(""); };
-  const applySearch = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSearch(searchInput.trim()); };
+  const resetFilters = () => { setDraftFilters(initialFilters); setAppliedFilters(initialFilters); };
+  const applyFilters = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const nextFilters = normalizeFilters(draftFilters);
+    setDraftFilters(nextFilters);
+    if (!sameFilters(nextFilters, appliedFilters)) setAppliedFilters(nextFilters);
+  };
   const changePage = (targetPage: number) => {
     if (targetPage < 1 || targetPage > pagination.totalPages || targetPage === pagination.page) return;
     setPagination((current) => ({ ...current, page: targetPage }));
@@ -298,22 +336,23 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
     <section className="billing-main"><header className="billing-topbar"><div className="billing-breadcrumbs"><button className="billing-mobile-menu" onClick={() => setIsSidebarOpen(true)} aria-label="Abrir menú"><Menu size={19} /></button><Home size={14} /><ChevronRight size={14} /><span>Indicadores</span><ChevronRight size={14} /><strong>Facturación diaria</strong></div><div className="billing-top-actions"><button className="billing-help-button" aria-label="Ayuda"><CircleHelp size={18} /></button></div></header>
       <div className="billing-content">
         <div className="billing-heading-row"><div><div className="billing-eyebrow">CENTRO DE INDICADORES <span>·</span> COMERCIAL</div><h1>Facturación detallada</h1><p>Consulta el comportamiento de la facturación, notas crédito y documentos por periodo.</p></div><div className="billing-heading-actions"><button className="billing-secondary-button" onClick={() => setShowFilters((visible) => !visible)}><SlidersHorizontal size={16} /> Filtros</button></div></div>
-        <div className="billing-filterbar">
+        <form className="billing-filterbar" onSubmit={applyFilters}>
           <div className="billing-filterbar-primary">
-            <label><CalendarDays size={15} /><span>Periodo</span><select value={selectedYear} onChange={(event) => setSelectedYear(event.target.value)} disabled={loading}><option value="Todos">Todos los años</option>{years.map((year) => <option key={year} value={year}>{year}</option>)}</select></label>
-            <label><span>Mes</span><select value={selectedMonth} onChange={(event) => setSelectedMonth(event.target.value)} disabled={loading}><option value="Todos">Todos los meses</option>{months.map((month) => <option key={month} value={String(month)}>{formatMonthName(month)}</option>)}</select></label>
-            <form className="billing-search" role="search" onSubmit={applySearch}><button className="billing-search-button" type="submit" aria-label="Buscar" disabled={loading}><Search size={16} /></button><input type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Buscar documento, cliente o ciudad..." aria-label="Buscar documento, cliente o ciudad" enterKeyHint="search" /></form>
-            <button className="billing-reset-button" onClick={resetFilters}>Limpiar</button>
+            <label><CalendarDays size={15} /><span>Periodo</span><select value={draftFilters.year} onChange={(event) => updateDraft("year")(event.target.value)}><option value="Todos">Todos los años</option>{years.map((year) => <option key={year} value={year}>{year}</option>)}</select></label>
+            <label><span>Mes</span><select value={draftFilters.month} onChange={(event) => updateDraft("month")(event.target.value)}><option value="Todos">Todos los meses</option>{months.map((month) => <option key={month} value={String(month)}>{formatMonthName(month)}</option>)}</select></label>
+            <div className="billing-search" role="search"><button className="billing-search-button" type="submit" aria-label="Buscar" disabled={loading}><Search size={16} /></button><input type="search" value={draftFilters.search} onChange={(event) => updateDraft("search")(event.target.value)} placeholder="Buscar documento, cliente o ciudad..." aria-label="Buscar documento, cliente o ciudad" enterKeyHint="search" /></div>
+            <div className="billing-filter-actions"><button className="billing-reset-button" type="button" onClick={resetFilters}>Limpiar</button><button className="billing-primary-button" type="submit" disabled={loading || !hasPendingFilters}>Aplicar filtros</button></div>
           </div>
           {showFilters && <div className="billing-advanced-filters">
             <div className="billing-advanced-filters-heading"><div><Filter size={15} /><span>Filtros del documento</span></div><small>Combina los criterios para afinar la consulta</small></div>
-            <DocumentFilter label="Cliente" value={selectedCustomer} emptyValue="Todos" emptyLabel="Todos los clientes" options={customers} onChange={setSelectedCustomer} disabled={loading} />
-            <DocumentFilter label="Grupo de cliente" value={selectedGroup} emptyValue="Todos" emptyLabel="Todos los grupos" options={groups} onChange={setSelectedGroup} disabled={loading} />
-            <DocumentFilter label="Mercado" value={selectedChannel} emptyValue="Todos" emptyLabel="Todos los mercados" options={markets} onChange={setSelectedChannel} disabled={loading} />
-            <DocumentFilter label="Zona" value={selectedZone} emptyValue="Todas" emptyLabel="Todas las zonas" options={zones} onChange={handleZoneChange} disabled={loading} />
-            <DocumentFilter label="Ciudad" value={selectedCity} emptyValue="Todas" emptyLabel="Todas las ciudades" options={cities} onChange={setSelectedCity} disabled={loading} />
+            <DocumentFilter label="Cliente" value={draftFilters.customer} emptyValue="Todos" emptyLabel="Todos los clientes" options={customers} onChange={updateDraft("customer")} />
+            <DocumentFilter label="Grupo de cliente" value={draftFilters.group} emptyValue="Todos" emptyLabel="Todos los grupos" options={groups} onChange={updateDraft("group")} />
+            <DocumentFilter label="Mercado" value={draftFilters.channel} emptyValue="Todos" emptyLabel="Todos los mercados" options={markets} onChange={updateDraft("channel")} />
+            <DocumentFilter label="Zona" value={draftFilters.zone} emptyValue="Todas" emptyLabel="Todas las zonas" options={zones} onChange={handleZoneChange} />
+            <DocumentFilter label="Ciudad" value={draftFilters.city} emptyValue="Todas" emptyLabel="Todas las ciudades" options={cities} onChange={updateDraft("city")} />
+            <div className="billing-advanced-filters-footer">{hasPendingFilters && <span>Hay cambios sin aplicar</span>}<button className="billing-primary-button" type="submit" disabled={loading || !hasPendingFilters}>Aplicar filtros</button></div>
           </div>}
-        </div>
+        </form>
         {error && <div className="billing-alert"><Database size={16} /><span>{error}</span><button onClick={() => void loadData(1)}>Reintentar</button></div>}
         <div className="billing-metrics-grid">{loading ? Array.from({ length: 4 }, (_, index) => <MetricSkeleton key={index} />) : <><MetricCard label="Facturación bruta" value={formatCompactCurrency(totals.invoiced)} detail={`${number.format(pagination.total)} documentos filtrados`} trend="12,4%" icon={TrendingUp} /><MetricCard label="Facturación neta" value={formatCompactCurrency(totals.net)} detail="Facturado menos notas crédito" icon={ArrowUpRight} /><MetricCard label="Notas crédito" value={formatCompactCurrency(totals.creditNote)} detail={`${percent.format(totals.invoiced ? totals.creditNote / totals.invoiced : 0)} sobre la facturación`} icon={ArrowDownRight} /><MetricCard label="Cumplimiento" value="94,8%" detail="Meta mensual nacional" trend="4,7%" icon={BarChart3} /></>}</div>
         <div className="billing-analysis-grid"><section className="billing-panel billing-chart-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">EVOLUCIÓN DIARIA</span><h2>Facturación y notas crédito</h2></div><span className="billing-period-caption">{dailyData.length ? `${formatDate(dailyData[0].sort)} — ${formatDate(dailyData[dailyData.length - 1].sort)}` : "Sin datos"}</span></div><div className="billing-chart-legend"><span><i className="facturado" /> Facturado</span><span><i className="notas" /> Notas crédito</span></div>{loading ? <div className="billing-chart-skeleton"><span /><span /><span /></div> : <div className="billing-chart"><ResponsiveContainer width="100%" height="100%"><AreaChart data={dailyData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}><defs><linearGradient id="facturadoGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={chartColors.primary} stopOpacity={0.18} /><stop offset="100%" stopColor={chartColors.primary} stopOpacity={0} /></linearGradient></defs><CartesianGrid vertical={false} stroke={chartColors.grid} /><XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} /><YAxis axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} tickFormatter={(value) => `$${number.format(Math.round(Number(value) / 1_000_000))} M`} width={64} /><Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: chartColors.primary, fontWeight: 600 }} formatter={(value) => formatCurrency(Number(value))} /><Area type="monotone" dataKey="facturado" name="Facturado" stroke={chartColors.primary} strokeWidth={2.5} fill="url(#facturadoGradient)" /><Area type="monotone" dataKey="notas" name="Notas crédito" stroke={chartColors.secondary} strokeWidth={2} fill="none" /></AreaChart></ResponsiveContainer></div>}</section><section className="billing-panel billing-zone-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">DISTRIBUCIÓN</span><h2>Facturación neta por zona</h2></div><button className="billing-icon-action" aria-label="Más opciones">···</button></div>{loading ? <div className="billing-zone-skeleton"><span /><span /><span /></div> : <div className="billing-zone-list">{zoneData.length ? zoneData.map((item) => <div className="billing-zone-row" key={item.name}><div className="billing-zone-label"><span>{item.name}</span><strong>{formatCompactCurrency(item.value)}</strong></div><div className="billing-progress"><span style={{ width: `${item.percent}%` }} /></div><small>{item.percent}%</small></div>) : <div className="billing-empty">No hay zonas para los filtros seleccionados.</div>}</div>}</section></div>

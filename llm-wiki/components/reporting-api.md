@@ -30,7 +30,7 @@ Authorization: Bearer <REPORTING_API_TOKEN>
 
 Parámetros: `page`, `pageSize`, `fechaDesde`, `fechaHasta`, `anio`, `mes`, `zona`, `grupoCliente`, `mercado` (`TipoVentas`), `ciudad` (`Ciudad`), `cliente` (`CodCliente`) y `search`.
 
-La respuesta incluye `filterOptions` (`markets`, `cities`, `zones`, `customerGroups` y `customers` con `code`/`name`): los valores distintos del periodo, calculados solo con los filtros de fecha para que las listas no se reduzcan; la excepción es `cities`, que con `zona` activa solo trae las ciudades de esa zona. Disponible desde la rama `fix/filtros-mercado-ciudad` de la API (`pendiente` de despliegue).
+La respuesta incluye `filterOptions` (`markets`, `cities`, `zones`, `customerGroups` y `customers` con `code`/`name`): los valores distintos del periodo, calculados solo con los filtros de fecha para que las listas no se reduzcan; la excepción es `cities`, que con `zona` activa solo trae las ciudades de esa zona. `cityZones` trae las parejas zona-ciudad del periodo sin limitar por zona. Disponible desde la rama `fix/filtros-mercado-ciudad` de la API (`pendiente` de despliegue).
 
 Respuestas principales:
 
