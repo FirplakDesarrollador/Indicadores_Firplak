@@ -177,3 +177,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Orden de despliegue: primero la API (recompilar y reiniciar en IIS), después el frontend. Si el frontend sale antes, los filtros nuevos se ignoran sin errores.
 - Validación: `tsc` en la API y `npm run lint`/`tsc` en el frontend. `pendiente` probar contra SQL Server: valores reales de `TipoVentas` y tiempo de respuesta de los catálogos con "Todos los años".
 - Rollback: revertir los commits de ambas ramas; no hay cambios de esquema.
+
+## [2026-10-27] cambio | Ciudad dependiente de Zona
+
+- API (`fix/filtros-mercado-ciudad`, commit `8ef6968`): con `zona` activa, el catálogo `filterOptions.cities` solo incluye las ciudades de esa zona.
+- Frontend: al cambiar la zona, la ciudad seleccionada vuelve a `Todas`. Sin la API actualizada, la lista de respaldo (derivada de las filas visibles) ya queda limitada por zona, porque `zona` siempre se filtró en el servidor.
+- Requiere volver a copiar `dist/` de la API al servidor y reiniciar el servicio.
