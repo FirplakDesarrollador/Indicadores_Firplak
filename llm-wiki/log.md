@@ -207,3 +207,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - La pestaña "Resumen" pasa a "Todos" y "Facturación" ahora filtra las filas con valor facturado; antes ambas mostraban lo mismo.
 - Portal: se quitan la sección "Más aplicaciones próximamente", el correo en la cabecera y el texto "Accesos gestionados por tu organización" (tenía ícono de enlace sin serlo). El saludo usa el nombre o la parte local del correo.
 - Se eliminan del CSS los estilos de esos elementos. `pendiente`: volver a mostrar "Cumplimiento" cuando existan metas reales (hoy `monthlyTargets` solo cubre enero a abril de 2026).
+
+## [2026-10-27] proceso | Skills para migrar BI con IA
+
+- Se agregan cinco skills de proyecto en `.claude/skills/`: `migrar-bi` (coordina las 8 fases y los puntos de aprobación), `analizar-bi` (de un proyecto `.pbip` a la ficha del BI), `crear-tabla-incremental` (tabla, SP por ventana móvil, índices, bitácora y validación), `crear-endpoint` (contrato y endpoint en `reporting-api` con el patrón de facturación, más paquete de despliegue) y `crear-dashboard` (proxy, filtros en borrador, identidad Firplak y verificación responsive).
+- Plantillas: ficha del BI (`analizar-bi/plantilla-ficha-bi.md`) y script T-SQL (`crear-tabla-incremental/plantilla-tabla-sp.sql`). La tabla `dbo.Bitacora_Cargas_Informes` es una propuesta `pendiente` de confirmar con el DBA.
+- Reparto: la IA hace el trabajo operativo; el desarrollador decide, ejecuta scripts en SQL Server, revisa PR y despliega. La IA nunca escribe en la base ni despliega.
+- `pendiente`: extraer componentes comunes del dashboard antes del segundo BI, versión en `/health` de la API, permisos por usuario y conexión SQL de solo lectura para la IA.

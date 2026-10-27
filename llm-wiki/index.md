@@ -51,6 +51,11 @@ SP o proceso de actualización periódica
 
 - [Manual de identidad web](../docs/manual-identidad-web.md) (borrador v0.3, basado en el Manual de marca v1-030726 y las decisiones de Mercadeo): tokens, tipografía, responsive, componentes y accesibilidad derivados del Brand Book. Aplicado al portal, al login y al dashboard (ver [Frontend](components/frontend.md#estilos-e-identidad-visual)).
 
+### Migración de BI
+
+- Proceso con IA en 8 fases (inventario, análisis, tabla y SP incremental, contrato, endpoint, dashboard, conciliación, despliegue) definido en las skills de [`.claude/skills/`](../.claude/skills/): [`migrar-bi`](../.claude/skills/migrar-bi/SKILL.md) coordina y [`analizar-bi`](../.claude/skills/analizar-bi/SKILL.md), [`crear-tabla-incremental`](../.claude/skills/crear-tabla-incremental/SKILL.md), [`crear-endpoint`](../.claude/skills/crear-endpoint/SKILL.md) y [`crear-dashboard`](../.claude/skills/crear-dashboard/SKILL.md) ejecutan cada fase.
+- Cada BI migrado tiene su ficha en `llm-wiki/bi/<slug>.md` ([plantilla](../.claude/skills/analizar-bi/plantilla-ficha-bi.md)). Aún no hay fichas.
+
 ### Decisiones
 
 - [ADR-001: tabla de reportes](decisions/ADR-001-reporting-table.md): por qué la API consulta una tabla preparada en lugar de una vista pesada.

@@ -8,6 +8,7 @@ Este repositorio mantiene una wiki persistente para agentes LLM en [`llm-wiki/`]
 2. Abre solo las páginas relacionadas con la tarea.
 3. Comprueba el código y la configuración real antes de afirmar que algo existe.
 4. No leas, copies ni expongas valores secretos de `.env.local`, `.env` o tokens.
+5. Para migrar un reporte de Power BI, sigue la skill [`migrar-bi`](.claude/skills/migrar-bi/SKILL.md): coordina las fases y los puntos de aprobación del desarrollador.
 
 ## Fuentes de verdad
 
