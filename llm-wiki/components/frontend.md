@@ -58,7 +58,8 @@ La navegación lateral no muestra las opciones `Notas crédito` ni `Comparativos
 La interfaz aplica el [manual de identidad web](../../docs/manual-identidad-web.md):
 
 - [`app/globals.css`](../../app/globals.css) define los tokens (color, tipografía, espaciado, forma, movimiento) y la base; [`app/styles/`](../../app/styles/) contiene `login.css`, `portal.css` y `billing.css`, importados desde [`app/layout.tsx`](../../app/layout.tsx).
-- Fuentes Montserrat (300/400/500/600) y Jost (300) cargadas con `next/font/google`. Es necesario tener acceso a Google Fonts en el momento del build. Jost solo aparece en momentos de marca (panel del login, formulario del login y cabecera del portal); los títulos del dashboard y del panel de detalle usan Montserrat 300.
+- Solo Montserrat (300/400/500/600), cargada con `next/font/google`; es necesario tener acceso a Google Fonts en el momento del build. Los titulares van en Montserrat 300 de gran volumen (`--text-display` hasta 64 px en login y portal; `--text-h1` hasta 48 px en el dashboard). Jost se retiró por decisión de Mercadeo (2026-10-27).
+- Fondo blanco (`--color-bg`) por decisión de Mercadeo; navy para bloques de volumen (barra lateral, panel del login, cabecera del portal). Los neutros de interfaz son grises fríos (`--gray-100`, `--gray-200`); el crema solo se usa como texto sobre navy.
 - El token `--black` existe para el logo monocromático y detalles; el texto de interfaz sigue en navy.
 - Puntos de corte mobile-first: 640, 1024 y 1440 px. Las cuadrículas de KPIs y de análisis usan `@container` sobre `.billing-content`. La barra lateral del dashboard funciona como drawer por debajo de 1024 px.
 - Logos recortados en `public/brand/firplak-wordmark-*.png` y `firplak-eslogan-*.png`. Los `firplak-es-*.png` originales (600×600 con margen) ya no se referencian.

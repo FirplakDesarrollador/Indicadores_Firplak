@@ -15,7 +15,7 @@
 .login-kicker, .login-form-kicker { align-items: center; display: flex; font-size: .75rem; font-weight: 600; gap: var(--space-2); letter-spacing: .14em; text-transform: uppercase; }
 .login-form-kicker { color: var(--color-text-muted); }
 
-.login-form-wrap h2 { color: var(--color-text); font-family: var(--font-display); font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem); font-weight: 300; line-height: 1.15; margin: var(--space-2) 0 var(--space-3); }
+.login-form-wrap h2 { color: var(--color-text); font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem); font-weight: 300; letter-spacing: -.02em; line-height: 1.1; margin: var(--space-2) 0 var(--space-3); }
 
 .login-description { color: var(--color-text-muted); margin-bottom: var(--space-6); }
 
@@ -34,7 +34,7 @@
 
 .login-error { background: rgb(158 67 53 / .08); border: 1px solid rgb(158 67 53 / .25); border-radius: var(--radius-sm); color: var(--danger); font-size: .875rem; margin-top: var(--space-4); padding: var(--space-3) var(--space-4); }
 
-.login-security { align-items: flex-start; background: var(--color-bg); border-radius: var(--radius-sm); color: var(--color-text); display: flex; font-size: .8125rem; gap: var(--space-3); line-height: 1.5; margin-top: var(--space-6); padding: var(--space-4); }
+.login-security { align-items: flex-start; background: var(--color-surface-muted); border-radius: var(--radius-sm); color: var(--color-text); display: flex; font-size: .8125rem; gap: var(--space-3); line-height: 1.5; margin-top: var(--space-6); padding: var(--space-4); }
 .login-security svg { color: var(--color-accent-text); flex: none; margin-top: 2px; }
 
 .login-terms { color: var(--color-text-muted); font-size: .75rem; margin-top: var(--space-5); text-align: center; }
@@ -55,7 +55,7 @@
   .login-brand-content { max-width: 540px; }
   .login-kicker { color: var(--color-nav-text-muted); }
   .login-kicker svg { color: var(--color-on-dark-accent); }
-  .login-brand-content h1 { font-family: var(--font-display); font-size: var(--text-display); font-weight: 300; letter-spacing: -.01em; line-height: 1.1; margin: var(--space-5) 0; }
+  .login-brand-content h1 { font-size: var(--text-display); font-weight: 300; letter-spacing: -.02em; line-height: 1.05; margin: var(--space-5) 0; }
   .login-brand-content h1 em { color: var(--color-on-dark-accent); font-style: normal; }
   .login-brand-content p { color: var(--color-nav-text-muted); font-size: 1rem; line-height: 1.6; max-width: 44ch; }
 

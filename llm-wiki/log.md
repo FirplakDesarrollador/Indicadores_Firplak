@@ -161,3 +161,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Código: Montserrat suma el peso 300; los títulos del dashboard y del panel de detalle pasan de Jost a Montserrat 300. Jost queda en el login y la cabecera del portal.
 - Pendientes con Mercadeo: licencia de Orborn (su muestra se ve como Jost), peso real del H1 de la escala y confirmación de que el texto de interfaz puede seguir en navy.
 - Validación: `npm run lint` y `npm run build`. Rollback: revertir el commit.
+
+## [2026-10-27] decisión | Respuestas de Mercadeo al manual web
+
+- Mercadeo (Gabriel Molina Isaza) respondió: todo en Montserrat (Orborn es secundaria y el "Jost" de la escala del Brand Book es un error), titulares de gran volumen, fondo blanco en lugar de crema con navy para bloques de volumen, y texto en navy o negro sobre blanco.
+- Manual web v0.3: decisiones registradas al inicio del documento; paleta con fondo blanco y neutros fríos (`--gray-100`, `--gray-200`); crema solo como texto sobre navy; una sola familia tipográfica; escala de titulares más grande; pendientes de tipografía, negro y fondo cerrados. Myriad no se adopta (licencia paga de Adobe).
+- Código: se retira Jost; `--color-bg` pasa a blanco; skeletons, barra de progreso, encabezados de tabla y panel de detalle usan grises fríos; favicon blanco sobre navy; colores de Recharts actualizados en `lib/brand.ts`.
+- Validación: `npm run lint`, `npm run build` y revisión visual a 375 y 1440 px. Rollback: revertir el commit.

@@ -14,9 +14,9 @@
   --sage-500: #7B8E90;
   --sage-300: #B4C1C2;
   --sage-50: #EFF2F2;
-  --crema-100: #F6F3EE;
-  --crema-200: #ECE7DF;
-  --crema-300: #D9D3C9;
+  --crema-100: #F6F3EE; /* Solo texto sobre navy; no se usa como fondo (decisión de Mercadeo) */
+  --gray-100: #F4F6F8;
+  --gray-200: #E3E7EB;
   --gray-600: #5F6B73;
   --white: #FFFFFF;
   --black: #000000; /* Complementario: logo monocromático y detalles; no para texto de interfaz */
@@ -27,15 +27,15 @@
   --danger: #9E4335;
 
   /* Semánticos */
-  --color-bg: var(--crema-100);
+  --color-bg: var(--white);
   --color-surface: var(--white);
-  --color-surface-muted: var(--crema-200);
+  --color-surface-muted: var(--gray-100);
   --color-text: var(--navy-700);
   --color-text-strong: var(--navy-900);
   --color-text-muted: var(--gray-600);
   --color-accent: var(--sage-500);
   --color-accent-text: var(--sage-700);
-  --color-border: var(--crema-300);
+  --color-border: var(--gray-200);
   --color-border-control: var(--sage-500);
   --color-focus: var(--sage-700);
   --color-nav-bg: var(--navy-700);
@@ -46,9 +46,8 @@
 
   /* Tipografía */
   --font-sans: var(--font-montserrat), system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-jost), var(--font-sans); /* Solo momentos de marca */
-  --text-display: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
-  --text-h1: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --text-display: clamp(2.5rem, 1.6rem + 3.6vw, 4rem);
+  --text-h1: clamp(1.875rem, 1.4rem + 2vw, 3rem);
   --text-h2: clamp(1.0625rem, 1rem + .35vw, 1.25rem);
   --text-kpi: clamp(1.5rem, 1.2rem + 1vw, 2rem);
 

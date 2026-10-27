@@ -1,6 +1,6 @@
 ---
 status: borrador
-version: 0.2
+version: 0.3
 updated: 2026-10-27
 implementacion: ../app/globals.css
 sources:
@@ -12,7 +12,18 @@ sources:
 
 Lineamientos para diseñar y desarrollar aplicaciones web responsive de Firplak: portales internos, dashboards, herramientas operativas y sitios.
 
-> **Relación con el Brand Book.** Este manual **hereda** la identidad del Brand Book (logotipo, paleta, tipografía, tono y sistema gráfico) y la **traduce** a interfaces digitales. Si algo se contradice, manda el Brand Book. Lo que aquí se añade (escalas derivadas, colores funcionales, componentes, estados, accesibilidad) cubre aspectos que el Brand Book no define.
+> **Relación con el Brand Book.** Este manual **hereda** la identidad del Brand Book (logotipo, paleta, tipografía, tono y sistema gráfico) y la **traduce** a interfaces digitales. Si algo se contradice, manda el Brand Book, salvo las decisiones de Mercadeo registradas abajo. Lo que aquí se añade (escalas derivadas, colores funcionales, componentes, estados, accesibilidad) cubre aspectos que el Brand Book no define.
+
+### Decisiones de Mercadeo para web (2026-10-27)
+
+Respuestas de Mercadeo (Gabriel Molina Isaza) a las dudas de la v0.2. Prevalecen sobre el Brand Book en web:
+
+| Tema | Decisión | Dónde se aplica |
+|---|---|---|
+| Tipografía | Todo en **Montserrat**. Orborn es secundaria y no se usa en web. | 3.1 |
+| Titulares | Los titulares principales van en Montserrat (el "Jost" de la escala del Brand Book es un error) y con **gran volumen**. | 3.2 |
+| Fondo | **Blanco** en lugar de crema. El navy se usa para bloques y detalles de volumen. | 2.1, 2.2 |
+| Color de texto | Navy, o negro sobre fondo blanco. En web se usa navy para no mezclar ambos. | 2.1 |
 
 ---
 
@@ -24,7 +35,7 @@ La personalidad de marca (moderna, confiable, cálida, ingeniosa, sofisticada, c
 |---|---|---|
 | **Claro, no técnico** | Etiquetas en lenguaje de negocio, un dato principal por tarjeta, jerarquía evidente. | Nombres de tablas, códigos internos o jerga de sistemas en la UI. |
 | **Cercano, no informal** | Microcopy en segunda persona ("Selecciona un periodo"), mensajes de error que dicen qué hacer. | Bromas, emojis, signos de exclamación repetidos. |
-| **Inspirador, no exagerado** | Mucho aire, fondos crema, fotografía de producto en contexto. | Gradientes llamativos, animaciones decorativas, colores saturados. |
+| **Inspirador, no exagerado** | Mucho aire, fondos blancos con bloques navy, fotografía de producto en contexto. | Gradientes llamativos, animaciones decorativas, colores saturados. |
 | **Seguro, no arrogante** | Datos precisos, estados de carga honestos, confirmación antes de acciones destructivas. | Prometer en la UI cosas que el sistema no garantiza. |
 
 **Regla de oro:** el contenido (los datos, el producto) es el protagonista; la marca lo enmarca, no compite con él.
@@ -39,22 +50,24 @@ La personalidad de marca (moderna, confiable, cálida, ingeniosa, sofisticada, c
 |---|---|---|---|
 | Principal | Navy | `#324354` | Navegación, títulos, botón primario, encabezados de tabla, serie principal de gráficos. |
 | Secundario | Sage | `#7B8E90` | Acentos, estados activos, bordes de controles, serie secundaria. **No** se usa para texto pequeño. |
-| Fondo | Crema | `#F6F3EE` | Fondo general de la aplicación. |
-| Complementario | Negro | `#000000` | Logo monocromático y detalles puntuales. **No** se usa como color de texto de interfaz (ver nota). |
-| Superficie | Blanco | `#FFFFFF` | Tarjetas, paneles, tablas, modales. El Brand Book no lo lista como color de marca, pero lo usa como superficie en todas sus piezas. |
+| Fondo y superficie | Blanco | `#FFFFFF` | Fondo general, tarjetas, paneles, tablas y modales (decisión de Mercadeo). |
+| Complementario | Negro | `#000000` | Logo monocromático y detalles puntuales. Mercadeo lo acepta para texto sobre blanco, pero la interfaz usa navy (ver nota). |
+| Marca (impresos) | Crema | `#F6F3EE` | No se usa como fondo en web. Se conserva como color de texto sobre navy ("crema sobre navy" del Brand Book). |
 
-> **Negro en pantalla.** El Brand Book reserva el negro "para texto y detalles", pero en sus propias piezas el texto va en navy. En web el texto de interfaz se mantiene en navy (`--color-text`): el negro puro sobre crema (18,97:1) produce un contraste excesivo que fatiga en pantallas grandes y rompe la calidez de la paleta. El negro se reserva para la versión monocromática del logo, para impresión y para detalles gráficos puntuales.
+> **Negro en pantalla.** El Brand Book reserva el negro "para texto y detalles", pero en sus propias piezas el texto va en navy. Mercadeo aprueba negro o navy sobre blanco. En web el texto de interfaz se mantiene en navy (`--color-text`) para no mezclar ambos: el negro puro sobre blanco (21:1) produce un contraste excesivo que fatiga en pantallas grandes. El negro se reserva para la versión monocromática del logo, para impresión y para detalles gráficos puntuales.
 
 ### 2.2 Proporción 60 / 30 / 10 en interfaz
 
-- **60 % crema y blanco:** fondo de la app (crema) y superficies de contenido (blanco).
-- **30 % navy:** barra lateral, títulos, texto principal, botones primarios.
+El Brand Book asigna el 60 % al crema. En web ese 60 % es blanco, por decisión de Mercadeo.
+
+- **60 % blanco:** fondo de la app y superficies de contenido. Las tarjetas se separan del fondo con borde `--gray-200` y sombra suave.
+- **30 % navy:** barra lateral, bloques de volumen (cabeceras de marca, panel del login), títulos, texto principal, botones primarios.
 - **10 % sage:** ítem de menú activo, foco, chips, indicadores secundarios.
 - **Negro:** fuera de la proporción; solo en detalles.
 
 ### 2.3 Escala derivada
 
-El Brand Book define tres colores; una interfaz necesita más matices para bordes, fondos suaves, hover y texto secundario. Todos se derivan de los colores base: **no se introducen tonos nuevos**.
+El Brand Book define pocos colores; una interfaz necesita más matices para bordes, fondos suaves, hover y texto secundario. Todos se derivan de los colores base. Los neutros de interfaz derivan del navy (fríos): sobre blanco, los neutros cálidos del crema se ven sucios.
 
 | Token | HEX | Uso |
 |---|---|---|
@@ -66,10 +79,10 @@ El Brand Book define tres colores; una interfaz necesita más matices para borde
 | `--sage-500` | `#7B8E90` | Sage de marca. |
 | `--sage-300` | `#B4C1C2` | Acento de texto e iconos **sobre navy** (el sage de marca no alcanza 3:1 sobre navy). |
 | `--sage-50` | `#EFF2F2` | Fondo de chips y badges neutros. |
-| `--crema-100` | `#F6F3EE` | Crema de marca. |
-| `--crema-200` | `#ECE7DF` | Fondo de encabezados secundarios y zonas agrupadas. |
-| `--crema-300` | `#D9D3C9` | Divisores y bordes decorativos. |
+| `--gray-100` | `#F4F6F8` | Fondo de encabezados de tabla, zonas agrupadas, skeletons. |
+| `--gray-200` | `#E3E7EB` | Bordes de tarjetas y divisores. **No** lleva texto secundario encima (4,40:1). |
 | `--gray-600` | `#5F6B73` | Texto secundario, etiquetas, pies. |
+| `--crema-100` | `#F6F3EE` | Solo texto sobre navy. No se usa como fondo. |
 
 ### 2.4 Colores funcionales
 
@@ -88,15 +101,15 @@ Cada color funcional se acompaña de un fondo al 10 % de opacidad para alertas y
 
 Combinaciones verificadas. Mínimos: 4,5:1 para texto normal, 3:1 para texto grande (≥ 24 px, o ≥ 18,66 px en negrita) y para componentes de UI.
 
-| Texto / elemento | Sobre blanco | Sobre crema | Veredicto |
+| Texto / elemento | Sobre blanco | Sobre gris 100 | Veredicto |
 |---|---|---|---|
-| Navy `#324354` | 10,16 | 9,18 | ✅ Cualquier texto |
-| Navy 900 `#1F2B37` | 14,39 | 13,00 | ✅ Cualquier texto |
-| Negro `#000000` | 21,00 | 18,97 | ✅ Cumple, pero no se usa para texto de interfaz (ver 2.1) |
-| Gris 600 `#5F6B73` | 5,47 | 4,94 | ✅ Texto secundario |
-| Sage 700 `#5A6B6D` | 5,59 | 5,05 | ✅ Texto de acento |
-| Sage `#7B8E90` | 3,43 | 3,10 | ⚠️ Solo iconos, bordes y texto grande |
-| Success / Warning / Danger | 5,90 / 5,35 / 6,35 | 5,33 / 4,83 / 5,74 | ✅ Texto |
+| Navy `#324354` | 10,16 | 9,38 | ✅ Cualquier texto |
+| Navy 900 `#1F2B37` | 14,39 | — | ✅ Cualquier texto |
+| Negro `#000000` | 21,00 | — | ✅ Cumple; aprobado por Mercadeo, pero la interfaz usa navy (ver 2.1) |
+| Gris 600 `#5F6B73` | 5,47 | 5,05 | ✅ Texto secundario |
+| Sage 700 `#5A6B6D` | 5,59 | 5,16 | ✅ Texto de acento |
+| Sage `#7B8E90` | 3,43 | 3,17 | ⚠️ Solo iconos, bordes y texto grande |
+| Success / Warning / Danger | 5,90 / 5,35 / 6,35 | 5,45 / 4,94 / 5,86 | ✅ Texto |
 
 | Texto sobre fondo de color | Contraste | Veredicto |
 |---|---|---|
@@ -108,7 +121,7 @@ Combinaciones verificadas. Mínimos: 4,5:1 para texto normal, 3:1 para texto gra
 | Navy sobre sage | 2,96 | ❌ No usar |
 | Navy sobre negro | 2,07 | ❌ No usar |
 
-> Los bordes de campos de formulario usan sage (3,10:1 sobre crema) para cumplir el mínimo de 3:1 de componentes. El borde `--crema-300` es solo decorativo (divisores).
+> Los bordes de campos de formulario usan sage (3,43:1 sobre blanco) para cumplir el mínimo de 3:1 de componentes. El borde `--gray-200` es solo decorativo (tarjetas y divisores).
 
 ---
 
@@ -118,11 +131,10 @@ Combinaciones verificadas. Mínimos: 4,5:1 para texto normal, 3:1 para texto gra
 
 | Rol | Familia | Pesos | Uso |
 |---|---|---|---|
-| Principal | **Montserrat** | 300, 400, 500, 600 | Todo el texto de interfaz. El peso 300 (Light) es solo para el título de página, como los títulos de sección del Brand Book. |
-| Display | **Jost** | 300 | Solo momentos de marca: login, cabecera del portal, portadas. Nunca en vistas de trabajo (dashboards, tablas, paneles). |
+| Única | **Montserrat** | 300, 400, 500, 600 | Todo: titulares, interfaz, cuerpo, tablas. El peso 300 (Light) es para titulares de gran volumen. |
 
-- *Orborn Medium* (display del Brand Book) **no tiene licencia web confirmada** (`pendiente`). La escala tipográfica del Brand Book usa Jost para H1, y en la v1-030726 la muestra de Orborn y los titulares de portada se ven en Jost, por lo que Jost es el sustituto en web.
-- **Dos niveles de titular.** El Brand Book define la display como de "uso ocasional y acotado", y en la v1-030726 los títulos de sección van en Montserrat Light. Por eso en web Jost queda para los momentos de marca, y el título de cada vista usa Montserrat 300.
+- **Una sola familia.** Por decisión de Mercadeo, la web usa solo Montserrat. Orborn (display del Brand Book) es secundaria y no se carga.
+- **Textos extensos.** Montserrat en 15–16 px es suficiente para la interfaz. Mercadeo mencionó Myriad como alternativa para textos largos, pero es una fuente de Adobe con licencia paga; solo se evaluaría si el portal llega a publicar documentos extensos.
 - Carga las fuentes con `next/font/google` (o autohospedadas con `font-display: swap`). No uses `@import` de Google Fonts en CSS: bloquea el render.
 - Fuente de respaldo: `system-ui, -apple-system, "Segoe UI", sans-serif`.
 
@@ -132,8 +144,8 @@ Adaptación de la jerarquía del Brand Book (pensada para piezas editoriales) a 
 
 | Nivel | Familia / peso | Tamaño | Interlineado | Uso |
 |---|---|---|---|---|
-| Display | Jost 300 | `clamp(2.25rem, 1.5rem + 3vw, 3.5rem)` | 1.1 | Momentos de marca: login, cabecera del portal, portadas. |
-| H1 | Montserrat 300 | `clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem)` | 1.15 | Título de página (uno por vista) y títulos de paneles laterales. |
+| Display | Montserrat 300, `letter-spacing: -.02em` | `clamp(2.5rem, 1.6rem + 3.6vw, 4rem)` | 1.05 | Titulares de gran volumen en momentos de marca: login, cabecera del portal, portadas. |
+| H1 | Montserrat 300, `letter-spacing: -.02em` | `clamp(1.875rem, 1.4rem + 2vw, 3rem)` | 1.1 | Título de página (uno por vista) y títulos de paneles laterales. Más contenido que el display para no empujar los datos fuera de la pantalla. |
 | H2 | Montserrat 500 | `clamp(1.125rem, 1rem + 0.5vw, 1.375rem)` | 1.3 | Título de panel o sección. |
 | H3 / Eyebrow | Montserrat 600, MAYÚSCULAS, `letter-spacing: .14em` | 0.75rem | 1.4 | Antetítulos ("RESUMEN DIARIO"), categorías. |
 | Cuerpo | Montserrat 400 | 1rem (0.9375rem en tablas densas) | 1.6 | Texto corrido, descripciones. |
@@ -207,7 +219,7 @@ Adaptación de la jerarquía del Brand Book (pensada para piezas editoriales) a 
 | Formato | **SVG** (`pendiente` de obtener el SVG oficial). PNG solo como respaldo, recortado y sin margen. |
 | Ancho mínimo | 120 px (Brand Book). |
 | Área de seguridad | 1X en todos los lados (X = altura del símbolo "Λ"). Implementar con `padding` del contenedor, no con márgenes negativos. |
-| Versión clara | Navy sobre crema o blanco. |
+| Versión clara | Navy sobre blanco. |
 | Versión negativa | Blanco o crema sobre navy, sage o fotografía con capa de contraste. |
 | Monocromática (negro) y escala de grises | Aprobadas en el Brand Book v1-030726. En web son de uso excepcional (documentos o exportaciones en blanco y negro, impresión). En pantalla se usan la versión clara o la negativa. |
 | Con eslogan | Solo en login, portadas y pie de página; nunca en barras de navegación por debajo de 200 px de ancho. |
@@ -217,7 +229,7 @@ Adaptación de la jerarquía del Brand Book (pensada para piezas editoriales) a 
 
 ### Favicon e iconos de app
 
-- `favicon.svg` con el monograma "Λ" navy sobre crema, más `favicon.ico` de 32 px.
+- `favicon.svg` con el monograma "Λ" blanco sobre navy (se distingue en pestañas claras y oscuras), más `favicon.ico` de 32 px.
 - `apple-touch-icon.png` de 180 px y `icon-512.png` de 512 px: monograma crema sobre navy con margen de seguridad.
 - `theme-color`: `#324354`.
 
@@ -226,7 +238,7 @@ Adaptación de la jerarquía del Brand Book (pensada para piezas editoriales) a 
 ## 6. Sistema gráfico: el pico
 
 - El "Λ" se usa como **marca de agua** en zonas de marca: barra lateral, panel de login, cabeceras de portada, estados vacíos.
-- Opacidad del 4–8 % sobre navy, o del 5 % en navy sobre crema. Nunca sobre tablas, gráficos ni formularios.
+- Opacidad del 4–8 % sobre navy, o del 4 % en navy sobre blanco. Nunca sobre tablas, gráficos ni formularios.
 - Puede salirse por un borde del contenedor, como en el Brand Book, pero nunca superponerse al logotipo.
 - El patrón de monogramas solo se usa en fondos de páginas de marca (login, error 404), nunca detrás de datos.
 - Implementación: un único componente SVG decorativo con `aria-hidden="true"` y `pointer-events: none`.
@@ -246,7 +258,7 @@ Adaptación de la jerarquía del Brand Book (pensada para piezas editoriales) a 
 | `--shadow-md` | `0 8px 24px rgb(50 67 84 / .08)` | Menús, paneles flotantes. |
 | `--shadow-lg` | `0 16px 48px rgb(50 67 84 / .14)` | Modales y paneles laterales. |
 
-Prefiere bordes de 1 px (`--crema-300`) sobre sombras. La estética es plana y limpia.
+Sobre fondo blanco, las tarjetas combinan borde de 1 px (`--gray-200`) y `--shadow-sm`. La estética es plana y limpia.
 
 ### 7.2 Estados obligatorios
 
@@ -290,8 +302,8 @@ Tamaños: 36 px de alto en escritorio y 44 px en táctil. Padding horizontal de 
 
 ### 7.6 Tablas de datos
 
-- Encabezado: fondo `--crema-200` o navy con texto blanco, Montserrat 600 de 12–13 px en mayúsculas.
-- Filas de 44–48 px de alto, divisor de 1 px `--crema-300` y hover `--navy-50`. Sin cebrado.
+- Encabezado: fondo `--gray-100` o navy con texto blanco, Montserrat 600 de 12–13 px en mayúsculas.
+- Filas de 44–48 px de alto, divisor de 1 px `--gray-200` y hover `--navy-50`. Sin cebrado.
 - Encabezado fijo (`position: sticky`) en tablas con scroll vertical, y primera columna fija en scroll horizontal.
 - Números a la derecha con `tabular-nums`; negativos en `--danger` con signo menos, no solo en rojo.
 - Paginación con texto explícito ("Página 2 de 14 · 683 registros").
@@ -310,16 +322,16 @@ Tamaños: 36 px de alto en escritorio y 44 px en táctil. Padding horizontal de 
 |---|---|
 | Alerta en página | Banda con fondo funcional al 10 %, icono, mensaje y acción ("Reintentar"). |
 | Toast | Esquina inferior derecha (en móvil, inferior centrado), desaparece a los 5 s y se puede cerrar. |
-| Skeleton | Bloques `--crema-200` con pulso suave; replican la forma final. |
+| Skeleton | Bloques `--gray-100` con pulso suave; replican la forma final. |
 | Estado vacío | Pico de marca de agua, título breve, explicación y acción sugerida. |
 
 ---
 
 ## 8. Visualización de datos
 
-- **Orden de series:** 1) navy `#324354`, 2) sage `#7B8E90`, 3) navy al 45 %, 4) sage al 45 %, 5) `--crema-300`. Máximo 5 series. Si hay más, agrupa en "Otros" o usa una tabla.
+- **Orden de series:** 1) navy `#324354`, 2) sage `#7B8E90`, 3) navy al 45 %, 4) sage al 45 %, 5) `--gray-200`. Máximo 5 series. Si hay más, agrupa en "Otros" o usa una tabla.
 - Positivo y negativo con los colores funcionales, solo cuando el signo es el mensaje.
-- Rejilla horizontal tenue (`--crema-300`, 1 px), sin rejilla vertical y sin bordes de gráfico.
+- Rejilla horizontal tenue (`--gray-200`, 1 px), sin rejilla vertical y sin bordes de gráfico.
 - Ejes en Montserrat de 12 px gris 600, con valores abreviados ("$450 M").
 - Tooltip en superficie blanca, `--shadow-md`, valores completos con formato de moneda.
 - Leyenda visible si hay más de una serie; nunca dependas solo del color (usa etiquetas directas cuando sea posible).
@@ -431,9 +443,9 @@ Fuera del alcance de la versión 0.1: el Brand Book no lo define. Los tokens sem
   --sage-500: #7B8E90;
   --sage-300: #B4C1C2;
   --sage-50:  #EFF2F2;
-  --crema-100: #F6F3EE;
-  --crema-200: #ECE7DF;
-  --crema-300: #D9D3C9;
+  --crema-100: #F6F3EE; /* solo texto sobre navy */
+  --gray-100: #F4F6F8;
+  --gray-200: #E3E7EB;
   --gray-600: #5F6B73;
   --white: #FFFFFF;
   --black: #000000; /* logo monocromático y detalles; no para texto de interfaz */
@@ -444,15 +456,15 @@ Fuera del alcance de la versión 0.1: el Brand Book no lo define. Los tokens sem
   --danger:  #9E4335;
 
   /* Semánticos (usa estos en los componentes) */
-  --color-bg: var(--crema-100);
+  --color-bg: var(--white);
   --color-surface: var(--white);
-  --color-surface-muted: var(--crema-200);
+  --color-surface-muted: var(--gray-100);
   --color-text: var(--navy-700);
   --color-text-strong: var(--navy-900);
   --color-text-muted: var(--gray-600);
   --color-accent: var(--sage-500);
   --color-accent-text: var(--sage-700);
-  --color-border: var(--crema-300);
+  --color-border: var(--gray-200);
   --color-border-control: var(--sage-500);
   --color-focus: var(--sage-700);
   --color-nav-bg: var(--navy-700);
@@ -463,7 +475,6 @@ Fuera del alcance de la versión 0.1: el Brand Book no lo define. Los tokens sem
 
   /* Tipografía */
   --font-sans: var(--font-montserrat), system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-jost), var(--font-sans);
 
   /* Espaciado */
   --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
@@ -494,12 +505,11 @@ Fuera del alcance de la versión 0.1: el Brand Book no lo define. Los tokens sem
 Carga de fuentes en Next.js (`app/layout.tsx`):
 
 ```tsx
-import { Jost, Montserrat } from "next/font/google";
+import { Montserrat } from "next/font/google";
 
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-montserrat" });
-const jost = Jost({ subsets: ["latin"], weight: ["300"], variable: "--font-jost" });
 
-// <html lang="es" className={`${montserrat.variable} ${jost.variable}`}>
+// <html lang="es" className={montserrat.variable}>
 ```
 
 **Reglas para el código**
@@ -513,7 +523,8 @@ const jost = Jost({ subsets: ["latin"], weight: ["300"], variable: "--font-jost"
 ## 17. Checklist de revisión (PR)
 
 - [ ] Solo tokens; ningún HEX nuevo en componentes.
-- [ ] Montserrat y Jost cargadas con `next/font`; ninguna otra familia. Jost solo en momentos de marca.
+- [ ] Solo Montserrat, cargada con `next/font`.
+- [ ] Fondo blanco; sin crema como fondo.
 - [ ] Logo en versión aprobada, ≥ 120 px y con área de seguridad.
 - [ ] Revisado a 375, 768, 1280 y 1440 px, sin scroll horizontal.
 - [ ] Estados de hover, foco, deshabilitado, cargando, vacío y error diseñados.
@@ -528,9 +539,9 @@ const jost = Jost({ subsets: ["latin"], weight: ["300"], variable: "--font-jost"
 | Tema | Estado |
 |---|---|
 | SVG oficial del logotipo y del monograma "Λ" | `pendiente`: solicitar a Mercadeo. |
-| Licencia web de Orborn Medium | `pendiente`: mientras tanto, Jost. Confirmar si la muestra de Orborn de la v1-030726 es en realidad Jost. |
-| Peso del H1 en el Brand Book | `pendiente`: la escala dice "Jost · 300", pero la muestra se ve en un peso mayor. |
-| Uso del negro en texto | `pendiente`: confirmar con Mercadeo que el texto de interfaz puede seguir en navy. |
+| Orborn y titulares | Resuelto (2026-10-27): todo en Montserrat; el "Jost" de la escala del Brand Book es un error. |
+| Uso del negro en texto | Resuelto (2026-10-27): navy o negro sobre blanco; la web usa navy. |
+| Fondo crema | Resuelto (2026-10-27): la web usa fondo blanco. |
 | Validación de colores funcionales por Mercadeo | `pendiente`. |
 | Modo oscuro | Fuera de alcance de la v0.1. |
 | Biblioteca de componentes compartida entre aplicaciones Firplak | Por evaluar cuando exista una segunda aplicación. |

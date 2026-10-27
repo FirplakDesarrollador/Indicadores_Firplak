@@ -20,7 +20,7 @@
 .portal-peak { bottom: -64px; color: var(--white); opacity: .06; right: -48px; width: 260px; }
 .portal-eyebrow { align-items: center; color: var(--color-nav-text-muted); display: inline-flex; font-size: .75rem; font-weight: 600; gap: var(--space-2); letter-spacing: .14em; text-transform: uppercase; }
 .portal-eyebrow svg { color: var(--color-on-dark-accent); }
-.portal-intro h1 { font-family: var(--font-display); font-size: clamp(2rem, 1.5rem + 2vw, 3rem); font-weight: 300; letter-spacing: -.01em; line-height: 1.1; margin: var(--space-3) 0 var(--space-2); }
+.portal-intro h1 { font-size: var(--text-display); font-weight: 300; letter-spacing: -.02em; line-height: 1.05; margin: var(--space-3) 0 var(--space-2); }
 .portal-intro p { color: var(--color-nav-text-muted); font-size: 1rem; }
 .portal-account { align-self: flex-start; border: 1px solid rgb(255 255 255 / .2); border-radius: var(--radius-pill); font-size: .8125rem; max-width: 100%; overflow: hidden; padding: var(--space-2) var(--space-4); text-overflow: ellipsis; white-space: nowrap; }
 
@@ -47,7 +47,7 @@
 .empty-copy span { color: var(--color-text-muted); font-size: .8125rem; }
 
 .planned-grid { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
-.planned-card { align-items: center; background: rgb(255 255 255 / .55); border: 1px dashed var(--color-border); border-radius: var(--radius-md); display: flex; gap: var(--space-3); padding: var(--space-4); }
+.planned-card { align-items: center; background: transparent; border: 1px dashed var(--color-border); border-radius: var(--radius-md); display: flex; gap: var(--space-3); padding: var(--space-4); }
 .planned-icon { align-items: center; background: var(--sage-50); border-radius: var(--radius-sm); color: var(--color-accent-text); display: flex; flex: none; height: 44px; justify-content: center; width: 44px; }
 .planned-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .planned-copy strong { color: var(--color-text); font-size: .9375rem; font-weight: 500; }
