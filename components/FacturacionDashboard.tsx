@@ -256,6 +256,8 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
     return totals.zones.map((item) => ({ name: item.name, value: item.net, percent: Math.round((Math.max(item.net, 0) / positiveTotal) * 100) })).slice(0, 5);
   }, [totals.zones]);
 
+  // La ciudad depende de la zona: al cambiar de zona se limpia, porque puede no pertenecer a la nueva.
+  const handleZoneChange = (zone: string) => { setSelectedZone(zone); setSelectedCity("Todas"); };
   const handleSignOut = async () => { await supabase.auth.signOut(); window.location.assign("/login"); };
   const resetFilters = () => { setSelectedYear(initialYear); setSelectedMonth(initialMonth); setSelectedZone("Todas"); setSelectedGroup("Todos"); setSelectedCustomer("Todos"); setSelectedChannel("Todos"); setSelectedCity("Todas"); setSearch(""); };
   const changePage = (targetPage: number) => {
@@ -286,7 +288,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
             <DocumentFilter label="Cliente" value={selectedCustomer} emptyValue="Todos" emptyLabel="Todos los clientes" options={customers} onChange={setSelectedCustomer} disabled={loading} />
             <DocumentFilter label="Grupo de cliente" value={selectedGroup} emptyValue="Todos" emptyLabel="Todos los grupos" options={groups} onChange={setSelectedGroup} disabled={loading} />
             <DocumentFilter label="Mercado" value={selectedChannel} emptyValue="Todos" emptyLabel="Todos los mercados" options={markets} onChange={setSelectedChannel} disabled={loading} />
-            <DocumentFilter label="Zona" value={selectedZone} emptyValue="Todas" emptyLabel="Todas las zonas" options={zones} onChange={setSelectedZone} disabled={loading} />
+            <DocumentFilter label="Zona" value={selectedZone} emptyValue="Todas" emptyLabel="Todas las zonas" options={zones} onChange={handleZoneChange} disabled={loading} />
             <DocumentFilter label="Ciudad" value={selectedCity} emptyValue="Todas" emptyLabel="Todas las ciudades" options={cities} onChange={setSelectedCity} disabled={loading} />
           </div>}
         </div>
