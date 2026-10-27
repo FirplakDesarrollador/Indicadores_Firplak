@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -143,6 +143,8 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   const [error, setError] = useState("");
   const [activeView, setActiveView] = useState<View>("Resumen");
   const [search, setSearch] = useState("");
+  // Texto escrito en el buscador; solo se aplica (y consulta la API) al pulsar la lupa o Enter.
+  const [searchInput, setSearchInput] = useState("");
   const [selectedYear, setSelectedYear] = useState(initialYear);
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [selectedZone, setSelectedZone] = useState("Todas");
@@ -277,7 +279,8 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   // La ciudad depende de la zona: al cambiar de zona se limpia, porque puede no pertenecer a la nueva.
   const handleZoneChange = (zone: string) => { setSelectedZone(zone); setSelectedCity("Todas"); };
   const handleSignOut = async () => { await supabase.auth.signOut(); window.location.assign("/login"); };
-  const resetFilters = () => { setSelectedYear(initialYear); setSelectedMonth(initialMonth); setSelectedZone("Todas"); setSelectedGroup("Todos"); setSelectedCustomer("Todos"); setSelectedChannel("Todos"); setSelectedCity("Todas"); setSearch(""); };
+  const resetFilters = () => { setSelectedYear(initialYear); setSelectedMonth(initialMonth); setSelectedZone("Todas"); setSelectedGroup("Todos"); setSelectedCustomer("Todos"); setSelectedChannel("Todos"); setSelectedCity("Todas"); setSearch(""); setSearchInput(""); };
+  const applySearch = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSearch(searchInput.trim()); };
   const changePage = (targetPage: number) => {
     if (targetPage < 1 || targetPage > pagination.totalPages || targetPage === pagination.page) return;
     setPagination((current) => ({ ...current, page: targetPage }));
@@ -299,7 +302,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
           <div className="billing-filterbar-primary">
             <label><CalendarDays size={15} /><span>Periodo</span><select value={selectedYear} onChange={(event) => setSelectedYear(event.target.value)} disabled={loading}><option value="Todos">Todos los años</option>{years.map((year) => <option key={year} value={year}>{year}</option>)}</select></label>
             <label><span>Mes</span><select value={selectedMonth} onChange={(event) => setSelectedMonth(event.target.value)} disabled={loading}><option value="Todos">Todos los meses</option>{months.map((month) => <option key={month} value={String(month)}>{formatMonthName(month)}</option>)}</select></label>
-            <div className="billing-search"><Search size={16} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar documento, cliente o ciudad..." disabled={loading} /></div>
+            <form className="billing-search" role="search" onSubmit={applySearch}><button className="billing-search-button" type="submit" aria-label="Buscar" disabled={loading}><Search size={16} /></button><input type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Buscar documento, cliente o ciudad..." aria-label="Buscar documento, cliente o ciudad" enterKeyHint="search" /></form>
             <button className="billing-reset-button" onClick={resetFilters}>Limpiar</button>
           </div>
           {showFilters && <div className="billing-advanced-filters">

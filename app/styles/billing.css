@@ -96,6 +96,11 @@
 .billing-search { grid-column: 1 / -1; }
 .billing-search input { background: transparent; border: 0; color: var(--color-text); flex: 1; font-size: .875rem; min-width: 0; outline: 0; }
 .billing-search input::placeholder { color: var(--color-text-muted); }
+.billing-search { margin: 0; padding-left: var(--space-1); }
+.billing-search-button { align-items: center; background: transparent; border: 0; border-radius: 6px; color: var(--color-accent-text); display: flex; flex: none; height: 36px; justify-content: center; transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); width: 36px; }
+.billing-search-button:hover:not(:disabled) { background: var(--navy-50); color: var(--color-text); }
+.billing-search-button:disabled { opacity: .45; }
+.billing-search input::-webkit-search-cancel-button { cursor: pointer; }
 .billing-reset-button { background: transparent; border: 0; color: var(--color-accent-text); font-size: .875rem; font-weight: 500; grid-column: 1 / -1; justify-self: end; min-height: var(--control-height); padding: 0 var(--space-2); white-space: nowrap; }
 .billing-reset-button:hover { text-decoration: underline; text-underline-offset: 3px; }
 

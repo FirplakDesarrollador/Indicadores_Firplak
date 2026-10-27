@@ -183,3 +183,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - API (`fix/filtros-mercado-ciudad`, commit `8ef6968`): con `zona` activa, el catálogo `filterOptions.cities` solo incluye las ciudades de esa zona.
 - Frontend: al cambiar la zona, la ciudad seleccionada vuelve a `Todas`. Sin la API actualizada, la lista de respaldo (derivada de las filas visibles) ya queda limitada por zona, porque `zona` siempre se filtró en el servidor.
 - Requiere volver a copiar `dist/` de la API al servidor y reiniciar el servicio.
+
+## [2026-10-27] cambio | Búsqueda al pulsar la lupa
+
+- El buscador del dashboard deja de consultar la API con cada tecla: el texto se aplica al pulsar la lupa o Enter (formulario con `role="search"`). `Limpiar` borra también el texto escrito.
+- Se confirmó con datos reales que `Zona` es una zona comercial: con `zona=ANTIOQUIA` aparecen ciudades de otros departamentos. También hay nombres de ciudad duplicados (por ejemplo `ENVIGADO`/`ENVÍGADO`); su normalización corresponde al proceso que alimenta `Informe_ventas` (`pendiente`).
