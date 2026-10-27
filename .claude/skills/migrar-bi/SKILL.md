@@ -65,5 +65,5 @@ Prepara para el desarrollador:
 - [ ] Endpoint documentado en `reporting-api/README.md` y en `llm-wiki/components/reporting-api.md`.
 - [ ] Dashboard accesible desde el portal y documentado en `llm-wiki/components/frontend.md`.
 - [ ] Conciliación firmada por el dueño de negocio (fecha y nombre en la ficha).
-- [ ] PR revisado por otro desarrollador y unido a `main` en ambos repositorios.
+- [ ] PR creado, revisado por el desarrollador responsable (no se exige un segundo revisor) y unido a `main` en ambos repositorios.
 - [ ] Entrada en `llm-wiki/log.md` con validación y rollback.

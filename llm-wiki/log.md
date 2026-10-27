@@ -307,3 +307,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Por decisión de Daniel Jimenez, cambia la decisión 4: `tipoVentas` y `vendedorSenior` filtran también la facturación, que es el denominador del %. Departamento, concepto, tipo NC y búsqueda siguen filtrando solo las notas, porque las facturas no tienen esos datos.
 - `reporting-api` (`src/db.ts`, `addCreditNoteFilters` devuelve `shared` y `notesOnly`) y su README actualizados. Compila. Paquete `reporting-api-dist-bi-notas-credito.zip` regenerado. `pendiente`: commit y despliegue en el servidor.
 - Frontend: el texto del panel de filtros avanzados lo indica.
+
+## [2026-10-27] proceso | Revisión de PR por el mismo desarrollador
+
+- Por falta de personal, los PR de las migraciones los revisa el mismo desarrollador responsable; ya no se exige un segundo revisor. Cambian las skills `migrar-bi` (definición de terminado) y `crear-dashboard` (regla "No hagas").
+- La IA crea los PR con `gh` (GitHub CLI, instalada y autenticada el 2026-10-27).
