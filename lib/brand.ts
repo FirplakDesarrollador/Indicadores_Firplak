@@ -4,6 +4,7 @@ export const chartColors = {
   secondary: "#7B8E90",
   grid: "#E3E7EB",
   axis: "#5F6B73",
+  surface: "#FFFFFF",
 };
 
 export const chartTooltipStyle = {
