@@ -200,3 +200,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - El perfil del dashboard deja de mostrar "DJ" y "Usuario Firplak" fijos: usa el nombre, el correo y las iniciales del usuario de Microsoft 365 obtenidos de Supabase.
 - Se desactiva `devIndicators` en `next.config.ts`; el círculo "N" solo aparecía en `npm run dev` y tapaba el avatar.
+
+## [2026-10-27] limpieza | Elementos sin funcionalidad
+
+- Dashboard: se quitan la tarjeta "Fuente de datos", los botones "Ayuda" (barra lateral y superior), los menús "···", la insignia "01", el botón "Ver documento", las tendencias fijas "12,4 %"/"4,7 %" y la tarjeta "Cumplimiento 94,8 %" (valores inventados). Los KPIs pasan a 3 tarjetas.
+- La pestaña "Resumen" pasa a "Todos" y "Facturación" ahora filtra las filas con valor facturado; antes ambas mostraban lo mismo.
+- Portal: se quitan la sección "Más aplicaciones próximamente", el correo en la cabecera y el texto "Accesos gestionados por tu organización" (tenía ícono de enlace sin serlo). El saludo usa el nombre o la parte local del correo.
+- Se eliminan del CSS los estilos de esos elementos. `pendiente`: volver a mostrar "Cumplimiento" cuando existan metas reales (hoy `monthlyTargets` solo cubre enero a abril de 2026).

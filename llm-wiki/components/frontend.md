@@ -41,6 +41,8 @@ La distribución de facturación neta por zona muestra las cinco primeras zonas.
 La tabla diaria se presenta en orden descendente por fecha, comenzando por el día más reciente y continuando hacia atrás. Los acumulados mensuales se calculan antes de invertir la presentación para conservar sus valores correctos.
 El resumen diario muestra inicialmente los 7 días más recientes y ofrece `Ver todos los días` cuando existen más registros; el botón alterna entre la vista resumida y la completa.
 
+Se retiraron los elementos sin funcionalidad: tarjeta "Fuente de datos", botones de ayuda, menús "···", insignia "01", botón "Ver documento", tendencias y tarjeta "Cumplimiento" con valores fijos (los KPIs quedan en Facturación bruta, neta y Notas crédito), sección "Más aplicaciones próximamente" y correo del portal. Las pestañas del detalle son `Todos`, `Facturación` (filas con valor facturado) y `Notas crédito`.
+
 La barra lateral del dashboard muestra el nombre y correo del usuario de Microsoft 365 (`user_metadata.full_name`/`name` y `email` de Supabase) con sus iniciales en el avatar. `next.config.ts` desactiva `devIndicators` porque el indicador de desarrollo de Next.js se superponía al perfil.
 
 Los filtros (periodo, mes, búsqueda, Cliente, Grupo, Mercado, Zona y Ciudad) se editan como borrador y solo consultan la API al pulsar `Aplicar filtros`, la lupa o Enter; el botón se habilita únicamente cuando hay cambios sin aplicar. `Limpiar` restablece borrador y filtros aplicados con una sola consulta.
