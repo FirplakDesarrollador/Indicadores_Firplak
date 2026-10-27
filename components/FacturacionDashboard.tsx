@@ -105,6 +105,12 @@ function formatMonthName(month: number) {
   const name = new Intl.DateTimeFormat("es-CO", { month: "long" }).format(new Date(2026, month - 1, 1));
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
+function initialsFrom(name: string) {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  const initials = words.length > 1 ? `${words[0][0]}${words[words.length - 1][0]}` : (words[0] ?? "").slice(0, 2);
+  return initials.toUpperCase() || "FP";
+}
+
 function dateValue(value: string) { return new Date(`${value}T12:00:00`); }
 function formatDate(value: string) {
   if (!value) return "—";
@@ -181,6 +187,15 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   const [selectedRow, setSelectedRow] = useState<BillingRow | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const supabase = useMemo(() => createClient(), []);
+  const [userProfile, setUserProfile] = useState({ name: "Usuario Firplak", email: "" });
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const email = data.user?.email ?? "";
+      const name = data.user?.user_metadata?.full_name ?? data.user?.user_metadata?.name ?? (email.split("@")[0] || "Usuario Firplak");
+      setUserProfile({ name, email });
+    });
+  }, [supabase]);
 
   const loadData = useCallback(async (targetPage = 1) => {
     setLoading(true);
@@ -330,7 +345,7 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
       <BrandPeak className="brand-peak billing-sidebar-peak" />
       <div className="billing-brand-row"><Image className="brand-logo" src="/brand/firplak-wordmark-negativo.png" alt="Firplak" width={536} height={82} priority /><button className="billing-close-menu" onClick={() => setIsSidebarOpen(false)} aria-label="Cerrar menú"><X size={18} /></button></div>
       <nav className="billing-nav" aria-label="Navegación de facturación"><span className="billing-nav-label">MENÚ PRINCIPAL</span><Link className="billing-nav-item" href="/"><LayoutDashboard size={17} /> Resumen</Link><Link className={`billing-nav-item ${!isDetailView ? "active" : ""}`} href="/facturacion-diaria"><TrendingUp size={17} /> Facturación <span>01</span></Link><span className="billing-nav-label billing-nav-label-spaced">ANÁLISIS</span><Link className={`billing-nav-item ${isDetailView ? "active" : ""}`} href="/facturacion-diaria/detalle"><Table2 size={17} /> Detalle de documentos</Link></nav>
-      <div className="billing-sidebar-bottom"><div className="billing-tip"><Database size={16} /><div><strong>Fuente de datos</strong><span>Ventas y entregas</span></div></div><button className="billing-nav-item"><CircleHelp size={17} /> Ayuda</button><div className="billing-profile"><div className="billing-avatar">DJ</div><div><strong>Usuario Firplak</strong><span>Sesión Microsoft 365</span></div><button onClick={handleSignOut} aria-label="Cerrar sesión"><LogOut size={15} /></button></div></div>
+      <div className="billing-sidebar-bottom"><div className="billing-tip"><Database size={16} /><div><strong>Fuente de datos</strong><span>Ventas y entregas</span></div></div><button className="billing-nav-item"><CircleHelp size={17} /> Ayuda</button><div className="billing-profile"><div className="billing-avatar" aria-hidden="true">{initialsFrom(userProfile.name)}</div><div><strong title={userProfile.name}>{userProfile.name}</strong><span title={userProfile.email}>{userProfile.email || "Sesión Microsoft 365"}</span></div><button onClick={handleSignOut} aria-label="Cerrar sesión"><LogOut size={15} /></button></div></div>
     </aside>
 
     <section className="billing-main"><header className="billing-topbar"><div className="billing-breadcrumbs"><button className="billing-mobile-menu" onClick={() => setIsSidebarOpen(true)} aria-label="Abrir menú"><Menu size={19} /></button><Home size={14} /><ChevronRight size={14} /><span>Indicadores</span><ChevronRight size={14} /><strong>Facturación diaria</strong></div><div className="billing-top-actions"><button className="billing-help-button" aria-label="Ayuda"><CircleHelp size={18} /></button></div></header>

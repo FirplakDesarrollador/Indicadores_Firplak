@@ -195,3 +195,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - API (`fix/filtros-mercado-ciudad`, commit `f69963b`): `filterOptions.cityZones` con las parejas zona-ciudad del periodo, para que la lista de ciudades siga a la zona del borrador sin otra consulta.
 - Diseño: la barra de filtros pasa a una sola fila con una consulta de contenedor (≥ 1040 px de contenido); el panel avanzado usa 3 o 5 columnas según el ancho disponible y muestra un segundo botón `Aplicar filtros` solo en pantallas angostas.
 - Requiere copiar `dist/` de la API al servidor y reiniciar (ZIP `reporting-api-dist-f69963b.zip`). Sin esa copia, todo funciona salvo que la lista de ciudades se ajusta a la zona solo después de aplicar.
+
+## [2026-10-27] cambio | Perfil real en la barra lateral
+
+- El perfil del dashboard deja de mostrar "DJ" y "Usuario Firplak" fijos: usa el nombre, el correo y las iniciales del usuario de Microsoft 365 obtenidos de Supabase.
+- Se desactiva `devIndicators` en `next.config.ts`; el círculo "N" solo aparecía en `npm run dev` y tapaba el avatar.
