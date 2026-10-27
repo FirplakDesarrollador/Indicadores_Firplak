@@ -25,6 +25,7 @@ import {
   BarChart3,
   Download,
   Calendar,
+  ExternalLink,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -374,13 +375,14 @@ export default function CargaView() {
   // Estados de Selección Múltiple y Filtros
   const [selectedFechaCorte, setSelectedFechaCorte] = useState<string>("");
   const [vencimientoMode, setVencimientoMode] = useState<
-    "todos" | "coincidir_corte" | "atrasadas" | "atiempo" | "fecha_especifica"
-  >("todos");
+    "hoy_mas_atrasadas" | "todos" | "atrasadas" | "atiempo" | "fecha_especifica"
+  >("hoy_mas_atrasadas");
   const [selectedFechaEntrega, setSelectedFechaEntrega] = useState<string>("");
 
   const [selectedAreas, setSelectedAreas] = useState<Set<string>>(new Set());
   const [selectedPlanes, setSelectedPlanes] = useState<Set<string>>(new Set());
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
+  const [stackedDimension, setStackedDimension] = useState<"colaboradores" | "areas" | "planes">("colaboradores");
   const [statusFilter, setStatusFilter] = useState<"all" | "atrasadas" | "atiempo">("all");
   const [onlyOverloaded, setOnlyOverloaded] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -544,8 +546,9 @@ export default function CargaView() {
 
     return apiData.snapshotRows.filter((r) => {
       // 1. Filtro de Coincidencia con Día del Registro o Fecha de Vencimiento
-      if (vencimientoMode === "coincidir_corte") {
-        if (!r.fecha_entrega || !r.fecha_entrega.startsWith(corteDate)) {
+      if (vencimientoMode === "hoy_mas_atrasadas") {
+        const venceHoy = Boolean(r.fecha_entrega && r.fecha_entrega.startsWith(corteDate));
+        if (!venceHoy && !r.es_atrasado) {
           return false;
         }
       } else if (vencimientoMode === "fecha_especifica" && selectedFechaEntrega) {
@@ -722,6 +725,10 @@ export default function CargaView() {
     const aTiempoDia = totalDia - atrasadasDia;
     const desempenoDia = totalDia > 0 ? Math.round((aTiempoDia / totalDia) * 100) : 100;
 
+    const totalHoyMasAtrasadas = (apiData?.snapshotRows || []).filter(
+      (r) => r.es_atrasado || (r.fecha_entrega && r.fecha_entrega.startsWith(corteDate))
+    ).length;
+
     // 2. Desempeño Total: evalúa el cumplimiento sobre el backlog abierto
     const desempenoTotal = totalAsignaciones > 0 ? 100 - pctAtraso : 100;
 
@@ -742,6 +749,7 @@ export default function CargaView() {
       totalDia,
       atrasadasDia,
       aTiempoDia,
+      totalHoyMasAtrasadas,
       personasCount,
       sobrecargaCount,
       optimosCount,
@@ -811,7 +819,7 @@ export default function CargaView() {
     setSelectedPlanes(new Set());
     setSelectedUsers(new Set());
     setStatusFilter("all");
-    setVencimientoMode("todos");
+    setVencimientoMode("hoy_mas_atrasadas");
     setSelectedFechaEntrega("");
     setOnlyOverloaded(false);
     setSearchTerm("");
@@ -865,8 +873,13 @@ export default function CargaView() {
       .filter((c) => c.nombre !== "Sin asignar" && c.total > 0)
       .slice(0, 18)
       .map((c) => {
-        const parts = c.nombre.split(" ");
-        const shortName = parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : parts[0];
+        const parts = c.nombre.trim().split(/\s+/);
+        let shortName = parts[0];
+        if (parts.length === 2 || parts.length === 3) {
+          shortName = `${parts[0]} ${parts[1][0]}.`;
+        } else if (parts.length >= 4) {
+          shortName = `${parts[0]} ${parts[2][0]}.`;
+        }
         return {
           nombre: c.nombre,
           nombreCorto: shortName,
@@ -878,6 +891,36 @@ export default function CargaView() {
         };
       });
   }, [colaboradoresCalculated]);
+
+  // Datos para Gráfico de Barras Apiladas (No atrasadas vs Atrasadas)
+  const stackedChartData = useMemo(() => {
+    if (stackedDimension === "areas") {
+      return areasList.slice(0, 16).map((a) => ({
+        nombre: a.area,
+        nombreCorto: a.area.length > 15 ? `${a.area.slice(0, 13)}…` : a.area,
+        aTiempo: a.aTiempo,
+        atrasadas: a.atrasadas,
+        total: a.total,
+      }));
+    }
+    if (stackedDimension === "planes") {
+      return planesList.slice(0, 16).map((p) => ({
+        nombre: p.plan,
+        nombreCorto: p.plan.length > 16 ? `${p.plan.slice(0, 14)}…` : p.plan,
+        aTiempo: Math.max(0, p.total - p.atrasadas),
+        atrasadas: p.atrasadas,
+        total: p.total,
+      }));
+    }
+    // Por defecto: Colaboradores
+    return chartColaboradores.map((c) => ({
+      nombre: c.nombre,
+      nombreCorto: c.nombreCorto,
+      aTiempo: c.aTiempo,
+      atrasadas: c.atrasadas,
+      total: c.wip,
+    }));
+  }, [stackedDimension, chartColaboradores, areasList, planesList]);
 
   // Datos para Donut de Cumplimiento / Sobrecarga
   const donutData = useMemo(() => {
@@ -1278,7 +1321,7 @@ export default function CargaView() {
                   gap: "5px",
                   fontSize: "11px",
                   fontWeight: 700,
-                  color: vencimientoMode === "coincidir_corte" ? theme.tealDark : theme.inkMuted,
+                  color: vencimientoMode === "hoy_mas_atrasadas" ? theme.tealDark : theme.inkMuted,
                   marginBottom: "5px",
                 }}
               >
@@ -1290,27 +1333,27 @@ export default function CargaView() {
                   value={vencimientoMode}
                   onChange={(e) => {
                     setVencimientoMode(
-                      e.target.value as "todos" | "coincidir_corte" | "atrasadas" | "atiempo" | "fecha_especifica"
+                      e.target.value as "hoy_mas_atrasadas" | "todos" | "atrasadas" | "atiempo" | "fecha_especifica"
                     );
                     setCurrentPage(1);
                   }}
                   style={{
                     flex: 1,
                     padding: "8px 10px",
-                    background: vencimientoMode === "coincidir_corte" ? theme.tealBg : theme.white,
-                    border: `1.5px solid ${vencimientoMode === "coincidir_corte" ? theme.teal : theme.border}`,
+                    background: vencimientoMode === "hoy_mas_atrasadas" ? theme.tealBg : theme.white,
+                    border: `1.5px solid ${vencimientoMode === "hoy_mas_atrasadas" ? theme.teal : theme.border}`,
                     borderRadius: "8px",
                     fontSize: "12px",
-                    fontWeight: vencimientoMode === "coincidir_corte" ? 700 : 500,
-                    color: vencimientoMode === "coincidir_corte" ? theme.tealDark : theme.ink,
+                    fontWeight: vencimientoMode === "hoy_mas_atrasadas" ? 700 : 500,
+                    color: vencimientoMode === "hoy_mas_atrasadas" ? theme.tealDark : theme.ink,
                     outline: "none",
                     cursor: "pointer",
                   }}
                 >
-                  <option value="todos">📋 Todo el Backlog Abierto ({apiData?.snapshotRows.length || 0})</option>
-                  <option value="coincidir_corte">
-                    🎯 Coincidir con Día del Registro ({kpis.totalDia} vencen el {apiData?.fechaCorte})
+                  <option value="hoy_mas_atrasadas">
+                    🔥 Vence Hoy + Atrasadas ({kpis.totalHoyMasAtrasadas} exigibles)
                   </option>
+                  <option value="todos">📋 Todo el Backlog Abierto ({apiData?.snapshotRows.length || 0})</option>
                   <option value="atrasadas">⚠️ Solo Atrasadas al corte</option>
                   <option value="atiempo">✅ Solo A Tiempo al corte</option>
                   <option value="fecha_especifica">📅 Fecha de vencimiento específica...</option>
@@ -1908,10 +1951,10 @@ export default function CargaView() {
             {/* Card 2: Desempeño Día (Power BI 726abab735379dbd274a) */}
             <div
               style={{
-                background: vencimientoMode === "coincidir_corte" ? theme.tealBg : theme.white,
+                background: vencimientoMode === "hoy_mas_atrasadas" ? theme.tealBg : theme.white,
                 borderRadius: "12px",
                 padding: "20px",
-                border: `1px solid ${vencimientoMode === "coincidir_corte" ? theme.teal : theme.border}`,
+                border: `1px solid ${vencimientoMode === "hoy_mas_atrasadas" ? theme.teal : theme.border}`,
                 boxShadow: theme.shadowSm,
                 display: "flex",
                 flexDirection: "column",
@@ -1920,10 +1963,10 @@ export default function CargaView() {
                 transition: "all 0.15s ease",
               }}
               onClick={() => {
-                setVencimientoMode((prev) => (prev === "coincidir_corte" ? "todos" : "coincidir_corte"));
+                setVencimientoMode((prev) => (prev === "hoy_mas_atrasadas" ? "todos" : "hoy_mas_atrasadas"));
                 setCurrentPage(1);
               }}
-              title="Haz clic para filtrar solo las tareas que vencen el día del registro"
+              title="Haz clic para alternar entre Vence Hoy + Atrasadas y Todo el Backlog"
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -1935,12 +1978,12 @@ export default function CargaView() {
                       fontSize: "9px",
                       padding: "1px 5px",
                       borderRadius: "6px",
-                      background: vencimientoMode === "coincidir_corte" ? theme.teal : "#f1f5f9",
-                      color: vencimientoMode === "coincidir_corte" ? "#fff" : theme.subtle,
+                      background: vencimientoMode === "hoy_mas_atrasadas" ? theme.teal : "#f1f5f9",
+                      color: vencimientoMode === "hoy_mas_atrasadas" ? "#fff" : theme.subtle,
                       fontWeight: 700,
                     }}
                   >
-                    {vencimientoMode === "coincidir_corte" ? "FILTRADO" : "HOY"}
+                    {vencimientoMode === "hoy_mas_atrasadas" ? "EXIGIBLES" : "HOY"}
                   </span>
                 </div>
                 <div style={{ padding: "6px", borderRadius: "8px", background: "#fff7ed", color: theme.coral }}>
@@ -2040,6 +2083,173 @@ export default function CargaView() {
               <div style={{ fontSize: "12px", color: theme.inkMuted }}>
                 De {kpis.personasCount} personas con tareas activas
               </div>
+            </div>
+          </div>
+
+          {/* 2.5 Gráfico de Barras Apiladas: Tareas No Atrasadas vs Atrasadas */}
+          <div
+            style={{
+              background: theme.white,
+              borderRadius: "14px",
+              padding: "22px",
+              border: `1px solid ${theme.border}`,
+              boxShadow: theme.shadowSm,
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: "12px",
+              }}
+            >
+              <div>
+                <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: theme.ink }}>
+                  Tareas No Atrasadas (A tiempo) vs. Tareas Atrasadas
+                </h3>
+                <p style={{ margin: "3px 0 0", fontSize: "12px", color: theme.subtle }}>
+                  Comparación visual apilada. Haz clic en una barra para filtrar interactivamente.
+                </p>
+              </div>
+
+              {/* Selector de Dimensión */}
+              <div
+                style={{
+                  display: "inline-flex",
+                  background: theme.canvas,
+                  padding: "3px",
+                  borderRadius: "8px",
+                  border: `1px solid ${theme.border}`,
+                  gap: "3px",
+                }}
+              >
+                {(
+                  [
+                    { id: "colaboradores", label: "Por Colaborador" },
+                    { id: "areas", label: "Por Área" },
+                    { id: "planes", label: "Por Plan" },
+                  ] as const
+                ).map((tab) => {
+                  const isActive = stackedDimension === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setStackedDimension(tab.id)}
+                      style={{
+                        padding: "5px 12px",
+                        fontSize: "11px",
+                        fontWeight: isActive ? 700 : 500,
+                        border: "none",
+                        borderRadius: "6px",
+                        background: isActive ? theme.white : "transparent",
+                        color: isActive ? theme.tealDark : theme.inkMuted,
+                        boxShadow: isActive ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div style={{ height: "300px", width: "100%", marginTop: "6px" }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={stackedChartData}
+                  margin={{ top: 15, right: 20, left: -10, bottom: 45 }}
+                  onClick={(state) => {
+                    if (state && state.activePayload && state.activePayload.length > 0) {
+                      const item = state.activePayload[0].payload;
+                      if (stackedDimension === "areas") toggleArea(item.nombre);
+                      else if (stackedDimension === "planes") togglePlan(item.nombre);
+                      else toggleUser(item.nombre);
+                    }
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme.borderLight} />
+                  <XAxis
+                    dataKey="nombreCorto"
+                    stroke={theme.subtle}
+                    fontSize={11}
+                    interval={0}
+                    angle={-25}
+                    textAnchor="end"
+                    tick={{ fill: theme.inkMuted }}
+                  />
+                  <YAxis stroke={theme.subtle} fontSize={11} tick={{ fill: theme.inkMuted }} />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const item = payload[0].payload;
+                        const pctAtraso = item.total > 0 ? Math.round((item.atrasadas / item.total) * 100) : 0;
+                        const pctATiempo = 100 - pctAtraso;
+                        return (
+                          <div
+                            style={{
+                              background: theme.ink,
+                              color: theme.white,
+                              padding: "10px 14px",
+                              borderRadius: "8px",
+                              fontSize: "12px",
+                              boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+                            }}
+                          >
+                            <div style={{ fontWeight: 700, marginBottom: "6px", fontSize: "13px" }}>
+                              {item.nombre}
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", marginBottom: "3px" }}>
+                              <span style={{ color: "#6ee7b7" }}>✓ No atrasadas (A tiempo):</span>
+                              <strong>{item.aTiempo} ({pctATiempo}%)</strong>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", marginBottom: "4px" }}>
+                              <span style={{ color: "#fda4af" }}>⚠️ Atrasadas:</span>
+                              <strong>{item.atrasadas} ({pctAtraso}%)</strong>
+                            </div>
+                            <div
+                              style={{
+                                marginTop: "6px",
+                                paddingTop: "6px",
+                                borderTop: "1px solid rgba(255,255,255,0.15)",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                fontWeight: 700,
+                              }}
+                            >
+                              <span>Total asignadas:</span>
+                              <span>{item.total}</span>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Legend verticalAlign="top" align="right" height={36} iconType="circle" />
+                  <Bar
+                    dataKey="aTiempo"
+                    name="No atrasadas (A tiempo)"
+                    stackId="stack"
+                    fill={theme.teal}
+                    radius={[0, 0, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="atrasadas"
+                    name="Atrasadas"
+                    stackId="stack"
+                    fill={theme.red}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
@@ -2482,9 +2692,35 @@ export default function CargaView() {
                         }}
                       >
                         <td style={{ padding: "12px 14px", fontWeight: 600, color: theme.ink, maxWidth: "340px" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                          <a
+                            href={
+                              t.plan_id
+                                ? `https://planner.cloud.microsoft/webui/plan/${t.plan_id}/task/${t.task_id}?tid=fa1de04f-4780-4d83-a942-93c7ae8dee9d`
+                                : `https://tasks.office.com/Home/Task/${t.task_id}`
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: theme.ink,
+                              textDecoration: "none",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "6px",
+                              transition: "color 0.15s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = theme.teal;
+                              e.currentTarget.style.textDecoration = "underline";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = theme.ink;
+                              e.currentTarget.style.textDecoration = "none";
+                            }}
+                            title="Abrir tarea en Microsoft Planner"
+                          >
                             <span>{t.titulo_tarea}</span>
-                          </div>
+                            <ExternalLink size={12} style={{ opacity: 0.5, flexShrink: 0 }} />
+                          </a>
                         </td>
                         <td style={{ padding: "12px 14px", color: theme.inkMuted, fontWeight: 500 }}>
                           <span

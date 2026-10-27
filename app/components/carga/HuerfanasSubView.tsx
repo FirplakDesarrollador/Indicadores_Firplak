@@ -6,6 +6,7 @@ import {
   AlertTriangle,
   FolderOpen,
   Layers,
+  ExternalLink,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -271,9 +272,37 @@ export default function HuerfanasSubView({ tasks, onSelectPlan }: HuerfanasSubVi
                   onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                 >
                   <td style={{ padding: "14px 16px", fontWeight: 600, color: theme.ink, maxWidth: "260px" }}>
-                    <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={t.titulo_tarea}>
-                      {t.titulo_tarea}
-                    </div>
+                    <a
+                      href={
+                        t.plan_id
+                          ? `https://planner.cloud.microsoft/webui/plan/${t.plan_id}/task/${t.task_id}?tid=fa1de04f-4780-4d83-a942-93c7ae8dee9d`
+                          : `https://tasks.office.com/Home/Task/${t.task_id}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: theme.ink,
+                        textDecoration: "none",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        maxWidth: "100%",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = theme.teal;
+                        e.currentTarget.style.textDecoration = "underline";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = theme.ink;
+                        e.currentTarget.style.textDecoration = "none";
+                      }}
+                      title="Abrir tarea en Microsoft Planner"
+                    >
+                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {t.titulo_tarea}
+                      </span>
+                      <ExternalLink size={12} style={{ opacity: 0.5, flexShrink: 0 }} />
+                    </a>
                   </td>
                   <td style={{ padding: "14px 16px", color: theme.subtle, maxWidth: "180px" }}>
                     <span
