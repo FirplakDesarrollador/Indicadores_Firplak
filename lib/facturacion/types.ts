@@ -26,6 +26,15 @@ export type BillingPayload = {
     totalPages: number;
   };
   summary?: BillingSummary;
+  filterOptions?: BillingFilterOptions;
+};
+
+export type BillingFilterOptions = {
+  markets: string[];
+  cities: string[];
+  zones: string[];
+  customerGroups: string[];
+  customers: Array<{ code: string; name: string }>;
 };
 
 export type BillingSummary = {

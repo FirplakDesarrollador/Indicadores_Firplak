@@ -136,3 +136,12 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Se añadió un log seguro que muestra la base, esquema y tabla/vista que la API está consultando, sin imprimir credenciales ni filtros de búsqueda.
 - Esto permite distinguir una configuración `.env` correcta de un proceso que ejecuta otro `dist/` o inicia desde otra carpeta.
 - El arranque también informa el directorio de trabajo, porque `dotenv` busca `.env` relativo al proceso iniciado.
+
+## [2026-10-27] fix | Filtros de Mercado, Ciudad y Cliente
+
+- Causa: la Reporting API solo aceptaba `zona` y `grupoCliente`. Cliente, Mercado y Ciudad se aplicaban en el navegador sobre las 50 filas visibles, que solo alimentan la tabla de detalle, y no disparaban una nueva consulta; Mercado además comparaba `TipoVentas` contra opciones fijas. Las listas de opciones salían de la página visible.
+- API (rama `fix/filtros-mercado-ciudad`): nuevos parámetros `mercado`, `ciudad` y `cliente`; `filterOptions` con los valores del periodo; entregas acepta `grupoCliente` y `cliente`; normalización de espacios.
+- Frontend (rama `fix/filtros-mercado-ciudad`): envía todos los filtros, vuelve a consultar al cambiarlos, usa `filterOptions` con respaldo en las filas visibles y avisa que entregas no se filtra por mercado, zona ni ciudad.
+- Orden de despliegue: primero la API (recompilar y reiniciar en IIS), después el frontend. Si el frontend sale antes, los filtros nuevos se ignoran sin errores.
+- Validación: `tsc` en la API y `npm run lint`/`tsc` en el frontend. `pendiente` probar contra SQL Server: valores reales de `TipoVentas` y tiempo de respuesta de los catálogos con "Todos los años".
+- Rollback: revertir los commits de ambas ramas; no hay cambios de esquema.
