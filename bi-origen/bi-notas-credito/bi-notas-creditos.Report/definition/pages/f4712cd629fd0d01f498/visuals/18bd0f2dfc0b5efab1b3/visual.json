@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "18bd0f2dfc0b5efab1b3",
+  "position": {
+    "x": 510.73170731707319,
+    "y": 0,
+    "z": 4000,
+    "height": 61.463414634146339,
+    "width": 185.85365853658536,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "Vendedor Senior"
+                }
+              },
+              "queryRef": "NotasCreditos.Vendedor Senior",
+              "nativeQueryRef": "Vendedor Senior",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

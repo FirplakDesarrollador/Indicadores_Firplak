@@ -53,4 +53,4 @@ Si no existe, propón al desarrollador extraerlas de `FacturacionDashboard.tsx` 
 
 - No leas `.env.local`.
 - No cambies los tokens de marca ni el manual sin aprobación de Mercadeo.
-- No unas a `main` sin PR revisado por otro desarrollador.
+- No unas a `main` sin PR. Lo revisa el mismo desarrollador responsable: no se exige un segundo revisor.

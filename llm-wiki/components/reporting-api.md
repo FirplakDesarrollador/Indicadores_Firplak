@@ -45,6 +45,15 @@ Consulta `Planos_Symphony.dbo.Informe_entregas` y requiere el mismo Bearer token
 
 La respuesta incluye el detalle de entregas, los años disponibles y resúmenes diarios/mensuales con `Cantidad`, `CantidadFacturada` y `ValorSinIVA`. La tabla usa `(DocEntry, LineNum)` como clave y `FechaEntrega` como fecha principal.
 
+### `GET /api/v1/notas-credito`
+
+Agregado en la rama `bi/notas-credito` y desplegado en el servidor el 2026-10-27 (el servicio escucha en `127.0.0.1:8090`). Consulta `Informe_ventas` (`REPORT_DB_TABLE`) con el mismo Bearer token. Firplak y Viventta van juntas. Las notas son `TipoDocumento = 'Nota Crédito'` y el denominador, `TipoDocumento = 'Factura'`, filtrado por periodo, `tipoVentas` y `vendedorSenior`.
+
+- Filtros: `fechaDesde`, `fechaHasta`, `anio`, `mes`, `tipoVentas`, `departamento`, `concepto`, `tipoNc`, `vendedorSenior` y `search`.
+- Respuesta: detalle por documento, totales, % de notas sobre la facturación, meta del 3 %, serie mensual con el % del año anterior y totales por departamento, concepto, tipo NC agrupado y vendedor.
+- Código: `getCreditNoteReport` en `src/db.ts` y `creditNoteFiltersFrom` en `src/server.ts`.
+- Reglas: [ficha de Notas crédito](../bi/notas-credito.md#3-contrato-del-endpoint).
+
 ## Configuración SQL
 
 ```env

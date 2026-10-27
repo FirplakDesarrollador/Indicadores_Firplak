@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   BarChart3,
+  FileMinus,
   LayoutGrid,
   LogOut,
   ReceiptText,
@@ -18,6 +19,12 @@ const accessCards = [
     subtitle: "Indicadores comerciales y operativos",
     href: "/facturacion-diaria",
     icon: ReceiptText,
+  },
+  {
+    title: "Notas crédito",
+    subtitle: "Notas crédito frente a la facturación y sus causas",
+    href: "/notas-credito",
+    icon: FileMinus,
   },
 ];
 

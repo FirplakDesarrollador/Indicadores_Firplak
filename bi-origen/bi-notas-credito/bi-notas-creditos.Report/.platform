@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "bi-notas-creditos"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "99268130-7bb8-4c47-844e-982b030dbea1"
+  }
+}

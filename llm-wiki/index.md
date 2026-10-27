@@ -54,7 +54,8 @@ SP o proceso de actualización periódica
 ### Migración de BI
 
 - Proceso con IA en 8 fases (inventario, análisis, tabla y SP incremental, contrato, endpoint, dashboard, conciliación, despliegue) definido en las skills de [`.claude/skills/`](../.claude/skills/): [`migrar-bi`](../.claude/skills/migrar-bi/SKILL.md) coordina y [`analizar-bi`](../.claude/skills/analizar-bi/SKILL.md), [`crear-tabla-incremental`](../.claude/skills/crear-tabla-incremental/SKILL.md), [`crear-endpoint`](../.claude/skills/crear-endpoint/SKILL.md) y [`crear-dashboard`](../.claude/skills/crear-dashboard/SKILL.md) ejecutan cada fase.
-- Cada BI migrado tiene su ficha en `llm-wiki/bi/<slug>.md` ([plantilla](../.claude/skills/analizar-bi/plantilla-ficha-bi.md)). Aún no hay fichas.
+- Cada BI migrado tiene su ficha en `llm-wiki/bi/<slug>.md` ([plantilla](../.claude/skills/analizar-bi/plantilla-ficha-bi.md)). Fichas:
+  - [Notas crédito](bi/notas-credito.md): piloto, fase 5 (dashboard `/notas-credito` construido; pendiente prueba con datos reales); siguiente: fase 6 (conciliación).
 
 ### Decisiones
 
@@ -78,6 +79,6 @@ SP o proceso de actualización periódica
 | Tabla de reportes | Confirmado: `Planos_Symphony.dbo.Informe_ventas` | [Flujo de datos](architecture/data-flow.md) |
 | Notas crédito | Confirmado: `TipoDocumento = Nota Crédito` y columnas `CodigoTipoNC`/`TiposNC` | [Flujo de datos](architecture/data-flow.md) |
 | API pública | Configurada mediante `api.firplak.com:8443` | [Reporting API](components/reporting-api.md) |
-| Actualización periódica de las tablas | Dependencia operativa; confirmar proceso y horario | [Runbook](operations/runbook.md) |
+| Actualización periódica de las tablas | `Informe_ventas`: `SP_Generar_Informe_Ventas`, jobs `BI - Ventas carga incremental`/`completa`, bitácora `Cargas_Log`; incremental cada 15 min (6:00–20:00) y completa a las 2:00 | [Flujo de datos](architecture/data-flow.md#carga) |
 | Tabla de entregas | Confirmada: `Planos_Symphony.dbo.Informe_entregas` | [Reporting API](components/reporting-api.md) |
 | Índices SQL | Recomendados; validar en SQL Server | [ADR-001](decisions/ADR-001-reporting-table.md) |

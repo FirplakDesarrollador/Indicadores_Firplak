@@ -5,27 +5,34 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   CalendarDays,
-  ChevronLeft,
   ChevronRight,
   Database,
   Filter,
-  Home,
-  LayoutDashboard,
-  LogOut,
-  Menu,
   RefreshCw,
   Search,
   SlidersHorizontal,
-  Table2,
   TrendingUp,
   X,
 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import Link from "next/link";
-import Image from "next/image";
-import BrandPeak from "@/components/BrandPeak";
+import DashboardShell from "@/components/dashboard/DashboardShell";
+import FilterSelect from "@/components/dashboard/FilterSelect";
+import { MetricCard, MetricSkeleton } from "@/components/dashboard/MetricCard";
+import TablePager from "@/components/dashboard/TablePager";
 import { chartColors, chartTooltipStyle } from "@/lib/brand";
-import { createClient } from "@/lib/supabase/client";
+import { readJsonPayload } from "@/lib/dashboard/fetch";
+import { billingNavigation } from "@/lib/dashboard/navigation";
+import {
+  dateValue,
+  formatCompactCurrency,
+  formatCurrency,
+  formatDate,
+  formatDateTime,
+  formatMonthName,
+  formatNumber,
+  formatPercent,
+} from "@/lib/dashboard/format";
+import { type FilterOption, toOptions, uniqueSorted } from "@/lib/dashboard/options";
 import type {
   BillingFilterOptions,
   BillingPayload,
@@ -37,10 +44,6 @@ import type {
 
 type View = "Todos" | "Facturación" | "Notas crédito";
 
-const currency = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
-const number = new Intl.NumberFormat("es-CO", { maximumFractionDigits: 0 });
-const millionsNumber = new Intl.NumberFormat("es-CO", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const percent = new Intl.NumberFormat("es-CO", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const emptySummary: BillingSummary = { invoiced: 0, creditNote: 0, net: 0, daily: [], zones: [] };
 const emptyDeliverySummary: DeliverySummary = {
   deliveredQuantity: 0,
@@ -56,7 +59,6 @@ const monthlyTargets: Record<string, { national: number; firplak: number }> = {
   "2026-03": { national: 375_000_000, firplak: 503_000_000 },
   "2026-04": { national: 375_000_000, firplak: 575_000_000 },
 };
-type FilterOption = { value: string; label: string };
 const initialPeriod = new Date();
 const initialYear = String(initialPeriod.getFullYear());
 const initialMonth = String(initialPeriod.getMonth() + 1);
@@ -91,73 +93,6 @@ function sameFilters(a: DashboardFilters, b: DashboardFilters) {
   return (Object.keys(a) as Array<keyof DashboardFilters>).every((key) => a[key] === b[key]);
 }
 
-function formatCurrency(value: number) { return currency.format(value); }
-function formatCompactCurrency(value: number) {
-  if (Math.abs(value) >= 1_000_000) {
-    return `${value < 0 ? "-" : ""}$${millionsNumber.format(Math.abs(value) / 1_000_000)} M`;
-  }
-  return formatCurrency(value);
-}
-function formatMonthName(month: number) {
-  const name = new Intl.DateTimeFormat("es-CO", { month: "long" }).format(new Date(2026, month - 1, 1));
-  return name.charAt(0).toUpperCase() + name.slice(1);
-}
-function initialsFrom(name: string) {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  const initials = words.length > 1 ? `${words[0][0]}${words[words.length - 1][0]}` : (words[0] ?? "").slice(0, 2);
-  return initials.toUpperCase() || "FP";
-}
-
-function dateValue(value: string) { return new Date(`${value}T12:00:00`); }
-function formatDate(value: string) {
-  if (!value) return "—";
-  return new Intl.DateTimeFormat("es-CO", { day: "2-digit", month: "short" }).format(dateValue(value)).replace(".", "");
-}
-
-async function readJsonPayload<T extends { error?: string }>(response: Response, sourceLabel: string): Promise<T> {
-  const contentType = response.headers.get("content-type") ?? "";
-  if (!contentType.toLowerCase().includes("application/json")) {
-    if (response.url.includes("/login")) {
-      throw new Error("La sesión expiró. Vuelve a iniciar sesión para consultar los indicadores.");
-    }
-    throw new Error(`${sourceLabel} devolvió una respuesta no válida (HTTP ${response.status}).`);
-  }
-  return response.json() as Promise<T>;
-}
-
-function MetricCard({ label, value, detail, icon: Icon }: {
-  label: string;
-  value: string;
-  detail: string;
-  icon: typeof TrendingUp;
-}) {
-  return <article className="billing-metric-card"><div className="billing-metric-icon blue"><Icon size={18} /></div><div className="billing-metric-copy"><span>{label}</span><strong>{value}</strong><small>{detail}</small></div></article>;
-}
-
-function MetricSkeleton() {
-  return <article className="billing-metric-card billing-skeleton-card"><span className="billing-skeleton billing-skeleton-icon" /><div><span className="billing-skeleton billing-skeleton-label" /><span className="billing-skeleton billing-skeleton-value" /><span className="billing-skeleton billing-skeleton-detail" /></div></article>;
-}
-
-function toOptions(values: string[]): FilterOption[] {
-  return values.map((value) => ({ value, label: value }));
-}
-
-function uniqueSorted(values: string[]) {
-  return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b, "es"));
-}
-
-function DocumentFilter({ label, value, emptyValue, emptyLabel, options, onChange, disabled }: {
-  label: string;
-  value: string;
-  emptyValue: string;
-  emptyLabel: string;
-  options: FilterOption[];
-  onChange: (value: string) => void;
-  disabled?: boolean;
-}) {
-  return <label className="billing-advanced-filter"><span>{label}</span><select value={value} onChange={(event) => onChange(event.target.value)} disabled={disabled}><option value={emptyValue}>{emptyLabel}</option>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
-}
-
 type FacturacionDashboardProps = {
   mode?: "overview" | "detail";
 };
@@ -177,21 +112,10 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   // Los filtros se editan como borrador y solo consultan la API al aplicarlos (botón, lupa o Enter).
   const [appliedFilters, setAppliedFilters] = useState<DashboardFilters>(initialFilters);
   const [draftFilters, setDraftFilters] = useState<DashboardFilters>(initialFilters);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showAllDailySummary, setShowAllDailySummary] = useState(false);
   const [selectedRow, setSelectedRow] = useState<BillingRow | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const supabase = useMemo(() => createClient(), []);
-  const [userProfile, setUserProfile] = useState({ name: "Usuario Firplak", email: "" });
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      const email = data.user?.email ?? "";
-      const name = data.user?.user_metadata?.full_name ?? data.user?.user_metadata?.name ?? (email.split("@")[0] || "Usuario Firplak");
-      setUserProfile({ name, email });
-    });
-  }, [supabase]);
 
   const loadData = useCallback(async (targetPage = 1) => {
     setLoading(true);
@@ -248,15 +172,11 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   }, [loadData]);
 
   useEffect(() => {
-    if (!selectedRow && !isSidebarOpen) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      setSelectedRow(null);
-      setIsSidebarOpen(false);
-    };
+    if (!selectedRow) return;
+    const handleKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setSelectedRow(null); };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isSidebarOpen, selectedRow]);
+  }, [selectedRow]);
 
   const years = useMemo(() => availableYears.length ? availableYears : Array.from(new Set(rows.map((row) => dateValue(row.date).getFullYear()))).sort((a, b) => b - a), [availableYears, rows]);
   const months = useMemo(() => Array.from({ length: 12 }, (_, index) => index + 1), []);
@@ -322,7 +242,6 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   const updateDraft = (key: keyof DashboardFilters) => (value: string) => setDraftFilters((current) => ({ ...current, [key]: value }));
   // La ciudad depende de la zona: al cambiar de zona se limpia, porque puede no pertenecer a la nueva.
   const handleZoneChange = (zone: string) => setDraftFilters((current) => ({ ...current, zone, city: "Todas" }));
-  const handleSignOut = async () => { await supabase.auth.signOut(); window.location.assign("/login"); };
   const resetFilters = () => { setDraftFilters(initialFilters); setAppliedFilters(initialFilters); };
   const applyFilters = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -335,17 +254,9 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
     setPagination((current) => ({ ...current, page: targetPage }));
     void loadData(targetPage);
   };
-  return <main className={`billing-shell ${isDetailView ? "billing-shell-detail" : ""}`}>
-    <div className={`billing-sidebar-backdrop ${isSidebarOpen ? "visible" : ""}`} onClick={() => setIsSidebarOpen(false)} />
-    <aside className={`billing-sidebar ${isSidebarOpen ? "open" : ""}`}>
-      <BrandPeak className="brand-peak billing-sidebar-peak" />
-      <div className="billing-brand-row"><Image className="brand-logo" src="/brand/firplak-wordmark-negativo.png" alt="Firplak" width={536} height={82} priority /><button className="billing-close-menu" onClick={() => setIsSidebarOpen(false)} aria-label="Cerrar menú"><X size={18} /></button></div>
-      <nav className="billing-nav" aria-label="Navegación de facturación"><span className="billing-nav-label">MENÚ PRINCIPAL</span><Link className="billing-nav-item" href="/"><LayoutDashboard size={17} /> Resumen</Link><Link className={`billing-nav-item ${!isDetailView ? "active" : ""}`} href="/facturacion-diaria"><TrendingUp size={17} /> Facturación</Link><span className="billing-nav-label billing-nav-label-spaced">ANÁLISIS</span><Link className={`billing-nav-item ${isDetailView ? "active" : ""}`} href="/facturacion-diaria/detalle"><Table2 size={17} /> Detalle de documentos</Link></nav>
-      <div className="billing-sidebar-bottom"><div className="billing-profile"><div className="billing-avatar" aria-hidden="true">{initialsFrom(userProfile.name)}</div><div><strong title={userProfile.name}>{userProfile.name}</strong><span title={userProfile.email}>{userProfile.email || "Sesión Microsoft 365"}</span></div><button onClick={handleSignOut} aria-label="Cerrar sesión"><LogOut size={15} /></button></div></div>
-    </aside>
+  const detailDrawer = selectedRow && <><button className="billing-drawer-backdrop" onClick={() => setSelectedRow(null)} aria-label="Cerrar detalle" /><aside className="billing-detail-drawer"><div className="billing-drawer-header"><div><span className="billing-panel-kicker">DETALLE DEL DOCUMENTO</span><h2>{selectedRow.docnum}</h2></div><button onClick={() => setSelectedRow(null)} aria-label="Cerrar detalle"><X size={19} /></button></div><div className="billing-drawer-status"><span className="billing-status-dot" /> Documento contabilizado <span>{formatDate(selectedRow.date)}</span></div><div className="billing-drawer-total"><span>Total neto</span><strong>{formatCurrency(selectedRow.net)}</strong><small>Facturado {formatCurrency(selectedRow.invoiced)} · NC {formatCurrency(selectedRow.creditNote)}</small></div><dl className="billing-detail-list"><div><dt>Cliente</dt><dd>{selectedRow.customer}</dd></div><div><dt>Grupo de cliente</dt><dd>{selectedRow.customerGroup}</dd></div><div><dt>Canal</dt><dd>{selectedRow.channel}</dd></div><div><dt>Zona</dt><dd>{selectedRow.zone}</dd></div><div><dt>Ciudad</dt><dd>{selectedRow.city}</dd></div></dl></aside></>;
 
-    <section className="billing-main"><header className="billing-topbar"><div className="billing-breadcrumbs"><button className="billing-mobile-menu" onClick={() => setIsSidebarOpen(true)} aria-label="Abrir menú"><Menu size={19} /></button><Home size={14} /><ChevronRight size={14} /><span>Indicadores</span><ChevronRight size={14} /><strong>Facturación diaria</strong></div></header>
-      <div className="billing-content">
+  return <DashboardShell navigation={billingNavigation} activeHref={isDetailView ? "/facturacion-diaria/detalle" : "/facturacion-diaria"} title="Facturación diaria" className={isDetailView ? "billing-shell-detail" : ""} overlay={detailDrawer}>
         <div className="billing-heading-row"><div><div className="billing-eyebrow">CENTRO DE INDICADORES <span>·</span> COMERCIAL</div><h1>Facturación detallada</h1><p>Consulta el comportamiento de la facturación, notas crédito y documentos por periodo.</p></div><div className="billing-heading-actions"><button className="billing-secondary-button" onClick={() => setShowFilters((visible) => !visible)}><SlidersHorizontal size={16} /> Filtros</button></div></div>
         <form className="billing-filterbar" onSubmit={applyFilters}>
           <div className="billing-filterbar-primary">
@@ -356,24 +267,22 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
           </div>
           {showFilters && <div className="billing-advanced-filters">
             <div className="billing-advanced-filters-heading"><div><Filter size={15} /><span>Filtros del documento</span></div><small>Combina los criterios para afinar la consulta</small></div>
-            <DocumentFilter label="Cliente" value={draftFilters.customer} emptyValue="Todos" emptyLabel="Todos los clientes" options={customers} onChange={updateDraft("customer")} />
-            <DocumentFilter label="Grupo de cliente" value={draftFilters.group} emptyValue="Todos" emptyLabel="Todos los grupos" options={groups} onChange={updateDraft("group")} />
-            <DocumentFilter label="Mercado" value={draftFilters.channel} emptyValue="Todos" emptyLabel="Todos los mercados" options={markets} onChange={updateDraft("channel")} />
-            <DocumentFilter label="Zona" value={draftFilters.zone} emptyValue="Todas" emptyLabel="Todas las zonas" options={zones} onChange={handleZoneChange} />
-            <DocumentFilter label="Ciudad" value={draftFilters.city} emptyValue="Todas" emptyLabel="Todas las ciudades" options={cities} onChange={updateDraft("city")} />
+            <FilterSelect label="Cliente" value={draftFilters.customer} emptyValue="Todos" emptyLabel="Todos los clientes" options={customers} onChange={updateDraft("customer")} />
+            <FilterSelect label="Grupo de cliente" value={draftFilters.group} emptyValue="Todos" emptyLabel="Todos los grupos" options={groups} onChange={updateDraft("group")} />
+            <FilterSelect label="Mercado" value={draftFilters.channel} emptyValue="Todos" emptyLabel="Todos los mercados" options={markets} onChange={updateDraft("channel")} />
+            <FilterSelect label="Zona" value={draftFilters.zone} emptyValue="Todas" emptyLabel="Todas las zonas" options={zones} onChange={handleZoneChange} />
+            <FilterSelect label="Ciudad" value={draftFilters.city} emptyValue="Todas" emptyLabel="Todas las ciudades" options={cities} onChange={updateDraft("city")} />
             <div className="billing-advanced-filters-footer">{hasPendingFilters && <span>Hay cambios sin aplicar</span>}<button className="billing-primary-button" type="submit" disabled={loading || !hasPendingFilters}>Aplicar filtros</button></div>
           </div>}
         </form>
         {error && <div className="billing-alert"><Database size={16} /><span>{error}</span><button onClick={() => void loadData(1)}>Reintentar</button></div>}
-        <div className="billing-metrics-grid">{loading ? Array.from({ length: 3 }, (_, index) => <MetricSkeleton key={index} />) : <><MetricCard label="Facturación bruta" value={formatCompactCurrency(totals.invoiced)} detail={`${number.format(pagination.total)} documentos filtrados`} icon={TrendingUp} /><MetricCard label="Facturación neta" value={formatCompactCurrency(totals.net)} detail="Facturado menos notas crédito" icon={ArrowUpRight} /><MetricCard label="Notas crédito" value={formatCompactCurrency(totals.creditNote)} detail={`${percent.format(totals.invoiced ? totals.creditNote / totals.invoiced : 0)} sobre la facturación`} icon={ArrowDownRight} /></>}</div>
-        <div className="billing-analysis-grid"><section className="billing-panel billing-chart-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">EVOLUCIÓN DIARIA</span><h2>Facturación y notas crédito</h2></div><span className="billing-period-caption">{dailyData.length ? `${formatDate(dailyData[0].sort)} — ${formatDate(dailyData[dailyData.length - 1].sort)}` : "Sin datos"}</span></div><div className="billing-chart-legend"><span><i className="facturado" /> Facturado</span><span><i className="notas" /> Notas crédito</span></div>{loading ? <div className="billing-chart-skeleton"><span /><span /><span /></div> : <div className="billing-chart"><ResponsiveContainer width="100%" height="100%"><AreaChart data={dailyData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}><defs><linearGradient id="facturadoGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={chartColors.primary} stopOpacity={0.18} /><stop offset="100%" stopColor={chartColors.primary} stopOpacity={0} /></linearGradient></defs><CartesianGrid vertical={false} stroke={chartColors.grid} /><XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} /><YAxis axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} tickFormatter={(value) => `$${number.format(Math.round(Number(value) / 1_000_000))} M`} width={64} /><Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: chartColors.primary, fontWeight: 600 }} formatter={(value) => formatCurrency(Number(value))} /><Area type="monotone" dataKey="facturado" name="Facturado" stroke={chartColors.primary} strokeWidth={2.5} fill="url(#facturadoGradient)" /><Area type="monotone" dataKey="notas" name="Notas crédito" stroke={chartColors.secondary} strokeWidth={2} fill="none" /></AreaChart></ResponsiveContainer></div>}</section><section className="billing-panel billing-zone-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">DISTRIBUCIÓN</span><h2>Facturación neta por zona</h2></div></div>{loading ? <div className="billing-zone-skeleton"><span /><span /><span /></div> : <div className="billing-zone-list">{zoneData.length ? zoneData.map((item) => <div className="billing-zone-row" key={item.name}><div className="billing-zone-label"><span>{item.name}</span><strong>{formatCompactCurrency(item.value)}</strong></div><div className="billing-progress"><span style={{ width: `${item.percent}%` }} /></div><small>{item.percent}%</small></div>) : <div className="billing-empty">No hay zonas para los filtros seleccionados.</div>}</div>}</section></div>
+        <div className="billing-metrics-grid">{loading ? Array.from({ length: 3 }, (_, index) => <MetricSkeleton key={index} />) : <><MetricCard label="Facturación bruta" value={formatCompactCurrency(totals.invoiced)} detail={`${formatNumber(pagination.total)} documentos filtrados`} icon={TrendingUp} /><MetricCard label="Facturación neta" value={formatCompactCurrency(totals.net)} detail="Facturado menos notas crédito" icon={ArrowUpRight} /><MetricCard label="Notas crédito" value={formatCompactCurrency(totals.creditNote)} detail={`${formatPercent(totals.invoiced ? totals.creditNote / totals.invoiced : 0)} sobre la facturación`} icon={ArrowDownRight} /></>}</div>
+        <div className="billing-analysis-grid"><section className="billing-panel billing-chart-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">EVOLUCIÓN DIARIA</span><h2>Facturación y notas crédito</h2></div><span className="billing-period-caption">{dailyData.length ? `${formatDate(dailyData[0].sort)} — ${formatDate(dailyData[dailyData.length - 1].sort)}` : "Sin datos"}</span></div><div className="billing-chart-legend"><span><i className="facturado" /> Facturado</span><span><i className="notas" /> Notas crédito</span></div>{loading ? <div className="billing-chart-skeleton"><span /><span /><span /></div> : <div className="billing-chart"><ResponsiveContainer width="100%" height="100%"><AreaChart data={dailyData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}><defs><linearGradient id="facturadoGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={chartColors.primary} stopOpacity={0.18} /><stop offset="100%" stopColor={chartColors.primary} stopOpacity={0} /></linearGradient></defs><CartesianGrid vertical={false} stroke={chartColors.grid} /><XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} /><YAxis axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} tickFormatter={(value) => `$${formatNumber(Math.round(Number(value) / 1_000_000))} M`} width={64} /><Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: chartColors.primary, fontWeight: 600 }} formatter={(value) => formatCurrency(Number(value))} /><Area type="monotone" dataKey="facturado" name="Facturado" stroke={chartColors.primary} strokeWidth={2.5} fill="url(#facturadoGradient)" /><Area type="monotone" dataKey="notas" name="Notas crédito" stroke={chartColors.secondary} strokeWidth={2} fill="none" /></AreaChart></ResponsiveContainer></div>}</section><section className="billing-panel billing-zone-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">DISTRIBUCIÓN</span><h2>Facturación neta por zona</h2></div></div>{loading ? <div className="billing-zone-skeleton"><span /><span /><span /></div> : <div className="billing-zone-list">{zoneData.length ? zoneData.map((item) => <div className="billing-zone-row" key={item.name}><div className="billing-zone-label"><span>{item.name}</span><strong>{formatCompactCurrency(item.value)}</strong></div><div className="billing-progress"><span style={{ width: `${item.percent}%` }} /></div><small>{item.percent}%</small></div>) : <div className="billing-empty">No hay zonas para los filtros seleccionados.</div>}</div>}</section></div>
         <section className="billing-panel billing-daily-summary-panel">
           <div className="billing-table-heading"><div><span className="billing-panel-kicker">RESUMEN DIARIO</span><h2>Facturación y entregas por día</h2><p>Acumulado mensual, entregas y metas configuradas</p>{hasUnfilteredDeliveryCriteria && <p>Las columnas de entregas no se filtran por mercado, zona ni ciudad: esos datos no existen en la tabla de entregas.</p>}</div><div className="billing-daily-summary-actions"><span className="billing-daily-summary-count">{dailySummaryRows.length ? `${dailySummaryRows.length} días` : "Sin datos"}</span>{dailySummaryRows.length > 7 && <button className="billing-secondary-button small" type="button" onClick={() => setShowAllDailySummary((visible) => !visible)}>{showAllDailySummary ? "Mostrar menos" : "Ver todos los días"}</button>}</div></div>
           <div className="billing-table-scroll"><table className="billing-data-table billing-daily-summary-table"><thead><tr><th>Año</th><th>Mes</th><th>Día</th><th className="align-right">Ent día</th><th className="align-right">Ent mes total</th><th className="align-right">Fac día total</th><th className="align-right">Fac mes total</th><th className="align-right">Total NC</th><th className="align-right">Fac - NC</th><th className="align-right">Meta Nacional</th><th className="align-right">Meta Firplak</th></tr></thead><tbody>{loading ? Array.from({ length: 5 }, (_, index) => <tr key={index} className="billing-skeleton-row"><td colSpan={11}><span className="billing-skeleton billing-skeleton-row-fill" /></td></tr>) : dailySummaryRows.length ? displayedDailySummaryRows.map((item) => <tr key={item.date}><td>{item.year}</td><td>{item.month}</td><td>{item.day}</td><td className="align-right delivery-cell">{item.deliveryDay ? formatCurrency(item.deliveryDay) : "—"}</td><td className="align-right delivery-cell">{item.deliveryMonthTotal ? formatCurrency(item.deliveryMonthTotal) : "—"}</td><td className="align-right number-cell">{formatCurrency(item.invoiced)}</td><td className="align-right number-cell">{formatCurrency(item.monthTotal)}</td><td className="align-right credit-cell">{item.creditNote ? formatCurrency(item.creditNote) : "—"}</td><td className="align-right net-cell">{formatCurrency(item.net)}</td><td className="align-right">{item.nationalTarget ? formatCurrency(item.nationalTarget) : "—"}</td><td className="align-right">{item.firplakTarget ? formatCurrency(item.firplakTarget) : "—"}</td></tr>) : <tr><td colSpan={11} className="billing-table-state"><strong>Sin datos diarios</strong></td></tr>}</tbody></table></div>
         </section>
-        <section className="billing-panel billing-table-panel"><div className="billing-table-heading"><div><span className="billing-panel-kicker">DETALLE OPERATIVO</span><h2>Documentos de facturación</h2><p>{number.format(pagination.total)} registros encontrados · página {pagination.page} de {pagination.totalPages}</p></div><div className="billing-table-actions"><button className="billing-secondary-button small" onClick={() => void loadData(pagination.page)} disabled={isRefreshing}><RefreshCw size={15} className={isRefreshing ? "billing-spin" : ""} /> Actualizar</button></div></div><div className="billing-tabs" role="tablist">{(["Todos", "Facturación", "Notas crédito"] as View[]).map((view) => <button key={view} className={activeView === view ? "active" : ""} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}{view === "Notas crédito" && <span>{number.format(rows.filter((row) => row.creditNote > 0).length)}</span>}</button>)}</div><div className="billing-table-scroll"><table className="billing-data-table"><thead><tr><th>Fecha</th><th>DOCNUM</th><th>Grupo de cliente</th><th>Canal</th><th>Zona</th><th>Ciudad</th><th className="align-right">Facturado</th><th className="align-right">NC</th><th className="align-right">Neto</th><th aria-label="Abrir detalle" /></tr></thead><tbody>{loading ? Array.from({ length: 6 }, (_, index) => <tr key={index} className="billing-skeleton-row"><td colSpan={10}><span className="billing-skeleton billing-skeleton-row-fill" /></td></tr>) : visibleRows.length ? visibleRows.map((row) => <tr key={row.id} tabIndex={0} onClick={() => setSelectedRow(row)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedRow(row); } }}><td><span className="billing-date-cell">{formatDate(row.date)}</span><small>{dateValue(row.date).getFullYear()}</small></td><td><strong className="billing-docnum">{row.docnum}</strong></td><td><span className="billing-group-cell">{row.customerGroup}</span><small>{row.customer}</small></td><td>{row.channel}</td><td><span className={`billing-zone-tag ${row.zone.toLowerCase().replaceAll(" ", "-")}`}>{row.zone}</span></td><td>{row.city}</td><td className="align-right number-cell">{formatCurrency(row.invoiced)}</td><td className="align-right number-cell credit-cell">{row.creditNote ? formatCurrency(row.creditNote) : "—"}</td><td className="align-right number-cell net-cell">{formatCurrency(row.net)}</td><td><ChevronRight size={16} className="billing-row-chevron" /></td></tr>) : <tr><td colSpan={10} className="billing-table-state"><Search size={22} /><strong>No encontramos documentos</strong><span>Prueba cambiando los filtros o el texto de búsqueda.</span></td></tr>}</tbody></table></div><div className="billing-table-footer"><span>Mostrando {visibleRows.length} de {number.format(pagination.total)} documentos</span><div><button onClick={() => changePage(pagination.page - 1)} disabled={loading || pagination.page <= 1} aria-label="Página anterior"><ChevronLeft size={15} /></button><strong>{pagination.page}</strong><button onClick={() => changePage(pagination.page + 1)} disabled={loading || pagination.page >= pagination.totalPages} aria-label="Página siguiente"><ChevronRight size={15} /></button></div></div></section>
-        <footer className="billing-footer"><span>{lastUpdated ? `Actualizado ${new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(new Date(lastUpdated))}` : "Actualización automática"}</span><span>Firplak · Portal interno</span></footer>
-      </div></section>
-    {selectedRow && <><button className="billing-drawer-backdrop" onClick={() => setSelectedRow(null)} aria-label="Cerrar detalle" /><aside className="billing-detail-drawer"><div className="billing-drawer-header"><div><span className="billing-panel-kicker">DETALLE DEL DOCUMENTO</span><h2>{selectedRow.docnum}</h2></div><button onClick={() => setSelectedRow(null)} aria-label="Cerrar detalle"><X size={19} /></button></div><div className="billing-drawer-status"><span className="billing-status-dot" /> Documento contabilizado <span>{formatDate(selectedRow.date)}</span></div><div className="billing-drawer-total"><span>Total neto</span><strong>{formatCurrency(selectedRow.net)}</strong><small>Facturado {formatCurrency(selectedRow.invoiced)} · NC {formatCurrency(selectedRow.creditNote)}</small></div><dl className="billing-detail-list"><div><dt>Cliente</dt><dd>{selectedRow.customer}</dd></div><div><dt>Grupo de cliente</dt><dd>{selectedRow.customerGroup}</dd></div><div><dt>Canal</dt><dd>{selectedRow.channel}</dd></div><div><dt>Zona</dt><dd>{selectedRow.zone}</dd></div><div><dt>Ciudad</dt><dd>{selectedRow.city}</dd></div></dl></aside></>}
-  </main>;
+        <section className="billing-panel billing-table-panel"><div className="billing-table-heading"><div><span className="billing-panel-kicker">DETALLE OPERATIVO</span><h2>Documentos de facturación</h2><p>{formatNumber(pagination.total)} registros encontrados · página {pagination.page} de {pagination.totalPages}</p></div><div className="billing-table-actions"><button className="billing-secondary-button small" onClick={() => void loadData(pagination.page)} disabled={isRefreshing}><RefreshCw size={15} className={isRefreshing ? "billing-spin" : ""} /> Actualizar</button></div></div><div className="billing-tabs" role="tablist">{(["Todos", "Facturación", "Notas crédito"] as View[]).map((view) => <button key={view} className={activeView === view ? "active" : ""} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}{view === "Notas crédito" && <span>{formatNumber(rows.filter((row) => row.creditNote > 0).length)}</span>}</button>)}</div><div className="billing-table-scroll"><table className="billing-data-table"><thead><tr><th>Fecha</th><th>DOCNUM</th><th>Grupo de cliente</th><th>Canal</th><th>Zona</th><th>Ciudad</th><th className="align-right">Facturado</th><th className="align-right">NC</th><th className="align-right">Neto</th><th aria-label="Abrir detalle" /></tr></thead><tbody>{loading ? Array.from({ length: 6 }, (_, index) => <tr key={index} className="billing-skeleton-row"><td colSpan={10}><span className="billing-skeleton billing-skeleton-row-fill" /></td></tr>) : visibleRows.length ? visibleRows.map((row) => <tr key={row.id} tabIndex={0} onClick={() => setSelectedRow(row)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedRow(row); } }}><td><span className="billing-date-cell">{formatDate(row.date)}</span><small>{dateValue(row.date).getFullYear()}</small></td><td><strong className="billing-docnum">{row.docnum}</strong></td><td><span className="billing-group-cell">{row.customerGroup}</span><small>{row.customer}</small></td><td>{row.channel}</td><td><span className={`billing-zone-tag ${row.zone.toLowerCase().replaceAll(" ", "-")}`}>{row.zone}</span></td><td>{row.city}</td><td className="align-right number-cell">{formatCurrency(row.invoiced)}</td><td className="align-right number-cell credit-cell">{row.creditNote ? formatCurrency(row.creditNote) : "—"}</td><td className="align-right number-cell net-cell">{formatCurrency(row.net)}</td><td><ChevronRight size={16} className="billing-row-chevron" /></td></tr>) : <tr><td colSpan={10} className="billing-table-state"><Search size={22} /><strong>No encontramos documentos</strong><span>Prueba cambiando los filtros o el texto de búsqueda.</span></td></tr>}</tbody></table></div><TablePager shown={visibleRows.length} total={pagination.total} page={pagination.page} totalPages={pagination.totalPages} loading={loading} noun="documentos" onPageChange={changePage} /></section>
+        <footer className="billing-footer"><span>{lastUpdated ? `Actualizado ${formatDateTime(lastUpdated)}` : "Actualización automática"}</span><span>Firplak · Portal interno</span></footer>
+  </DashboardShell>;
 }

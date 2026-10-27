@@ -1,0 +1,46 @@
+table Medidas
+	lineageTag: dbe3cf30-30e2-499e-8a04-0fd6f9bbbd75
+
+	measure 'Total Facturado' = sum(Facturas[Valor Total])
+		lineageTag: 1e8b61dc-2e0a-4292-8826-412d7510f0c8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total NC' = sum(NotasCreditos[Valor Total])*-1
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 1b2d7683-ceee-4e3f-9660-c2a081b33503
+
+	measure 'Total Ventas' = [Total Facturado] - [Total NC]
+		lineageTag: 8c97024a-5e2e-4990-8525-e6506b2ff0de
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Sobre el total' = DIVIDE([Total NC], [Total Facturado])
+		formatString: #,0.00\ %;-#,0.00\ %;#,0.00\ %
+		lineageTag: 1ab2af26-d749-4a6d-afec-8fc877d1de96
+
+	measure Meta = 0.03
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: a3450276-65c0-44f2-9bd3-e63e5528f0af
+
+	measure 'A.A % Sobre el total' = CALCULATE([% Sobre el total], SAMEPERIODLASTYEAR(calendario[Date]))
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: b383b341-961c-46fc-976a-b3cf9917ce6c
+
+	measure 'Total notas' = SUM(NotasCreditos[Valor Total])
+		lineageTag: 2371a4ce-18fe-4498-98d2-f8d570e28d36
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Medidas = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Columna1", type text}}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Tipo cambiado",{"Columna1"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+

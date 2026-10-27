@@ -30,6 +30,9 @@ sources:
 - `/facturacion-diaria/detalle`: página independiente para el detalle paginado de documentos de facturación.
 - `/api/facturacion-diaria`: proxy server-side hacia la Reporting API.
 - `/api/entregas`: proxy server-side hacia `GET /api/v1/entregas`.
+- `/notas-credito`: dashboard de notas crédito para Cartera ([`NotasCreditoDashboard.tsx`](../../components/NotasCreditoDashboard.tsx); reglas en la [ficha del BI](../bi/notas-credito.md)).
+- `/notas-credito/detalle`: detalle paginado de documentos de notas crédito, con filtros y panel lateral.
+- `/api/notas-credito`: proxy server-side hacia `GET /api/v1/notas-credito`.
 
 ## Comportamiento del dashboard
 
@@ -57,13 +60,22 @@ El consumo de las APIs valida el tipo de contenido antes de parsear JSON y muest
 
 En la composición visual del dashboard, la tabla de acumulados aparece inmediatamente después de las cards de KPIs. La tabla operativa no se muestra en la vista principal: la opción lateral `Detalle de documentos` enlaza a `/facturacion-diaria/detalle`, una página independiente con filtros, paginación y detalle de documentos.
 
-La navegación lateral no muestra las opciones `Notas crédito` ni `Comparativos`; el encabezado no muestra el estado de conexión SQL Server ni un botón de exportación.
+La navegación lateral sale de [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Desde el 2026-10-27, por decisión del desarrollador, cada reporte solo muestra su vista principal y su detalle: facturación (`billingNavigation`) muestra Facturación y Detalle de documentos; notas crédito (`creditNoteNavigation`) muestra Notas crédito y Detalle de notas crédito. Para volver al portal se usa el enlace "Indicadores" de las migas de pan. No muestra `Comparativos`; el encabezado no muestra el estado de conexión SQL Server ni un botón de exportación.
+
+## Componentes comunes de dashboard
+
+Extraídos de `FacturacionDashboard.tsx` el 2026-10-27, antes del segundo dashboard, sin cambiar el comportamiento ni la apariencia de facturación:
+
+- [`components/dashboard/DashboardShell.tsx`](../../components/dashboard/DashboardShell.tsx): barra lateral, menú, perfil de Microsoft 365, cierre de sesión, menú móvil y migas de pan. Recibe `navigation` (grupos del menú del reporte), `activeHref`, `title`, `className` y `overlay` (panel de detalle).
+- [`MetricCard.tsx`](../../components/dashboard/MetricCard.tsx) (`MetricCard`, `MetricSkeleton`), [`FilterSelect.tsx`](../../components/dashboard/FilterSelect.tsx) y [`TablePager.tsx`](../../components/dashboard/TablePager.tsx).
+- [`lib/dashboard/`](../../lib/dashboard/): `format.ts` (formatos es-CO), `fetch.ts` (`readJsonPayload`, que detecta la sesión expirada), `options.ts` y `navigation.ts`.
+- Las clases CSS conservan el prefijo `billing-*`. Un dashboard nuevo agrega solo sus estilos propios en `app/styles/<tema>.css`. Atención: `billing.css` oculta `.billing-table-panel` fuera de la vista de detalle y reordena las secciones con `order`; [`credit-notes.css`](../../app/styles/credit-notes.css) lo compensa con `.credit-table-panel` y `order: 0`.
 
 ## Estilos e identidad visual
 
 La interfaz aplica el [manual de identidad web](../../docs/manual-identidad-web.md):
 
-- [`app/globals.css`](../../app/globals.css) define los tokens (color, tipografía, espaciado, forma, movimiento) y la base; [`app/styles/`](../../app/styles/) contiene `login.css`, `portal.css` y `billing.css`, importados desde [`app/layout.tsx`](../../app/layout.tsx).
+- [`app/globals.css`](../../app/globals.css) define los tokens (color, tipografía, espaciado, forma, movimiento) y la base; [`app/styles/`](../../app/styles/) contiene `login.css`, `portal.css`, `billing.css` y `credit-notes.css`, importados desde [`app/layout.tsx`](../../app/layout.tsx).
 - Solo Montserrat (300/400/500/600), cargada con `next/font/google`; es necesario tener acceso a Google Fonts en el momento del build. Los titulares van en Montserrat 300 de gran volumen (`--text-display` hasta 64 px en login y portal; `--text-h1` hasta 48 px en el dashboard). Jost se retiró por decisión de Mercadeo (2026-10-27).
 - Fondo blanco (`--color-bg`) por decisión de Mercadeo; navy para bloques de volumen (barra lateral, panel del login, cabecera del portal). Los neutros de interfaz son grises fríos (`--gray-100`, `--gray-200`); el crema solo se usa como texto sobre navy.
 - El token `--black` existe para el logo monocromático y detalles; el texto de interfaz sigue en navy.
