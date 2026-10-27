@@ -1,10 +1,11 @@
 ---
 status: borrador
-version: 0.1
+version: 0.2
 updated: 2026-10-27
 implementacion: ../app/globals.css
 sources:
-  - Brand Book Firplak (Manual de Identidad Corporativa, PDF, 25 páginas)
+  - Manual de marca Firplak v1-030726 (Manual de Identidad Corporativa, PDF, 23 páginas)
+  - Brand Book Firplak, versión anterior (PDF, 25 páginas), reemplazada por la v1-030726
 ---
 
 # Manual de identidad web Firplak
@@ -39,13 +40,17 @@ La personalidad de marca (moderna, confiable, cálida, ingeniosa, sofisticada, c
 | Principal | Navy | `#324354` | Navegación, títulos, botón primario, encabezados de tabla, serie principal de gráficos. |
 | Secundario | Sage | `#7B8E90` | Acentos, estados activos, bordes de controles, serie secundaria. **No** se usa para texto pequeño. |
 | Fondo | Crema | `#F6F3EE` | Fondo general de la aplicación. |
-| Superficie | Blanco | `#FFFFFF` | Tarjetas, paneles, tablas, modales. |
+| Complementario | Negro | `#000000` | Logo monocromático y detalles puntuales. **No** se usa como color de texto de interfaz (ver nota). |
+| Superficie | Blanco | `#FFFFFF` | Tarjetas, paneles, tablas, modales. El Brand Book no lo lista como color de marca, pero lo usa como superficie en todas sus piezas. |
+
+> **Negro en pantalla.** El Brand Book reserva el negro "para texto y detalles", pero en sus propias piezas el texto va en navy. En web el texto de interfaz se mantiene en navy (`--color-text`): el negro puro sobre crema (18,97:1) produce un contraste excesivo que fatiga en pantallas grandes y rompe la calidez de la paleta. El negro se reserva para la versión monocromática del logo, para impresión y para detalles gráficos puntuales.
 
 ### 2.2 Proporción 60 / 30 / 10 en interfaz
 
 - **60 % crema y blanco:** fondo de la app (crema) y superficies de contenido (blanco).
 - **30 % navy:** barra lateral, títulos, texto principal, botones primarios.
 - **10 % sage:** ítem de menú activo, foco, chips, indicadores secundarios.
+- **Negro:** fuera de la proporción; solo en detalles.
 
 ### 2.3 Escala derivada
 
@@ -87,6 +92,7 @@ Combinaciones verificadas. Mínimos: 4,5:1 para texto normal, 3:1 para texto gra
 |---|---|---|---|
 | Navy `#324354` | 10,16 | 9,18 | ✅ Cualquier texto |
 | Navy 900 `#1F2B37` | 14,39 | 13,00 | ✅ Cualquier texto |
+| Negro `#000000` | 21,00 | 18,97 | ✅ Cumple, pero no se usa para texto de interfaz (ver 2.1) |
 | Gris 600 `#5F6B73` | 5,47 | 4,94 | ✅ Texto secundario |
 | Sage 700 `#5A6B6D` | 5,59 | 5,05 | ✅ Texto de acento |
 | Sage `#7B8E90` | 3,43 | 3,10 | ⚠️ Solo iconos, bordes y texto grande |
@@ -95,10 +101,12 @@ Combinaciones verificadas. Mínimos: 4,5:1 para texto normal, 3:1 para texto gra
 | Texto sobre fondo de color | Contraste | Veredicto |
 |---|---|---|
 | Blanco o crema sobre navy | 10,16 / 9,18 | ✅ Cualquier texto |
+| Crema sobre negro | 18,97 | ✅ Cualquier texto (piezas de marca, no interfaz) |
 | Crema al 72 % sobre navy (texto secundario de navegación) | 5,67 | ✅ Texto |
 | Sage 300 `#B4C1C2` sobre navy | 5,49 | ✅ Texto e iconos de acento |
 | Blanco sobre sage | 3,43 | ⚠️ Solo texto grande o en negrita (ajuste al Brand Book para web) |
 | Navy sobre sage | 2,96 | ❌ No usar |
+| Navy sobre negro | 2,07 | ❌ No usar |
 
 > Los bordes de campos de formulario usan sage (3,10:1 sobre crema) para cumplir el mínimo de 3:1 de componentes. El borde `--crema-300` es solo decorativo (divisores).
 
@@ -110,10 +118,11 @@ Combinaciones verificadas. Mínimos: 4,5:1 para texto normal, 3:1 para texto gra
 
 | Rol | Familia | Pesos | Uso |
 |---|---|---|---|
-| Principal | **Montserrat** | 400, 500, 600 | Todo el texto de interfaz, cuerpo, etiquetas, tablas, botones. |
-| Display | **Jost** | 300 | Solo H1 de página y momentos de marca (login, portadas). |
+| Principal | **Montserrat** | 300, 400, 500, 600 | Todo el texto de interfaz. El peso 300 (Light) es solo para el título de página, como los títulos de sección del Brand Book. |
+| Display | **Jost** | 300 | Solo momentos de marca: login, cabecera del portal, portadas. Nunca en vistas de trabajo (dashboards, tablas, paneles). |
 
-- *Orborn Medium* (display del Brand Book) **no tiene licencia web confirmada** (`pendiente`). La escala tipográfica del propio Brand Book usa Jost para H1, por lo que Jost es el sustituto oficial en web.
+- *Orborn Medium* (display del Brand Book) **no tiene licencia web confirmada** (`pendiente`). La escala tipográfica del Brand Book usa Jost para H1, y en la v1-030726 la muestra de Orborn y los titulares de portada se ven en Jost, por lo que Jost es el sustituto en web.
+- **Dos niveles de titular.** El Brand Book define la display como de "uso ocasional y acotado", y en la v1-030726 los títulos de sección van en Montserrat Light. Por eso en web Jost queda para los momentos de marca, y el título de cada vista usa Montserrat 300.
 - Carga las fuentes con `next/font/google` (o autohospedadas con `font-display: swap`). No uses `@import` de Google Fonts en CSS: bloquea el render.
 - Fuente de respaldo: `system-ui, -apple-system, "Segoe UI", sans-serif`.
 
@@ -123,8 +132,8 @@ Adaptación de la jerarquía del Brand Book (pensada para piezas editoriales) a 
 
 | Nivel | Familia / peso | Tamaño | Interlineado | Uso |
 |---|---|---|---|---|
-| Display | Jost 300 | `clamp(2.25rem, 1.5rem + 3vw, 3.5rem)` | 1.1 | Login, portadas. |
-| H1 | Jost 300 | `clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem)` | 1.15 | Título de página (uno por vista). |
+| Display | Jost 300 | `clamp(2.25rem, 1.5rem + 3vw, 3.5rem)` | 1.1 | Momentos de marca: login, cabecera del portal, portadas. |
+| H1 | Montserrat 300 | `clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem)` | 1.15 | Título de página (uno por vista) y títulos de paneles laterales. |
 | H2 | Montserrat 500 | `clamp(1.125rem, 1rem + 0.5vw, 1.375rem)` | 1.3 | Título de panel o sección. |
 | H3 / Eyebrow | Montserrat 600, MAYÚSCULAS, `letter-spacing: .14em` | 0.75rem | 1.4 | Antetítulos ("RESUMEN DIARIO"), categorías. |
 | Cuerpo | Montserrat 400 | 1rem (0.9375rem en tablas densas) | 1.6 | Texto corrido, descripciones. |
@@ -200,6 +209,7 @@ Adaptación de la jerarquía del Brand Book (pensada para piezas editoriales) a 
 | Área de seguridad | 1X en todos los lados (X = altura del símbolo "Λ"). Implementar con `padding` del contenedor, no con márgenes negativos. |
 | Versión clara | Navy sobre crema o blanco. |
 | Versión negativa | Blanco o crema sobre navy, sage o fotografía con capa de contraste. |
+| Monocromática (negro) y escala de grises | Aprobadas en el Brand Book v1-030726. En web son de uso excepcional (documentos o exportaciones en blanco y negro, impresión). En pantalla se usan la versión clara o la negativa. |
 | Con eslogan | Solo en login, portadas y pie de página; nunca en barras de navegación por debajo de 200 px de ancho. |
 | Espacios reducidos | Monograma "Λ" (favicon, avatar, icono de app, menú colapsado). |
 
@@ -426,6 +436,7 @@ Fuera del alcance de la versión 0.1: el Brand Book no lo define. Los tokens sem
   --crema-300: #D9D3C9;
   --gray-600: #5F6B73;
   --white: #FFFFFF;
+  --black: #000000; /* logo monocromático y detalles; no para texto de interfaz */
 
   /* Funcionales */
   --success: #3D6E55;
@@ -485,7 +496,7 @@ Carga de fuentes en Next.js (`app/layout.tsx`):
 ```tsx
 import { Jost, Montserrat } from "next/font/google";
 
-const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-montserrat" });
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-montserrat" });
 const jost = Jost({ subsets: ["latin"], weight: ["300"], variable: "--font-jost" });
 
 // <html lang="es" className={`${montserrat.variable} ${jost.variable}`}>
@@ -502,7 +513,7 @@ const jost = Jost({ subsets: ["latin"], weight: ["300"], variable: "--font-jost"
 ## 17. Checklist de revisión (PR)
 
 - [ ] Solo tokens; ningún HEX nuevo en componentes.
-- [ ] Montserrat y Jost cargadas con `next/font`; ninguna otra familia.
+- [ ] Montserrat y Jost cargadas con `next/font`; ninguna otra familia. Jost solo en momentos de marca.
 - [ ] Logo en versión aprobada, ≥ 120 px y con área de seguridad.
 - [ ] Revisado a 375, 768, 1280 y 1440 px, sin scroll horizontal.
 - [ ] Estados de hover, foco, deshabilitado, cargando, vacío y error diseñados.
@@ -517,7 +528,9 @@ const jost = Jost({ subsets: ["latin"], weight: ["300"], variable: "--font-jost"
 | Tema | Estado |
 |---|---|
 | SVG oficial del logotipo y del monograma "Λ" | `pendiente`: solicitar a Mercadeo. |
-| Licencia web de Orborn Medium | `pendiente`: mientras tanto, Jost. |
+| Licencia web de Orborn Medium | `pendiente`: mientras tanto, Jost. Confirmar si la muestra de Orborn de la v1-030726 es en realidad Jost. |
+| Peso del H1 en el Brand Book | `pendiente`: la escala dice "Jost · 300", pero la muestra se ve en un peso mayor. |
+| Uso del negro en texto | `pendiente`: confirmar con Mercadeo que el texto de interfaz puede seguir en navy. |
 | Validación de colores funcionales por Mercadeo | `pendiente`. |
 | Modo oscuro | Fuera de alcance de la v0.1. |
 | Biblioteca de componentes compartida entre aplicaciones Firplak | Por evaluar cuando exista una segunda aplicación. |

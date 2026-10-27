@@ -49,7 +49,7 @@ SP o proceso de actualización periódica
 
 ### Diseño
 
-- [Manual de identidad web](../docs/manual-identidad-web.md) (borrador v0.1): tokens, tipografía, responsive, componentes y accesibilidad derivados del Brand Book. Aplicado al portal, al login y al dashboard (ver [Frontend](components/frontend.md#estilos-e-identidad-visual)).
+- [Manual de identidad web](../docs/manual-identidad-web.md) (borrador v0.2, basado en el Manual de marca v1-030726): tokens, tipografía, responsive, componentes y accesibilidad derivados del Brand Book. Aplicado al portal, al login y al dashboard (ver [Frontend](components/frontend.md#estilos-e-identidad-visual)).
 
 ### Decisiones
 

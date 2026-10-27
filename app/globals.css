@@ -19,6 +19,7 @@
   --crema-300: #D9D3C9;
   --gray-600: #5F6B73;
   --white: #FFFFFF;
+  --black: #000000; /* Complementario: logo monocromático y detalles; no para texto de interfaz */
 
   /* Funcionales */
   --success: #3D6E55;
@@ -45,7 +46,7 @@
 
   /* Tipografía */
   --font-sans: var(--font-montserrat), system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-jost), var(--font-sans);
+  --font-display: var(--font-jost), var(--font-sans); /* Solo momentos de marca */
   --text-display: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
   --text-h1: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
   --text-h2: clamp(1.0625rem, 1rem + .35vw, 1.25rem);

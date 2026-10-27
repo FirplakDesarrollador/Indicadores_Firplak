@@ -71,7 +71,7 @@
 .billing-heading-row { display: flex; flex-direction: column; gap: var(--space-4); }
 .billing-eyebrow, .billing-panel-kicker { color: var(--color-text-muted); display: block; font-size: .75rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
 .billing-eyebrow span { color: var(--color-accent); padding: 0 var(--space-1); }
-.billing-heading-row h1 { color: var(--color-text); font-family: var(--font-display); font-size: var(--text-h1); font-weight: 300; letter-spacing: -.01em; line-height: 1.15; margin: var(--space-2) 0; }
+.billing-heading-row h1 { color: var(--color-text); font-size: var(--text-h1); font-weight: 300; letter-spacing: -.01em; line-height: 1.15; margin: var(--space-2) 0; }
 .billing-heading-row p { color: var(--color-text-muted); max-width: 68ch; }
 .billing-heading-actions, .billing-table-actions { align-items: center; display: flex; gap: var(--space-2); }
 .billing-heading-actions > * { flex: 1; }
@@ -225,7 +225,7 @@
 .billing-drawer-backdrop { animation: fade-in var(--duration-base) var(--ease-out); background: var(--color-overlay); border: 0; cursor: default; inset: 0; position: fixed; z-index: 50; }
 .billing-detail-drawer { animation: slide-in-right var(--duration-slow) var(--ease-out); background: var(--color-surface); box-shadow: var(--shadow-lg); height: 100vh; height: 100dvh; overflow-y: auto; padding: var(--space-5); position: fixed; right: 0; top: 0; width: 100%; z-index: 51; }
 .billing-drawer-header { align-items: flex-start; display: flex; gap: var(--space-4); justify-content: space-between; }
-.billing-drawer-header h2 { color: var(--color-text); font-family: var(--font-display); font-size: 1.75rem; font-weight: 300; line-height: 1.2; margin-top: 6px; overflow-wrap: anywhere; }
+.billing-drawer-header h2 { color: var(--color-text); font-size: 1.75rem; font-weight: 300; line-height: 1.2; margin-top: 6px; overflow-wrap: anywhere; }
 .billing-drawer-header > button { align-items: center; background: var(--color-bg); border: 0; border-radius: var(--radius-sm); color: var(--color-text); display: flex; flex: none; height: 44px; justify-content: center; width: 44px; }
 .billing-drawer-header > button:hover { background: var(--crema-200); }
 .billing-drawer-status { align-items: center; display: flex; font-size: .875rem; gap: var(--space-2); margin-top: var(--space-5); }

@@ -58,7 +58,8 @@ La navegación lateral no muestra las opciones `Notas crédito` ni `Comparativos
 La interfaz aplica el [manual de identidad web](../../docs/manual-identidad-web.md):
 
 - [`app/globals.css`](../../app/globals.css) define los tokens (color, tipografía, espaciado, forma, movimiento) y la base; [`app/styles/`](../../app/styles/) contiene `login.css`, `portal.css` y `billing.css`, importados desde [`app/layout.tsx`](../../app/layout.tsx).
-- Fuentes Montserrat (400/500/600) y Jost (300) cargadas con `next/font/google`. Es necesario tener acceso a Google Fonts en el momento del build.
+- Fuentes Montserrat (300/400/500/600) y Jost (300) cargadas con `next/font/google`. Es necesario tener acceso a Google Fonts en el momento del build. Jost solo aparece en momentos de marca (panel del login, formulario del login y cabecera del portal); los títulos del dashboard y del panel de detalle usan Montserrat 300.
+- El token `--black` existe para el logo monocromático y detalles; el texto de interfaz sigue en navy.
 - Puntos de corte mobile-first: 640, 1024 y 1440 px. Las cuadrículas de KPIs y de análisis usan `@container` sobre `.billing-content`. La barra lateral del dashboard funciona como drawer por debajo de 1024 px.
 - Logos recortados en `public/brand/firplak-wordmark-*.png` y `firplak-eslogan-*.png`. Los `firplak-es-*.png` originales (600×600 con margen) ya no se referencian.
 - El monograma «Λ» es [`components/BrandPeak.tsx`](../../components/BrandPeak.tsx) (marca de agua) y [`app/icon.svg`](../../app/icon.svg) (favicon). Ambos se dibujaron a partir de la geometría del Brand Book; `pendiente` reemplazarlos por el SVG oficial.

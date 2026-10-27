@@ -5,7 +5,7 @@ import "./styles/login.css";
 import "./styles/portal.css";
 import "./styles/billing.css";
 
-const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-montserrat", display: "swap" });
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-montserrat", display: "swap" });
 const jost = Jost({ subsets: ["latin"], weight: ["300"], variable: "--font-jost", display: "swap" });
 
 export const metadata: Metadata = {
