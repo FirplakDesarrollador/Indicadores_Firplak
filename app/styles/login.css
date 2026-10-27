@@ -1,0 +1,70 @@
+/* Login — panel de marca (navy + pico) y formulario sobre crema */
+
+.login-shell { display: grid; min-height: 100vh; min-height: 100dvh; }
+
+.login-brand-panel { display: none; }
+
+.login-form-panel { align-items: center; background: var(--color-bg); display: flex; justify-content: center; padding: var(--space-6) var(--space-4); }
+
+/* En móvil el formulario ocupa la pantalla sin tarjeta; desde tablet se presenta como tarjeta */
+.login-form-wrap { max-width: 440px; padding: var(--space-2) var(--space-1); width: 100%; }
+
+.login-mobile-mark { margin-bottom: var(--space-6); }
+.login-mobile-mark .brand-logo { width: 176px; }
+
+.login-kicker, .login-form-kicker { align-items: center; display: flex; font-size: .75rem; font-weight: 600; gap: var(--space-2); letter-spacing: .14em; text-transform: uppercase; }
+.login-form-kicker { color: var(--color-text-muted); }
+
+.login-form-wrap h2 { color: var(--color-text); font-family: var(--font-display); font-size: clamp(1.75rem, 1.5rem + 1vw, 2.25rem); font-weight: 300; line-height: 1.15; margin: var(--space-2) 0 var(--space-3); }
+
+.login-description { color: var(--color-text-muted); margin-bottom: var(--space-6); }
+
+.microsoft-button { align-items: center; background: var(--navy-700); border: 0; border-radius: var(--radius-sm); color: var(--white); display: flex; font-size: .9375rem; font-weight: 500; gap: var(--space-3); min-height: 48px; padding: 0 var(--space-4); transition: background var(--duration-fast) var(--ease-out); width: 100%; }
+.microsoft-button:hover:not(:disabled) { background: var(--navy-900); }
+.microsoft-button:disabled { cursor: progress; opacity: .7; }
+.microsoft-button > span:not(.microsoft-logo) { flex: 1; text-align: left; }
+
+/* Colores oficiales de Microsoft, exigidos por su guía de botón de inicio de sesión */
+.microsoft-logo { background: var(--white); border-radius: 4px; display: grid; flex: none; gap: 2px; grid-template-columns: repeat(2, 8px); padding: 4px; }
+.microsoft-logo i { display: block; height: 8px; width: 8px; }
+.microsoft-logo i:nth-child(1) { background: #F25022; }
+.microsoft-logo i:nth-child(2) { background: #7FBA00; }
+.microsoft-logo i:nth-child(3) { background: #00A4EF; }
+.microsoft-logo i:nth-child(4) { background: #FFB900; }
+
+.login-error { background: rgb(158 67 53 / .08); border: 1px solid rgb(158 67 53 / .25); border-radius: var(--radius-sm); color: var(--danger); font-size: .875rem; margin-top: var(--space-4); padding: var(--space-3) var(--space-4); }
+
+.login-security { align-items: flex-start; background: var(--color-bg); border-radius: var(--radius-sm); color: var(--color-text); display: flex; font-size: .8125rem; gap: var(--space-3); line-height: 1.5; margin-top: var(--space-6); padding: var(--space-4); }
+.login-security svg { color: var(--color-accent-text); flex: none; margin-top: 2px; }
+
+.login-terms { color: var(--color-text-muted); font-size: .75rem; margin-top: var(--space-5); text-align: center; }
+
+@media (min-width: 640px) {
+  .login-form-panel { padding: var(--space-7); }
+  .login-form-wrap { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: var(--space-7) var(--space-6); }
+}
+
+@media (min-width: 1024px) {
+  .login-shell { grid-template-columns: minmax(0, 1.1fr) minmax(460px, 1fr); }
+
+  .login-brand-panel { background: var(--color-nav-bg); color: var(--color-nav-text); display: flex; flex-direction: column; gap: var(--space-7); isolation: isolate; justify-content: space-between; overflow: hidden; padding: var(--space-7) var(--space-8); position: relative; }
+  .login-brand-lockup .brand-logo { width: 216px; }
+
+  .login-peak { bottom: -12%; color: var(--white); opacity: .05; right: -10%; width: min(70%, 560px); }
+
+  .login-brand-content { max-width: 540px; }
+  .login-kicker { color: var(--color-nav-text-muted); }
+  .login-kicker svg { color: var(--color-on-dark-accent); }
+  .login-brand-content h1 { font-family: var(--font-display); font-size: var(--text-display); font-weight: 300; letter-spacing: -.01em; line-height: 1.1; margin: var(--space-5) 0; }
+  .login-brand-content h1 em { color: var(--color-on-dark-accent); font-style: normal; }
+  .login-brand-content p { color: var(--color-nav-text-muted); font-size: 1rem; line-height: 1.6; max-width: 44ch; }
+
+  .login-points { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-6); }
+  .login-points span { align-items: center; display: flex; font-size: .9375rem; gap: var(--space-3); }
+  .login-points svg { color: var(--color-on-dark-accent); }
+
+  .login-brand-footer { color: var(--color-nav-text-muted); font-size: .8125rem; }
+  .login-brand-footer span { margin: 0 var(--space-2); }
+
+  .login-mobile-mark { display: none; }
+}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowRight, BarChart3, CheckCircle2, ShieldCheck } from "lucide-react";
+import BrandPeak from "@/components/BrandPeak";
 import { createClient } from "@/lib/supabase/client";
 
 const supabase = createClient();
@@ -51,7 +52,8 @@ export default function LoginPage() {
   return (
     <main className="login-shell">
       <section className="login-brand-panel">
-        <div className="login-brand-lockup"><div className="official-logo-wrap official-logo-wrap-dark"><Image className="official-logo-image" src="/brand/firplak-es-negativo.png" alt="Firplak" width={240} height={240} priority /></div></div>
+        <BrandPeak className="brand-peak login-peak" />
+        <div className="login-brand-lockup"><Image className="brand-logo" src="/brand/firplak-eslogan-negativo.png" alt="Firplak, inspirando hogares" width={536} height={142} priority /></div>
         <div className="login-brand-content">
           <div className="login-kicker"><BarChart3 size={15} /> CENTRO DE INDICADORES</div>
           <h1>Decisiones claras,<br /><em>datos en movimiento.</em></h1>
@@ -63,7 +65,7 @@ export default function LoginPage() {
 
       <section className="login-form-panel">
         <div className="login-form-wrap">
-          <div className="login-mobile-mark"><div className="official-logo-wrap official-logo-wrap-light"><Image className="official-logo-image" src="/brand/firplak-es-positivo.png" alt="Firplak" width={210} height={210} priority /></div></div>
+          <div className="login-mobile-mark"><Image className="brand-logo" src="/brand/firplak-eslogan-positivo.png" alt="Firplak, inspirando hogares" width={536} height={142} priority /></div>
           <div className="login-form-kicker">BIENVENIDO DE NUEVO</div>
           <h2>Ingresa a tu espacio</h2>
           <p className="login-description">Usa tu cuenta corporativa para consultar los indicadores de Firplak.</p>

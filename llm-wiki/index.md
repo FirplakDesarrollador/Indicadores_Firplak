@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-26
+updated: 2026-10-27
 sources:
   - ../README.md
   - ../package.json
@@ -46,6 +46,10 @@ SP o proceso de actualización periódica
 
 - [Runbook](operations/runbook.md): desarrollo local, despliegue y diagnóstico.
 - [Seguridad](concepts/security-and-secrets.md): límites de secretos y autenticación.
+
+### Diseño
+
+- [Manual de identidad web](../docs/manual-identidad-web.md) (borrador v0.1): tokens, tipografía, responsive, componentes y accesibilidad derivados del Brand Book. Aplicado al portal, al login y al dashboard (ver [Frontend](components/frontend.md#estilos-e-identidad-visual)).
 
 ### Decisiones
 

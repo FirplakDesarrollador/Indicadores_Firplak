@@ -14,6 +14,7 @@ import {
   Target,
   UsersRound,
 } from "lucide-react";
+import BrandPeak from "@/components/BrandPeak";
 import { createClient } from "@/lib/supabase/client";
 
 type PortalCard = {
@@ -67,16 +68,14 @@ export default function HomePage() {
       <header className="portal-header">
         <div className="portal-brand">
           <div className="portal-brand-lockup">
-            <div className="official-logo-wrap official-logo-wrap-light">
-              <Image
-                className="official-logo-image"
-                src="/brand/firplak-es-positivo.png"
-                alt="Firplak"
-                width={220}
-                height={220}
-                priority
-              />
-            </div>
+            <Image
+              className="brand-logo"
+              src="/brand/firplak-wordmark-positivo.png"
+              alt="Firplak"
+              width={536}
+              height={82}
+              priority
+            />
           </div>
           <div className="portal-brand-subtitle">Portal de indicadores</div>
         </div>
@@ -94,6 +93,7 @@ export default function HomePage() {
 
       <section className="portal-content">
         <div className="portal-intro">
+          <BrandPeak className="brand-peak portal-peak" />
           <div>
             <div className="portal-eyebrow"><BarChart3 size={15} /> ESPACIO DE TRABAJO</div>
             <h1>Aplicaciones disponibles</h1>

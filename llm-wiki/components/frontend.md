@@ -1,12 +1,15 @@
 ---
 status: active
-updated: 2026-10-26
+updated: 2026-10-27
 sources:
   - ../../app/page.tsx
   - ../../app/login/page.tsx
   - ../../components/FacturacionDashboard.tsx
   - ../../app/api/facturacion-diaria/route.ts
   - ../../app/api/entregas/route.ts
+  - ../../app/globals.css
+  - ../../app/styles/
+  - ../../docs/manual-identidad-web.md
 ---
 
 # Frontend
@@ -40,7 +43,7 @@ El resumen diario muestra inicialmente los 7 días más recientes y ofrece `Ver 
 
 El botón `Filtros` abre un panel avanzado responsive con Cliente, Grupo de cliente, Mercado, Zona y Ciudad. Mercado ofrece las opciones fijas `Nacional` e `Internacional`; Zona y Grupo de cliente también se envían como filtros soportados al endpoint de facturación, mientras Cliente, Mercado y Ciudad refinan las filas visibles.
 
-Los importes de KPIs y distribuciÃ³n se muestran abreviados siempre en millones cuando superan $1.000.000, usando el sufijo `M`; los datos numÃ©ricos originales se conservan para cÃ¡lculos, grÃ¡ficos y exportaciÃ³n.
+Los importes de KPIs y distribución se muestran abreviados en millones cuando superan $1.000.000, con formato `es-CO` y sufijo ` M` (por ejemplo `$1.284,5 M`); los porcentajes también usan `es-CO` (`3,2 %`). Los datos numéricos originales se conservan para cálculos, gráficos y exportación.
 
 El dashboard no usa datos demo en el flujo actual. Solicita `pageSize=50` a facturación y entregas en paralelo, conserva el estado de carga con skeletons y envía filtros de año, mes y búsqueda a ambos endpoints; zona y grupo se aplican al endpoint de facturación. Los KPIs se construyen con `summary`, no sumando únicamente la página visible.
 
@@ -49,6 +52,18 @@ El consumo de las APIs valida el tipo de contenido antes de parsear JSON y muest
 En la composición visual del dashboard, la tabla de acumulados aparece inmediatamente después de las cards de KPIs. La tabla operativa no se muestra en la vista principal: la opción lateral `Detalle de documentos` enlaza a `/facturacion-diaria/detalle`, una página independiente con filtros, paginación y detalle de documentos.
 
 La navegación lateral no muestra las opciones `Notas crédito` ni `Comparativos`; el encabezado no muestra el estado de conexión SQL Server ni un botón de exportación.
+
+## Estilos e identidad visual
+
+La interfaz aplica el [manual de identidad web](../../docs/manual-identidad-web.md):
+
+- [`app/globals.css`](../../app/globals.css) define los tokens (color, tipografía, espaciado, forma, movimiento) y la base; [`app/styles/`](../../app/styles/) contiene `login.css`, `portal.css` y `billing.css`, importados desde [`app/layout.tsx`](../../app/layout.tsx).
+- Fuentes Montserrat (400/500/600) y Jost (300) cargadas con `next/font/google`. Es necesario tener acceso a Google Fonts en el momento del build.
+- Puntos de corte mobile-first: 640, 1024 y 1440 px. Las cuadrículas de KPIs y de análisis usan `@container` sobre `.billing-content`. La barra lateral del dashboard funciona como drawer por debajo de 1024 px.
+- Logos recortados en `public/brand/firplak-wordmark-*.png` y `firplak-eslogan-*.png`. Los `firplak-es-*.png` originales (600×600 con margen) ya no se referencian.
+- El monograma «Λ» es [`components/BrandPeak.tsx`](../../components/BrandPeak.tsx) (marca de agua) y [`app/icon.svg`](../../app/icon.svg) (favicon). Ambos se dibujaron a partir de la geometría del Brand Book; `pendiente` reemplazarlos por el SVG oficial.
+- Los colores de Recharts salen de [`lib/brand.ts`](../../lib/brand.ts), que replica los tokens.
+- Las filas de la tabla de documentos se abren con teclado (Enter/Espacio) y `Esc` cierra el panel de detalle y el menú lateral.
 
 ## Variables del frontend
 
