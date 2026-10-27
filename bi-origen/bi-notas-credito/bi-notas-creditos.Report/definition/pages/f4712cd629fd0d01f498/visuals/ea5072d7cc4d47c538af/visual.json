@@ -1,0 +1,572 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "ea5072d7cc4d47c538af",
+  "position": {
+    "x": 0,
+    "y": 65.853658536585371,
+    "z": 0,
+    "height": 614.63414634146341,
+    "width": 1280.4878048780488,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "TipoVentas"
+                }
+              },
+              "queryRef": "NotasCreditos.TipoVentas",
+              "nativeQueryRef": "TipoVentas"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "Nombre Cliente"
+                }
+              },
+              "queryRef": "NotasCreditos.Nombre Cliente",
+              "nativeQueryRef": "Nombre Cliente"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "Num Documento"
+                }
+              },
+              "queryRef": "Sum(NotasCreditos.Num Documento)",
+              "nativeQueryRef": "Num Documento",
+              "displayName": "Nota crédito "
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "Vendedor Senior"
+                }
+              },
+              "queryRef": "NotasCreditos.Vendedor Senior",
+              "nativeQueryRef": "Vendedor Senior"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "Subgrupo de Cliente"
+                }
+              },
+              "queryRef": "NotasCreditos.Subgrupo de Cliente",
+              "nativeQueryRef": "Subgrupo de Cliente"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "Conceptos Notas Crédito"
+                }
+              },
+              "queryRef": "NotasCreditos.Conceptos Notas Crédito",
+              "nativeQueryRef": "Concepto",
+              "displayName": "Concepto"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "TiposNC"
+                }
+              },
+              "queryRef": "NotasCreditos.TiposNC",
+              "nativeQueryRef": "TiposNC"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "Territorio"
+                }
+              },
+              "queryRef": "NotasCreditos.Territorio",
+              "nativeQueryRef": "Territorio"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Total NC"
+                }
+              },
+              "queryRef": "Medidas.Total NC",
+              "nativeQueryRef": "Total",
+              "displayName": "Total"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NotasCreditos"
+                    }
+                  },
+                  "Property": "Comentarios"
+                }
+              },
+              "queryRef": "NotasCreditos.Comentarios",
+              "nativeQueryRef": "Comentarios"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Medidas"
+                  }
+                },
+                "Property": "Total NC"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "144.47728979606447D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Conceptos Notas Crédito"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "109.76796994284823D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.TipoVentas"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "125.34679387086133D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Vendedor Senior"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "128.95196059316308D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Territorio"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "137.37621260684924D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Medidas.Total NC"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "131.79583535773918D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Subgrupo de Cliente"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "98.65139971720278D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.TiposNC"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "184.13046949146704D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Nombre Cliente"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "73.40482208754119D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(NotasCreditos.Num Documento)"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Auto'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnFormatting": [
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Medidas.Total NC"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.TipoVentas"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Nombre Cliente"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(NotasCreditos.Num Documento)"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Vendedor Senior"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Subgrupo de Cliente"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Conceptos Notas Crédito"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.TiposNC"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Territorio"
+          }
+        },
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Left'"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "NotasCreditos.Comentarios"
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "label": {
+              "expr": {
+                "Literal": {
+                  "Value": "'TOTAL'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "outlineWeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

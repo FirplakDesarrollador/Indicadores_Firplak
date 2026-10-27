@@ -1,0 +1,25 @@
+model Model
+	culture: es-CO
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-CO
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["NotasCreditos","Facturas","Medidas","ÁREA"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table NotasCreditos
+ref table DateTableTemplate_90ad8aea-df83-4e0c-bc82-205f47730872
+ref table Facturas
+ref table LocalDateTable_2ef7aa7e-7cff-4d0e-973f-002d3e2d7f22
+ref table calendario
+ref table LocalDateTable_a0e18613-e41c-4cd1-9c56-c78370ce9fd6
+ref table Medidas
+ref table ÁREA
+
+ref cultureInfo es-CO
+

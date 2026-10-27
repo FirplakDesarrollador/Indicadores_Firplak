@@ -214,3 +214,96 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Plantillas: ficha del BI (`analizar-bi/plantilla-ficha-bi.md`) y script T-SQL (`crear-tabla-incremental/plantilla-tabla-sp.sql`). La tabla `dbo.Bitacora_Cargas_Informes` es una propuesta `pendiente` de confirmar con el DBA.
 - Reparto: la IA hace el trabajo operativo; el desarrollador decide, ejecuta scripts en SQL Server, revisa PR y despliega. La IA nunca escribe en la base ni despliega.
 - `pendiente`: extraer componentes comunes del dashboard antes del segundo BI, versión en `/health` de la API, permisos por usuario y conexión SQL de solo lectura para la IA.
+
+## [2026-10-27] migración | BI Notas crédito, fase 0
+
+- Se inicia la migración piloto del Power BI `bi-notas-creditos` (fuente en `bi-origen/bi-notas-credito/`), rama `bi/notas-credito`.
+- Ficha creada en [`llm-wiki/bi/notas-credito.md`](bi/notas-credito.md): dueño de negocio Daniel Jimenez, usuarios de Cartera, prioridad piloto.
+- Desarrollador responsable: Daniel Jimenez. Frecuencia de uso: diaria.
+
+## [2026-10-27] migración | BI Notas crédito, fase 1 (análisis)
+
+- Ficha completada con fuentes, transformaciones, relaciones, 6 medidas, visuales de 3 páginas, filtros y RLS (no hay): [`llm-wiki/bi/notas-credito.md`](bi/notas-credito.md).
+- Hallazgo: el BI lee de SAP (`ITPLAKINFO.Firplak_SA`, tablas `ORIN`/`RIN1` y `OINV`/`INV1`), no de `Planos_Symphony`. Las consultas de facturas y notas aplican exclusiones distintas (Donaciones, `DocType`, artículos `VZNOPE`, documentos retirados a mano).
+- Se propone la tabla `Informe_notas_credito` con grano de línea de nota crédito; el denominador de facturación queda `pendiente`.
+- Se agrega `bi-origen/bi-notas-credito/.gitignore` para no versionar `.pbi/cache.abf` (datos importados) ni `.pbi/localSettings.json`.
+- `pendiente`: validación del dueño de negocio (10 preguntas en la ficha) y resultados de las consultas de validación.
+
+## [2026-10-27] migración | BI Notas crédito, fase 1 validada
+
+- Daniel Jimenez (dueño de negocio) respondió las 10 preguntas. Facturas y notas aplicarán las mismas exclusiones (Donaciones, `DocType = 'S'`, `VZNOPE-0021`), lo que cambia el % frente al Power BI actual. Las exclusiones manuales por `DocNum` irán en una tabla. La meta del 3 % se mantiene. Se descarta `ÁREA` y se agregan al detalle ciudad, teléfono, obra y punto de venta.
+- Validación con datos: `Planos_Symphony` y `Firplak_SA` están en la misma instancia `ITPLAKINFO`. Con los datos reales, el tipo NC agrupado solo resulta en Devolución, Anulación y vacío; los prefijos de concepto 34–36 quedan sin departamento.
+
+## [2026-10-27] hallazgo | `Informe_ventas` frente a SAP
+
+- Durante la fase 2 de Notas crédito, `Informe_ventas` (`TipoDocumento = 'Factura'`) no cuadró con `Firplak_SA.dbo.OINV`: sobran documentos de `DOCNUM` bajo que no existen en `OINV` con esa fecha (unos 5 a 12 millones al mes) y falta al menos la factura de exportación 4316 (serie 276). Detalle en [la ficha de Notas crédito](bi/notas-credito.md#sirve-informe_ventas-como-denominador-2026-10-27).
+- Decisión: el BI de notas no usa `Informe_ventas` como denominador. `pendiente`: revisar el SP de `Informe_ventas` porque el dashboard de facturación podría estar afectado.
+
+## [2026-10-27] corrección | Documentos de Viventta en `Informe_ventas`
+
+- Los documentos de `DOCNUM` bajo del hallazgo anterior son de **Viventta**, compañía del grupo que `Informe_ventas` ya incluye en facturas y notas crédito. No es un error de `Informe_ventas`. El Power BI de notas crédito solo lee `Firplak_SA`.
+- Sigue `pendiente`: la factura 4316 (serie 276), que está en SAP pero no en `Informe_ventas`, y la decisión de incluir Viventta en el dashboard de notas crédito.
+
+## [2026-10-27] decisión | Notas crédito incluye Viventta
+
+- El dashboard de notas crédito incluirá Viventta (base `DBViventta`). Sus notas quedan sin tipo, concepto ni departamento porque no usa esos campos. Recarga completa los domingos a las 2:00.
+
+## [2026-10-27] ingesta | `SP_Generar_Informe_Ventas`
+
+- El desarrollador compartió la definición del SP que llena `Informe_ventas`. Ya incluye notas crédito de Firplak con tipo, concepto (por línea), comentarios y las columnas del detalle; además tiene `Empresa`, `DocEntry` y `LineNum`. La bitácora existente es `dbo.Cargas_Log`.
+- Diferencias con las decisiones del BI de Notas crédito: las facturas no excluyen `DocType = 'S'`; Viventta no excluye Donaciones; las exclusiones manuales son fijas en el SP. Detalle en la [ficha](bi/notas-credito.md#cómo-se-carga-informe_ventas-definición-compartida-por-el-desarrollador-2026-10-27).
+- `pendiente`: la plantilla de la skill `crear-tabla-incremental` propone `Bitacora_Cargas_Informes`; debería apuntar a `Cargas_Log`.
+
+## [2026-10-27] decisión | Notas crédito reutiliza `Informe_ventas`
+
+- El dashboard de notas crédito leerá notas y facturación de `Informe_ventas` (filtrando por `Empresa` y `TipoDocumento`). No se crean tablas, SP ni jobs nuevos y **no se modifican** las reglas de `SP_Generar_Informe_Ventas`.
+- Los jobs existentes ya cumplen la frecuencia pedida: incremental cada 15 minutos (6:00–20:00) y completa a las 2:00.
+- La factura 4316 queda explicada (`VZNOPE-0028`, excluida por `Informe_ventas`). `pendiente`: el concepto NC por línea difiere del concepto del encabezado en el 97 % de las líneas.
+
+## [2026-10-27] hallazgo | Concepto NC vacío en `Informe_ventas`
+
+- 5.928 de 5.929 líneas de notas de Firplak (desde 2025) no tienen `CodigoConceptoNC`. `SP_Generar_Informe_Ventas` lee el concepto de la línea (`RIN1.U_CONCEPTOSNC`, casi siempre `NULL`) y no del encabezado (`ORIN.U_CONCEPTOSNC`). Corrección propuesta en la [ficha de Notas crédito](bi/notas-credito.md); `pendiente` de aprobación.
+- Índices de `Informe_ventas` confirmados: PK clustered, `IX_Informe_ventas_Fecha` y columnstore `NCCI_Informe_ventas`.
+
+## [2026-10-27] cambio | Concepto NC en `SP_Generar_Informe_Ventas` (fase 2 de Notas crédito cerrada)
+
+- Las notas crédito de Firplak toman el concepto del encabezado (`ORIN.U_CONCEPTOSNC`) en lugar de la línea. Lo ejecutó el desarrollador en SSMS, con respaldo previo del SP.
+- Validación: líneas sin concepto desde 2025 de 5.928 a 25; facturación de enero a septiembre de 2026 sin cambios; carga completa de 260.204 filas sin error.
+- Rollback: ejecutar el respaldo como `ALTER PROCEDURE` y hacer una carga `COMPLETA`.
+- Impacto en otros consumidores de `Informe_ventas`: `CodigoConceptoNC` y `ConceptosNotasCredito` ahora tienen datos; antes venían vacíos.
+
+## [2026-10-27] migración | Notas crédito, fase 3 (contrato propuesto)
+
+- Contrato de `GET /api/v1/notas-credito` en la [ficha](bi/notas-credito.md#3-contrato-del-endpoint), sobre `Informe_ventas`, sin filtro de empresa (Firplak y Viventta sumadas, decisión del desarrollador). Departamento y tipo NC agrupado se calculan con `CASE` en SQL. `pendiente`: aprobación del desarrollador.
+
+## [2026-10-27] migración | Notas crédito, fase 4 (endpoint)
+
+- Contrato aprobado por Daniel Jimenez. Se implementa `GET /api/v1/notas-credito` en `reporting-api`, rama `bi/notas-credito`; compila sin errores. Documentado en [Reporting API](components/reporting-api.md#get-apiv1notas-credito).
+- `pendiente`: prueba del desarrollador contra la base y despliegue. Si el proxy de IIS limita rutas, hay que agregar `/api/v1/notas-credito`.
+
+## [2026-10-27] despliegue | `GET /api/v1/notas-credito` en el servidor
+
+- El desarrollador desplegó el `dist` de la rama `bi/notas-credito` en `C:\Apps\reporting-api`. La API escucha en `127.0.0.1:8090` (no en 8080, que pertenece a otra aplicación).
+- Prueba de septiembre de 2026: la facturación coincide con `Informe_ventas`; las notas suman 796.683.781,95 (13,49 % de la facturación). Detalle en la [ficha](bi/notas-credito.md#4-endpoint).
+- `pendiente`: el código desplegado aún no tiene commit en `reporting-api`; confirmar el respaldo del `dist` anterior.
+
+## [2026-10-27] migración | Notas crédito, fase 5 (dashboard) y componentes comunes
+
+- Commit `da3e0fc` en `reporting-api`, rama `bi/notas-credito`, con el endpoint ya desplegado.
+- Se extraen los componentes comunes de dashboard (`components/dashboard/`, `lib/dashboard/`) desde `FacturacionDashboard.tsx`, sin cambios visibles en facturación. Ver [Frontend](components/frontend.md#componentes-comunes-de-dashboard).
+- Nuevo dashboard `/notas-credito` con proxy `/api/notas-credito`, tarjeta en el portal y opción en el menú lateral. Lint y build sin errores; revisión visual a 375, 820 y 1440 px con datos ficticios en una copia temporal, ya borrada.
+- `lib/brand.ts` agrega `surface` (blanco, replica `--white`) para los puntos de los gráficos.
+- `pendiente`: prueba con sesión y datos reales, revisión de IIS para la ruta nueva y commit del frontend.
+
+## [2026-10-27] cambio | Menú lateral por reporte y selector de mes
+
+- Validación con datos reales del dashboard de notas crédito: hecha por el desarrollador.
+- Cada reporte muestra en el menú lateral solo su vista principal y su detalle (`billingNavigation`, `creditNoteNavigation`). Se quita "Resumen" del menú; "Indicadores" en las migas de pan pasa a ser el enlace al portal.
+- Nueva página `/notas-credito/detalle`. La vista principal de notas crédito ya no muestra la tabla de documentos.
+- `billing.css`: la columna del mes en la barra de filtros pasa de `minmax(180px, .8fr)` a `minmax(255px, 1fr)`, para que "Todos los meses" no se recorte en ninguno de los dos dashboards. Revisado a 1380 y 1440 px.
+
+## [2026-10-27] cambio | Notas crédito: filtros también sobre la facturación
+
+- Por decisión de Daniel Jimenez, cambia la decisión 4: `tipoVentas` y `vendedorSenior` filtran también la facturación, que es el denominador del %. Departamento, concepto, tipo NC y búsqueda siguen filtrando solo las notas, porque las facturas no tienen esos datos.
+- `reporting-api` (`src/db.ts`, `addCreditNoteFilters` devuelve `shared` y `notesOnly`) y su README actualizados. Compila. Paquete `reporting-api-dist-bi-notas-credito.zip` regenerado. `pendiente`: commit y despliegue en el servidor.
+- Frontend: el texto del panel de filtros avanzados lo indica.

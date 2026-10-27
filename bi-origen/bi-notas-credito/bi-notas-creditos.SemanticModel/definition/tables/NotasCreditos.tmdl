@@ -1,0 +1,359 @@
+table NotasCreditos
+	lineageTag: 37f77b90-9871-43c2-b650-72e4aa4e5368
+
+	column 'Fecha contabilización'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 10b1babb-f995-41ce-9ffb-7b468b6065dc
+		summarizeBy: none
+		sourceColumn: Fecha contabilización
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Num Documento'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0ec754fc-04ab-4e41-b3d0-ab2964cff0ff
+		summarizeBy: sum
+		sourceColumn: Num Documento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Vendedor Senior'
+		dataType: string
+		lineageTag: a33a54d6-fa56-47cd-8527-7f6d46c7881a
+		summarizeBy: none
+		sourceColumn: Vendedor Senior
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Vendedor Junior'
+		dataType: string
+		lineageTag: 30dd1aea-98fa-43e3-bdf7-d432c59aa482
+		summarizeBy: none
+		sourceColumn: Vendedor Junior
+
+		annotation SummarizationSetBy = Automatic
+
+	column TipoVentas
+		dataType: string
+		lineageTag: fab83092-64b1-496d-8e5d-8445a5b311db
+		summarizeBy: none
+		sourceColumn: TipoVentas
+
+		annotation SummarizationSetBy = Automatic
+
+	column Zona
+		dataType: string
+		lineageTag: b75b13b5-8693-42c4-b388-e2c6125ed24f
+		summarizeBy: none
+		sourceColumn: Zona
+
+		annotation SummarizationSetBy = Automatic
+
+	column Territorio
+		dataType: string
+		lineageTag: e037573d-6265-42f4-9837-cb44ee10a4b1
+		summarizeBy: none
+		sourceColumn: Territorio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo de Cliente'
+		dataType: string
+		lineageTag: e7ef2106-e0ad-42bd-83b8-b7138a0ab1d3
+		summarizeBy: none
+		sourceColumn: Grupo de Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Subgrupo de Cliente'
+		dataType: string
+		lineageTag: dddf9006-ad10-40ec-b6cc-31dc9ccda151
+		summarizeBy: none
+		sourceColumn: Subgrupo de Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cod Cliente'
+		dataType: string
+		lineageTag: 53f6a254-9c23-499b-9b2e-c2ddcad86957
+		summarizeBy: none
+		sourceColumn: Cod Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nombre Cliente'
+		dataType: string
+		lineageTag: 1ec39579-8f1c-4aeb-8b98-53c530f55840
+		summarizeBy: none
+		sourceColumn: Nombre Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código Punto de Venta'
+		dataType: string
+		lineageTag: 149a89d3-b480-44fb-9a81-a77e1cc120f4
+		summarizeBy: none
+		sourceColumn: Código Punto de Venta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descripción Punto de Venta'
+		dataType: string
+		lineageTag: 171b9a29-cd8b-4a77-8f25-672c09c5ccb8
+		summarizeBy: none
+		sourceColumn: Descripción Punto de Venta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Centro de Costos'
+		dataType: string
+		lineageTag: 30552600-20b1-464b-a29d-90a7cbc3e09e
+		summarizeBy: none
+		sourceColumn: Centro de Costos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo de Articulo'
+		dataType: string
+		lineageTag: 2b0d54b0-1097-4f40-9ac1-46246524717a
+		summarizeBy: none
+		sourceColumn: Grupo de Articulo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Familia
+		dataType: string
+		lineageTag: 21956d0b-cb0b-41f8-b5ec-9735537ad060
+		summarizeBy: none
+		sourceColumn: Familia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Codigo Articulo'
+		dataType: string
+		lineageTag: 03093b63-ab06-40de-ad6c-656bbccca609
+		summarizeBy: none
+		sourceColumn: Codigo Articulo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descripcion de Articulo'
+		dataType: string
+		lineageTag: c7ba0d10-f5fd-4431-b0c8-e1bbdd30787b
+		summarizeBy: none
+		sourceColumn: Descripcion de Articulo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cantidad
+		dataType: double
+		lineageTag: 1c91ae41-dce7-4dda-8a8c-422959648d42
+		summarizeBy: sum
+		sourceColumn: Cantidad
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Precio de venta'
+		dataType: double
+		lineageTag: 6181a69e-9519-4cad-b7da-331de53ea7f8
+		summarizeBy: sum
+		sourceColumn: Precio de venta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column '% Descuento'
+		dataType: double
+		lineageTag: cdc2e520-9cc2-4b00-a23a-1dbf979a3034
+		summarizeBy: sum
+		sourceColumn: % Descuento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Precio tras el descuento'
+		dataType: double
+		lineageTag: e5af55a8-1638-44d4-9df2-a2e1547264e0
+		summarizeBy: sum
+		sourceColumn: Precio tras el descuento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Valor Total'
+		dataType: double
+		lineageTag: 7620f3d2-9568-4897-97ef-867588f2b30c
+		summarizeBy: sum
+		sourceColumn: Valor Total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Costo
+		dataType: double
+		lineageTag: 243b8865-0580-4277-86fc-e8e66a18e79f
+		summarizeBy: sum
+		sourceColumn: Costo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Costo total'
+		dataType: double
+		lineageTag: 73990b40-39d6-4010-94db-b80228c3cd77
+		summarizeBy: sum
+		sourceColumn: Costo total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Utilidad Bruta'
+		dataType: double
+		lineageTag: 58d464d4-f36e-4992-a2d5-e3db946a4ed7
+		summarizeBy: sum
+		sourceColumn: Utilidad Bruta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Margen Bruta'
+		dataType: double
+		lineageTag: 507a2b67-2af5-4d94-a10f-93a2119f4992
+		summarizeBy: sum
+		sourceColumn: Margen Bruta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Obra
+		dataType: string
+		lineageTag: 4392214e-d3b6-4594-a34e-99a6ac0cbed1
+		summarizeBy: none
+		sourceColumn: Obra
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciudad
+		dataType: string
+		lineageTag: 7b5e2057-5302-464a-a2c8-c4c67c3cfe12
+		summarizeBy: none
+		sourceColumn: Ciudad
+
+		annotation SummarizationSetBy = Automatic
+
+	column Teléfono
+		dataType: string
+		lineageTag: 7a630b60-c6e8-41c5-9380-2c3d594fc2d6
+		summarizeBy: none
+		sourceColumn: Teléfono
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Segmento del cliente'
+		dataType: string
+		lineageTag: fa1f4e9e-48e0-464e-9c00-ae878069661f
+		summarizeBy: none
+		sourceColumn: Segmento del cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Codigo del Tipo NC'
+		dataType: string
+		lineageTag: 52ff07a3-6559-4425-a2e4-df2c6273a770
+		summarizeBy: none
+		sourceColumn: Codigo del Tipo NC
+
+		annotation SummarizationSetBy = Automatic
+
+	column TiposNC
+		dataType: string
+		lineageTag: 7d34c3ab-1a5d-4b07-8ea0-8b20a6e7c3a1
+		summarizeBy: none
+		sourceColumn: TiposNC
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Codigo Concepto Nc'
+		dataType: string
+		lineageTag: a8460031-5742-48be-aa84-4b21c3f8637f
+		summarizeBy: none
+		sourceColumn: Codigo Concepto Nc
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Conceptos Notas Crédito'
+		dataType: string
+		lineageTag: f51ae214-9db4-4a18-91e6-7b6ea1d2e552
+		summarizeBy: none
+		sourceColumn: Conceptos Notas Crédito
+
+		annotation SummarizationSetBy = Automatic
+
+	column Comentarios
+		dataType: string
+		lineageTag: 14c215df-3cc2-493a-859d-70fe201657ce
+		summarizeBy: none
+		sourceColumn: Comentarios
+
+		annotation SummarizationSetBy = Automatic
+
+	column Departamento = ```
+			SWITCH(LEFT(NotasCreditos[Codigo Concepto Nc],2),
+			                "23", "COMERCIAL",
+			                "24", "LOGISTICA",
+			                "25", "FINANCIERA",
+			                "26", "PRODUCCIÓN",
+			                "27", "CALIDAD",
+			                "28", "CLIENTE", 
+			                "29", "COMPRAS",
+			                "30", "T.I",
+			                "31", "INGENIERIA",
+			                "32", "COMEX",
+			                "33", "MUESTRA"
+			)
+			```
+		lineageTag: 9f248775-66fc-487e-9740-b8d262f6e937
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'TIPO NC Agr.' =
+			SWITCH(LEFT(NotasCreditos[TiposNC],10),
+			"Devolución", "Devolución",
+			"Anulación ", "Anulación",
+			"Descuento ", "Anulación",
+			"Dscto no f", "Anulación",
+			"NC Obsequi", "Anulación",
+			"Perdida po", "Anulación",
+			"Reposicion", "Anulación",
+			NotasCreditos[TiposNC]
+			)
+		lineageTag: 69c72d1c-88c9-4342-8297-120f1beba8dc
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition NotasCreditos = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ITPLAKINFO", "Firplak_SA", [Query="SELECT T0.DOCDATE#(lf)      , T0.DOCNUM#(lf)      , CASE#(lf)           WHEN ISNULL( DATALENGTH( T1.U_TIENDAS ),0 ) = 0 THEN T11.SLPNAME#(lf)           ELSE#(lf)               (#(lf)                 SELECT VENDEDOR.SLPNAME#(lf)     FROM OSLP VENDEDOR#(lf)          INNER JOIN OCRD SN ON SN.SLPCODE = VENDEDOR.SLPCODE#(lf)     WHERE SN.CARDCODE = T1.U_TIENDAS#(lf)               )#(lf)       END AS 'Vendedor Senior'#(lf)      , CASE#(lf)           WHEN ISNULL( DATALENGTH( T1.U_TIENDAS ),0 ) = 0 THEN T12.NAME#(lf)           ELSE#(lf)               (#(lf)                 SELECT DISTINCT#(lf)          T16.NAME#(lf)     FROM [@FIR_VENDEDORJUNIOR] T16#(lf)          INNER JOIN OCRD T17 ON T17.U_VENDEDORJUNIOR = T16.CODE#(lf)     WHERE T17.CARDCODE = T1.U_TIENDAS#(lf)               )#(lf)       END AS 'Vendedor Junior'#(lf)      , T0.U_TipoVentas#(lf)      , CASE#(lf)           WHEN ISNULL( DATALENGTH( T1.U_TIENDAS ),0 ) = 0 THEN T10.DESCRIPT#(lf)           ELSE#(lf)               (#(lf)                 SELECT ZONAPADRE.DESCRIPT#(lf)     FROM OCRD ZONASN#(lf)          INNER JOIN OTER ZONATERRITORIO ON ZONASN.TERRITORY = ZONATERRITORIO.TERRITRYID#(lf)          INNER JOIN OTER ZONAPADRE ON ZONATERRITORIO.PARENT = ZONAPADRE.TERRITRYID#(lf)     WHERE ZONASN.CARDCODE = T1.U_TIENDAS#(lf)               )#(lf)       END AS 'Zona'#(lf)      , CASE#(lf)           WHEN ISNULL( DATALENGTH( T1.U_TIENDAS ),0 ) = 0 THEN T9.DESCRIPT#(lf)           ELSE#(lf)               (#(lf)                 SELECT ZONATERRITORIO.DESCRIPT#(lf)     FROM OCRD ZONASN#(lf)          INNER JOIN OTER ZONATERRITORIO ON ZONASN.TERRITORY = ZONATERRITORIO.TERRITRYID#(lf)     WHERE ZONASN.CARDCODE = T1.U_TIENDAS#(lf)               )#(lf)       END AS 'Territorio'#(lf)      , T5.GROUPNAME 'Grupo de Cliente'#(lf)      , T8.NAME 'Subgrupo de Cliente'#(lf)      , T0.CARDCODE 'Cod Cliente'#(lf)      , T0.CARDNAME 'Nombre Cliente'#(lf)      , T1.U_TIENDAS 'Código Punto de Venta'#(lf)      , T13.CARDNAME 'Descripción Punto de Venta'#(lf)      , CASE#(lf)           WHEN ISNULL( DATALENGTH( T1.U_TIENDAS ),0 ) = 0 THEN T4.U_CENTRODECTOS#(lf)           ELSE T13.U_CENTRODECTOS#(lf)       END AS 'Centro de Costos'#(lf)      , T15.ITMSGRPNAM 'Grupo de Articulo'#(lf)      , T14.U_GRUPO 'Familia'#(lf)      , T1.ITEMCODE 'Codigo Articulo'#(lf)      , T1.DSCRIPTION 'Descripcion de Articulo'#(lf)      , case WHEN t1.itemcode = 'VZNOPE-0011-000-0000' THEN '0' else T1.QUANTITY * -1 END AS 'Cantidad'#(lf)      ,(T1.[PriceBefDi]*t0.DocRate) 'Precio de venta'#(lf)      ,T1.DiscPrcnt '% Descuento'#(lf)      ,(T1.Price*t0.DocRate) 'Precio tras el descuento'#(lf)     , T1.LINETOTAL * -1 'Valor Total'      #(lf)     , T1.GROSSBUYPR AS Costo#(lf)#(tab)  , T1.Quantity * t1.GrossBuyPr*-1 as 'Costo total'#(lf)#(tab), (t1.LineTotal)*-1 - (T1.Quantity * t1.GrossBuyPr*-1) as 'Utilidad Bruta'#(lf)#(tab), 0.00 as 'Margen Bruta'#(lf)--((t1.LineTotal)*-1 - (T1.Quantity * t1.GrossBuyPr*-1)) / t1.LineTotal#(lf)      , T3.NAME AS 'Obra'#(lf)#(tab)  , T16.CityS as 'Ciudad'#(lf)      , T4.Phone1 as 'Teléfono'#(lf)#(tab), t14.U_FNovedad as 'Fecha Fin Novedad'#(lf)      ,T17.Name as 'Segmento del cliente'#(lf)      , T0.U_TIPOSNC 'Codigo del Tipo NC'#(lf)      , T30.NAME 'TiposNC'#(lf)      , T0.U_CONCEPTOSNC 'Codigo Concepto Nc'#(lf)      , T31.NAME 'Conceptos Notas Crédito'#(lf)      , T0.COMMENTS#(lf)FROM ORIN T0#(lf)     INNER JOIN RIN1 T1 ON T0.DOCENTRY = T1.DOCENTRY#(lf)     INNER JOIN RIN12 T16 ON T0.DOCENTRY = T16.DOCENTRY#(lf)     INNER JOIN OCRD T4 ON T0.CARDCODE = T4.CARDCODE#(lf)     LEFT JOIN OCPR T3 ON T0.CNTCTCODE = T3.CNTCTCODE#(lf)     INNER JOIN OTER T9 ON T4.TERRITORY = T9.TERRITRYID#(lf)     INNER JOIN OCRG T5 ON T4.GROUPCODE = T5.GROUPCODE#(lf)     INNER JOIN OSLP T6 ON T0.SLPCODE = T6.SLPCODE#(lf)     LEFT JOIN OSLP T11 ON T0.SLPCODE = T11.SLPCODE#(lf)     LEFT JOIN [@FIR_SUBGRUPOCLIENTE] T8 ON T4.U_SUBGROUPCODE = T8.CODE#(lf)     LEFT JOIN OTER T10 ON T9.PARENT = T10.TERRITRYID#(lf)     LEFT JOIN [@FIR_VENDEDORJUNIOR] T12 ON T4.U_VENDEDORJUNIOR = T12.CODE#(lf)     LEFT JOIN OCRD T13 ON T1.U_TIENDAS = T13.CARDCODE#(lf)     LEFT JOIN OITM T14 ON T1.ITEMCODE = T14.ITEMCODE#(lf)     LEFT JOIN OITB T15 ON T14.ITMSGRPCOD = T15.ITMSGRPCOD#(lf)     LEFT JOIN [@FIR_TIPOSNC] T30 ON T0.U_TIPOSNC = T30.CODE#(lf)     LEFT JOIN [@FIR_CONCEPTOSNC] T31 ON T0.U_CONCEPTOSNC = T31.CODE#(lf)     LEFT JOIN [dbo].[@FIR_SEGMENTACION]  T17 ON T0.[U_Segmentacion] = T17.[Code]#(lf)WHERE T0.SERIES <> '88'#(lf)     AND T1.TAXONLY = 'N'#(lf)     AND T1.LINETOTAL <> 0#(lf)     AND T0.CANCELED = 'N'#(lf)     And t0.DocType <>'S'#(lf)     AND T1.ItemCode NOT IN ('VZNOPE-0003-000-0000', 'VZNOPE-0001-000-0000', 'VZNOPE-0004-000-0000', 'VZNOPE-0006-000-0000', #(lf)     'VZNOPE-0007-000-0000', 'VZNOPE-0008-000-0000', 'VZNOPE-0009-000-0000', 'VZNOPE-0010-000-0000', 'VZNOPE-0012-000-0000', #(lf)     'VZNOPE-0014-000-0000', 'VZNOPE-0015-000-0000', 'VZNOPE-0017-000-0000', 'VZNOPE-0018-000-0000')#(lf)     AND T0.DocNum <> 1002414 --Se retira esta NC por solicitud de Claudia Duque"]),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"U_TipoVentas", "TipoVentas"}, {"DOCDATE", "Fecha contabilización"}, {"DOCNUM", "Num Documento"}, {"COMMENTS", "Comentarios"}}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Renamed Columns",{"Fecha Fin Novedad"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+

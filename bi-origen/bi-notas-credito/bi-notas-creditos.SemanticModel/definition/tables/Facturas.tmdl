@@ -1,0 +1,299 @@
+table Facturas
+	lineageTag: 440345ea-5e6b-4608-ad6c-a9c844f06770
+
+	measure ÁREA
+		lineageTag: 1bf86182-c02f-4782-b6e3-c68a82c164a3
+
+	column 'Fecha contabilización'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 195b539f-456f-4e8e-ab6b-2dd04c89c3a7
+		summarizeBy: none
+		sourceColumn: Fecha contabilización
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Num Documento'
+		dataType: int64
+		formatString: 0
+		lineageTag: 160ff2cf-79a2-47ae-a402-af0e77990a81
+		summarizeBy: sum
+		sourceColumn: Num Documento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Vendedor Senior'
+		dataType: string
+		lineageTag: 52385faf-2560-435f-ac0c-fd7624c8f9cf
+		summarizeBy: none
+		sourceColumn: Vendedor Senior
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Vendedor Junior'
+		dataType: string
+		lineageTag: f8b242eb-e23c-490b-974c-43e70e537072
+		summarizeBy: none
+		sourceColumn: Vendedor Junior
+
+		annotation SummarizationSetBy = Automatic
+
+	column TipoVentas
+		dataType: string
+		lineageTag: 950bf699-d1ac-4789-a3aa-b70598c708e6
+		summarizeBy: none
+		sourceColumn: TipoVentas
+
+		annotation SummarizationSetBy = Automatic
+
+	column Zona
+		dataType: string
+		lineageTag: 73ea7c1d-c892-4404-a83a-18b2ed8fe678
+		summarizeBy: none
+		sourceColumn: Zona
+
+		annotation SummarizationSetBy = Automatic
+
+	column Territorio
+		dataType: string
+		lineageTag: 09319a0c-5937-42db-b97e-2cbeda12f297
+		summarizeBy: none
+		sourceColumn: Territorio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo de Cliente'
+		dataType: string
+		lineageTag: d8af3a03-3027-48e4-be6d-d9db38e83dcc
+		summarizeBy: none
+		sourceColumn: Grupo de Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Subgrupo de Cliente'
+		dataType: string
+		lineageTag: dd564835-7867-48bc-9c86-47ae6ef43d2a
+		summarizeBy: none
+		sourceColumn: Subgrupo de Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cod Cliente'
+		dataType: string
+		lineageTag: ab64d253-a7df-45c2-b756-e489d1195155
+		summarizeBy: none
+		sourceColumn: Cod Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nombre Cliente'
+		dataType: string
+		lineageTag: bb353aef-967f-4f1f-9716-6209a793ef38
+		summarizeBy: none
+		sourceColumn: Nombre Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código Punto de Venta'
+		dataType: string
+		lineageTag: 755f567d-a52f-4cd6-a30c-66aad7696b64
+		summarizeBy: none
+		sourceColumn: Código Punto de Venta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descripción Punto de Venta'
+		dataType: string
+		lineageTag: 62e4eaff-4220-434a-8a8f-9eb4f5e8490d
+		summarizeBy: none
+		sourceColumn: Descripción Punto de Venta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Centro de Costos'
+		dataType: string
+		lineageTag: 19e52e51-cfd9-4f65-b893-4437763abb8c
+		summarizeBy: none
+		sourceColumn: Centro de Costos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo de Articulo'
+		dataType: string
+		lineageTag: 3d30969e-5cc6-4f83-8125-c372f8eeba23
+		summarizeBy: none
+		sourceColumn: Grupo de Articulo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Familia
+		dataType: string
+		lineageTag: d8356f88-e852-4416-ba44-69415e8724f1
+		summarizeBy: none
+		sourceColumn: Familia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Codigo Articulo'
+		dataType: string
+		lineageTag: 91fd8f93-3f73-438c-8863-148e4e087614
+		summarizeBy: none
+		sourceColumn: Codigo Articulo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descripcion de Articulo'
+		dataType: string
+		lineageTag: 9b6dc800-ba78-45bf-8538-6cd05f9b372f
+		summarizeBy: none
+		sourceColumn: Descripcion de Articulo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cantidad
+		dataType: double
+		lineageTag: 3bd8a20f-18bb-40d4-a494-985db73a63d0
+		summarizeBy: sum
+		sourceColumn: Cantidad
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Precio de venta'
+		dataType: double
+		lineageTag: b7fea133-e10a-4aa1-bb1d-57f32ee4cd47
+		summarizeBy: sum
+		sourceColumn: Precio de venta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column '% Descuento'
+		dataType: double
+		lineageTag: e4c428c5-8991-4aa0-8328-06c8675a5d35
+		summarizeBy: sum
+		sourceColumn: % Descuento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Precio tras el descuento'
+		dataType: double
+		lineageTag: b66689f3-f231-489f-a319-11df57df48db
+		summarizeBy: sum
+		sourceColumn: Precio tras el descuento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Valor Total'
+		dataType: double
+		lineageTag: 53c791f8-4874-4e6d-ba54-f854c51a8daa
+		summarizeBy: sum
+		sourceColumn: Valor Total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Costo
+		dataType: double
+		lineageTag: a46446aa-c3ed-49d9-bc31-26b39bb57a63
+		summarizeBy: sum
+		sourceColumn: Costo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Costo total'
+		dataType: double
+		lineageTag: d5ab70ae-5cf0-4081-96b0-63dfa3d2f16c
+		summarizeBy: sum
+		sourceColumn: Costo total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Utilidad Bruta'
+		dataType: double
+		lineageTag: 9738b6b1-faad-4453-8027-d7a211621b1e
+		summarizeBy: sum
+		sourceColumn: Utilidad Bruta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Margen Bruta'
+		dataType: double
+		lineageTag: eb46495c-c6e2-46cd-8e4a-f47d6387ba9d
+		summarizeBy: sum
+		sourceColumn: Margen Bruta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Obra
+		dataType: string
+		lineageTag: 01fe6841-802f-468c-afbd-d4469e203a77
+		summarizeBy: none
+		sourceColumn: Obra
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciudad
+		dataType: string
+		lineageTag: 82078c89-7a24-4d35-af2c-f5fc8971de17
+		summarizeBy: none
+		sourceColumn: Ciudad
+
+		annotation SummarizationSetBy = Automatic
+
+	column Teléfono
+		dataType: string
+		lineageTag: 2d79c3e2-d115-460e-8c57-59b7541ac433
+		summarizeBy: none
+		sourceColumn: Teléfono
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fecha Fin Novedad'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6353e651-f048-4c64-8351-9ab202e03ada
+		summarizeBy: none
+		sourceColumn: Fecha Fin Novedad
+
+		variation Variación
+			isDefault
+			relationship: 23f4ffa0-db75-4daf-a5e9-5c169eb6a039
+			defaultHierarchy: LocalDateTable_2ef7aa7e-7cff-4d0e-973f-002d3e2d7f22.'Jerarquía de fechas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Segmento del cliente'
+		dataType: string
+		lineageTag: abd89de5-2a7f-4e79-91e9-ffae9ac09221
+		summarizeBy: none
+		sourceColumn: Segmento del cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Facturas = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ITPLAKINFO", "Firplak_SA", [Query="SELECT T0.DOCDATE#(lf)      , T0.DOCNUM#(lf)      , CASE#(lf)           WHEN ISNULL(DATALENGTH(T1.U_TIENDAS),0) = 0 THEN T11.SLPNAME#(lf)           ELSE( #(lf)                 SELECT VENDEDOR.SLPNAME#(lf)     FROM OSLP VENDEDOR#(lf)          INNER JOIN OCRD SN ON SN.SLPCODE = VENDEDOR.SLPCODE#(lf)     WHERE SN.CARDCODE = T1.U_TIENDAS#(lf)               )#(lf)       END AS 'Vendedor Senior'#(lf)      , CASE#(lf)           WHEN ISNULL(DATALENGTH(T1.U_TIENDAS),0) = 0 THEN T12.NAME#(lf)           ELSE( #(lf)                 SELECT DISTINCT T16.NAME#(lf)     FROM [@FIR_VENDEDORJUNIOR] T16#(lf)          INNER JOIN OCRD T17 ON T17.U_VENDEDORJUNIOR = T16.CODE#(lf)     WHERE T17.CARDCODE = T1.U_TIENDAS#(lf)               )#(lf)       END AS 'Vendedor Junior'#(lf)      , T0.U_TipoVentas#(lf)      , CASE#(lf)           WHEN ISNULL(DATALENGTH(T1.U_TIENDAS),0) = 0 THEN T10.DESCRIPT#(lf)           ELSE( #(lf)                 SELECT ZONAPADRE.DESCRIPT#(lf)     FROM OCRD ZONASN#(lf)          INNER JOIN OTER ZONATERRITORIO ON ZONASN.TERRITORY = ZONATERRITORIO.TERRITRYID#(lf)          INNER JOIN OTER ZONAPADRE ON ZONATERRITORIO.PARENT = ZONAPADRE.TERRITRYID#(lf)     WHERE ZONASN.CARDCODE = T1.U_TIENDAS#(lf)               )#(lf)       END AS 'Zona'#(lf)      , CASE#(lf)           WHEN ISNULL(DATALENGTH(T1.U_TIENDAS),0) = 0 THEN T9.DESCRIPT#(lf)           ELSE( #(lf)                 SELECT ZONATERRITORIO.DESCRIPT#(lf)     FROM OCRD ZONASN#(lf)          INNER JOIN OTER ZONATERRITORIO ON ZONASN.TERRITORY = ZONATERRITORIO.TERRITRYID#(lf)     WHERE ZONASN.CARDCODE = T1.U_TIENDAS#(lf)               )#(lf)       END AS 'Territorio'#(lf)      , T5.GROUPNAME 'Grupo de Cliente'#(lf)      , T8.NAME 'Subgrupo de Cliente'#(lf)      , T0.CARDCODE 'Cod Cliente'#(lf)      , T0.CARDNAME 'Nombre Cliente'#(lf)      , T1.U_TIENDAS 'Código Punto de Venta'#(lf)      , T13.CARDNAME 'Descripción Punto de Venta'#(lf)      , CASE#(lf)           WHEN ISNULL(DATALENGTH(T1.U_TIENDAS),0) = 0 THEN T4.U_CENTRODECTOS#(lf)           ELSE T13.U_CENTRODECTOS#(lf)       END AS 'Centro de Costos'#(lf)      , T15.ITMSGRPNAM 'Grupo de Articulo'#(lf)      , T14.U_GRUPO 'Familia'#(lf)      , T1.ITEMCODE 'Codigo Articulo'#(lf)      , T1.DSCRIPTION 'Descripcion de Articulo'#(lf)      , T1.QUANTITY 'Cantidad'#(lf)      ,(T1.[PriceBefDi]*t0.DocRate) 'Precio de venta'#(lf)      ,T1.DiscPrcnt '% Descuento'#(lf)      ,(T1.Price*t0.DocRate) 'Precio tras el descuento'#(lf)      , T1.LINETOTAL 'Valor Total'#(lf)      , T1.GROSSBUYPR AS Costo#(lf), T1.Quantity * t1.GrossBuyPr as 'Costo total'#(lf), t1.LineTotal - (T1.Quantity * t1.GrossBuyPr) as 'Utilidad Bruta'#(lf), (t1.LineTotal - (T1.Quantity * t1.GrossBuyPr)) / t1.LineTotal as 'Margen Bruta'#(lf)      , T3.NAME AS 'Obra'#(lf)      , T16.CityS as 'Ciudad'#(lf)      , T4.Phone1 as 'Teléfono'#(lf)      , t14.U_FNovedad as 'Fecha Fin Novedad'#(lf)      ,T17.Name as 'Segmento del cliente'#(lf)FROM OINV T0#(lf)     INNER JOIN INV1 T1 ON T0.DOCENTRY = T1.DOCENTRY#(lf)     INNER JOIN INV12 T16 ON T0.DOCENTRY = T16.DOCENTRY#(lf)     INNER JOIN OCRD T4 ON T0.CARDCODE = T4.CARDCODE#(lf)     LEFT JOIN OCPR T3 ON T0.CNTCTCODE = T3.CNTCTCODE#(lf)     INNER JOIN OTER T9 ON T4.TERRITORY = T9.TERRITRYID#(lf)     INNER JOIN OCRG T5 ON T4.GROUPCODE = T5.GROUPCODE#(lf)     INNER JOIN OSLP T6 ON T0.SLPCODE = T6.SLPCODE#(lf)     LEFT JOIN OSLP T11 ON T0.SLPCODE = T11.SLPCODE#(lf)     INNER JOIN [@FIR_SUBGRUPOCLIENTE] T8 ON T4.U_SUBGROUPCODE = T8.CODE#(lf)     INNER JOIN OTER T10 ON T9.PARENT = T10.TERRITRYID#(lf)     LEFT JOIN [@FIR_VENDEDORJUNIOR] T12 ON T4.U_VENDEDORJUNIOR = T12.CODE#(lf)     LEFT JOIN OCRD T13 ON T1.U_TIENDAS = T13.CARDCODE#(lf)     LEFT JOIN OITM T14 ON T1.ITEMCODE = T14.ITEMCODE#(lf)     LEFT JOIN OITB T15 ON T14.ITMSGRPCOD = T15.ITMSGRPCOD#(lf)     LEFT JOIN [dbo].[@FIR_SEGMENTACION]  T17 ON T0.[U_Segmentacion] = T17.[Code]#(lf)WHERE T0.SERIES <> '88'#(lf)     AND T0.CANCELED = 'N'#(lf)     AND T1.TAXONLY = 'N'#(lf)     AND T0.U_TipoVentas <> 'Donaciones'#(lf)     AND T1.LINETOTAL <> 0#(lf)     AND T1.ItemCode NOT IN ('VZNOPE-0003-000-0000', 'VZNOPE-0001-000-0000', 'VZNOPE-0004-000-0000', 'VZNOPE-0006-000-0000', #(lf)     'VZNOPE-0007-000-0000', 'VZNOPE-0008-000-0000', 'VZNOPE-0009-000-0000', 'VZNOPE-0010-000-0000', 'VZNOPE-0012-000-0000', #(lf)     'VZNOPE-0014-000-0000', 'VZNOPE-0015-000-0000', 'VZNOPE-0017-000-0000', 'VZNOPE-0018-000-0000', 'VZNOPE-0021-000-0000')#(lf)     AND T0.DocNum NOT IN (96491, 96492, 96493, 96494, 96495, 96496, 96497, 96515, 96516) --Se retira estas facturas por solicitud de Claudia Duque", CreateNavigationProperties=false]),
+				    #"Renamed Columns" = Table.RenameColumns(Source,{{"U_TipoVentas", "TipoVentas"}, {"DOCDATE", "Fecha contabilización"}, {"DOCNUM", "Num Documento"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+
