@@ -25,12 +25,12 @@ Esta skill es el punto de entrada. No ejecuta todo de una vez: lleva al desarrol
 
 | # | Fase | Quién la ejecuta | Termina cuando… |
 |---|---|---|---|
-| 0 | Inventario: dueño de negocio, usuarios, prioridad | Desarrollador; tú creas la ficha vacía con `plantilla-ficha-bi.md` de la skill `analizar-bi` | La ficha tiene dueño, responsable y prioridad. |
+| 0 | Inventario: dueño de negocio, usuarios (correos de quienes deben ver el informe), prioridad | Desarrollador; tú creas la ficha vacía con `plantilla-ficha-bi.md` de la skill `analizar-bi` | La ficha tiene dueño, responsable y prioridad. |
 | 1 | Análisis del BI | Skill `analizar-bi` | **APROBACIÓN:** el dueño de negocio valida las reglas de cada indicador. |
 | 2 | Tabla y SP incremental | Skill `crear-tabla-incremental` | **APROBACIÓN:** el desarrollador ejecutó el script, el job corre y los totales cuadran con el origen. |
 | 3 | Contrato del endpoint | Skill `crear-endpoint`, paso 1 | **APROBACIÓN:** el desarrollador aprueba el contrato JSON de la ficha. |
 | 4 | Endpoint en la API | Skill `crear-endpoint` | Compila y el desarrollador lo probó contra la base. |
-| 5 | Dashboard | Skill `crear-dashboard` | Lint y build pasan y se revisó en 375, 820 y 1440 px. |
+| 5 | Dashboard | Skill `crear-dashboard` | Lint y build pasan, se revisó en 375, 820 y 1440 px y el informe está en el catálogo `lib/reports.ts` con sus permisos asignados en `/admin/permisos`. |
 | 6 | Conciliación con Power BI | Tú preparas la comparación; el desarrollador la presenta | **APROBACIÓN:** el dueño de negocio firma que las cifras coinciden. |
 | 7 | Despliegue, documentación y retiro | Desarrollador despliega; tú documentas | API y frontend en producción, wiki al día, **documentación subida a VibeWorkFlow** y Power BI retirado. |
 

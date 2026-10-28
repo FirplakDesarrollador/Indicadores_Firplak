@@ -24,7 +24,7 @@ sources:
 
 ## Rutas
 
-- `/`: portal de accesos.
+- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver (catálogo en `lib/reports.ts`) y, a los administradores, la tarjeta de permisos.
 - `/login`: inicio de sesión Microsoft 365.
 - `/facturacion-diaria`: dashboard comercial.
 - `/facturacion-diaria/detalle`: página independiente para el detalle paginado de documentos de facturación.
@@ -33,6 +33,7 @@ sources:
 - `/notas-credito`: dashboard de notas crédito para Cartera ([`NotasCreditoDashboard.tsx`](../../components/NotasCreditoDashboard.tsx); reglas en la [ficha del BI](../bi/notas-credito.md)).
 - `/notas-credito/detalle`: detalle paginado de documentos de notas crédito, con filtros y panel lateral.
 - `/api/notas-credito`: proxy server-side hacia `GET /api/v1/notas-credito`.
+- `/admin/permisos`: administración de permisos por informe, solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
 
 ## Comportamiento del dashboard
 
