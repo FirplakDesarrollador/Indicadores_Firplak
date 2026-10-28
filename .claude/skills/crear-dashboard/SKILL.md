@@ -37,7 +37,7 @@ Si no existe, propón al desarrollador extraerlas de `FacturacionDashboard.tsx` 
    - Cortes 640/1024/1440 y `@container` para cuadrículas que dependen del espacio disponible.
 8. **Accesibilidad:** foco visible, filas clicables operables con teclado, `aria-label` en botones de solo icono, controles táctiles de 44 px.
 9. **Estados:** carga (skeleton con la forma final), vacío y error con "Reintentar". Si la sesión expiró, el mensaje lo dice.
-10. **Portal:** agrega la tarjeta en `accessCards` de `app/page.tsx` y, si aplica, el ítem en la navegación lateral.
+10. **Catálogo y permisos:** registra el informe en `lib/reports.ts` (slug, título, páginas y proxys). Así aparece en el portal y en `/admin/permisos`, y el middleware lo protege. Nadie lo ve hasta que un administrador lo asigna: pide al desarrollador que dé acceso a los usuarios de la ficha. Agrega también la navegación del reporte en `lib/dashboard/navigation.ts`.
 11. **Sin elementos decorativos sin función:** nada de botones "···", "Ayuda" o enlaces que no lleven a nada.
 
 ## Verificación

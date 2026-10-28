@@ -1,0 +1,31 @@
+/* Menú del perfil (nombre y correo) en el portal y en la barra lateral de los dashboards. Tokens: app/globals.css */
+
+.user-menu { min-width: 0; position: relative; }
+.user-menu-identity { align-items: center; display: flex; gap: var(--space-3); min-width: 0; }
+.user-menu-trigger { align-items: center; background: none; border: 0; border-radius: var(--radius-sm); color: inherit; cursor: pointer; display: flex; font: inherit; gap: var(--space-2); min-height: 44px; padding: var(--space-1); text-align: left; transition: background var(--duration-fast) var(--ease-out); width: 100%; }
+.user-menu-trigger:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.user-menu-chevron { flex: none; transition: transform var(--duration-fast) var(--ease-out); }
+.user-menu-trigger[aria-expanded="true"] .user-menu-chevron { transform: rotate(180deg); }
+
+.user-menu-popover { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); min-width: 220px; padding: var(--space-1); position: absolute; z-index: 40; }
+.user-menu-item { align-items: center; border-radius: var(--radius-sm); color: var(--color-text); display: flex; font-size: .875rem; font-weight: 500; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-3); text-decoration: none; white-space: nowrap; }
+.user-menu-item svg { color: var(--color-accent-text); flex: none; }
+.user-menu-item:hover { background: var(--navy-50); }
+.user-menu-item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+
+/* Barra lateral (fondo navy): el menú abre hacia arriba y ocupa toda la fila del perfil. */
+.billing-profile { position: relative; }
+.user-menu-sidebar { flex: 1; position: static; }
+.user-menu-sidebar .user-menu-trigger:hover { background: rgb(255 255 255 / .08); }
+.user-menu-sidebar .user-menu-trigger:focus-visible { outline-color: var(--color-on-dark-accent); }
+.user-menu-sidebar .user-menu-chevron { color: var(--color-nav-text-muted); transform: rotate(180deg); }
+.user-menu-sidebar .user-menu-trigger[aria-expanded="true"] .user-menu-chevron { transform: none; }
+.user-menu-sidebar .user-menu-popover { bottom: calc(100% + var(--space-2)); left: 0; right: 0; min-width: 0; }
+
+/* Encabezado del portal: el menú abre hacia abajo, alineado a la derecha. */
+.user-menu-header { margin-left: auto; }
+.user-menu-header + .portal-logout { margin-left: 0; }
+.user-menu-header .user-menu-trigger:hover { background: var(--navy-50); }
+.user-menu-header .user-menu-chevron { color: var(--color-text-muted); }
+.user-menu-header .user-menu-popover { right: 0; top: calc(100% + var(--space-2)); }
+.user-menu-header .portal-avatar { order: 2; }

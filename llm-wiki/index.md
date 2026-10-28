@@ -45,7 +45,7 @@ SP o proceso de actualización periódica
 ### Operación
 
 - [Runbook](operations/runbook.md): desarrollo local, despliegue y diagnóstico.
-- [Seguridad](concepts/security-and-secrets.md): límites de secretos y autenticación.
+- [Seguridad](concepts/security-and-secrets.md): límites de secretos, autenticación y permisos por informe.
 
 ### Diseño
 

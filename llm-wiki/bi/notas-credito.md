@@ -802,5 +802,6 @@ No se incluyen: `Total notas` (sin uso), la tabla `ÁREA` (decisión 9) ni la co
 
 - API desplegada (versión / fecha):
 - Frontend desplegado (commit / fecha):
+- Documentación en VibeWorkFlow (flujo, área, id y fecha de aprobación): `pendiente`
 - Power BI retirado (fecha):
 - Rollback:

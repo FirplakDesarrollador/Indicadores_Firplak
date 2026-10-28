@@ -312,3 +312,41 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - Por falta de personal, los PR de las migraciones los revisa el mismo desarrollador responsable; ya no se exige un segundo revisor. Cambian las skills `migrar-bi` (definición de terminado) y `crear-dashboard` (regla "No hagas").
 - La IA crea los PR con `gh` (GitHub CLI, instalada y autenticada el 2026-10-27).
+
+## [2026-10-27] proceso | Migración de BI documentada en VibeWorkFlow
+
+- Se conecta el MCP `vibeworkflow` en Claude Code (configuración de usuario).
+- Se documenta el proceso en VibeWorkFlow: flujo estándar "Migración de reportes de Power BI al portal de Indicadores", entorno FIRPLAK, área Tecnología (id `5cb0a7af-a680-49ca-89a0-4bcb69efe3be`). Tiene 8 acciones (fases 0 a 7) con su documento, 4 soluciones (skills, ficha, Reporting API y portal), responsables por rol, 2 KPI, un deseo y el checklist de cierre.
+- Skill `migrar-bi`: la fase 7 exige subir la documentación del BI migrado a VibeWorkFlow (flujo estándar del indicador en el área del dueño de negocio) y enlazarla en la ficha. Se actualizan la definición de terminado y la plantilla de la ficha.
+- `pendiente`: subir la documentación del BI de notas crédito cuando llegue a la fase 7.
+
+## [2026-10-27] cambio | Permisos por informe
+
+- **Decisiones del desarrollador:**
+  - Los permisos se guardan en una tabla de Supabase, uno por usuario y por informe.
+  - La administración se hace en una página de la misma aplicación.
+  - Los administradores ven todos los informes.
+  - Administradores iniciales: analista.desarrollador, daniel.jimenez, milton.rendon, analista2.desarrollo (Esteban Muñoz), alejandro.isaza e ismael.correa (@firplak.com).
+  - Al lanzar, ningún usuario normal tiene informes.
+- **Implementación:**
+  - Script `supabase/migrations/20261027_permisos_informes.sql`: tablas, RLS, triggers de historial y de último administrador, y administradores iniciales.
+  - Catálogo `lib/reports.ts` y `lib/auth/access.ts`.
+  - El middleware responde 403 o redirige al portal.
+  - Registro de ingresos en el callback.
+  - Portal filtrado por permisos.
+  - Página `/admin/permisos`.
+- **Validación:**
+  - Lint y build sin errores.
+  - Revisión visual a 375, 820 y 1440 px con un Supabase simulado y usuarios ficticios, en una copia temporal ya borrada.
+- **Despliegue:** ejecutar el script **antes** de desplegar el frontend. Sin las tablas, el middleware niega todos los informes.
+- **Rollback:** revertir el PR. Las tablas se borran con el bloque de rollback del script.
+- **`pendiente`:**
+  - Ejecutar el script en Supabase.
+  - Probar con sesión real.
+- **Skills:** `migrar-bi` (fases 0 y 5) y `crear-dashboard` (paso 10) incluyen el catálogo y los permisos.
+
+## [2026-10-27] cambio | Permisos en el menú del perfil
+
+- Por decisión del desarrollador, el acceso a `/admin/permisos` deja de ser una tarjeta del portal y pasa a ser una opción ("Permisos de informes") del menú del perfil, el bloque con nombre y correo. Está en el encabezado del portal y en la barra lateral de los dashboards, y solo lo ven los administradores; para los demás, el perfil se muestra sin menú.
+- Componente `components/dashboard/UserMenu.tsx` y estilos en `app/styles/user-menu.css`. El portal muestra ahora el avatar y el correo del usuario.
+- Lint, tipos y build sin errores; revisión visual con el menú abierto en una copia temporal con datos ficticios, ya borrada.

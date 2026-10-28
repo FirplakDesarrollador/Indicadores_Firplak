@@ -5,6 +5,8 @@ import "./styles/login.css";
 import "./styles/portal.css";
 import "./styles/billing.css";
 import "./styles/credit-notes.css";
+import "./styles/admin.css";
+import "./styles/user-menu.css";
 
 const montserrat = Montserrat({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-montserrat", display: "swap" });
 
