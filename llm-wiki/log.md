@@ -312,3 +312,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - Por falta de personal, los PR de las migraciones los revisa el mismo desarrollador responsable; ya no se exige un segundo revisor. Cambian las skills `migrar-bi` (definición de terminado) y `crear-dashboard` (regla "No hagas").
 - La IA crea los PR con `gh` (GitHub CLI, instalada y autenticada el 2026-10-27).
+
+## [2026-10-27] proceso | Migración de BI documentada en VibeWorkFlow
+
+- Se conecta el MCP `vibeworkflow` en Claude Code (configuración de usuario).
+- Se documenta el proceso en VibeWorkFlow: flujo estándar "Migración de reportes de Power BI al portal de Indicadores", entorno FIRPLAK, área Tecnología (id `5cb0a7af-a680-49ca-89a0-4bcb69efe3be`). Tiene 8 acciones (fases 0 a 7) con su documento, 4 soluciones (skills, ficha, Reporting API y portal), responsables por rol, 2 KPI, un deseo y el checklist de cierre.
+- Skill `migrar-bi`: la fase 7 exige subir la documentación del BI migrado a VibeWorkFlow (flujo estándar del indicador en el área del dueño de negocio) y enlazarla en la ficha. Se actualizan la definición de terminado y la plantilla de la ficha.
+- `pendiente`: subir la documentación del BI de notas crédito cuando llegue a la fase 7.

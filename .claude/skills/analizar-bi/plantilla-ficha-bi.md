@@ -143,5 +143,6 @@ Respuesta:
 
 - API desplegada (versión / fecha):
 - Frontend desplegado (commit / fecha):
+- Documentación en VibeWorkFlow (flujo, área, id y fecha de aprobación):
 - Power BI retirado (fecha):
 - Rollback:

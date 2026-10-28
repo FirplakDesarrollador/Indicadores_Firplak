@@ -32,7 +32,7 @@ Esta skill es el punto de entrada. No ejecuta todo de una vez: lleva al desarrol
 | 4 | Endpoint en la API | Skill `crear-endpoint` | Compila y el desarrollador lo probó contra la base. |
 | 5 | Dashboard | Skill `crear-dashboard` | Lint y build pasan y se revisó en 375, 820 y 1440 px. |
 | 6 | Conciliación con Power BI | Tú preparas la comparación; el desarrollador la presenta | **APROBACIÓN:** el dueño de negocio firma que las cifras coinciden. |
-| 7 | Despliegue, documentación y retiro | Desarrollador despliega; tú documentas | API y frontend en producción, wiki al día, Power BI retirado. |
+| 7 | Despliegue, documentación y retiro | Desarrollador despliega; tú documentas | API y frontend en producción, wiki al día, **documentación subida a VibeWorkFlow** y Power BI retirado. |
 
 En cada fase:
 
@@ -48,6 +48,18 @@ Prepara para el desarrollador:
 - La lista de indicadores de la ficha, cada uno con su valor en el dashboard y un espacio para el valor de Power BI, para al menos tres periodos (mes actual, mes anterior y un mes con notas o ajustes).
 - Las consultas SQL de solo lectura que explican cada cifra, por si hay diferencias.
 - Una diferencia mayor a una unidad de redondeo es un hallazgo: documenta la causa en la ficha antes de seguir.
+
+## Fase 7: documentación en VibeWorkFlow
+
+La fase 7 no termina hasta que la documentación del BI migrado está en VibeWorkFlow (MCP `vibeworkflow`, entorno **FIRPLAK**):
+
+1. Busca primero con `search_flows` si el BI ya tiene un flujo; si existe, actualízalo en lugar de duplicarlo.
+2. Crea o actualiza un **flujo estándar** con el nombre del indicador (por ejemplo, "Consulta del indicador de notas crédito") en el área del dueño de negocio. Sus tarjetas `accion` siguen el recorrido del dato: origen en SAP, carga de la tabla de reporte, endpoint de la API y consulta en el dashboard. Cada `accion` lleva su documento Markdown con lo que corresponda de la ficha: fuentes, reglas de cada indicador, filtros, decisiones del dueño de negocio, conciliación y rollback. Agrega como `responsable` el rol del dueño de negocio y el del desarrollador, nunca nombres propios.
+3. Respeta la ontología del MCP (`get_ontology`): solo `accion → accion` y `solucion → accion` llevan aristas; las demás tarjetas usan `parentId`.
+4. Los cambios se aplican directamente en VibeWorkFlow: pide al desarrollador que revise el flujo ahí y ajusta lo que indique.
+5. Registra en la ficha (sección 7) el nombre y el identificador del flujo, y en `llm-wiki/log.md` la fecha.
+
+El proceso de migración también está documentado en VibeWorkFlow: flujo estándar "Migración de reportes de Power BI al portal de Indicadores" (entorno FIRPLAK, área Tecnología, id `5cb0a7af-a680-49ca-89a0-4bcb69efe3be`). Si cambian las fases de esta skill, actualiza ese flujo.
 
 ## Reglas que no se negocian
 
@@ -66,4 +78,5 @@ Prepara para el desarrollador:
 - [ ] Dashboard accesible desde el portal y documentado en `llm-wiki/components/frontend.md`.
 - [ ] Conciliación firmada por el dueño de negocio (fecha y nombre en la ficha).
 - [ ] PR creado, revisado por el desarrollador responsable (no se exige un segundo revisor) y unido a `main` en ambos repositorios.
+- [ ] Documentación del BI subida a VibeWorkFlow (flujo estándar en el área del dueño de negocio, revisado por el desarrollador) y enlazada en la ficha.
 - [ ] Entrada en `llm-wiki/log.md` con validación y rollback.
