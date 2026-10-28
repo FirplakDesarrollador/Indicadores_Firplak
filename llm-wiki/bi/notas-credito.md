@@ -1,7 +1,7 @@
 ---
 status: en-migracion
-fase: 5
-updated: 2026-10-27
+fase: 6
+updated: 2026-10-28
 sources:
   - ../../bi-origen/bi-notas-credito/
 ---
@@ -793,15 +793,26 @@ No se incluyen: `Total notas` (sin uso), la tabla `ÁREA` (decisión 9) ni la co
 
 ## 6. Conciliación con Power BI
 
-| Indicador | Periodo | Dashboard | Power BI | Diferencia | Causa |
-|---|---|---|---|---|---|
+El dueño de negocio contrastó las cifras del dashboard con el Power BI y las dio por conciliadas el 2026-10-28. Los valores por indicador y periodo no se registraron en el repositorio.
 
-**Firma del dueño de negocio:** nombre — fecha — `pendiente`
+Las diferencias esperadas, ya explicadas en la ficha, son:
+
+- Viventta incluida (el Power BI solo leía `Firplak_SA`).
+- Donaciones excluidas también en las notas (decisión 1).
+- Los 21 artículos `VZNOPE` de `Informe_ventas`, que excluyen, por ejemplo, la factura 4316.
+- El concepto NC leído del encabezado después de la corrección de `SP_Generar_Informe_Ventas`.
+- Tipo de venta y vendedor también filtran la facturación (decisión 4, cambiada).
+
+**Firma del dueño de negocio:** Daniel Jimenez — 2026-10-28 — conciliado.
 
 ## 7. Despliegue y retiro
 
-- API desplegada (versión / fecha):
-- Frontend desplegado (commit / fecha):
-- Documentación en VibeWorkFlow (flujo, área, id y fecha de aprobación): `pendiente`
-- Power BI retirado (fecha):
+- API desplegada: `dist` de la rama `bi/notas-credito-2` en `C:\Apps\reporting-api`, 2026-10-27 (ver sección 4).
+- Frontend: unido a `main` (dashboard: PR #1, merge `540abfb`; permisos por informe: PR #5, merge `6a02bc2`). Fecha del despliegue en Vercel: `pendiente`.
+- Documentación en VibeWorkFlow (flujo, área, id y fecha de aprobación): `pendiente`. El 2026-10-28 el MCP no respondió (tiempo agotado).
+- Power BI retirado (fecha): `pendiente`.
 - Rollback:
+  - API: restaurar el `dist` anterior en `C:\Apps\reporting-api` y reiniciar el servicio.
+  - Frontend: revertir el merge en `main` y dejar que Vercel redespliegue.
+  - SP: ejecutar el respaldo de `SP_Generar_Informe_Ventas` como `ALTER PROCEDURE` y hacer una carga `COMPLETA` (ver sección 2).
+  - Mientras el Power BI no se retire, sigue disponible como respaldo para Cartera.

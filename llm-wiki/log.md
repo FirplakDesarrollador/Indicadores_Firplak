@@ -350,3 +350,12 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Por decisión del desarrollador, el acceso a `/admin/permisos` deja de ser una tarjeta del portal y pasa a ser una opción ("Permisos de informes") del menú del perfil, el bloque con nombre y correo. Está en el encabezado del portal y en la barra lateral de los dashboards, y solo lo ven los administradores; para los demás, el perfil se muestra sin menú.
 - Componente `components/dashboard/UserMenu.tsx` y estilos en `app/styles/user-menu.css`. El portal muestra ahora el avatar y el correo del usuario.
 - Lint, tipos y build sin errores; revisión visual con el menú abierto en una copia temporal con datos ficticios, ya borrada.
+
+## [2026-10-28] bi | Notas crédito: conciliación firmada (fase 6)
+
+- El dueño de negocio (Daniel Jimenez) contrastó el dashboard con el Power BI y dio la conciliación por buena. Las cifras por indicador no quedaron registradas; las diferencias esperadas están en la sección 6 de [la ficha](bi/notas-credito.md).
+- La ficha pasa a `fase: 6` y la sección 7 registra el despliegue de la API y del frontend y el rollback de cada parte.
+- **`pendiente` para cerrar la fase 7:**
+  - Flujo en VibeWorkFlow. El MCP no respondió el 2026-10-28 (tiempo agotado en tres intentos).
+  - Fecha del despliegue en Vercel.
+  - Fecha de retiro del Power BI.
