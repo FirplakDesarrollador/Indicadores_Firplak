@@ -809,7 +809,11 @@ Las diferencias esperadas, ya explicadas en la ficha, son:
 
 - API desplegada: `dist` de la rama `bi/notas-credito-2` en `C:\Apps\reporting-api`, 2026-10-27 (ver sección 4).
 - Frontend: unido a `main` (dashboard: PR #1, merge `540abfb`; permisos por informe: PR #5, merge `6a02bc2`). Fecha del despliegue en Vercel: `pendiente`.
-- Documentación en VibeWorkFlow (flujo, área, id y fecha de aprobación): `pendiente`. El 2026-10-28 el MCP no respondió (tiempo agotado).
+- Documentación en VibeWorkFlow: flujo estándar "Consulta del indicador de notas crédito", entorno FIRPLAK, área Tecnología, id `35bad5f7-8628-4bb1-9af3-4da057d07722`, creado el 2026-10-28.
+  - Cuatro `accion` encadenadas, con su documento: registro en SAP, carga en `Informe_ventas`, endpoint de la API y dashboard.
+  - Responsables por rol: área de Cartera, desarrollador del portal de Indicadores y dueño de negocio del indicador.
+  - KPI: % de notas crédito sobre la facturación (meta 3 %).
+  - Revisión del desarrollador en VibeWorkFlow: `pendiente`.
 - Power BI retirado (fecha): `pendiente`.
 - Rollback:
   - API: restaurar el `dist` anterior en `C:\Apps\reporting-api` y reiniciar el servicio.
