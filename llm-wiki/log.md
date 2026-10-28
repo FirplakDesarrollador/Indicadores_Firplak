@@ -355,7 +355,11 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - El dueño de negocio (Daniel Jimenez) contrastó el dashboard con el Power BI y dio la conciliación por buena. Las cifras por indicador no quedaron registradas; las diferencias esperadas están en la sección 6 de [la ficha](bi/notas-credito.md).
 - La ficha pasa a `fase: 6` y la sección 7 registra el despliegue de la API y del frontend y el rollback de cada parte.
-- **`pendiente` para cerrar la fase 7:**
-  - Revisión del flujo en VibeWorkFlow por el desarrollador. El flujo se creó el mismo día, después de una caída del servicio: "Consulta del indicador de notas crédito", área Tecnología, id `35bad5f7-8628-4bb1-9af3-4da057d07722`.
-  - Fecha del despliegue en Vercel.
-  - Fecha de retiro del Power BI.
+
+## [2026-10-28] bi | Notas crédito: migración cerrada (fase 7)
+
+- **VibeWorkFlow:** flujo estándar "Consulta del indicador de notas crédito", área Tecnología, id `35bad5f7-8628-4bb1-9af3-4da057d07722`. Lo creó el agente después de una caída del servicio y lo revisó el desarrollador el 2026-10-28.
+- **Frontend:** desplegado en Vercel el 2026-10-28.
+- **Power BI:** retiro programado para el 2026-11-06; hasta entonces queda en paralelo como respaldo.
+- **Rollback:** está en la sección 7 de [la ficha](bi/notas-credito.md), separado para la API, el frontend y el SP.
+- La ficha pasa a `status: migrado` y `fase: 7`.
