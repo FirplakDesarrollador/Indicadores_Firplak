@@ -27,12 +27,12 @@
 
 .billing-profile { align-items: center; border-top: 1px solid rgb(255 255 255 / .12); display: flex; gap: var(--space-3); margin-top: var(--space-3); padding: var(--space-4) var(--space-1) 0; }
 .billing-avatar { align-items: center; background: var(--crema-100); border-radius: 50%; color: var(--navy-700); display: flex; flex: none; font-size: .75rem; font-weight: 600; height: 32px; justify-content: center; width: 32px; }
-.billing-profile > div:nth-child(2) { flex: 1; min-width: 0; }
-.billing-profile strong, .billing-profile span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.billing-profile strong { font-size: .8125rem; font-weight: 600; }
-.billing-profile span { color: var(--color-nav-text-muted); font-size: .75rem; }
-.billing-profile button { align-items: center; background: transparent; border: 0; border-radius: var(--radius-sm); color: var(--color-nav-text-muted); display: flex; flex: none; height: 44px; justify-content: center; width: 44px; }
-.billing-profile button:hover { background: rgb(255 255 255 / .08); color: var(--color-nav-text); }
+.billing-profile .user-menu-text { flex: 1; min-width: 0; }
+.billing-profile .user-menu-text strong, .billing-profile .user-menu-text span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.billing-profile .user-menu-text strong { font-size: .8125rem; font-weight: 600; }
+.billing-profile .user-menu-text span { color: var(--color-nav-text-muted); font-size: .75rem; }
+.billing-profile .billing-signout { align-items: center; background: transparent; border: 0; border-radius: var(--radius-sm); color: var(--color-nav-text-muted); display: flex; flex: none; height: 44px; justify-content: center; width: 44px; }
+.billing-profile .billing-signout:hover { background: rgb(255 255 255 / .08); color: var(--color-nav-text); }
 
 /* ── Área principal ── */
 .billing-main { display: flex; flex: 1; flex-direction: column; min-width: 0; }

@@ -8,24 +8,22 @@ import {
   Info,
   LayoutGrid,
   LogOut,
-  ShieldCheck,
 } from "lucide-react";
 import BrandPeak from "@/components/BrandPeak";
+import UserMenu from "@/components/dashboard/UserMenu";
 import { canViewReport, getUserAccess, type UserAccess } from "@/lib/auth/access";
 import { reports } from "@/lib/reports";
 import { createClient } from "@/lib/supabase/client";
 
-const adminCard = {
-  slug: "admin-permisos",
-  title: "Administración de permisos",
-  subtitle: "Quién puede ver cada informe",
-  href: "/admin/permisos",
-  icon: ShieldCheck,
-  type: "ADMINISTRACIÓN",
-};
+function initialsFrom(name: string) {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  const initials = words.length > 1 ? `${words[0][0]}${words[words.length - 1][0]}` : (words[0] ?? "").slice(0, 2);
+  return initials.toUpperCase() || "FP";
+}
 
 export default function HomePage() {
   const [userName, setUserName] = useState("Usuario Firplak");
+  const [userEmail, setUserEmail] = useState("");
   const [access, setAccess] = useState<UserAccess | null>(null);
   const [accessError, setAccessError] = useState(false);
   const [accessDenied, setAccessDenied] = useState(false);
@@ -36,6 +34,7 @@ export default function HomePage() {
     setAccessDenied(new URLSearchParams(window.location.search).get("acceso") === "denegado");
     supabase.auth.getUser().then(async ({ data }) => {
       const email = data.user?.email ?? "";
+      setUserEmail(email);
       setUserName(
         data.user?.user_metadata?.full_name ??
           data.user?.user_metadata?.name ??
@@ -51,10 +50,7 @@ export default function HomePage() {
 
   const accessCards = useMemo(() => {
     if (!access) return [];
-    const reportCards = reports
-      .filter((report) => canViewReport(access, report.slug))
-      .map((report) => ({ ...report, type: "BUSINESS INTELLIGENCE" }));
-    return access.isAdmin ? [...reportCards, adminCard] : reportCards;
+    return reports.filter((report) => canViewReport(access, report.slug));
   }, [access]);
 
   const handleSignOut = async () => {
@@ -79,10 +75,14 @@ export default function HomePage() {
           <div className="portal-brand-subtitle">Portal de indicadores</div>
         </div>
 
-        <div className="portal-welcome">
-          <span>&iexcl;Bienvenido!</span>
-          <strong>{userName}</strong>
-        </div>
+        <UserMenu isAdmin={Boolean(access?.isAdmin)} variant="header">
+          <span className="portal-avatar" aria-hidden="true">{initialsFrom(userName)}</span>
+          <span className="portal-welcome">
+            <span>&iexcl;Bienvenido!</span>
+            <strong>{userName}</strong>
+            {userEmail && <small>{userEmail}</small>}
+          </span>
+        </UserMenu>
 
         <button className="portal-logout" onClick={handleSignOut}>
           <LogOut size={18} />
@@ -111,11 +111,11 @@ export default function HomePage() {
           {access && !accessCards.length && <p className="portal-notice"><Info size={16} /> A&uacute;n no tienes informes asignados. Pide acceso a un administrador.</p>}
 
           <div className="access-grid" aria-label="Accesos habilitados" aria-busy={!access && !accessError}>
-            {accessCards.map(({ slug, title, subtitle, href, icon: Icon, type }) => (
+            {accessCards.map(({ slug, title, subtitle, href, icon: Icon }) => (
               <Link className="access-card" href={href} key={slug}>
                 <div className="access-icon"><Icon size={40} strokeWidth={1.75} /></div>
                 <div className="access-card-copy">
-                  <span className="access-type">{type}</span>
+                  <span className="access-type">BUSINESS INTELLIGENCE</span>
                   <h2>{title}</h2>
                   <p>{subtitle}</p>
                 </div>

@@ -344,3 +344,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
   - Ejecutar el script en Supabase.
   - Probar con sesión real.
 - **Skills:** `migrar-bi` (fases 0 y 5) y `crear-dashboard` (paso 10) incluyen el catálogo y los permisos.
+
+## [2026-10-27] cambio | Permisos en el menú del perfil
+
+- Por decisión del desarrollador, el acceso a `/admin/permisos` deja de ser una tarjeta del portal y pasa a ser una opción ("Permisos de informes") del menú del perfil, el bloque con nombre y correo. Está en el encabezado del portal y en la barra lateral de los dashboards, y solo lo ven los administradores; para los demás, el perfil se muestra sin menú.
+- Componente `components/dashboard/UserMenu.tsx` y estilos en `app/styles/user-menu.css`. El portal muestra ahora el avatar y el correo del usuario.
+- Lint, tipos y build sin errores; revisión visual con el menú abierto en una copia temporal con datos ficticios, ya borrada.

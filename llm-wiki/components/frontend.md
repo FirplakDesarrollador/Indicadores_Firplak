@@ -24,7 +24,7 @@ sources:
 
 ## Rutas
 
-- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver (catálogo en `lib/reports.ts`) y, a los administradores, la tarjeta de permisos.
+- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver (catálogo en `lib/reports.ts`). El perfil del encabezado (nombre y correo) abre, solo para administradores, el menú con "Permisos de informes"; la barra lateral de los dashboards tiene el mismo menú en el perfil.
 - `/login`: inicio de sesión Microsoft 365.
 - `/facturacion-diaria`: dashboard comercial.
 - `/facturacion-diaria/detalle`: página independiente para el detalle paginado de documentos de facturación.

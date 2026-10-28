@@ -36,7 +36,8 @@ Implementados el 2026-10-27 (rama `feat/permisos-informes`). Decisiones del desa
 - **Catálogo de informes:** [`lib/reports.ts`](../../lib/reports.ts), con el slug, las páginas y los proxys de cada informe. Un informe nuevo no lo ve nadie hasta que se asigna (denegado por defecto).
 - **Dónde se aplica:**
   1. [`middleware.ts`](../../middleware.ts) responde 403 en los proxys `/api/<informe>` y redirige las páginas a `/?acceso=denegado`. `/admin/*` exige administrador.
-  2. El portal solo muestra los informes permitidos y la tarjeta de administración.
+  2. El portal solo muestra los informes permitidos.
+  El acceso a la administración está en el menú del perfil (nombre y correo), en el encabezado del portal y en la barra lateral de los dashboards, y solo aparece para administradores ([`UserMenu.tsx`](../../components/dashboard/UserMenu.tsx)).
   La Reporting API sigue con su token único; solo la alcanza el servidor de Next.js.
 - **Administración:** `/admin/permisos` ([`PermissionsAdmin.tsx`](../../components/admin/PermissionsAdmin.tsx)): casillas por usuario e informe, rol de administrador, alta por correo, usuarios "Pendiente de acceso" (iniciaron sesión sin informes), búsqueda e historial.
 - **Administradores iniciales:** los del script (correo de Esteban Muñoz confirmado: `analista2.desarrollo@firplak.com`).
