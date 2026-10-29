@@ -1,5 +1,13 @@
 # Registro de mantenimiento
 
+## [2026-10-29] merge | Integración de main en Ale
+
+- Se sincronizó la rama local `main` con `origin/main` y se fusionó en `Ale`.
+- Se adoptó la arquitectura de `main`: portal de accesos (`/`), autenticación Supabase SSR, middleware protector y módulos independientes.
+- El módulo de Planner/Capacidad WIPL se integró como ruta `/carga` (con redirección desde `/planner`) y tarjeta de acceso en el portal de inicio.
+- Se resolvió conflicto de dependencias instalando `@supabase/ssr` y verificando `npm run build` exitoso.
+
+
 ## [2026-10-26] ux | Resumen diario compacto
 
 - El resumen diario muestra inicialmente solo los 7 registros más recientes.
