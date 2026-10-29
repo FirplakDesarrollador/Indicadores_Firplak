@@ -2,6 +2,9 @@ node_modules/
 .next/
 .npm-cache/
 out/
+# La Reporting API tiene su propio repositorio; cualquier checkout local se mantiene fuera del frontend.
+reporting-api/
+reporting-api.zip
 .env*
 !.env.example
 npm-debug.log*
@@ -9,3 +12,5 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 tsconfig.tsbuildinfo
+_logs/
+_update-notifier-last-checked

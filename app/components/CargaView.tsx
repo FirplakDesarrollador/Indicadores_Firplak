@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState, useMemo, useRef } from "react";
+import Link from "next/link";
 import {
   AlertTriangle,
+  ArrowLeft,
   CheckCircle2,
   Layers,
   RefreshCw,
@@ -1002,6 +1004,25 @@ export default function CargaView() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+              <Link
+                href="/"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  color: theme.ink,
+                  textDecoration: "none",
+                  background: "#f1f5f9",
+                  padding: "4px 10px",
+                  borderRadius: "6px",
+                  border: `1px solid ${theme.border}`,
+                }}
+              >
+                <ArrowLeft size={13} />
+                Portal
+              </Link>
               <span
                 style={{
                   fontSize: "11px",
