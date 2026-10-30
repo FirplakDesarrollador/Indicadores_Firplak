@@ -27,10 +27,27 @@ export async function GET(req: NextRequest) {
       new Set((dateData || []).map((d) => d.fecha_corte).filter(Boolean))
     );
 
+    // Auto-generación de corte diario si el día actual (Colombia) no existe aún
+    const todayBogota = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Bogota",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+
+    if (!fechasCorteDisponibles.includes(todayBogota)) {
+      try {
+        await supabase.rpc("fn_tomar_corte_diario_planner", { p_fecha: todayBogota });
+        fechasCorteDisponibles.unshift(todayBogota);
+      } catch (corteErr) {
+        console.warn("No fue posible generar corte automático:", corteErr);
+      }
+    }
+
     const targetDate =
       requestedDate && fechasCorteDisponibles.includes(requestedDate)
         ? requestedDate
-        : fechasCorteDisponibles[0] || requestedDate || new Date().toISOString().split("T")[0];
+        : fechasCorteDisponibles[0] || requestedDate || todayBogota;
 
     // 2. Query de todas las asignaciones del corte del día
     const { data: rows, error } = await supabase
