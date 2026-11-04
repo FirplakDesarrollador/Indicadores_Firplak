@@ -363,3 +363,11 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - **Power BI:** retiro programado para el 2026-11-06; hasta entonces queda en paralelo como respaldo.
 - **Rollback:** está en la sección 7 de [la ficha](bi/notas-credito.md), separado para la API, el frontend y el SP.
 - La ficha pasa a `status: migrado` y `fase: 7`.
+
+## [2026-11-04] bi | Costo actual de producto terminado: inventario y análisis (fases 0 y 1)
+
+- Ficha nueva: [`bi/costo-actual-pt.md`](bi/costo-actual-pt.md). El dueño de negocio es Contabilidad, la prioridad es alta y el uso es diario. Rama `bi/costo-actual-pt`.
+- Fuente: proyecto `.pbip` en `bi-origen/bi-costo-actual-pt/`. Es la explosión de la lista de materiales (4 niveles) desde SAP `FIRPLAK_SA`, con costo de MP, MO y CIF.
+- **Decisión del desarrollador:** la migración usa [`query-optimizado.sql`](../bi-origen/bi-costo-actual-pt/query-optimizado.sql), sin cursores y con reglas corregidas, en lugar del SQL del Power BI. Las diferencias de reglas (D1–D8) están en la ficha y afectarán la conciliación.
+- Propuesta: tabla `Informe_costo_pt` con **carga completa** diaria, no incremental (nombre y horario pendientes).
+- Pendiente: la validación de Contabilidad (preguntas P1–P9) y los resultados de las consultas V1–V7.

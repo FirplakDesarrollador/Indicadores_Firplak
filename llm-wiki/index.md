@@ -56,6 +56,7 @@ SP o proceso de actualización periódica
 - Proceso con IA en 8 fases (inventario, análisis, tabla y SP incremental, contrato, endpoint, dashboard, conciliación, despliegue) definido en las skills de [`.claude/skills/`](../.claude/skills/): [`migrar-bi`](../.claude/skills/migrar-bi/SKILL.md) coordina y [`analizar-bi`](../.claude/skills/analizar-bi/SKILL.md), [`crear-tabla-incremental`](../.claude/skills/crear-tabla-incremental/SKILL.md), [`crear-endpoint`](../.claude/skills/crear-endpoint/SKILL.md) y [`crear-dashboard`](../.claude/skills/crear-dashboard/SKILL.md) ejecutan cada fase.
 - Cada BI migrado tiene su ficha en `llm-wiki/bi/<slug>.md` ([plantilla](../.claude/skills/analizar-bi/plantilla-ficha-bi.md)). Fichas:
   - [Notas crédito](bi/notas-credito.md): piloto, migrado (fase 7 cerrada el 2026-10-28; Power BI se retira el 2026-11-06).
+  - [Costo actual de producto terminado](bi/costo-actual-pt.md): en migración (fase 1, análisis; pendiente la validación de Contabilidad). Usa el query optimizado del desarrollador, con reglas distintas a las del Power BI.
 
 ### Decisiones
 
