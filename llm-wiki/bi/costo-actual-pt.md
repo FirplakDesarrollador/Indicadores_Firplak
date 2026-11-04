@@ -38,7 +38,7 @@ Las dos fuentes son SQL Server en `ITPLAKINFO`, la misma instancia de `Planos_Sy
 #### Reglas del query optimizado (base de la migración)
 
 1. **Productos (nivel 1):** artículos de `OITM` que no están inactivos (`frozenFor = 'N'`) y tienen lista de materiales en `ITT1` (`Father`). La cantidad del producto es 1.
-2. **Explosión:** niveles 2, 3 y 4 desde `ITT1`, ordenados por `ChildNum`. La cantidad de cada línea se acumula: es la cantidad del componente multiplicada por la de sus padres. Un componente del nivel 4 que tenga su propia lista **no** se explota más: se costea como hoja.
+2. **Explosión:** niveles 2, 3 y 4 desde `ITT1`, ordenados por `ChildNum`. La cantidad de cada línea se acumula: es la cantidad del componente multiplicada por la de sus padres. Un componente del nivel 4 que tenga su propia lista **no** se explota más: se costea como hoja. **En la migración esto cambia (D9):** el SP explota hasta la última hoja.
 3. **Costo por línea:**
    - Las **hojas** (componentes sin lista) cuestan su costo unitario por la cantidad acumulada.
    - Los **encabezados** (componentes con lista, en los niveles 2 y 3) cuestan 0, porque su costo está en sus hijos.
@@ -70,7 +70,9 @@ Estas diferencias explican las cifras distintas que van a aparecer en la concili
 | D7 | Artículo con `QryGroup39 = 'Y'` y `QryGroup40 = 'Y'` | Los dos bloques de limpieza se anulan entre sí: costo 0 | Suma el costo **dos veces**, en `Costo_Mo` y en `Costo_Cif` | Hoy ninguno (V3). Queda el control en el SP y la pregunta P2. |
 | D8 | Columnas de salida | `linea` (orden) y `Padre` (código del producto, usado en la relación) | Ninguna de las dos. Devuelve `Alerta` y calcula internamente `RootCode` y `SortPath`. | La tabla de reporte debe guardar `RootCode` como código del producto y `SortPath` como orden. Se agrega al SP. |
 
-Las dos versiones comparten esto: la explosión llega solo hasta el nivel 4 (ver V4), los encabezados cuestan 0 y el producto suma sus líneas.
+| D9 | Profundidad de la explosión | Hasta el nivel 4: un componente del nivel 4 con lista se costea como hoja | Igual que el Power BI | **Decisión P10:** el SP desglosa todos los niveles (hoy, hasta el 6, V4b). Cambia la clasificación MP/MO/CIF de 3.421 productos y, en algunos casos, su total, porque el componente se costea con sus hijos y no con su propio `AvgPrice`. El SP debe controlar ciclos en las listas. |
+
+Las dos versiones comparten esto: los encabezados cuestan 0 y el producto suma sus líneas. El portal desglosará todos los niveles (D9).
 
 <details><summary>SQL de cada fuente</summary>
 
@@ -151,18 +153,25 @@ Riesgos técnicos:
 Preguntas para Contabilidad:
 
 - **P1.** ¿Aceptan las reglas del query optimizado (D1 a D3, D5 y D6) como las correctas, aunque cambien las cifras respecto del Power BI?
+  - **Respuesta (2026-11-04):** sí, se aceptan las reglas corregidas.
 - **P2.** Si un artículo es mano de obra y CIF a la vez (D7), ¿a cuál de los dos va su costo? ¿O no debería existir ese caso?
 - **P3.** En la tabla "Lista de Materiales", la columna "Total Costo" muestra solo la **materia prima**: las líneas de mano de obra y CIF aparecen en 0. ¿Mostramos las columnas MP, MO, CIF y Total por separado?
 - **P4.** La torta "sin CIF" excluye los componentes por el **texto** "CIF" en la descripción, no por su clasificación en SAP. ¿La excluimos por clasificación (`QryGroup40`)? ¿La mano de obra debe aparecer en la torta?
 - **P5.** La tarjeta de arriba se titula "Promedio Costo Total sin CIF", pero muestra la **suma**. ¿Se renombra a "Costo total sin CIF"?
 - **P6.** Sin producto seleccionado, "Total Costo" suma el costo de **todos** los productos, una cifra sin sentido de negocio. ¿Las tarjetas se muestran solo con un producto seleccionado, o se reemplazan por el número de productos y el costo promedio?
 - **P7.** El universo incluye todo artículo con lista de materiales, también semielaborados y subensambles. ¿Se limita a producto terminado? Si es así, ¿con qué criterio de SAP (grupo de artículos, propiedad)?
+  - **Respuesta (2026-11-04):** se incluyen los semielaborados. El universo es todo artículo activo con lista de materiales, como en el query optimizado.
 - **P10.** El 30 % de los productos tiene listas de más de 4 niveles (V4). ¿Explotamos todos los niveles (cambia el desglose MP/MO/CIF de esos productos, no necesariamente su total) o mantenemos el corte en 4 como hoy?
+  - **Respuesta (2026-11-04):** se desglosan todos los niveles. Es un cambio respecto del query optimizado: ver **D9**.
 - **P11.** Hay unas 13.000 líneas de componentes sin costo en SAP, todas de materia prima (V5b). 12.055 son de 345 artículos que no son de inventario: ¿es correcto que cuesten 0? Las otras 982 líneas son de 630 artículos de inventario sin costo promedio en ninguna bodega: ¿se corrigen en SAP antes de salir a producción, o el portal los muestra con la alerta `SIN COSTO EN SAP`?
+  - **Respuesta (2026-11-04):** se dejan como están, en 0. Se controlan con la columna `Alerta`, así que el portal debe mostrarla (responde parte de P8).
 - **P8.** ¿Mostramos la columna `Alerta` y un indicador de líneas sin costo o inactivas?
+  - **Respuesta parcial (2026-11-04):** la columna `Alerta` se muestra (P11). Falta decidir si se agrega un indicador con el número de líneas con alerta.
 - **P9.** ¿Basta con el costo actual, o necesitan guardar una foto mensual para comparar el costo entre meses?
 
-**Validación del dueño de negocio:** Contabilidad — fecha — `pendiente`
+Respuestas transmitidas por el desarrollador el 2026-11-04: P1, P7, P10 y P11, más P8 en parte. Siguen `pendiente`: P2 a P6, el indicador de P8 y P9.
+
+**Validación del dueño de negocio:** Contabilidad — fecha — `pendiente` (falta responder P2 a P6, P8 y P9)
 
 ### Consultas de validación para el desarrollador
 
@@ -311,10 +320,11 @@ Propuesta de la fase 1. El script se escribe en la fase 2.
 | Campo | Valor |
 |---|---|
 | Tabla | `Planos_Symphony.dbo.Informe_costo_pt` (nombre propuesto, `pendiente` de confirmar) |
-| Grano (una fila por…) | Línea de la explosión de un producto: el producto (nivel 1), los encabezados y los componentes |
+| Grano (una fila por…) | Línea de la explosión de un producto: el producto (nivel 1), los encabezados y los componentes. Productos: todo artículo activo con lista de materiales, incluidos los semielaborados (P7) |
 | Clave | (`CodigoPT`, `SortPath`) |
 | Columnas propuestas | `CodigoPT` (`RootCode`), `Codigo`, `Descripcion`, `UnidadMedida`, `Nivel`, `Cantidad`, `Bodega` (`ITT1.Warehouse`), `TieneHijos`, `Clasificacion` (`MP` / `MO` / `CIF` en las hojas, nulo en los encabezados), `Costo_Unitario`, `Costo_Mp`, `Costo_Mo`, `Costo_Cif`, `Costo_Total`, `Alerta`, `SortPath`, `FechaCarga` |
 | Fecha de referencia (filtros por periodo) | Ninguna: es una foto del costo actual. `FechaCarga` indica cuándo se calculó. |
+| Explosión | Recursiva hasta la última hoja (D9), con tope de seguridad (por ejemplo, 15 niveles) y detección de ciclos por `SortPath`; las líneas cortadas por el tope o por un ciclo se marcan en `Alerta` |
 | Estrategia incremental | **Carga completa** (no incremental): el SP calcula la explosión en tablas temporales y reemplaza el contenido dentro de una transacción, para que la API nunca vea la tabla vacía |
 | SP | `dbo.sp_Actualizar_Informe_costo_pt` (nombre propuesto) |
 | Job y horario | Diario, de madrugada (por ejemplo, 5:00), antes de la consulta diaria de Contabilidad. Horario `pendiente` |

@@ -394,3 +394,11 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - El desarrollador confirma un error conocido del SQL original: en las hojas del nivel 3 no consulta la bodega alternativa y se queda con el costo de la bodega de la lista (D3/D5). El query optimizado lo corrige.
 - Se retira la consulta V7b. La validación con datos (V1–V7) queda completa. Para cerrar la fase 1 falta la validación de Contabilidad (P1–P11).
+
+## [2026-11-04] bi | Costo actual de producto terminado: respuestas de Contabilidad P1, P7, P10 y P11
+
+- P1: se aceptan las reglas corregidas del query optimizado.
+- P7: se incluyen los semielaborados (todo artículo activo con lista de materiales).
+- P10: se desglosan todos los niveles. Es una diferencia nueva respecto del query optimizado (**D9**): el SP de la fase 2 hará la explosión recursiva con control de ciclos.
+- P11: las líneas sin costo quedan en 0 y se controlan con la columna `Alerta`, que el portal mostrará.
+- Pendiente: P2 a P6, el indicador de P8 y P9.
