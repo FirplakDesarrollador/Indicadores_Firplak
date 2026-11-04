@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 1
+fase: 2
 updated: 2026-11-04
 sources:
   - ../../bi-origen/bi-costo-actual-pt/
@@ -67,7 +67,7 @@ Estas diferencias explican las cifras distintas que van a aparecer en la concili
 | D4 | Condición de materia prima | `QryGroup39 = 'N' AND QryGroup39 = 'N'` (error: repite el 39) | `QryGroup39 = 'N' AND QryGroup40 = 'N'` | Sin efecto esperado: en el original, los bloques posteriores ya ponían en 0 la materia prima de los artículos CIF. |
 | D5 | Cantidades | Fórmulas distintas por nivel. Ejemplos: la hoja del nivel 3 con costo estándar no multiplica por la cantidad del nivel 2 ([línea 356](../../bi-origen/bi-costo-actual-pt/query-original-powerbi.sql)), la hoja del nivel 4 no multiplica por la del nivel 3 (línea 276), y la hoja del nivel 3 busca su costo en la bodega del recorrido anterior (`@Bodega3_`, línea 331). | Siempre costo unitario × cantidad acumulada | Corrige costos de los niveles 3 y 4. |
 | D6 | Valores heredados | `SELECT @variable = … WHERE …` sin filas **conserva el valor del componente anterior**. Por ejemplo, una materia prima sin registro en `OITW` para su bodega toma el costo del componente anterior. | Cálculo por conjuntos, sin variables | Corrige costos inflados o desplazados en el original. |
-| D7 | Artículo con `QryGroup39 = 'Y'` y `QryGroup40 = 'Y'` | Los dos bloques de limpieza se anulan entre sí: costo 0 | Suma el costo **dos veces**, en `Costo_Mo` y en `Costo_Cif` | Hoy ninguno (V3). **Decisión P2:** el SP lo cuenta una sola vez como MO y lo marca con la alerta `MO Y CIF A LA VEZ`. |
+| D7 | Artículo con `QryGroup39 = 'Y'` y `QryGroup40 = 'Y'` | Los dos bloques de limpieza se anulan entre sí: costo 0 | Suma el costo **dos veces**, en `Costo_Mo` y en `Costo_Cif` | Hoy ninguno (V3). **Decisión P2:** el SP no lo costea (costo 0) y lo marca con la alerta `MO Y CIF A LA VEZ`. |
 | D8 | Columnas de salida | `linea` (orden) y `Padre` (código del producto, usado en la relación) | Ninguna de las dos. Devuelve `Alerta` y calcula internamente `RootCode` y `SortPath`. | La tabla de reporte debe guardar `RootCode` como código del producto y `SortPath` como orden. Se agrega al SP. |
 | D9 | Profundidad de la explosión | Hasta el nivel 4: un componente del nivel 4 con lista se costea como hoja | Igual que el Power BI | **Decisión P10:** el SP desglosa todos los niveles (hoy, hasta el 6, V4b). Cambia la clasificación MP/MO/CIF de 3.421 productos y, en algunos casos, su total, porque el componente se costea con sus hijos y no con su propio `AvgPrice`. El SP debe controlar ciclos en las listas. |
 
@@ -143,7 +143,7 @@ No hay filtros de página ni de informe. Tampoco hay filtro de fecha: el informe
 Riesgos técnicos:
 
 - **Reglas nuevas:** las cifras cambian respecto del Power BI (D1 a D7). La conciliación de la fase 6 debe comparar el dashboard contra el query optimizado y explicar las diferencias con el Power BI producto por producto.
-- **Doble clasificación (D7):** hoy no hay casos (V3), pero si aparecen artículos con `QryGroup39` y `QryGroup40` en `'Y'`, el query optimizado suma su costo dos veces.
+- **Doble clasificación (D7):** hoy no hay casos (V3). Si aparecen artículos con `QryGroup39` y `QryGroup40` en `'Y'`, el query optimizado sumaría su costo dos veces. El SP no los costea y los marca con una alerta (P2).
 - **Profundidad:** las listas con más de 4 niveles se truncan en las dos versiones. Afecta a 3.421 productos y 13.214 líneas en el nivel 5 (V4). Solo 1 producto llega al nivel 6 (24 líneas, V4b). Ver P10.
 - **Líneas sin costo:** unas 13.000 hojas no tienen costo en ninguna de las tres bodegas (V5). Todas son MP (V5b): 12.055 líneas son de artículos que no son de inventario, y 982 líneas (630 artículos) son de inventario sin costo en SAP. Ver P11.
 - **No es incremental:** el costo promedio cambia con cada movimiento de inventario y las listas no tienen una marca de modificación que sirva para recalcular la explosión. Se propone una carga completa programada (sección 2), lo que se aparta del patrón incremental de la skill.
@@ -154,7 +154,7 @@ Preguntas para Contabilidad:
 - **P1.** ¿Aceptan las reglas del query optimizado (D1 a D3, D5 y D6) como las correctas, aunque cambien las cifras respecto del Power BI?
   - **Respuesta (2026-11-04):** sí, se aceptan las reglas corregidas.
 - **P2.** Si un artículo es mano de obra y CIF a la vez (D7), ¿a cuál de los dos va su costo? ¿O no debería existir ese caso?
-  - **Respuesta (2026-11-04):** no debería presentarse y hay que controlarlo. El SP cuenta el costo **una sola vez**, como MO (precedencia de `QryGroup39`, igual que en V5b), marca la línea con la alerta `MO Y CIF A LA VEZ` y registra el número de casos en la bitácora de la carga. Así se corrige el doble conteo de D7.
+  - **Respuesta (2026-11-04, precisada por el desarrollador):** no debe permitirse. Un artículo con `QryGroup39` y `QryGroup40` en `'Y'` **no se costea**: sus costos quedan en 0, sin clasificación, y la línea lleva la alerta `MO Y CIF A LA VEZ` (`AlertaMoCif = 1`).
 - **P3.** En la tabla "Lista de Materiales", la columna "Total Costo" muestra solo la **materia prima**: las líneas de mano de obra y CIF aparecen en 0. ¿Mostramos las columnas MP, MO, CIF y Total por separado?
   - **Respuesta (2026-11-04):** sí. La tabla muestra las columnas MP, MO, CIF y Total por separado.
 - **P4.** La torta "sin CIF" excluye los componentes por el **texto** "CIF" en la descripción, no por su clasificación en SAP. ¿La excluimos por clasificación (`QryGroup40`)? ¿La mano de obra debe aparecer en la torta?
@@ -320,25 +320,51 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
 
 ## 2. Tabla de reporte y carga incremental
 
-Propuesta de la fase 1. El script se escribe en la fase 2.
+Diseño aprobado por el desarrollador el 2026-11-04, con dos precisiones: P2 (los artículos MO+CIF no se costean) y la carga cada hora.
+
+Script: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../../sql/costo-actual-pt/01_informe_costo_pt.sql) (escrito el 2026-11-04, **pendiente** de ejecutar por el desarrollador).
 
 | Campo | Valor |
 |---|---|
-| Tabla | `Planos_Symphony.dbo.Informe_costo_pt` (nombre propuesto, `pendiente` de confirmar) |
+| Tabla | `Planos_Symphony.dbo.Informe_costo_pt`, más `dbo.Informe_costo_pt_Carga` (misma estructura, se usa para el intercambio) |
 | Grano (una fila por…) | Línea de la explosión de un producto: el producto (nivel 1), los encabezados y los componentes. Productos: todo artículo activo con lista de materiales, incluidos los semielaborados (P7) |
 | Clave | (`CodigoPT`, `SortPath`) |
-| Columnas propuestas | `CodigoPT` (`RootCode`), `Codigo`, `Descripcion`, `UnidadMedida`, `Nivel`, `Cantidad`, `Bodega` (`ITT1.Warehouse`), `TieneHijos`, `Clasificacion` (`MP` / `MO` / `CIF` en las hojas, nulo en los encabezados), `Costo_Unitario`, `Costo_Mp`, `Costo_Mo`, `Costo_Cif`, `Costo_Total`, `Alerta`, `SortPath`, `FechaCarga` |
-| Fecha de referencia (filtros por periodo) | Ninguna: es una foto del costo actual. `FechaCarga` indica cuándo se calculó. |
-| Explosión | Recursiva hasta la última hoja (D9), con tope de seguridad (por ejemplo, 15 niveles) y detección de ciclos por `SortPath`; las líneas cortadas por el tope o por un ciclo se marcan en `Alerta` |
-| Estrategia incremental | **Carga completa** (no incremental): el SP calcula la explosión en tablas temporales y reemplaza el contenido dentro de una transacción, para que la API nunca vea la tabla vacía |
-| SP | `dbo.sp_Actualizar_Informe_costo_pt` (nombre propuesto) |
-| Job y horario | Diario, de madrugada (por ejemplo, 5:00), antes de la consulta diaria de Contabilidad. Horario `pendiente` |
-| Índices | Clave primaria (`CodigoPT`, `SortPath`) e índice por `Nivel` con `Descripcion` incluida para el catálogo de productos (`pendiente`) |
+| Columnas | `CodigoPT` (`RootCode`), `SortPath`, `Nivel`, `Codigo`, `Descripcion`, `UnidadMedida`, `Bodega` (`ITT1.Warehouse`), `TieneHijos`, `Clasificacion` (`MP` / `MO` / `CIF` en las hojas; nula en encabezados, ciclos y artículos MO+CIF), `Cantidad` (acumulada), `Costo_Unitario`, `Costo_Mp`, `Costo_Mo`, `Costo_Cif`, `Costo_Total`, `Alerta` (texto), `AlertaInactivo`, `AlertaSinCosto`, `AlertaMoCif`, `AlertaEstructura` (bits para el indicador de P8), `FechaCarga` |
+| Fecha de referencia (filtros por periodo) | Ninguna: es una foto del costo actual (P9). `FechaCarga` indica cuándo se calculó. |
+| Explosión | Nivel por nivel hasta la última hoja (D9), con tope `@MaxNiveles = 15` y detección de ciclos por la ruta de códigos. Una línea que repite un código de sus ancestros no se explota, cuesta 0 y lleva `CICLO EN LISTA DE MATERIALES`. Una línea con lista en el nivel del tope se costea como hoja y lleva `TOPE DE NIVELES`. |
+| Alertas | `ITEM INACTIVO`, `SIN COSTO EN SAP`, `MO Y CIF A LA VEZ`, `CICLO EN LISTA DE MATERIALES`, `TOPE DE NIVELES`, combinadas con ` \| `. Cambio menor frente al query optimizado: la combinación de inactivo y sin costo se escribe `ITEM INACTIVO \| SIN COSTO EN SAP` (antes `INACTIVO \| SIN COSTO EN SAP`). |
+| Estrategia | **Carga completa** cada hora (no incremental: el costo promedio cambia con cada movimiento y las listas no tienen marca de modificación). El SP arma el resultado en `Informe_costo_pt_Carga` y lo intercambia con `ALTER TABLE … SWITCH` (operación de metadatos), así la API nunca ve la tabla vacía ni queda bloqueada durante la carga. Si la explosión no devuelve filas, falla y conserva la carga anterior. `sp_getapplock` evita dos cargas simultáneas. |
+| SP | `dbo.sp_Actualizar_Informe_costo_pt` (`@MaxNiveles int = 15`) |
+| Bitácora | `dbo.Cargas_Log`, existente (`Proceso = 'Informe_costo_pt'`, `Modo = 'COMPLETA'`). El SP inserta una fila al terminar, con error o sin él. Tipos y nulabilidad de sus columnas: `pendiente` de verificar (consulta abajo). |
+| Job y horario | `BI - Costo PT carga completa`: **cada hora**, todos los días, al minuto 05 (decisión del desarrollador, 2026-11-04). La carga completa toma unos 33 s (V1). |
+| Índices | Clave primaria agrupada (`CodigoPT`, `SortPath`): sirve para traer la lista de un producto en orden, que es la consulta principal porque las tarjetas solo se muestran con un producto seleccionado (P6). `IX_…_Nivel` (`Nivel`) con `Codigo`, `Descripcion` y los costos incluidos: sirve para el catálogo de productos de los filtros (`Nivel = 1`). |
 
-Validación de totales (query optimizado vs. tabla):
+Antes de ejecutar, verificar la estructura de la bitácora (solo lectura):
 
-| Periodo | Filas origen | Filas tabla | Total origen | Total tabla |
-|---|---|---|---|---|
+```sql
+SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT
+FROM Planos_Symphony.INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'Cargas_Log'
+ORDER BY ORDINAL_POSITION;
+```
+
+Entrega al desarrollador, en este orden:
+
+1. Ejecutar el script en pruebas, si existe (crea las dos tablas y el SP; no carga datos).
+2. Primera carga: `EXEC dbo.sp_Actualizar_Informe_costo_pt;`, anotando la duración.
+3. Ejecutar las consultas de validación 4.1 a 4.6 del script y pegar los resultados abajo.
+4. Crear el job.
+
+Validación (query optimizado vs. tabla): `pendiente` de ejecutar.
+
+| Consulta | Esperado | Resultado |
+|---|---|---|
+| 4.1 Bitácora | Una fila sin `Error` | |
+| 4.2 Volumen por nivel | 11.244 productos en el nivel 1; niveles hasta el 6 | |
+| 4.3 Nivel 1 = suma de líneas | Sin filas | |
+| 4.4 Alertas por tipo | `MoCif = 0`, `Estructura = 0` | |
+| 4.5 Productos de V7 | 235.171,705 / 9.425,34 / 99.590,8988 (salvo cambios de costo en SAP) | |
+| 4.6 Comparación con el query optimizado | Sin diferencias en "Hasta 4 niveles"; diferencias en "Más de 4 niveles" (D9) | |
 
 ## 3. Contrato del endpoint
 

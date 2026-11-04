@@ -414,3 +414,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - P6: las tarjetas solo se muestran con un producto seleccionado (opción a). P4: confirmado que la mano de obra queda en la torta.
 - Contabilidad aprobó las reglas por medio del desarrollador. Solo queda P5, que se decide en la fase 5. Sigue la fase 2 (tabla y SP).
+
+## [2026-11-04] bi | Costo actual de producto terminado: fase 2, script de tabla y SP
+
+- Script nuevo: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../sql/costo-actual-pt/01_informe_costo_pt.sql). Crea `Informe_costo_pt`, `Informe_costo_pt_Carga` y `sp_Actualizar_Informe_costo_pt`, que desglosa todos los niveles (D9) con tope de 15 y control de ciclos.
+- Precisión del desarrollador sobre P2: los artículos MO+CIF **no se costean** (costo 0) y se marcan con la alerta `MO Y CIF A LA VEZ`.
+- Carga completa **cada hora** con intercambio por `ALTER TABLE … SWITCH`. Bitácora en `dbo.Cargas_Log`, existente.
+- Pendiente: que el desarrollador verifique las columnas de `Cargas_Log`, ejecute el script, la primera carga y las validaciones 4.1–4.6, y cree el job.
