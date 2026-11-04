@@ -69,7 +69,6 @@ Estas diferencias explican las cifras distintas que van a aparecer en la concili
 | D6 | Valores heredados | `SELECT @variable = … WHERE …` sin filas **conserva el valor del componente anterior**. Por ejemplo, una materia prima sin registro en `OITW` para su bodega toma el costo del componente anterior. | Cálculo por conjuntos, sin variables | Corrige costos inflados o desplazados en el original. |
 | D7 | Artículo con `QryGroup39 = 'Y'` y `QryGroup40 = 'Y'` | Los dos bloques de limpieza se anulan entre sí: costo 0 | Suma el costo **dos veces**, en `Costo_Mo` y en `Costo_Cif` | Hoy ninguno (V3). Queda el control en el SP y la pregunta P2. |
 | D8 | Columnas de salida | `linea` (orden) y `Padre` (código del producto, usado en la relación) | Ninguna de las dos. Devuelve `Alerta` y calcula internamente `RootCode` y `SortPath`. | La tabla de reporte debe guardar `RootCode` como código del producto y `SortPath` como orden. Se agrega al SP. |
-
 | D9 | Profundidad de la explosión | Hasta el nivel 4: un componente del nivel 4 con lista se costea como hoja | Igual que el Power BI | **Decisión P10:** el SP desglosa todos los niveles (hoy, hasta el 6, V4b). Cambia la clasificación MP/MO/CIF de 3.421 productos y, en algunos casos, su total, porque el componente se costea con sus hijos y no con su propio `AvgPrice`. El SP debe controlar ciclos en las listas. |
 
 Las dos versiones comparten esto: los encabezados cuestan 0 y el producto suma sus líneas. El portal desglosará todos los niveles (D9).
