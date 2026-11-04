@@ -229,7 +229,7 @@ V7: Contabilidad elige tres productos representativos (uno simple, uno con 4 niv
 | V4 | 13.214 líneas en el nivel 5, en 3.421 productos | **Hallazgo:** el 30 % de los productos tiene listas de más de 4 niveles. En esos casos, el componente del nivel 4 se costea con su propio `AvgPrice` y todo su costo va a una sola clasificación (normalmente MP), aunque incluya MO o CIF por dentro. Pasa igual en el Power BI. Ver P10. |
 | V5 | 13.095 hojas sin costo en su bodega ni en `MP-01`: 67 usan `PT-01`, 9 tenían precio en la lista 10 y ahora quedan en 0, y 13.019 no tienen costo en ninguna | D2 afecta poco (76 líneas). **Hallazgo:** hay 13.019 líneas sin costo en SAP, que saldrán con la alerta `SIN COSTO EN SAP`. Falta saber qué son: ver V5b. |
 | V6 | 484 componentes con costo estándar | Su costo cambia si `OITW.AvgPrice` difiere de `OITM.AvgPrice`. Se verá en V7. |
-| V7 | Productos elegidos: `VHPT09-0006-073-0100`, `CBAN05-0002-000-0438`, `CBAN12-0027-000-0406` | `CBAN12-0027-000-0406` **cuadra exacto** con el Power BI (ver tabla abajo). La salida del query solo trajo ese producto: los otros dos están `pendiente` de confirmar. |
+| V7 | Productos elegidos: `VHPT09-0006-073-0100`, `CBAN05-0002-000-0438`, `CBAN12-0027-000-0406` Los dos primeros están inactivos y se reemplazaron por `CBAN05-0001-000-0438` y `CMPD04-0268-000-0000`. `CBAN12` **cuadra exacto**. `CBAN05-0001` difiere en 1.817,70 por **D3** (el query corrige). `CMPD04-0268` difiere en 2.094,88 en cuatro hojas del nivel 3; la causa está `pendiente` (V7b). Ver la tabla abajo. |
 | V4b | 24 líneas en el nivel 6 o más, en 1 producto | La profundidad real llega como mucho a 6 niveles en un caso. Explotar todos los niveles (P10) es viable con una CTE recursiva sin tope práctico. |
 | V5b | Todas las hojas sin costo son **MP**: 12.055 líneas (345 artículos) no son de inventario (`InvntItem = 'N'`) y 982 líneas (630 artículos) sí lo son | No hay MO ni CIF sin costo. Las que no son de inventario es esperable que no tengan `AvgPrice`. **Las 982 líneas de artículos de inventario sin costo son el faltante real** que Contabilidad debe revisar en SAP (P11). El total (13.037) difiere en 9 líneas del de V5 (13.019 + 9 de la lista 10 = 13.028); se atribuye a cambios en SAP entre ejecuciones (`pendiente` si importa). |
 
@@ -278,14 +278,44 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
 
 | Producto | Fuente | Costo total | Costo sin CIF | MP | MO | CIF | Diferencia y causa (D#) |
 |---|---|---|---|---|---|---|---|
-| `VHPT09-0006-073-0100` | Power BI | | | | | | |
-| `VHPT09-0006-073-0100` | Query optimizado | | | | | | |
-| `CBAN05-0002-000-0438` | Power BI | | | | | | |
-| `CBAN05-0002-000-0438` | Query optimizado | | | | | | |
+| `CBAN05-0001-000-0438` | Power BI | 7.607,64 | 7.607,64 | 7.607,64 | 0 | 0 | −1.817,70: D3 |
+| `CBAN05-0001-000-0438` | Query optimizado | 9.425,34 | 9.425,34 | 9.425,34 | 0 | 0 | |
+| `CMPD04-0268-000-0000` | Power BI | 101.685,78 | 74.901,78 | 55.941,78 | 18.960 | 26.784 | +2.094,88: D5/D6 o cambio del costo promedio (`pendiente`, V7b) |
+| `CMPD04-0268-000-0000` | Query optimizado | 99.590,90 | 72.806,90 | 53.846,90 | 18.960 | 26.784 | |
 | `CBAN12-0027-000-0406` | Power BI | 235.171,705 | 124.379,705 | 91.819,705 | 32.560 | 110.792 | Sin diferencia |
 | `CBAN12-0027-000-0406` | Query optimizado | 235.171,705 | 124.379,705 | 91.819,705 | 32.560 | 110.792 | Sin diferencia |
 
-`CBAN12-0027-000-0406` (resultado del 2026-11-04): lista de un solo nivel, con 39 componentes, incluidos mano de obra (`PZCO01-0014`, 88 min × 370) y CIF (`PZCO01-0015`, 88 min × 1.259). Las 39 líneas coinciden en cantidad, costo unitario y clasificación. Es lo esperado: las diferencias D3, D5 y D6 solo aparecen en los niveles 3 y 4, que este producto no tiene. Falta comparar un producto de 4 niveles para probar esas reglas. En el Power BI, tres líneas (`CMPD06-0003`, `CMPD06-0008` y `CMPD06-0009`) no tienen unidad de medida. Es un dato de SAP y no afecta el costo.
+`CBAN12-0027-000-0406` (resultado del 2026-11-04): lista de un solo nivel, con 39 componentes, incluidos mano de obra (`PZCO01-0014`, 88 min × 370) y CIF (`PZCO01-0015`, 88 min × 1.259). Las 39 líneas coinciden en cantidad, costo unitario y clasificación. Es lo esperado: D5 y D6 solo aparecen en los niveles 3 y 4, y D3 en el nivel 2 solo afecta a las hojas sin costo en la bodega de la lista. En el Power BI, tres líneas (`CMPD06-0003`, `CMPD06-0008` y `CMPD06-0009`) no tienen unidad de medida. Es un dato de SAP y no afecta el costo.
+
+`VHPT09-0006-073-0100` y `CBAN05-0002-000-0438` están inactivos y no entran al universo. El desarrollador los reemplazó por `CBAN05-0001-000-0438` y `CMPD04-0268-000-0000` (resultado del 2026-11-04):
+
+- **`CBAN05-0001-000-0438`** (un nivel, solo MP): la única diferencia es el `CANTO PVC 19X0,45MM ROBLE CENIZO` (`CMPD06-0003-000-0438`, 7,3 × 249 = 1.817,70). El Power BI muestra el costo unitario de 249, pero pone `Costo_Mp` en 0. En el nivel 2, el original calcula la MP solo con el `AvgPrice` de la bodega de la lista, que aquí es 0, mientras que el costo unitario sí recorre `MP-01` y la lista 10. Es la regla **D3**, y el query optimizado corrige la subvaloración. El `TABLERO ST 15MM` (`CMPD06-0001-000-0438`) sale en 0 en las dos versiones. El query lo marca con `SIN COSTO EN SAP`.
+- **`CMPD04-0268-000-0000`** (tres niveles, con MO y CIF): la MO (18.960) y el CIF (26.784) coinciden, y también las hojas del nivel 2. La diferencia de MP (2.094,88) está en cuatro hojas del nivel 3 con distinto costo unitario:
+
+  | Componente | Costo unitario Power BI | Costo unitario query | Efecto en el Power BI |
+  |---|---|---|---|
+  | `COMP02-0033-000-0000` TUERCA 12MM | 293,14 | 196,74 | +2.313,60 |
+  | `COMP02-0027-000-0000` TUBO C18 3/4IN | 2.562,83 | 2.579,18 | −184,43 |
+  | `COMP02-0036-000-0000` VARILLA ROSCADA 12MM | 4.508,07 | 4.520,32 | −34,30 |
+  | `CIPR01-0028-000-0000` SOLDADURA MIG | 16.134,45 | 16.134,36 | +0,01 |
+
+  Hay dos causas posibles: la bodega que usa el original en el nivel 3 (**D5**, `@Bodega3_`, o un valor heredado de **D6**), o que el costo promedio cambió entre la última actualización del Power BI y la ejecución del query. Las diferencias pequeñas (tubo, varilla, soldadura) apuntan a lo segundo. La de la tuerca (−33 %) apunta a otra bodega. Se confirma con V7b.
+
+  Este artículo es un herraje (semielaborado), no un producto terminado: es un ejemplo de lo que pregunta P7.
+
+```sql
+-- V7b. Costo promedio por bodega de las hojas del nivel 3 de CMPD04-0268 y bodega indicada en su lista
+SELECT l.Father, l.Code, l.Warehouse AS bodega_lista, w.WhsCode, w.AvgPrice,
+       i.AvgPrice AS avgprice_oitm, i.EvalSystem
+FROM ITT1 l WITH (NOLOCK)
+INNER JOIN OITM i WITH (NOLOCK) ON i.ItemCode = l.Code
+LEFT JOIN OITW w WITH (NOLOCK) ON w.ItemCode = l.Code AND w.AvgPrice > 0
+WHERE l.Code IN ('COMP02-0033-000-0000', 'COMP02-0027-000-0000', 'COMP02-0036-000-0000', 'CIPR01-0028-000-0000')
+  AND l.Father IN (SELECT Code FROM ITT1 WITH (NOLOCK) WHERE Father = 'CMPD04-0268-000-0000')
+ORDER BY l.Code, w.WhsCode;
+```
+
+En el Power BI, anotar también la fecha de la última actualización del conjunto de datos.
 
 
 ## 2. Tabla de reporte y carga incremental

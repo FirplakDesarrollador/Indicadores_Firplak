@@ -383,3 +383,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - V4b: solo 1 producto llega al nivel 6 (24 líneas). Explotar todos los niveles (P10) es viable.
 - V5b: todas las hojas sin costo son MP. 12.055 líneas son de artículos que no son de inventario y 982 líneas (630 artículos) son de inventario sin costo en SAP. P11 queda reformulada sobre esos dos grupos.
 - V7: `CBAN12-0027-000-0406` (un nivel, con MO y CIF) cuadra exacto con el Power BI: total 235.171,705. Falta comparar `VHPT09-0006-073-0100` y `CBAN05-0002-000-0438`, que no salieron en la ejecución.
+
+## [2026-11-04] bi | Costo actual de producto terminado: comparación V7 de los tres productos
+
+- `VHPT09-0006-073-0100` y `CBAN05-0002-000-0438` están inactivos y se reemplazaron por `CBAN05-0001-000-0438` y `CMPD04-0268-000-0000`.
+- `CBAN05-0001`: el query da 1.817,70 más que el Power BI. El Power BI deja en 0 la MP de un canto que sí tiene costo unitario (regla D3), y el query lo corrige.
+- `CMPD04-0268`: MO y CIF iguales. La MP difiere en 2.094,88 en cuatro hojas del nivel 3 con distinto costo unitario. Puede deberse a D5/D6 o a un cambio del costo promedio desde la última actualización del Power BI. La consulta V7b queda pendiente.
