@@ -371,3 +371,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - **Decisión del desarrollador:** la migración usa [`query-optimizado.sql`](../bi-origen/bi-costo-actual-pt/query-optimizado.sql), sin cursores y con reglas corregidas, en lugar del SQL del Power BI. Las diferencias de reglas (D1–D8) están en la ficha y afectarán la conciliación.
 - Propuesta: tabla `Informe_costo_pt` con **carga completa** diaria, no incremental (nombre y horario pendientes).
 - Pendiente: la validación de Contabilidad (preguntas P1–P9) y los resultados de las consultas V1–V7.
+
+## [2026-11-04] bi | Costo actual de producto terminado: resultados de validación V1–V6
+
+- El query optimizado tarda 33 s y devuelve 449.018 filas, así que la carga completa diaria es viable.
+- D1 y D7 no tienen efecto: `validFor` y `frozenFor` son complementarios, y no hay artículos que sean MO y CIF a la vez.
+- Hallazgos para Contabilidad: 3.421 productos tienen listas de más de 4 niveles (P10) y 13.019 líneas no tienen costo en SAP (P11). Las consultas de seguimiento V4b y V5b y la comparación V7 de tres productos están en la [ficha](bi/costo-actual-pt.md#resultados-ejecutados-por-el-desarrollador-el-2026-11-04).

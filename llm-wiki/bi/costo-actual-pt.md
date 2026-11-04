@@ -61,13 +61,13 @@ Estas diferencias explican las cifras distintas que van a aparecer en la concili
 
 | # | Tema | Power BI (SQL original) | Query optimizado | Efecto esperado |
 |---|---|---|---|---|
-| D1 | Qué productos entran | `validFor = 'Y'` | `frozenFor = 'N'` | Puede cambiar el número de productos. Ver la consulta V2. |
+| D1 | Qué productos entran | `validFor = 'Y'` | `frozenFor = 'N'` | Ninguno: los campos son complementarios (V2, 11.244 productos en ambos). |
 | D2 | Tercer recurso del costo unitario | Precio de la **lista de precios 10** (`ITM1.Price`) | `AvgPrice` de la bodega **`PT-01`** | Cambian las hojas sin costo en su bodega ni en `MP-01`. Ver V5. |
 | D3 | Costo de materia prima | Varía por nivel: en el nivel 2, `AvgPrice` en la bodega de la lista; en los niveles 3 y 4, el costo unitario (bodega → `MP-01` → lista 10). Si queda en 0, usa `OITM.AvgPrice` cuando el artículo tiene costo estándar (`EvalSystem = 'S'`). | El mismo costo unitario de la regla 4 para MP, MO y CIF. Ya no usa el costo estándar de `OITM`. | Cambian los artículos con costo estándar o sin registro en la bodega de la lista. Ver V6. |
 | D4 | Condición de materia prima | `QryGroup39 = 'N' AND QryGroup39 = 'N'` (error: repite el 39) | `QryGroup39 = 'N' AND QryGroup40 = 'N'` | Sin efecto esperado: en el original, los bloques posteriores ya ponían en 0 la materia prima de los artículos CIF. |
 | D5 | Cantidades | Fórmulas distintas por nivel. Ejemplos: la hoja del nivel 3 con costo estándar no multiplica por la cantidad del nivel 2 ([línea 356](../../bi-origen/bi-costo-actual-pt/query-original-powerbi.sql)), la hoja del nivel 4 no multiplica por la del nivel 3 (línea 276), y la hoja del nivel 3 busca su costo en la bodega del recorrido anterior (`@Bodega3_`, línea 331). | Siempre costo unitario × cantidad acumulada | Corrige costos de los niveles 3 y 4. |
 | D6 | Valores heredados | `SELECT @variable = … WHERE …` sin filas **conserva el valor del componente anterior**. Por ejemplo, una materia prima sin registro en `OITW` para su bodega toma el costo del componente anterior. | Cálculo por conjuntos, sin variables | Corrige costos inflados o desplazados en el original. |
-| D7 | Artículo con `QryGroup39 = 'Y'` y `QryGroup40 = 'Y'` | Los dos bloques de limpieza se anulan entre sí: costo 0 | Suma el costo **dos veces**, en `Costo_Mo` y en `Costo_Cif` | **Riesgo** si hay artículos así. Ver V3 y la pregunta P2. |
+| D7 | Artículo con `QryGroup39 = 'Y'` y `QryGroup40 = 'Y'` | Los dos bloques de limpieza se anulan entre sí: costo 0 | Suma el costo **dos veces**, en `Costo_Mo` y en `Costo_Cif` | Hoy ninguno (V3). Queda el control en el SP y la pregunta P2. |
 | D8 | Columnas de salida | `linea` (orden) y `Padre` (código del producto, usado en la relación) | Ninguna de las dos. Devuelve `Alerta` y calcula internamente `RootCode` y `SortPath`. | La tabla de reporte debe guardar `RootCode` como código del producto y `SortPath` como orden. Se agrega al SP. |
 
 Las dos versiones comparten esto: la explosión llega solo hasta el nivel 4 (ver V4), los encabezados cuestan 0 y el producto suma sus líneas.
@@ -142,8 +142,9 @@ No hay filtros de página ni de informe. Tampoco hay filtro de fecha: el informe
 Riesgos técnicos:
 
 - **Reglas nuevas:** las cifras cambian respecto del Power BI (D1 a D7). La conciliación de la fase 6 debe comparar el dashboard contra el query optimizado y explicar las diferencias con el Power BI producto por producto.
-- **Doble clasificación (D7):** si existen artículos con `QryGroup39` y `QryGroup40` en `'Y'`, el query optimizado suma su costo dos veces.
-- **Profundidad:** las listas con más de 4 niveles se truncan en las dos versiones (V4).
+- **Doble clasificación (D7):** hoy no hay casos (V3), pero si aparecen artículos con `QryGroup39` y `QryGroup40` en `'Y'`, el query optimizado suma su costo dos veces.
+- **Profundidad:** las listas con más de 4 niveles se truncan en las dos versiones. Afecta a 3.421 productos y 13.214 líneas (V4). Ver P10.
+- **Líneas sin costo:** 13.019 hojas no tienen costo en ninguna de las tres bodegas (V5). Falta su desglose (V5b).
 - **No es incremental:** el costo promedio cambia con cada movimiento de inventario y las listas no tienen una marca de modificación que sirva para recalcular la explosión. Se propone una carga completa programada (sección 2), lo que se aparta del patrón incremental de la skill.
 - **Lecturas `NOLOCK`:** el query lee SAP sin bloqueos. Es aceptable para una foto de costos, pero puede leer datos a medio escribir durante una transacción.
 
@@ -156,6 +157,8 @@ Preguntas para Contabilidad:
 - **P5.** La tarjeta de arriba se titula "Promedio Costo Total sin CIF", pero muestra la **suma**. ¿Se renombra a "Costo total sin CIF"?
 - **P6.** Sin producto seleccionado, "Total Costo" suma el costo de **todos** los productos, una cifra sin sentido de negocio. ¿Las tarjetas se muestran solo con un producto seleccionado, o se reemplazan por el número de productos y el costo promedio?
 - **P7.** El universo incluye todo artículo con lista de materiales, también semielaborados y subensambles. ¿Se limita a producto terminado? Si es así, ¿con qué criterio de SAP (grupo de artículos, propiedad)?
+- **P10.** El 30 % de los productos tiene listas de más de 4 niveles (V4). ¿Explotamos todos los niveles (cambia el desglose MP/MO/CIF de esos productos, no necesariamente su total) o mantenemos el corte en 4 como hoy?
+- **P11.** Hay 13.019 líneas de componentes sin costo en SAP (V5). Según el desglose V5b, ¿es esperado (por ejemplo, artículos que no son de inventario) o hay que corregir costos en SAP?
 - **P8.** ¿Mostramos la columna `Alerta` y un indicador de líneas sin costo o inactivas?
 - **P9.** ¿Basta con el costo actual, o necesitan guardar una foto mensual para comparar el costo entre meses?
 
@@ -215,6 +218,71 @@ WHERE i.EvalSystem = 'S'
 ```
 
 V7: Contabilidad elige tres productos representativos (uno simple, uno con 4 niveles y uno con mano de obra y CIF). Se compara su costo total en el Power BI y en el query optimizado, y se explica cada diferencia con la tabla D1–D8.
+
+#### Resultados (ejecutados por el desarrollador el 2026-11-04)
+
+| Consulta | Resultado | Lectura |
+|---|---|---|
+| V1 | 33 segundos, 449.018 filas | Una carga completa diaria es viable. La tabla queda en un volumen manejable con paginación en la API. |
+| V2 | `validFor = 'Y'` / `frozenFor = 'N'`: 11.244 productos; `N` / `Y`: 3.141 | Los dos campos son complementarios: **D1 no cambia el universo** (11.244 productos en las dos versiones). |
+| V3 | Sin filas | Hoy no hay artículos que sean MO y CIF a la vez: **D7 no afecta las cifras actuales**. El SP agregará un control por si aparecen (P2). |
+| V4 | 13.214 líneas en el nivel 5, en 3.421 productos | **Hallazgo:** el 30 % de los productos tiene listas de más de 4 niveles. En esos casos, el componente del nivel 4 se costea con su propio `AvgPrice` y todo su costo va a una sola clasificación (normalmente MP), aunque incluya MO o CIF por dentro. Pasa igual en el Power BI. Ver P10. |
+| V5 | 13.095 hojas sin costo en su bodega ni en `MP-01`: 67 usan `PT-01`, 9 tenían precio en la lista 10 y ahora quedan en 0, y 13.019 no tienen costo en ninguna | D2 afecta poco (76 líneas). **Hallazgo:** hay 13.019 líneas sin costo en SAP, que saldrán con la alerta `SIN COSTO EN SAP`. Falta saber qué son: ver V5b. |
+| V6 | 484 componentes con costo estándar | Su costo cambia si `OITW.AvgPrice` difiere de `OITM.AvgPrice`. Se verá en V7. |
+| V7 | Productos elegidos: `VHPT09-0006-073-0100`, `CBAN05-0002-000-0438`, `CBAN12-0027-000-0406` | Comparación `pendiente`: ver V7 abajo. |
+
+Consultas de seguimiento (solo lectura, `FIRPLAK_SA`):
+
+```sql
+-- V4b. ¿Hasta qué profundidad llegan las listas? (líneas en el nivel 6 o más)
+SELECT COUNT(*) AS lineas_nivel_6, COUNT(DISTINCT a.Father) AS productos_afectados
+FROM ITT1 a WITH (NOLOCK)
+INNER JOIN OITM r WITH (NOLOCK) ON r.ItemCode = a.Father AND r.frozenFor = 'N'
+INNER JOIN ITT1 b WITH (NOLOCK) ON b.Father = a.Code
+INNER JOIN ITT1 c WITH (NOLOCK) ON c.Father = b.Code
+INNER JOIN ITT1 d WITH (NOLOCK) ON d.Father = c.Code
+INNER JOIN ITT1 e WITH (NOLOCK) ON e.Father = d.Code;
+
+-- V5b. ¿Qué son las hojas sin costo? Por clasificación y por si son artículos de inventario
+SELECT
+    CASE WHEN i.QryGroup39 = 'Y' THEN 'MO' WHEN i.QryGroup40 = 'Y' THEN 'CIF' ELSE 'MP' END AS clasificacion,
+    i.InvntItem AS de_inventario,
+    COUNT(*) AS lineas,
+    COUNT(DISTINCT c.Code) AS articulos
+FROM ITT1 c WITH (NOLOCK)
+INNER JOIN OITM i WITH (NOLOCK) ON i.ItemCode = c.Code
+LEFT JOIN OITW b  WITH (NOLOCK) ON b.ItemCode  = c.Code AND b.WhsCode  = c.Warehouse
+LEFT JOIN OITW mp WITH (NOLOCK) ON mp.ItemCode = c.Code AND mp.WhsCode = 'MP-01'
+LEFT JOIN OITW pt WITH (NOLOCK) ON pt.ItemCode = c.Code AND pt.WhsCode = 'PT-01'
+WHERE ISNULL(b.AvgPrice, 0) = 0
+  AND ISNULL(mp.AvgPrice, 0) = 0
+  AND ISNULL(pt.AvgPrice, 0) = 0
+  AND NOT EXISTS (SELECT 1 FROM ITT1 x WITH (NOLOCK) WHERE x.Father = c.Code)
+GROUP BY CASE WHEN i.QryGroup39 = 'Y' THEN 'MO' WHEN i.QryGroup40 = 'Y' THEN 'CIF' ELSE 'MP' END, i.InvntItem
+ORDER BY lineas DESC;
+```
+
+**V7, comparación de los tres productos.** En una copia de `query-optimizado.sql` (solo crea tablas temporales), reemplazar el `SELECT` de "RESULTADO FINAL" por:
+
+```sql
+SELECT r.RootCode, r.Nivel, r.Codigo, r.Descripcion, r.Cantidad,
+       r.CostoUnitario, r.CostoMp, r.CostoMo, r.CostoCif, r.CostoTotal, r.Alerta
+FROM #Resultado r
+WHERE r.RootCode IN ('VHPT09-0006-073-0100', 'CBAN05-0002-000-0438', 'CBAN12-0027-000-0406')
+ORDER BY r.SortPath;
+```
+
+En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarjetas "sin CIF". Si hay diferencia, exportar la tabla "Lista de Materiales" para comparar línea por línea.
+
+| Producto | Fuente | Costo total | Costo sin CIF | MP | MO | CIF | Diferencia y causa (D#) |
+|---|---|---|---|---|---|---|---|
+| `VHPT09-0006-073-0100` | Power BI | | | | | | |
+| `VHPT09-0006-073-0100` | Query optimizado | | | | | | |
+| `CBAN05-0002-000-0438` | Power BI | | | | | | |
+| `CBAN05-0002-000-0438` | Query optimizado | | | | | | |
+| `CBAN12-0027-000-0406` | Power BI | | | | | | |
+| `CBAN12-0027-000-0406` | Query optimizado | | | | | | |
+
 
 ## 2. Tabla de reporte y carga incremental
 
