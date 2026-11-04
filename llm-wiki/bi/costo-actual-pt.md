@@ -322,7 +322,7 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
 
 Diseño aprobado por el desarrollador el 2026-11-04, con dos precisiones: P2 (los artículos MO+CIF no se costean) y la carga cada hora.
 
-Script: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../../sql/costo-actual-pt/01_informe_costo_pt.sql) (escrito el 2026-11-04, **pendiente** de ejecutar por el desarrollador).
+Script: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../../sql/costo-actual-pt/01_informe_costo_pt.sql) (ejecutado por el desarrollador el 2026-11-04). Job: [`sql/costo-actual-pt/02_job_costo_pt.sql`](../../sql/costo-actual-pt/02_job_costo_pt.sql) (`pendiente` de crear).
 
 | Campo | Valor |
 |---|---|
@@ -336,7 +336,7 @@ Script: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../../sql/costo-actual-p
 | Estrategia | **Carga completa** cada hora (no incremental: el costo promedio cambia con cada movimiento y las listas no tienen marca de modificación). El SP arma el resultado en `Informe_costo_pt_Carga` y lo intercambia con `ALTER TABLE … SWITCH` (operación de metadatos), así la API nunca ve la tabla vacía ni queda bloqueada durante la carga. Si la explosión no devuelve filas, falla y conserva la carga anterior. `sp_getapplock` evita dos cargas simultáneas. |
 | SP | `dbo.sp_Actualizar_Informe_costo_pt` (`@MaxNiveles int = 15`) |
 | Bitácora | `dbo.Cargas_Log`, existente (`Proceso = 'Informe_costo_pt'`, `Modo = 'COMPLETA'`). El SP inserta una fila al terminar, con error o sin él. Tipos y nulabilidad de sus columnas: `pendiente` de verificar (consulta abajo). |
-| Job y horario | `BI - Costo PT carga completa`: **cada hora**, todos los días, al minuto 05 (decisión del desarrollador, 2026-11-04). La carga completa toma unos 33 s (V1). |
+| Job y horario | `BI - Costo PT carga completa`: **cada hora**, todos los días, al minuto 05 (decisión del desarrollador, 2026-11-04). La carga completa toma 32 s (`Cargas_Log` 1238). |
 | Índices | Clave primaria agrupada (`CodigoPT`, `SortPath`): sirve para traer la lista de un producto en orden, que es la consulta principal porque las tarjetas solo se muestran con un producto seleccionado (P6). `IX_…_Nivel` (`Nivel`) con `Codigo`, `Descripcion` y los costos incluidos: sirve para el catálogo de productos de los filtros (`Nivel = 1`). |
 
 Antes de ejecutar, verificar la estructura de la bitácora (solo lectura):
@@ -355,16 +355,24 @@ Entrega al desarrollador, en este orden:
 3. Ejecutar las consultas de validación 4.1 a 4.6 del script y pegar los resultados abajo.
 4. Crear el job.
 
-Validación (query optimizado vs. tabla): `pendiente` de ejecutar.
+Primera carga (2026-11-04, `dbo.Cargas_Log`):
+
+| Id | Inicio | Duración | Insertados | Nota |
+|---|---|---|---|---|
+| 1232 | 15:56:28 | 2 s | 0 | Error 515: líneas de `ITT1` sin código. Corregido. |
+| 1235 | 15:58:53 | 10 min 34 s | 463.226 | Correcta, pero lenta: join `varchar`/`nvarchar` con `#ConLista`. Corregido con `EXISTS` sobre `ITT1`. |
+| 1238 | 16:22:01 | **32 s** | 463.592 | Correcta. Es la versión final del SP. |
+
+Validación (desarrollador, 2026-11-04):
 
 | Consulta | Esperado | Resultado |
 |---|---|---|
-| 4.1 Bitácora | Una fila sin `Error` | |
-| 4.2 Volumen por nivel | 11.244 productos en el nivel 1; niveles hasta el 6 | |
-| 4.3 Nivel 1 = suma de líneas | Sin filas | |
-| 4.4 Alertas por tipo | `MoCif = 0`, `Estructura = 0` | |
-| 4.5 Productos de V7 | 235.171,705 / 9.425,34 / 99.590,8988 (salvo cambios de costo en SAP) | |
-| 4.6 Comparación con el query optimizado | Sin diferencias en "Hasta 4 niveles"; diferencias en "Más de 4 niveles" (D9) | |
+| 4.1 Bitácora | Una fila sin `Error` | OK: cargas 1235 y 1238 sin error |
+| 4.2 Volumen por nivel | 11.244 productos en el nivel 1; niveles hasta el 6 | Nivel 1: 11.253 productos (9 más que en V2, artículos creados o activados desde entonces). Niveles 2 a 6: 141.624 / 202.892 / 94.579 / 13.220 / 24 filas. La suma de los niveles 2 a 6 (7.009.591.851,91) es igual al total del nivel 1. |
+| 4.3 Nivel 1 = suma de líneas | Sin filas | OK: sin filas |
+| 4.4 Alertas por tipo | `MoCif = 0`, `Estructura = 0` | OK: 0 y 0. Además, 211 líneas con `ITEM INACTIVO` y 16.393 con `SIN COSTO EN SAP`. Son más que las ~13.000 de V5 porque la tabla cuenta cada aparición del componente en la explosión de cada producto (V5 contaba líneas de `ITT1`) e incluye los niveles 5 y 6. |
+| 4.5 Productos de V7 | 235.171,705 / 9.425,34 / 99.590,8988 | OK: idénticos en MP, MO, CIF y total |
+| 4.6 Comparación con el query optimizado | Sin diferencias en "Hasta 4 niveles" | `pendiente` (opcional: 4.3 y 4.5 ya confirman las reglas) |
 
 ## 3. Contrato del endpoint
 
