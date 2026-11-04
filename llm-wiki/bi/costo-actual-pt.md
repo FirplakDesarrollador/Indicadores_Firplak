@@ -143,8 +143,8 @@ Riesgos técnicos:
 
 - **Reglas nuevas:** las cifras cambian respecto del Power BI (D1 a D7). La conciliación de la fase 6 debe comparar el dashboard contra el query optimizado y explicar las diferencias con el Power BI producto por producto.
 - **Doble clasificación (D7):** hoy no hay casos (V3), pero si aparecen artículos con `QryGroup39` y `QryGroup40` en `'Y'`, el query optimizado suma su costo dos veces.
-- **Profundidad:** las listas con más de 4 niveles se truncan en las dos versiones. Afecta a 3.421 productos y 13.214 líneas (V4). Ver P10.
-- **Líneas sin costo:** 13.019 hojas no tienen costo en ninguna de las tres bodegas (V5). Falta su desglose (V5b).
+- **Profundidad:** las listas con más de 4 niveles se truncan en las dos versiones. Afecta a 3.421 productos y 13.214 líneas en el nivel 5 (V4). Solo 1 producto llega al nivel 6 (24 líneas, V4b). Ver P10.
+- **Líneas sin costo:** unas 13.000 hojas no tienen costo en ninguna de las tres bodegas (V5). Todas son MP (V5b): 12.055 líneas son de artículos que no son de inventario, y 982 líneas (630 artículos) son de inventario sin costo en SAP. Ver P11.
 - **No es incremental:** el costo promedio cambia con cada movimiento de inventario y las listas no tienen una marca de modificación que sirva para recalcular la explosión. Se propone una carga completa programada (sección 2), lo que se aparta del patrón incremental de la skill.
 - **Lecturas `NOLOCK`:** el query lee SAP sin bloqueos. Es aceptable para una foto de costos, pero puede leer datos a medio escribir durante una transacción.
 
@@ -158,7 +158,7 @@ Preguntas para Contabilidad:
 - **P6.** Sin producto seleccionado, "Total Costo" suma el costo de **todos** los productos, una cifra sin sentido de negocio. ¿Las tarjetas se muestran solo con un producto seleccionado, o se reemplazan por el número de productos y el costo promedio?
 - **P7.** El universo incluye todo artículo con lista de materiales, también semielaborados y subensambles. ¿Se limita a producto terminado? Si es así, ¿con qué criterio de SAP (grupo de artículos, propiedad)?
 - **P10.** El 30 % de los productos tiene listas de más de 4 niveles (V4). ¿Explotamos todos los niveles (cambia el desglose MP/MO/CIF de esos productos, no necesariamente su total) o mantenemos el corte en 4 como hoy?
-- **P11.** Hay 13.019 líneas de componentes sin costo en SAP (V5). Según el desglose V5b, ¿es esperado (por ejemplo, artículos que no son de inventario) o hay que corregir costos en SAP?
+- **P11.** Hay unas 13.000 líneas de componentes sin costo en SAP, todas de materia prima (V5b). 12.055 son de 345 artículos que no son de inventario: ¿es correcto que cuesten 0? Las otras 982 líneas son de 630 artículos de inventario sin costo promedio en ninguna bodega: ¿se corrigen en SAP antes de salir a producción, o el portal los muestra con la alerta `SIN COSTO EN SAP`?
 - **P8.** ¿Mostramos la columna `Alerta` y un indicador de líneas sin costo o inactivas?
 - **P9.** ¿Basta con el costo actual, o necesitan guardar una foto mensual para comparar el costo entre meses?
 
@@ -229,7 +229,9 @@ V7: Contabilidad elige tres productos representativos (uno simple, uno con 4 niv
 | V4 | 13.214 líneas en el nivel 5, en 3.421 productos | **Hallazgo:** el 30 % de los productos tiene listas de más de 4 niveles. En esos casos, el componente del nivel 4 se costea con su propio `AvgPrice` y todo su costo va a una sola clasificación (normalmente MP), aunque incluya MO o CIF por dentro. Pasa igual en el Power BI. Ver P10. |
 | V5 | 13.095 hojas sin costo en su bodega ni en `MP-01`: 67 usan `PT-01`, 9 tenían precio en la lista 10 y ahora quedan en 0, y 13.019 no tienen costo en ninguna | D2 afecta poco (76 líneas). **Hallazgo:** hay 13.019 líneas sin costo en SAP, que saldrán con la alerta `SIN COSTO EN SAP`. Falta saber qué son: ver V5b. |
 | V6 | 484 componentes con costo estándar | Su costo cambia si `OITW.AvgPrice` difiere de `OITM.AvgPrice`. Se verá en V7. |
-| V7 | Productos elegidos: `VHPT09-0006-073-0100`, `CBAN05-0002-000-0438`, `CBAN12-0027-000-0406` | Comparación `pendiente`: ver V7 abajo. |
+| V7 | Productos elegidos: `VHPT09-0006-073-0100`, `CBAN05-0002-000-0438`, `CBAN12-0027-000-0406` | `CBAN12-0027-000-0406` **cuadra exacto** con el Power BI (ver tabla abajo). La salida del query solo trajo ese producto: los otros dos están `pendiente` de confirmar. |
+| V4b | 24 líneas en el nivel 6 o más, en 1 producto | La profundidad real llega como mucho a 6 niveles en un caso. Explotar todos los niveles (P10) es viable con una CTE recursiva sin tope práctico. |
+| V5b | Todas las hojas sin costo son **MP**: 12.055 líneas (345 artículos) no son de inventario (`InvntItem = 'N'`) y 982 líneas (630 artículos) sí lo son | No hay MO ni CIF sin costo. Las que no son de inventario es esperable que no tengan `AvgPrice`. **Las 982 líneas de artículos de inventario sin costo son el faltante real** que Contabilidad debe revisar en SAP (P11). El total (13.037) difiere en 9 líneas del de V5 (13.019 + 9 de la lista 10 = 13.028); se atribuye a cambios en SAP entre ejecuciones (`pendiente` si importa). |
 
 Consultas de seguimiento (solo lectura, `FIRPLAK_SA`):
 
@@ -280,8 +282,10 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
 | `VHPT09-0006-073-0100` | Query optimizado | | | | | | |
 | `CBAN05-0002-000-0438` | Power BI | | | | | | |
 | `CBAN05-0002-000-0438` | Query optimizado | | | | | | |
-| `CBAN12-0027-000-0406` | Power BI | | | | | | |
-| `CBAN12-0027-000-0406` | Query optimizado | | | | | | |
+| `CBAN12-0027-000-0406` | Power BI | 235.171,705 | 124.379,705 | 91.819,705 | 32.560 | 110.792 | Sin diferencia |
+| `CBAN12-0027-000-0406` | Query optimizado | 235.171,705 | 124.379,705 | 91.819,705 | 32.560 | 110.792 | Sin diferencia |
+
+`CBAN12-0027-000-0406` (resultado del 2026-11-04): lista de un solo nivel, con 39 componentes, incluidos mano de obra (`PZCO01-0014`, 88 min × 370) y CIF (`PZCO01-0015`, 88 min × 1.259). Las 39 líneas coinciden en cantidad, costo unitario y clasificación. Es lo esperado: las diferencias D3, D5 y D6 solo aparecen en los niveles 3 y 4, que este producto no tiene. Falta comparar un producto de 4 niveles para probar esas reglas. En el Power BI, tres líneas (`CMPD06-0003`, `CMPD06-0008` y `CMPD06-0009`) no tienen unidad de medida. Es un dato de SAP y no afecta el costo.
 
 
 ## 2. Tabla de reporte y carga incremental

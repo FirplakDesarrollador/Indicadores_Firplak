@@ -377,3 +377,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - El query optimizado tarda 33 s y devuelve 449.018 filas, así que la carga completa diaria es viable.
 - D1 y D7 no tienen efecto: `validFor` y `frozenFor` son complementarios, y no hay artículos que sean MO y CIF a la vez.
 - Hallazgos para Contabilidad: 3.421 productos tienen listas de más de 4 niveles (P10) y 13.019 líneas no tienen costo en SAP (P11). Las consultas de seguimiento V4b y V5b y la comparación V7 de tres productos están en la [ficha](bi/costo-actual-pt.md#resultados-ejecutados-por-el-desarrollador-el-2026-11-04).
+
+## [2026-11-04] bi | Costo actual de producto terminado: V4b, V5b y primer producto de V7
+
+- V4b: solo 1 producto llega al nivel 6 (24 líneas). Explotar todos los niveles (P10) es viable.
+- V5b: todas las hojas sin costo son MP. 12.055 líneas son de artículos que no son de inventario y 982 líneas (630 artículos) son de inventario sin costo en SAP. P11 queda reformulada sobre esos dos grupos.
+- V7: `CBAN12-0027-000-0406` (un nivel, con MO y CIF) cuadra exacto con el Power BI: total 235.171,705. Falta comparar `VHPT09-0006-073-0100` y `CBAN05-0002-000-0438`, que no salieron en la ejecución.
