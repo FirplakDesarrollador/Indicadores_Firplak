@@ -158,11 +158,11 @@ Preguntas para Contabilidad:
 - **P3.** En la tabla "Lista de Materiales", la columna "Total Costo" muestra solo la **materia prima**: las líneas de mano de obra y CIF aparecen en 0. ¿Mostramos las columnas MP, MO, CIF y Total por separado?
   - **Respuesta (2026-11-04):** sí. La tabla muestra las columnas MP, MO, CIF y Total por separado.
 - **P4.** La torta "sin CIF" excluye los componentes por el **texto** "CIF" en la descripción, no por su clasificación en SAP. ¿La excluimos por clasificación (`QryGroup40`)? ¿La mano de obra debe aparecer en la torta?
-  - **Respuesta (2026-11-04):** sí. La torta excluye el CIF por su clasificación en SAP (`QryGroup40 = 'Y'`), no por el texto. La mano de obra se mantiene en la torta (interpretación del "sí"; `pendiente` de confirmar).
+  - **Respuesta (2026-11-04):** sí. La torta excluye el CIF por su clasificación en SAP (`QryGroup40 = 'Y'`), no por el texto. La mano de obra se mantiene en la torta (confirmado).
 - **P5.** La tarjeta de arriba se titula "Promedio Costo Total sin CIF", pero muestra la **suma**. ¿Se renombra a "Costo total sin CIF"?
   - **Respuesta (2026-11-04):** se decide al construir el dashboard (fase 5).
 - **P6.** Sin producto seleccionado, "Total Costo" suma el costo de **todos** los productos, una cifra sin sentido de negocio. ¿Las tarjetas se muestran solo con un producto seleccionado, o se reemplazan por el número de productos y el costo promedio?
-  - **Respuesta (2026-11-04):** "sí", sin precisar cuál de las dos opciones: `pendiente` de aclarar.
+  - **Respuesta (2026-11-04):** opción a. Las tarjetas solo se muestran con un producto seleccionado. Sin selección, el dashboard invita a elegir un producto.
 - **P7.** El universo incluye todo artículo con lista de materiales, también semielaborados y subensambles. ¿Se limita a producto terminado? Si es así, ¿con qué criterio de SAP (grupo de artículos, propiedad)?
   - **Respuesta (2026-11-04):** se incluyen los semielaborados. El universo es todo artículo activo con lista de materiales, como en el query optimizado.
 - **P10.** El 30 % de los productos tiene listas de más de 4 niveles (V4). ¿Explotamos todos los niveles (cambia el desglose MP/MO/CIF de esos productos, no necesariamente su total) o mantenemos el corte en 4 como hoy?
@@ -174,9 +174,9 @@ Preguntas para Contabilidad:
 - **P9.** ¿Basta con el costo actual, o necesitan guardar una foto mensual para comparar el costo entre meses?
   - **Respuesta (2026-11-04):** solo el costo actual. No se guarda historia: la carga completa reemplaza la foto anterior.
 
-Respuestas transmitidas por el desarrollador el 2026-11-04: P1 a P4 y P7 a P11. P5 se decide en la fase 5. Sigue `pendiente`: P6, y la confirmación de que la mano de obra queda en la torta (P4).
+Respuestas transmitidas por el desarrollador el 2026-11-04: P1 a P4 y P6 a P11. P5 (título de la tarjeta) se decide en la fase 5.
 
-**Validación del dueño de negocio:** Contabilidad — 2026-11-04, por medio del desarrollador — reglas aprobadas; quedan abiertas P6 y la confirmación de P4
+**Validación del dueño de negocio:** Contabilidad (por medio de Daniel Jimenez) — 2026-11-04 — reglas aprobadas. Fase 1 cerrada.
 
 ### Consultas de validación para el desarrollador
 

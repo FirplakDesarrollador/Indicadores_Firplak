@@ -409,3 +409,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - P3: la tabla muestra MP, MO, CIF y Total. P4: la torta excluye el CIF por clasificación de SAP, no por texto.
 - P5: se decide en el dashboard. P8: se muestra `Alerta` y un indicador de líneas con alerta, que resalte `ITEM INACTIVO`. P9: solo costo actual, sin historia.
 - Pendiente: aclarar P6 (tarjetas sin producto seleccionado) y confirmar que la mano de obra queda en la torta.
+
+## [2026-11-04] bi | Costo actual de producto terminado: fase 1 cerrada
+
+- P6: las tarjetas solo se muestran con un producto seleccionado (opción a). P4: confirmado que la mano de obra queda en la torta.
+- Contabilidad aprobó las reglas por medio del desarrollador. Solo queda P5, que se decide en la fase 5. Sigue la fase 2 (tabla y SP).
