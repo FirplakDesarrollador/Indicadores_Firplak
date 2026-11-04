@@ -213,13 +213,15 @@ BEGIN
                     b.Nivel + 1 AS Nivel,
                     CONVERT(decimal(38, 6), itt.Quantity * b.Cantidad) AS Cantidad,
                     itt.Warehouse,
-                    CASE WHEN l.ItemCode IS NULL THEN 0 ELSE 1 END AS TieneLista,
+                    -- EXISTS sobre ITT1 (mismo tipo de dato en Father y Code): usa la clave de ITT1.
+                    -- Un join contra una tabla temporal varchar obligaba a convertir y a recorrerla entera.
+                    CASE WHEN EXISTS (SELECT 1 FROM FIRPLAK_SA.dbo.ITT1 h WITH (NOLOCK) WHERE h.Father = itt.Code)
+                         THEN 1 ELSE 0 END AS TieneLista,
                     CASE WHEN CHARINDEX('|' + itt.Code + '|', b.Ruta) > 0 THEN 1 ELSE 0 END AS Ciclo,
                     b.SortPath + '.' + RIGHT('0000' + CAST(ROW_NUMBER() OVER (PARTITION BY b.ID ORDER BY itt.ChildNum) AS varchar(4)), 4) AS SortPath,
                     b.Ruta + itt.Code + '|' AS Ruta
                 FROM #Frontera b
                 INNER JOIN FIRPLAK_SA.dbo.ITT1 itt WITH (NOLOCK) ON itt.Father = b.Codigo
-                LEFT JOIN #ConLista l ON l.ItemCode = itt.Code
                 -- Líneas sin artículo (p. ej., líneas de texto de la lista): no tienen costo.
                 -- El query optimizado las dejaba con Codigo nulo y costo 0.
                 WHERE NULLIF(LTRIM(RTRIM(itt.Code)), '') IS NOT NULL
