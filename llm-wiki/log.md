@@ -421,3 +421,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Precisión del desarrollador sobre P2: los artículos MO+CIF **no se costean** (costo 0) y se marcan con la alerta `MO Y CIF A LA VEZ`.
 - Carga completa **cada hora** con intercambio por `ALTER TABLE … SWITCH`. Bitácora en `dbo.Cargas_Log`, existente.
 - Pendiente: que el desarrollador verifique las columnas de `Cargas_Log`, ejecute el script, la primera carga y las validaciones 4.1–4.6, y cree el job.
+
+## [2026-11-04] fix | Costo actual de PT: líneas de ITT1 sin código
+
+- La primera carga falló con el error 515 (`NULL` en `#BOM.Codigo`): hay líneas de `ITT1` sin `Code`, probablemente líneas de texto.
+- El SP las excluye del desglose. No tienen costo, así que los totales no cambian frente al query optimizado; solo cambia el número de filas. Se agregó una consulta de diagnóstico por `ITT1.Type`.

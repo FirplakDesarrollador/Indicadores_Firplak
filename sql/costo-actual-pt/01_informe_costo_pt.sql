@@ -201,6 +201,9 @@ BEGIN
                 LEFT JOIN #ConLista l ON l.ItemCode = itt.Code
                 WHERE b.Nivel = @Nivel
                   AND b.TieneHijos = 1
+                  -- Líneas sin artículo (p. ej., líneas de texto de la lista): no tienen costo.
+                  -- El query optimizado las dejaba con Codigo nulo y costo 0.
+                  AND NULLIF(LTRIM(RTRIM(itt.Code)), '') IS NOT NULL
             ) AS x;
 
             IF @@ROWCOUNT = 0 BREAK;
@@ -321,6 +324,13 @@ END
 GO
 
 /* ───────────── 3. Primera carga (la ejecuta el desarrollador) ───────────── */
+-- Diagnóstico previo (solo lectura): qué son las líneas de ITT1 sin código, que el SP excluye.
+-- En SAP B1, ITT1.Type: 4 = artículo, 290 = recurso, -18 = texto.
+-- SELECT itt.Type, COUNT_BIG(1) AS Lineas, COUNT(DISTINCT itt.Father) AS Padres
+-- FROM FIRPLAK_SA.dbo.ITT1 itt WITH (NOLOCK)
+-- WHERE NULLIF(LTRIM(RTRIM(itt.Code)), '') IS NULL
+-- GROUP BY itt.Type;
+
 -- EXEC dbo.sp_Actualizar_Informe_costo_pt;
 
 /* ───────────── 4. Validación (solo lectura) ───────────── */
