@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 2
+fase: 3
 updated: 2026-11-04
 sources:
   - ../../bi-origen/bi-costo-actual-pt/
@@ -322,7 +322,7 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
 
 Diseño aprobado por el desarrollador el 2026-11-04, con dos precisiones: P2 (los artículos MO+CIF no se costean) y la carga cada hora.
 
-Script: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../../sql/costo-actual-pt/01_informe_costo_pt.sql) (ejecutado por el desarrollador el 2026-11-04). Job: [`sql/costo-actual-pt/02_job_costo_pt.sql`](../../sql/costo-actual-pt/02_job_costo_pt.sql) (`pendiente` de crear).
+Script: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../../sql/costo-actual-pt/01_informe_costo_pt.sql) (ejecutado por el desarrollador el 2026-11-04). Job: [`sql/costo-actual-pt/02_job_costo_pt.sql`](../../sql/costo-actual-pt/02_job_costo_pt.sql), creado por el desarrollador el 2026-11-04 y funcionando. **Fase 2 cerrada.**
 
 | Campo | Valor |
 |---|---|
@@ -376,27 +376,107 @@ Validación (desarrollador, 2026-11-04):
 
 ## 3. Contrato del endpoint
 
-`GET /api/v1/<tema>`
+`GET /api/v1/costo-actual-pt`. Usa el mismo token, el mismo manejo de errores (502 sin detalles internos) y la misma forma general de respuesta que `/api/v1/facturacion-diaria` ([`server.ts`](../../../reporting-api/src/server.ts)).
 
-Parámetros:
+**Fuente.** `Planos_Symphony.dbo.Informe_costo_pt`, con variables nuevas `REPORT_COSTO_PT_TABLE_SCHEMA=dbo` y `REPORT_COSTO_PT_TABLE=Informe_costo_pt`, como `REPORT_DELIVERIES_TABLE`.
+
+**Diferencias con el patrón de facturación**, porque el informe es una foto del costo de un producto y no una serie en el tiempo:
+
+- **Sin periodo:** no hay `anio`, `mes`, `fechaDesde`, `fechaHasta` ni `years` (P9). En su lugar, `loadedAt` indica la hora de la última carga (`MAX(FechaCarga)`), que el dashboard debe mostrar porque los datos se recalculan cada hora.
+- **Sin paginación de `rows`:** se devuelve la lista de materiales completa del producto elegido, en orden jerárquico, para que el frontend pueda armar el árbol. Hoy el promedio es de 41 líneas por producto; la API pone un tope de 5.000 líneas (`truncated: true` si se alcanza). Máximo real: `pendiente` (consulta abajo).
+- **Selector de productos por búsqueda:** son 11.253 productos, demasiados para un catálogo completo en cada respuesta. `filterOptions.products` devuelve hasta 50 coincidencias de `search`, como el buscador del `AttributeSlicer` del Power BI.
+
+### Parámetros
 
 | Parámetro | Tipo | Columna | Descripción |
 |---|---|---|---|
-| `page`, `pageSize` | entero | — | Paginación |
-| `anio`, `mes` | entero | `<FechaReferencia>` | Periodo |
+| `codigo` | texto | `CodigoPT` | Producto elegido (coincidencia exacta). Sin él, `product`, `rows` y `summary` vuelven vacíos (P6) |
+| `search` | texto | `Codigo`, `Descripcion` del nivel 1 | Busca productos para el selector (contiene, sin distinguir mayúsculas). Mínimo 2 caracteres |
+| `alerta` | `inactivo` \| `sinCosto` \| `moCif` \| `estructura` | `Alerta…` | Opcional: deja en `rows` solo las líneas con esa alerta. No cambia `summary` |
 
-Respuesta:
+Reglas de los filtros:
+
+- Todos se aplican en SQL, con parámetros (`request.input`).
+- `summary` siempre se calcula sobre el producto completo, aunque se use `alerta`.
+
+### Respuesta
 
 ```json
 {
-  "rows": [],
-  "years": [],
-  "pagination": { "page": 1, "pageSize": 50, "total": 0, "totalPages": 1 },
-  "summary": {},
-  "filterOptions": {},
+  "product": {
+    "code": "CBAN12-0027-000-0406",
+    "description": "CARB MUEBLE MACAO LVM 63X48 CANTO 2MM CIERRE LENTO AMARETTO",
+    "unit": "UN",
+    "levels": 2,
+    "lines": 39
+  },
+  "rows": [
+    {
+      "path": "CBAN12-0027-000-0406.0001",
+      "level": 2,
+      "code": "CEMP03-0405-000-0000",
+      "description": "BOLSA RESELLABLE 30X20CM PARA HERRAJES",
+      "unit": "UN",
+      "warehouse": "MP-01",
+      "hasChildren": false,
+      "classification": "MP",
+      "quantity": 1,
+      "unitCost": 111.48,
+      "rawMaterialCost": 111.48,
+      "laborCost": 0,
+      "overheadCost": 0,
+      "totalCost": 111.48,
+      "alert": null,
+      "alerts": { "inactive": false, "noCost": false, "laborAndOverhead": false, "structure": false }
+    }
+  ],
+  "truncated": false,
+  "summary": {
+    "rawMaterialCost": 91819.705,
+    "laborCost": 32560,
+    "overheadCost": 110792,
+    "totalCost": 235171.705,
+    "costWithoutOverhead": 124379.705,
+    "alerts": { "inactive": 0, "noCost": 0, "laborAndOverhead": 0, "structure": 0, "total": 0 },
+    "compositionWithoutOverhead": [
+      { "code": "CMPD06-0008-000-0406", "description": "TABLERO CARB 15MM 1,53X2,44 DURATEX AMARETTO", "totalCost": 44725.4652 }
+    ]
+  },
+  "filterOptions": {
+    "products": [{ "code": "CBAN12-0027-000-0406", "description": "CARB MUEBLE MACAO LVM 63X48 CANTO 2MM CIERRE LENTO AMARETTO" }]
+  },
   "source": "sql-server",
-  "updatedAt": "2026-01-01T00:00:00.000Z"
+  "loadedAt": "2026-11-04T21:22:33.000Z",
+  "updatedAt": "2026-11-04T21:30:00.000Z"
 }
+```
+
+Los valores del ejemplo salen de la validación de `CBAN12-0027-000-0406`; el endpoint solo devuelve datos reales.
+
+Reglas de cada campo:
+
+| Campo | Regla | Visual del BI |
+|---|---|---|
+| `product` | Fila del nivel 1 de `codigo`: código, descripción, unidad, nivel máximo (`levels`) y número de líneas sin contar el nivel 1 (`lines`). `null` sin `codigo` o si no existe | Segmentadores Código y Producto |
+| `rows` | Líneas del nivel 2 en adelante del producto, ordenadas por `SortPath`. `path` permite armar el árbol: el padre de una línea es su `path` sin el último segmento | Tabla "Lista de Materiales" (P3: MP, MO, CIF y Total por separado) |
+| `rows[].alert` / `alerts` | Texto de `Alerta` y los cuatro bits | Columna nueva (P8, P11) |
+| `summary.rawMaterialCost`, `laborCost`, `overheadCost`, `totalCost` | Costos del nivel 1 del producto | Tarjeta "Total Costo" |
+| `summary.costWithoutOverhead` | `totalCost - overheadCost` | Tarjeta "sin CIF" (título según P5) |
+| `summary.alerts` | Número de líneas del producto con cada alerta, y `total` = líneas con al menos una | Indicador de alertas (P8), resaltando `inactive` |
+| `summary.compositionWithoutOverhead` | Hojas del producto con `Clasificacion` `MP` o `MO`, agrupadas por `Codigo` y `Descripcion`, con la suma de `Costo_Total`, de mayor a menor. Sin las de costo 0 | Torta "Lista Materiales sin CIF" (P4: excluye CIF por clasificación, incluye MO) |
+| `filterOptions.products` | Hasta 50 productos del nivel 1 cuyo código o descripción contiene `search`, ordenados por código. Vacío sin `search` | Buscador del segmentador |
+| `loadedAt` | `MAX(FechaCarga)` de la tabla | — (nuevo) |
+| `updatedAt` | Hora de la respuesta, igual que en facturación | — |
+
+No se incluyen las tarjetas de **promedio** ("Promedio Costo Total" y "Costo sin CIF Prom"): con P6 las tarjetas solo se muestran con un producto, y entonces el promedio es igual al total. `pendiente` de confirmar por el desarrollador.
+
+Consulta de apoyo para fijar el tope de líneas (solo lectura):
+
+```sql
+SELECT TOP (5) CodigoPT, COUNT_BIG(1) AS Lineas
+FROM Planos_Symphony.dbo.Informe_costo_pt
+GROUP BY CodigoPT
+ORDER BY Lineas DESC;
 ```
 
 **Aprobación del contrato:** nombre — fecha — `pendiente`

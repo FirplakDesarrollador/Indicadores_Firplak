@@ -437,3 +437,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - La carga final (`Cargas_Log` 1238) tarda 32 s e inserta 463.592 filas: 11.253 productos y listas hasta el nivel 6. Validaciones 4.1–4.5 correctas: el nivel 1 suma sus líneas, no hay MO+CIF ni problemas de estructura, y los tres productos de V7 cuadran exacto.
 - Script del job: [`sql/costo-actual-pt/02_job_costo_pt.sql`](../sql/costo-actual-pt/02_job_costo_pt.sql), cada hora al minuto 05. Pendiente: crearlo y ver la primera ejecución programada.
+
+## [2026-11-04] bi | Costo actual de PT: fase 2 cerrada y contrato del endpoint propuesto
+
+- El job `BI - Costo PT carga completa` quedó creado y funcionando (desarrollador). Fase 2 cerrada.
+- Contrato propuesto para `GET /api/v1/costo-actual-pt` en la [ficha](bi/costo-actual-pt.md#3-contrato-del-endpoint): selección de un producto por `codigo`, búsqueda de productos con `search`, lista completa sin paginar, resumen de costos y alertas, y composición sin CIF. Sin periodo; `loadedAt` muestra la última carga. Pendiente la aprobación.
