@@ -21,7 +21,7 @@ sources:
 
 ## 1. Análisis
 
-Analizado el 2026-11-04 a partir del proyecto [`BI Costo producto terminado.pbip`](../../bi-origen/bi-costo-actual-pt/BI%20Costo%20producto%20terminado.pbip). El modelo está en [`definition/tables/`](../../bi-origen/bi-costo-actual-pt/BI%20Costo%20producto%20terminado.SemanticModel/definition/tables/) y los visuales en [`definition/pages/ReportSection/`](../../bi-origen/bi-costo-actual-pt/BI%20Costo%20producto%20terminado.Report/definition/pages/ReportSection/). Todavía no se ha validado con datos: ver [Consultas de validación](#consultas-de-validación-para-el-desarrollador).
+Analizado el 2026-11-04 a partir del proyecto [`BI Costo producto terminado.pbip`](../../bi-origen/bi-costo-actual-pt/BI%20Costo%20producto%20terminado.pbip). El modelo está en [`definition/tables/`](../../bi-origen/bi-costo-actual-pt/BI%20Costo%20producto%20terminado.SemanticModel/definition/tables/) y los visuales en [`definition/pages/ReportSection/`](../../bi-origen/bi-costo-actual-pt/BI%20Costo%20producto%20terminado.Report/definition/pages/ReportSection/). Validado con datos por el desarrollador el 2026-11-04 (V1–V7): ver [Resultados](#resultados-ejecutados-por-el-desarrollador-el-2026-11-04). Falta la validación de Contabilidad.
 
 **Decisión del desarrollador (2026-11-04):** la migración **no** usa el SQL del Power BI. Usa el query optimizado [`query-optimizado.sql`](../../bi-origen/bi-costo-actual-pt/query-optimizado.sql), que el desarrollador ya había reescrito sin cursores y con cambios en algunas reglas de negocio. El SQL original queda como referencia en [`query-original-powerbi.sql`](../../bi-origen/bi-costo-actual-pt/query-original-powerbi.sql), extraído literalmente de la partición M de `Maestro`. Como cambian las reglas, **las cifras del portal no van a coincidir exactamente con las del Power BI**: ver [Diferencias de reglas](#diferencias-de-reglas-power-bi-vs-query-optimizado).
 
@@ -229,7 +229,7 @@ V7: Contabilidad elige tres productos representativos (uno simple, uno con 4 niv
 | V4 | 13.214 líneas en el nivel 5, en 3.421 productos | **Hallazgo:** el 30 % de los productos tiene listas de más de 4 niveles. En esos casos, el componente del nivel 4 se costea con su propio `AvgPrice` y todo su costo va a una sola clasificación (normalmente MP), aunque incluya MO o CIF por dentro. Pasa igual en el Power BI. Ver P10. |
 | V5 | 13.095 hojas sin costo en su bodega ni en `MP-01`: 67 usan `PT-01`, 9 tenían precio en la lista 10 y ahora quedan en 0, y 13.019 no tienen costo en ninguna | D2 afecta poco (76 líneas). **Hallazgo:** hay 13.019 líneas sin costo en SAP, que saldrán con la alerta `SIN COSTO EN SAP`. Falta saber qué son: ver V5b. |
 | V6 | 484 componentes con costo estándar | Su costo cambia si `OITW.AvgPrice` difiere de `OITM.AvgPrice`. Se verá en V7. |
-| V7 | Productos elegidos: `VHPT09-0006-073-0100`, `CBAN05-0002-000-0438`, `CBAN12-0027-000-0406` Los dos primeros están inactivos y se reemplazaron por `CBAN05-0001-000-0438` y `CMPD04-0268-000-0000`. `CBAN12` **cuadra exacto**. `CBAN05-0001` difiere en 1.817,70 por **D3** (el query corrige). `CMPD04-0268` difiere en 2.094,88 en cuatro hojas del nivel 3; la causa está `pendiente` (V7b). Ver la tabla abajo. |
+| V7 | Productos elegidos: `VHPT09-0006-073-0100`, `CBAN05-0002-000-0438`, `CBAN12-0027-000-0406` | Los dos primeros están inactivos y se reemplazaron por `CBAN05-0001-000-0438` y `CMPD04-0268-000-0000`. `CBAN12` **cuadra exacto**. `CBAN05-0001` difiere en 1.817,70 por **D3** (el query corrige). `CMPD04-0268` difiere en 2.094,88 en cuatro hojas del nivel 3 por **D3/D5**: el original no busca la bodega alternativa (verificado por el desarrollador). Ver la tabla abajo. |
 | V4b | 24 líneas en el nivel 6 o más, en 1 producto | La profundidad real llega como mucho a 6 niveles en un caso. Explotar todos los niveles (P10) es viable con una CTE recursiva sin tope práctico. |
 | V5b | Todas las hojas sin costo son **MP**: 12.055 líneas (345 artículos) no son de inventario (`InvntItem = 'N'`) y 982 líneas (630 artículos) sí lo son | No hay MO ni CIF sin costo. Las que no son de inventario es esperable que no tengan `AvgPrice`. **Las 982 líneas de artículos de inventario sin costo son el faltante real** que Contabilidad debe revisar en SAP (P11). El total (13.037) difiere en 9 líneas del de V5 (13.019 + 9 de la lista 10 = 13.028); se atribuye a cambios en SAP entre ejecuciones (`pendiente` si importa). |
 
@@ -280,7 +280,7 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
 |---|---|---|---|---|---|---|---|
 | `CBAN05-0001-000-0438` | Power BI | 7.607,64 | 7.607,64 | 7.607,64 | 0 | 0 | −1.817,70: D3 |
 | `CBAN05-0001-000-0438` | Query optimizado | 9.425,34 | 9.425,34 | 9.425,34 | 0 | 0 | |
-| `CMPD04-0268-000-0000` | Power BI | 101.685,78 | 74.901,78 | 55.941,78 | 18.960 | 26.784 | +2.094,88: D5/D6 o cambio del costo promedio (`pendiente`, V7b) |
+| `CMPD04-0268-000-0000` | Power BI | 101.685,78 | 74.901,78 | 55.941,78 | 18.960 | 26.784 | +2.094,88: D3/D5, sin bodega alternativa en el nivel 3 (verificado) |
 | `CMPD04-0268-000-0000` | Query optimizado | 99.590,90 | 72.806,90 | 53.846,90 | 18.960 | 26.784 | |
 | `CBAN12-0027-000-0406` | Power BI | 235.171,705 | 124.379,705 | 91.819,705 | 32.560 | 110.792 | Sin diferencia |
 | `CBAN12-0027-000-0406` | Query optimizado | 235.171,705 | 124.379,705 | 91.819,705 | 32.560 | 110.792 | Sin diferencia |
@@ -299,23 +299,9 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
   | `COMP02-0036-000-0000` VARILLA ROSCADA 12MM | 4.508,07 | 4.520,32 | −34,30 |
   | `CIPR01-0028-000-0000` SOLDADURA MIG | 16.134,45 | 16.134,36 | +0,01 |
 
-  Hay dos causas posibles: la bodega que usa el original en el nivel 3 (**D5**, `@Bodega3_`, o un valor heredado de **D6**), o que el costo promedio cambió entre la última actualización del Power BI y la ejecución del query. Las diferencias pequeñas (tubo, varilla, soldadura) apuntan a lo segundo. La de la tuerca (−33 %) apunta a otra bodega. Se confirma con V7b.
+  **Causa verificada por el desarrollador (2026-11-04):** es un error conocido del SQL original, identificado al escribir el query optimizado. En estas hojas del nivel 3, el original no consulta la bodega alternativa (`MP-01`) y se queda con el costo que tiene el componente en la bodega de la lista de materiales. Corresponde a **D3/D5**, y el query optimizado lo corrige con la cascada de la regla 4.
 
   Este artículo es un herraje (semielaborado), no un producto terminado: es un ejemplo de lo que pregunta P7.
-
-```sql
--- V7b. Costo promedio por bodega de las hojas del nivel 3 de CMPD04-0268 y bodega indicada en su lista
-SELECT l.Father, l.Code, l.Warehouse AS bodega_lista, w.WhsCode, w.AvgPrice,
-       i.AvgPrice AS avgprice_oitm, i.EvalSystem
-FROM ITT1 l WITH (NOLOCK)
-INNER JOIN OITM i WITH (NOLOCK) ON i.ItemCode = l.Code
-LEFT JOIN OITW w WITH (NOLOCK) ON w.ItemCode = l.Code AND w.AvgPrice > 0
-WHERE l.Code IN ('COMP02-0033-000-0000', 'COMP02-0027-000-0000', 'COMP02-0036-000-0000', 'CIPR01-0028-000-0000')
-  AND l.Father IN (SELECT Code FROM ITT1 WITH (NOLOCK) WHERE Father = 'CMPD04-0268-000-0000')
-ORDER BY l.Code, w.WhsCode;
-```
-
-En el Power BI, anotar también la fecha de la última actualización del conjunto de datos.
 
 
 ## 2. Tabla de reporte y carga incremental

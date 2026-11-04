@@ -389,3 +389,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `VHPT09-0006-073-0100` y `CBAN05-0002-000-0438` están inactivos y se reemplazaron por `CBAN05-0001-000-0438` y `CMPD04-0268-000-0000`.
 - `CBAN05-0001`: el query da 1.817,70 más que el Power BI. El Power BI deja en 0 la MP de un canto que sí tiene costo unitario (regla D3), y el query lo corrige.
 - `CMPD04-0268`: MO y CIF iguales. La MP difiere en 2.094,88 en cuatro hojas del nivel 3 con distinto costo unitario. Puede deberse a D5/D6 o a un cambio del costo promedio desde la última actualización del Power BI. La consulta V7b queda pendiente.
+
+## [2026-11-04] bi | Costo actual de producto terminado: causa de la diferencia de `CMPD04-0268` verificada
+
+- El desarrollador confirma un error conocido del SQL original: en las hojas del nivel 3 no consulta la bodega alternativa y se queda con el costo de la bodega de la lista (D3/D5). El query optimizado lo corrige.
+- Se retira la consulta V7b. La validación con datos (V1–V7) queda completa. Para cerrar la fase 1 falta la validación de Contabilidad (P1–P11).
