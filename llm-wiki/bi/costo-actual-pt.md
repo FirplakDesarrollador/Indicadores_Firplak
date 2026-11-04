@@ -67,7 +67,7 @@ Estas diferencias explican las cifras distintas que van a aparecer en la concili
 | D4 | Condición de materia prima | `QryGroup39 = 'N' AND QryGroup39 = 'N'` (error: repite el 39) | `QryGroup39 = 'N' AND QryGroup40 = 'N'` | Sin efecto esperado: en el original, los bloques posteriores ya ponían en 0 la materia prima de los artículos CIF. |
 | D5 | Cantidades | Fórmulas distintas por nivel. Ejemplos: la hoja del nivel 3 con costo estándar no multiplica por la cantidad del nivel 2 ([línea 356](../../bi-origen/bi-costo-actual-pt/query-original-powerbi.sql)), la hoja del nivel 4 no multiplica por la del nivel 3 (línea 276), y la hoja del nivel 3 busca su costo en la bodega del recorrido anterior (`@Bodega3_`, línea 331). | Siempre costo unitario × cantidad acumulada | Corrige costos de los niveles 3 y 4. |
 | D6 | Valores heredados | `SELECT @variable = … WHERE …` sin filas **conserva el valor del componente anterior**. Por ejemplo, una materia prima sin registro en `OITW` para su bodega toma el costo del componente anterior. | Cálculo por conjuntos, sin variables | Corrige costos inflados o desplazados en el original. |
-| D7 | Artículo con `QryGroup39 = 'Y'` y `QryGroup40 = 'Y'` | Los dos bloques de limpieza se anulan entre sí: costo 0 | Suma el costo **dos veces**, en `Costo_Mo` y en `Costo_Cif` | Hoy ninguno (V3). Queda el control en el SP y la pregunta P2. |
+| D7 | Artículo con `QryGroup39 = 'Y'` y `QryGroup40 = 'Y'` | Los dos bloques de limpieza se anulan entre sí: costo 0 | Suma el costo **dos veces**, en `Costo_Mo` y en `Costo_Cif` | Hoy ninguno (V3). **Decisión P2:** el SP lo cuenta una sola vez como MO y lo marca con la alerta `MO Y CIF A LA VEZ`. |
 | D8 | Columnas de salida | `linea` (orden) y `Padre` (código del producto, usado en la relación) | Ninguna de las dos. Devuelve `Alerta` y calcula internamente `RootCode` y `SortPath`. | La tabla de reporte debe guardar `RootCode` como código del producto y `SortPath` como orden. Se agrega al SP. |
 | D9 | Profundidad de la explosión | Hasta el nivel 4: un componente del nivel 4 con lista se costea como hoja | Igual que el Power BI | **Decisión P10:** el SP desglosa todos los niveles (hoy, hasta el 6, V4b). Cambia la clasificación MP/MO/CIF de 3.421 productos y, en algunos casos, su total, porque el componente se costea con sus hijos y no con su propio `AvgPrice`. El SP debe controlar ciclos en las listas. |
 
@@ -154,10 +154,15 @@ Preguntas para Contabilidad:
 - **P1.** ¿Aceptan las reglas del query optimizado (D1 a D3, D5 y D6) como las correctas, aunque cambien las cifras respecto del Power BI?
   - **Respuesta (2026-11-04):** sí, se aceptan las reglas corregidas.
 - **P2.** Si un artículo es mano de obra y CIF a la vez (D7), ¿a cuál de los dos va su costo? ¿O no debería existir ese caso?
+  - **Respuesta (2026-11-04):** no debería presentarse y hay que controlarlo. El SP cuenta el costo **una sola vez**, como MO (precedencia de `QryGroup39`, igual que en V5b), marca la línea con la alerta `MO Y CIF A LA VEZ` y registra el número de casos en la bitácora de la carga. Así se corrige el doble conteo de D7.
 - **P3.** En la tabla "Lista de Materiales", la columna "Total Costo" muestra solo la **materia prima**: las líneas de mano de obra y CIF aparecen en 0. ¿Mostramos las columnas MP, MO, CIF y Total por separado?
+  - **Respuesta (2026-11-04):** sí. La tabla muestra las columnas MP, MO, CIF y Total por separado.
 - **P4.** La torta "sin CIF" excluye los componentes por el **texto** "CIF" en la descripción, no por su clasificación en SAP. ¿La excluimos por clasificación (`QryGroup40`)? ¿La mano de obra debe aparecer en la torta?
+  - **Respuesta (2026-11-04):** sí. La torta excluye el CIF por su clasificación en SAP (`QryGroup40 = 'Y'`), no por el texto. La mano de obra se mantiene en la torta (interpretación del "sí"; `pendiente` de confirmar).
 - **P5.** La tarjeta de arriba se titula "Promedio Costo Total sin CIF", pero muestra la **suma**. ¿Se renombra a "Costo total sin CIF"?
+  - **Respuesta (2026-11-04):** se decide al construir el dashboard (fase 5).
 - **P6.** Sin producto seleccionado, "Total Costo" suma el costo de **todos** los productos, una cifra sin sentido de negocio. ¿Las tarjetas se muestran solo con un producto seleccionado, o se reemplazan por el número de productos y el costo promedio?
+  - **Respuesta (2026-11-04):** "sí", sin precisar cuál de las dos opciones: `pendiente` de aclarar.
 - **P7.** El universo incluye todo artículo con lista de materiales, también semielaborados y subensambles. ¿Se limita a producto terminado? Si es así, ¿con qué criterio de SAP (grupo de artículos, propiedad)?
   - **Respuesta (2026-11-04):** se incluyen los semielaborados. El universo es todo artículo activo con lista de materiales, como en el query optimizado.
 - **P10.** El 30 % de los productos tiene listas de más de 4 niveles (V4). ¿Explotamos todos los niveles (cambia el desglose MP/MO/CIF de esos productos, no necesariamente su total) o mantenemos el corte en 4 como hoy?
@@ -165,12 +170,13 @@ Preguntas para Contabilidad:
 - **P11.** Hay unas 13.000 líneas de componentes sin costo en SAP, todas de materia prima (V5b). 12.055 son de 345 artículos que no son de inventario: ¿es correcto que cuesten 0? Las otras 982 líneas son de 630 artículos de inventario sin costo promedio en ninguna bodega: ¿se corrigen en SAP antes de salir a producción, o el portal los muestra con la alerta `SIN COSTO EN SAP`?
   - **Respuesta (2026-11-04):** se dejan como están, en 0. Se controlan con la columna `Alerta`, así que el portal debe mostrarla (responde parte de P8).
 - **P8.** ¿Mostramos la columna `Alerta` y un indicador de líneas sin costo o inactivas?
-  - **Respuesta parcial (2026-11-04):** la columna `Alerta` se muestra (P11). Falta decidir si se agrega un indicador con el número de líneas con alerta.
+  - **Respuesta (2026-11-04):** sí. Se muestra la columna `Alerta` (P11) y un indicador con el número de líneas con alerta, por tipo, que resalte las de `ITEM INACTIVO`.
 - **P9.** ¿Basta con el costo actual, o necesitan guardar una foto mensual para comparar el costo entre meses?
+  - **Respuesta (2026-11-04):** solo el costo actual. No se guarda historia: la carga completa reemplaza la foto anterior.
 
-Respuestas transmitidas por el desarrollador el 2026-11-04: P1, P7, P10 y P11, más P8 en parte. Siguen `pendiente`: P2 a P6, el indicador de P8 y P9.
+Respuestas transmitidas por el desarrollador el 2026-11-04: P1 a P4 y P7 a P11. P5 se decide en la fase 5. Sigue `pendiente`: P6, y la confirmación de que la mano de obra queda en la torta (P4).
 
-**Validación del dueño de negocio:** Contabilidad — fecha — `pendiente` (falta responder P2 a P6, P8 y P9)
+**Validación del dueño de negocio:** Contabilidad — 2026-11-04, por medio del desarrollador — reglas aprobadas; quedan abiertas P6 y la confirmación de P4
 
 ### Consultas de validación para el desarrollador
 

@@ -402,3 +402,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - P10: se desglosan todos los niveles. Es una diferencia nueva respecto del query optimizado (**D9**): el SP de la fase 2 hará la explosión recursiva con control de ciclos.
 - P11: las líneas sin costo quedan en 0 y se controlan con la columna `Alerta`, que el portal mostrará.
 - Pendiente: P2 a P6, el indicador de P8 y P9.
+
+## [2026-11-04] bi | Costo actual de producto terminado: respuestas de Contabilidad P2 a P9
+
+- P2: los artículos que son MO y CIF a la vez no deberían existir. El SP los cuenta una vez como MO y los marca con la alerta `MO Y CIF A LA VEZ`.
+- P3: la tabla muestra MP, MO, CIF y Total. P4: la torta excluye el CIF por clasificación de SAP, no por texto.
+- P5: se decide en el dashboard. P8: se muestra `Alerta` y un indicador de líneas con alerta, que resalte `ITEM INACTIVO`. P9: solo costo actual, sin historia.
+- Pendiente: aclarar P6 (tarjetas sin producto seleccionado) y confirmar que la mano de obra queda en la torta.
