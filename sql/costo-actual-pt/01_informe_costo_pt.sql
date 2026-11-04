@@ -121,7 +121,7 @@ BEGIN
 
     BEGIN TRY
         /* ── Paso 1. Datos maestros de SAP ── */
-        DROP TABLE IF EXISTS #Items, #CostoBodega, #ConLista, #BOM;
+        DROP TABLE IF EXISTS #Items, #CostoBodega, #ConLista, #BOM, #Frontera;
 
         CREATE TABLE #Items (
             ItemCode   varchar(50) COLLATE SQL_Latin1_General_CP850_CI_AS PRIMARY KEY,
@@ -176,8 +176,29 @@ BEGIN
         INNER JOIN #ConLista l ON l.ItemCode = i.ItemCode
         WHERE i.frozenFor = 'N';
 
+        -- Frontera: solo los encabezados del nivel que se va a explotar. Mantiene el join con ITT1
+        -- sobre un conjunto pequeño; sin ella, el plan compilado con el nivel 1 se reutiliza
+        -- sobre todo #BOM y la carga pasa de segundos a más de 10 minutos.
+        CREATE TABLE #Frontera (
+            ID        int           NOT NULL PRIMARY KEY,
+            RootCode  varchar(50)   COLLATE SQL_Latin1_General_CP850_CI_AS NOT NULL,
+            Codigo    varchar(50)   COLLATE SQL_Latin1_General_CP850_CI_AS NOT NULL,
+            Nivel     int           NOT NULL,
+            Cantidad  decimal(38, 6) NOT NULL,
+            SortPath  varchar(400)  COLLATE SQL_Latin1_General_CP850_CI_AS NOT NULL,
+            Ruta      varchar(4000) COLLATE SQL_Latin1_General_CP850_CI_AS NOT NULL
+        );
+
         WHILE 1 = 1
         BEGIN
+            TRUNCATE TABLE #Frontera;
+            INSERT INTO #Frontera (ID, RootCode, Codigo, Nivel, Cantidad, SortPath, Ruta)
+            SELECT ID, RootCode, Codigo, Nivel, Cantidad, SortPath, Ruta
+            FROM #BOM
+            WHERE Nivel = @Nivel AND TieneHijos = 1;
+
+            IF @@ROWCOUNT = 0 BREAK;
+
             INSERT INTO #BOM (RootCode, Codigo, Nivel, Cantidad, Warehouse, TieneHijos, Ciclo, Tope, SortPath, Ruta)
             SELECT
                 x.RootCode, x.Code, x.Nivel, x.Cantidad, x.Warehouse,
@@ -196,15 +217,14 @@ BEGIN
                     CASE WHEN CHARINDEX('|' + itt.Code + '|', b.Ruta) > 0 THEN 1 ELSE 0 END AS Ciclo,
                     b.SortPath + '.' + RIGHT('0000' + CAST(ROW_NUMBER() OVER (PARTITION BY b.ID ORDER BY itt.ChildNum) AS varchar(4)), 4) AS SortPath,
                     b.Ruta + itt.Code + '|' AS Ruta
-                FROM #BOM b
+                FROM #Frontera b
                 INNER JOIN FIRPLAK_SA.dbo.ITT1 itt WITH (NOLOCK) ON itt.Father = b.Codigo
                 LEFT JOIN #ConLista l ON l.ItemCode = itt.Code
-                WHERE b.Nivel = @Nivel
-                  AND b.TieneHijos = 1
-                  -- Líneas sin artículo (p. ej., líneas de texto de la lista): no tienen costo.
-                  -- El query optimizado las dejaba con Codigo nulo y costo 0.
-                  AND NULLIF(LTRIM(RTRIM(itt.Code)), '') IS NOT NULL
-            ) AS x;
+                -- Líneas sin artículo (p. ej., líneas de texto de la lista): no tienen costo.
+                -- El query optimizado las dejaba con Codigo nulo y costo 0.
+                WHERE NULLIF(LTRIM(RTRIM(itt.Code)), '') IS NOT NULL
+            ) AS x
+            OPTION (RECOMPILE);   -- El tamaño de la frontera cambia mucho entre niveles
 
             IF @@ROWCOUNT = 0 BREAK;
             SET @Nivel += 1;
@@ -275,7 +295,8 @@ BEGIN
             CASE WHEN c.Nivel > 1 THEN c.MoCif ELSE 0 END,
             c.Estructura,
             @Inicio
-        FROM Costeadas c;
+        FROM Costeadas c
+        OPTION (RECOMPILE);
 
         /* ── Paso 4. Nivel 1 = suma de sus líneas ── */
         ;WITH Totales AS (
@@ -292,7 +313,8 @@ BEGIN
             r.Costo_Total = t.Mp + t.Mo + t.Cif
         FROM dbo.Informe_costo_pt_Carga r
         INNER JOIN Totales t ON t.CodigoPT = r.CodigoPT
-        WHERE r.Nivel = 1;
+        WHERE r.Nivel = 1
+        OPTION (RECOMPILE);
 
         SELECT @Insertados = COUNT(1) FROM dbo.Informe_costo_pt_Carga;
         IF @Insertados = 0
@@ -308,7 +330,7 @@ BEGIN
         INSERT INTO dbo.Cargas_Log (Proceso, Modo, Inicio, Fin, Eliminados, Insertados, Error)
         VALUES (N'Informe_costo_pt', N'COMPLETA', @Inicio, sysdatetime(), @Eliminados, @Insertados, NULL);
 
-        DROP TABLE IF EXISTS #Items, #CostoBodega, #ConLista, #BOM;
+        DROP TABLE IF EXISTS #Items, #CostoBodega, #ConLista, #BOM, #Frontera;
         EXEC sp_releaseapplock @Resource = N'sp_Actualizar_Informe_costo_pt', @LockOwner = N'Session';
     END TRY
     BEGIN CATCH

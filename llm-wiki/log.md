@@ -426,3 +426,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - La primera carga falló con el error 515 (`NULL` en `#BOM.Codigo`): hay líneas de `ITT1` sin `Code`, probablemente líneas de texto.
 - El SP las excluye del desglose. No tienen costo, así que los totales no cambian frente al query optimizado; solo cambia el número de filas. Se agregó una consulta de diagnóstico por `ITT1.Type`.
+
+## [2026-11-04] fix | Costo actual de PT: rendimiento de la explosión
+
+- La primera carga llevaba más de 9 minutos (1.145 s de CPU) en el `INSERT` del `WHILE`, con `#BOM` ya en las ~463.000 filas esperadas. Causa: el plan compilado con el nivel 1 se reutilizaba sobre todo `#BOM`.
+- Corrección: tabla `#Frontera` con solo los encabezados del nivel en curso y `OPTION (RECOMPILE)` en el `INSERT` del desglose, el `INSERT` final y el `UPDATE` de totales.
