@@ -161,6 +161,7 @@ Preguntas para Contabilidad:
   - **Respuesta (2026-11-04):** sí. La torta excluye el CIF por su clasificación en SAP (`QryGroup40 = 'Y'`), no por el texto. La mano de obra se mantiene en la torta (confirmado).
 - **P5.** La tarjeta de arriba se titula "Promedio Costo Total sin CIF", pero muestra la **suma**. ¿Se renombra a "Costo total sin CIF"?
   - **Respuesta (2026-11-05):** las cuatro tarjetas se titulan "Costo total", "Costo promedio", "Costo sin CIF" y "Costo promedio sin CIF" (aprobado por el desarrollador con el plan de la fase 5).
+  - **Cambio (2026-11-05):** al revisar el dashboard, el desarrollador pidió quitar "Costo promedio" y "Costo promedio sin CIF". Con un solo producto elegido repetían el total. Quedan "Costo total" y "Costo sin CIF".
 - **P6.** Sin producto seleccionado, "Total Costo" suma el costo de **todos** los productos, una cifra sin sentido de negocio. ¿Las tarjetas se muestran solo con un producto seleccionado, o se reemplazan por el número de productos y el costo promedio?
   - **Respuesta (2026-11-04):** opción a. Las tarjetas solo se muestran con un producto seleccionado. Sin selección, el dashboard invita a elegir un producto.
 - **P7.** El universo incluye todo artículo con lista de materiales, también semielaborados y subensambles. ¿Se limita a producto terminado? Si es así, ¿con qué criterio de SAP (grupo de artículos, propiedad)?
@@ -471,7 +472,7 @@ Reglas de cada campo:
 | `loadedAt` | `MAX(FechaCarga)` de la tabla | — (nuevo) |
 | `updatedAt` | Hora de la respuesta, igual que en facturación | — |
 
-**Tarjetas (decisión del desarrollador, 2026-11-05):** se mantienen las cuatro del Power BI, incluidas las de promedio, y solo se muestran con un producto elegido (P6).
+**Tarjetas (decisión del desarrollador, 2026-11-05):** se mantienen las cuatro del Power BI, incluidas las de promedio, y solo se muestran con un producto elegido (P6). **Actualización (2026-11-05):** el dashboard solo muestra "Costo total" y "Costo sin CIF". La API sigue devolviendo `averageCost` y `averageCostWithoutOverhead`, que el portal ya no usa.
 
 ### Descarga (`GET /api/v1/costo-actual-pt/export`)
 
@@ -554,7 +555,7 @@ Implementado el 2026-11-05 en la rama `bi/costo-actual-pt` de este repositorio.
   - **Buscador de producto:** consulta con la lupa, Enter o "Aplicar filtros", y muestra hasta 50 resultados. Al elegir uno se carga el producto.
   - **Filtro de alerta:** en borrador; se aplica con "Aplicar filtros" o con "Ver líneas" en el panel de alertas.
   - **Sin producto (P6):** se muestra un mensaje para elegirlo y el botón "Descargar todo".
-  - **Con producto:** las 4 tarjetas (P5), el panel de líneas con alerta (P8, con los inactivos resaltados), la composición sin CIF (P4, en barras como en notas crédito), la lista de materiales en árbol con MP, MO, CIF y Total (P3) y el botón "Descargar producto".
+  - **Con producto:** las tarjetas "Costo total" y "Costo sin CIF" (P5; se quitaron las de promedio), el panel de líneas con alerta (P8, con los inactivos resaltados), la composición sin CIF (P4, en barras como en notas crédito), la lista de materiales en árbol con MP, MO, CIF y Total (P3) y el botón "Descargar producto".
   - **Subtotales de los subensambles:** se calculan en el navegador con las líneas ya cargadas, porque en la tabla su costo es 0 (está en sus hijos). Se muestran en cursiva. Con un filtro de alerta, la tabla pierde la jerarquía y los subensambles muestran "—".
   - **Alertas en la tabla:** van debajo de la descripción del componente, no en una columna aparte, para que la tabla quepa a 1440 px.
   - **Pie de página:** hora de la última carga (`loadedAt`).

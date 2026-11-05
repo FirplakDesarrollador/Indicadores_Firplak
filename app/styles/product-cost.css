@@ -44,7 +44,6 @@
 .pc-metrics-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
 .pc-two-column-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
 @container (min-width: 560px) { .pc-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@container (min-width: 1040px) { .pc-metrics-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @container (min-width: 960px) { .pc-two-column-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Líneas con alerta: el número y el texto llevan el significado; el color solo refuerza. */

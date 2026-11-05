@@ -2,8 +2,6 @@
 
 import { type CSSProperties, type FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Boxes,
-  Calculator,
   ChevronDown,
   ChevronRight,
   Coins,
@@ -221,11 +219,9 @@ export default function CostoActualPtDashboard() {
         {loading || !product ? <div className="billing-zone-skeleton"><span /><span /></div> : <><h2>{product.description}</h2><p><strong>{product.code}</strong> · {product.unit || "Sin unidad"} · {formatNumber(product.lines)} líneas en {formatNumber(Math.max(product.levels - 1, 0))} nivel{product.levels === 2 ? "" : "es"} de la lista</p></>}
       </section>
 
-      <div className="pc-metrics-grid">{loading || !summary ? Array.from({ length: 4 }, (_, index) => <MetricSkeleton key={index} />) : <>
+      <div className="pc-metrics-grid">{loading || !summary ? Array.from({ length: 2 }, (_, index) => <MetricSkeleton key={index} />) : <>
         <MetricCard label="Costo total" value={formatCurrency(summary.totalCost)} detail={`MP ${formatCompactCurrency(summary.rawMaterialCost)} · MO ${formatCompactCurrency(summary.laborCost)} · CIF ${formatCompactCurrency(summary.overheadCost)}`} icon={Coins} />
-        <MetricCard label="Costo promedio" value={formatCurrency(summary.averageCost)} detail="Promedio de los productos seleccionados" icon={Calculator} />
         <MetricCard label="Costo sin CIF" value={formatCurrency(summary.costWithoutOverhead)} detail="Materia prima más mano de obra" icon={Layers} />
-        <MetricCard label="Costo promedio sin CIF" value={formatCurrency(summary.averageCostWithoutOverhead)} detail="Promedio sin costos indirectos" icon={Boxes} />
       </>}</div>
 
       <div className="pc-two-column-grid">
