@@ -459,3 +459,7 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - Prueba en el servidor: búsqueda, producto y descargas correctas. La descarga completa pesa 104,1 MB.
 - `loadedAt` salía en UTC por el estilo 127 de `CONVERT`; se cambió al 126 para conservar el desfase (commit `aeb3f5b` en `reporting-api`, paquete `reporting-api-dist-aeb3f5b.zip`).
+
+## [2026-11-05] bi | Costo actual de PT: fase 4 cerrada
+
+- Versión `aeb3f5b` desplegada en el servidor y verificada: resumen correcto, `loadedAt` con desfase `-05:00` y descarga completa de 104,1 MB en 16,2 s dentro del servidor.

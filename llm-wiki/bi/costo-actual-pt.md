@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 4
+fase: 5
 updated: 2026-11-04
 sources:
   - ../../bi-origen/bi-costo-actual-pt/
@@ -537,8 +537,10 @@ Implementado el 2026-11-05 en `reporting-api`, rama `bi/costo-actual-pt`, commit
   - Búsqueda `search=CBAN12`: devuelve `CBAN12-0027-000-0406`. OK.
   - Producto `CBAN12-0027-000-0406`: 39 líneas. OK. El CSV del producto trae un total de 235.170,505, 1,20 menos que el 2026-11-04 por un cambio del costo promedio en SAP (la carga es horaria).
   - Descarga del producto: encabezado y filas correctos, coma decimal y tildes bien.
-  - Descarga completa: 104,1 MB. Duración `pendiente`.
-  - Corrección `aeb3f5b`: `loadedAt` salía en UTC (`15:05:00Z`) por el estilo 127 de `CONVERT`; con el 126 conserva el desfase (`10:05:00-05:00`) y el nombre del archivo usa la hora local.
+  - Descarga completa: 104,1 MB en 16,2 s dentro del servidor.
+  - Corrección `aeb3f5b`: `loadedAt` salía en UTC (`15:05:00Z`) por el estilo 127 de `CONVERT`; con el 126 conserva el desfase (`10:05:00-05:00`) y el nombre del archivo usa la hora local. Desplegada y verificada: `2026-11-05T10:05:00-05:00`, resumen 235.170,505 / sin CIF 124.378,505 / promedios iguales al total.
+
+**Fase 4 cerrada** el 2026-11-05.
 
 ## 5. Dashboard
 
