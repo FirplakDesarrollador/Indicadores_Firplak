@@ -33,6 +33,9 @@ sources:
 - `/notas-credito`: dashboard de notas crédito para Cartera ([`NotasCreditoDashboard.tsx`](../../components/NotasCreditoDashboard.tsx); reglas en la [ficha del BI](../bi/notas-credito.md)).
 - `/notas-credito/detalle`: detalle paginado de documentos de notas crédito, con filtros y panel lateral.
 - `/api/notas-credito`: proxy server-side hacia `GET /api/v1/notas-credito`.
+- `/costo-actual-pt`: costo actual de producto terminado para Contabilidad ([`CostoActualPtDashboard.tsx`](../../components/CostoActualPtDashboard.tsx); reglas en la [ficha del BI](../bi/costo-actual-pt.md)). Sin vista de detalle: la lista de materiales del producto elegido está en la misma página.
+- `/api/costo-actual-pt`: proxy server-side hacia `GET /api/v1/costo-actual-pt`.
+- `/api/costo-actual-pt/export`: proxy de la descarga en CSV. Reenvía el flujo de la API sin acumularlo (`maxDuration = 300`) y cancela la petición si el usuario aborta la descarga.
 - `/admin/permisos`: administración de permisos por informe, solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
 
 ## Comportamiento del dashboard
@@ -69,8 +72,9 @@ Extraídos de `FacturacionDashboard.tsx` el 2026-10-27, antes del segundo dashbo
 
 - [`components/dashboard/DashboardShell.tsx`](../../components/dashboard/DashboardShell.tsx): barra lateral, menú, perfil de Microsoft 365, cierre de sesión, menú móvil y migas de pan. Recibe `navigation` (grupos del menú del reporte), `activeHref`, `title`, `className` y `overlay` (panel de detalle).
 - [`MetricCard.tsx`](../../components/dashboard/MetricCard.tsx) (`MetricCard`, `MetricSkeleton`), [`FilterSelect.tsx`](../../components/dashboard/FilterSelect.tsx) y [`TablePager.tsx`](../../components/dashboard/TablePager.tsx).
+- [`ShareList.tsx`](../../components/dashboard/ShareList.tsx): barras horizontales con el peso de cada categoría. Reemplaza a las tortas del Power BI. Extraída de notas crédito el 2026-11-05 para usarla también en costo de PT (`shareLabel` cambia el texto "de las notas").
 - [`lib/dashboard/`](../../lib/dashboard/): `format.ts` (formatos es-CO), `fetch.ts` (`readJsonPayload`, que detecta la sesión expirada), `options.ts` y `navigation.ts`.
-- Las clases CSS conservan el prefijo `billing-*`. Un dashboard nuevo agrega solo sus estilos propios en `app/styles/<tema>.css`. Atención: `billing.css` oculta `.billing-table-panel` fuera de la vista de detalle y reordena las secciones con `order`; [`credit-notes.css`](../../app/styles/credit-notes.css) lo compensa con `.credit-table-panel` y `order: 0`.
+- Las clases CSS conservan el prefijo `billing-*`. Un dashboard nuevo agrega solo sus estilos propios en `app/styles/<tema>.css`. Atención: `billing.css` oculta `.billing-table-panel` fuera de la vista de detalle y reordena las secciones con `order`; [`credit-notes.css`](../../app/styles/credit-notes.css) y [`product-cost.css`](../../app/styles/product-cost.css) lo compensan con su propio panel de tabla y `order: 0`.
 
 ## Estilos e identidad visual
 

@@ -463,3 +463,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 ## [2026-11-05] bi | Costo actual de PT: fase 4 cerrada
 
 - Versión `aeb3f5b` desplegada en el servidor y verificada: resumen correcto, `loadedAt` con desfase `-05:00` y descarga completa de 104,1 MB en 16,2 s dentro del servidor.
+
+## [2026-11-05] bi | Costo actual de PT: dashboard (fase 5)
+
+- Página `/costo-actual-pt` con buscador de producto, 4 tarjetas, panel de alertas, composición sin CIF, lista de materiales en árbol y botón de descarga (todo o el producto elegido). Proxys `/api/costo-actual-pt` y `/api/costo-actual-pt/export` (streaming, `maxDuration = 300`).
+- `ShareList` pasa de notas crédito a `components/dashboard/` para compartirla.
+- Lint y build sin errores. Revisión visual a 375, 820 y 1440 px con una API falsa; se movieron las alertas debajo del componente para que la tabla quepa a 1440 px.
+- Pendiente: asignar permisos, probar con sesión real y probar la descarga completa a través de Vercel.

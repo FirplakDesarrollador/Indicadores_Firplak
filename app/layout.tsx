@@ -5,6 +5,7 @@ import "./styles/login.css";
 import "./styles/portal.css";
 import "./styles/billing.css";
 import "./styles/credit-notes.css";
+import "./styles/product-cost.css";
 import "./styles/admin.css";
 import "./styles/user-menu.css";
 

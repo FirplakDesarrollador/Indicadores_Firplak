@@ -544,10 +544,24 @@ Implementado el 2026-11-05 en `reporting-api`, rama `bi/costo-actual-pt`, commit
 
 ## 5. Dashboard
 
-- Ruta: `/<tema>`
-- Proxy: `app/api/<tema>/route.ts`
-- Componentes reutilizados:
-- Revisión visual (375 / 820 / 1440 px): fecha
+Implementado el 2026-11-05 en la rama `bi/costo-actual-pt` de este repositorio.
+
+- Ruta: `/costo-actual-pt` ([`CostoActualPtDashboard.tsx`](../../components/CostoActualPtDashboard.tsx), estilos en [`product-cost.css`](../../app/styles/product-cost.css)).
+- Proxys: [`app/api/costo-actual-pt/route.ts`](../../app/api/costo-actual-pt/route.ts) y [`app/api/costo-actual-pt/export/route.ts`](../../app/api/costo-actual-pt/export/route.ts) (streaming, `maxDuration = 300`).
+- Catálogo: `costo-actual-pt` en [`lib/reports.ts`](../../lib/reports.ts) y `productCostNavigation` en [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Permisos: `pendiente` de asignar en `/admin/permisos` a las usuarias de la sección 0.
+- Componentes reutilizados: `DashboardShell`, `MetricCard`/`MetricSkeleton` y `ShareList`, que se extrajo de notas crédito a `components/dashboard/`.
+- Comportamiento:
+  - **Buscador de producto:** consulta con la lupa, Enter o "Aplicar filtros", y muestra hasta 50 resultados. Al elegir uno se carga el producto.
+  - **Filtro de alerta:** en borrador; se aplica con "Aplicar filtros" o con "Ver líneas" en el panel de alertas.
+  - **Sin producto (P6):** se muestra un mensaje para elegirlo y el botón "Descargar todo".
+  - **Con producto:** las 4 tarjetas (P5), el panel de líneas con alerta (P8, con los inactivos resaltados), la composición sin CIF (P4, en barras como en notas crédito), la lista de materiales en árbol con MP, MO, CIF y Total (P3) y el botón "Descargar producto".
+  - **Subtotales de los subensambles:** se calculan en el navegador con las líneas ya cargadas, porque en la tabla su costo es 0 (está en sus hijos). Se muestran en cursiva. Con un filtro de alerta, la tabla pierde la jerarquía y los subensambles muestran "—".
+  - **Alertas en la tabla:** van debajo de la descripción del componente, no en una columna aparte, para que la tabla quepa a 1440 px.
+  - **Pie de página:** hora de la última carga (`loadedAt`).
+- Verificación (2026-11-05):
+  - `npm run lint` y `npm run build` sin errores ni advertencias.
+  - Revisión visual a 375, 820 y 1440 px con una copia temporal sin middleware y una API falsa con los datos de `CMPD04-0268-000-0000` de la validación. Se revisaron el producto, el estado vacío y la búsqueda. Sin desborde horizontal de la página; la tabla se desplaza en su propio contenedor a 375 y 820 px.
+  - `pendiente`: la prueba con sesión real y datos reales, y la descarga completa (~104 MB) a través de Vercel. Si la descarga falla por duración o tamaño, el plan B es un enlace firmado de corta duración directo a la API.
 
 ## 6. Conciliación con Power BI
 
