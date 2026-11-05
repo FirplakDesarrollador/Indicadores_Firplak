@@ -442,3 +442,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - El job `BI - Costo PT carga completa` quedó creado y funcionando (desarrollador). Fase 2 cerrada.
 - Contrato propuesto para `GET /api/v1/costo-actual-pt` en la [ficha](bi/costo-actual-pt.md#3-contrato-del-endpoint): selección de un producto por `codigo`, búsqueda de productos con `search`, lista completa sin paginar, resumen de costos y alertas, y composición sin CIF. Sin periodo; `loadedAt` muestra la última carga. Pendiente la aprobación.
+
+## [2026-11-05] bi | Costo actual de PT: ajustes al contrato
+
+- Se mantienen las tarjetas de promedio del Power BI (`averageCost`, `averageCostWithoutOverhead`), visibles solo con un producto elegido.
+- Descarga nueva `GET /api/v1/costo-actual-pt/export` en CSV para Excel (UTF-8 con BOM, `;`, coma decimal), en streaming: todos los productos sin `codigo`, o solo el producto elegido.
+- El máximo real es de 331 líneas por producto; el tope de 5.000 del endpoint principal se mantiene.

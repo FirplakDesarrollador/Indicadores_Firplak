@@ -437,6 +437,8 @@ Reglas de los filtros:
     "overheadCost": 110792,
     "totalCost": 235171.705,
     "costWithoutOverhead": 124379.705,
+    "averageCost": 235171.705,
+    "averageCostWithoutOverhead": 124379.705,
     "alerts": { "inactive": 0, "noCost": 0, "laborAndOverhead": 0, "structure": 0, "total": 0 },
     "compositionWithoutOverhead": [
       { "code": "CMPD06-0008-000-0406", "description": "TABLERO CARB 15MM 1,53X2,44 DURATEX AMARETTO", "totalCost": 44725.4652 }
@@ -462,13 +464,55 @@ Reglas de cada campo:
 | `rows[].alert` / `alerts` | Texto de `Alerta` y los cuatro bits | Columna nueva (P8, P11) |
 | `summary.rawMaterialCost`, `laborCost`, `overheadCost`, `totalCost` | Costos del nivel 1 del producto | Tarjeta "Total Costo" |
 | `summary.costWithoutOverhead` | `totalCost - overheadCost` | Tarjeta "sin CIF" (título según P5) |
+| `summary.averageCost`, `averageCostWithoutOverhead` | `AVG(Costo_Total)` y `AVG(Costo_Total - Costo_Cif)` sobre el nivel 1 del producto elegido. Con un solo producto son iguales al total | Tarjetas "Promedio Costo Total" y "Costo sin CIF Prom" |
 | `summary.alerts` | Número de líneas del producto con cada alerta, y `total` = líneas con al menos una | Indicador de alertas (P8), resaltando `inactive` |
 | `summary.compositionWithoutOverhead` | Hojas del producto con `Clasificacion` `MP` o `MO`, agrupadas por `Codigo` y `Descripcion`, con la suma de `Costo_Total`, de mayor a menor. Sin las de costo 0 | Torta "Lista Materiales sin CIF" (P4: excluye CIF por clasificación, incluye MO) |
 | `filterOptions.products` | Hasta 50 productos del nivel 1 cuyo código o descripción contiene `search`, ordenados por código. Vacío sin `search` | Buscador del segmentador |
 | `loadedAt` | `MAX(FechaCarga)` de la tabla | — (nuevo) |
 | `updatedAt` | Hora de la respuesta, igual que en facturación | — |
 
-No se incluyen las tarjetas de **promedio** ("Promedio Costo Total" y "Costo sin CIF Prom"): con P6 las tarjetas solo se muestran con un producto, y entonces el promedio es igual al total. `pendiente` de confirmar por el desarrollador.
+**Tarjetas (decisión del desarrollador, 2026-11-05):** se mantienen las cuatro del Power BI, incluidas las de promedio, y solo se muestran con un producto elegido (P6).
+
+### Descarga (`GET /api/v1/costo-actual-pt/export`)
+
+Decisión del desarrollador (2026-11-05): un botón "Descargar" en el dashboard.
+
+- **Sin producto elegido:** descarga el informe completo, con todos los productos y sus líneas (unas 463.600 filas, del orden de 90 MB).
+- **Con producto elegido:** descarga solo la lista de materiales de ese producto.
+
+| Parámetro | Tipo | Descripción |
+|---|---|---|
+| `codigo` | texto, opcional | Igual que en el endpoint principal. Sin él, todos los productos. `alerta` y `search` no aplican |
+
+Respuesta:
+
+- `Content-Type: text/csv; charset=utf-8` y `Content-Disposition: attachment; filename="costo-actual-pt_<codigo o todos>_<AAAAMMDD-HHmm de loadedAt>.csv"`.
+- **Formato para Excel en español:** UTF-8 con BOM, separador `;`, decimales con coma, sin separador de miles y textos entre comillas cuando tengan `;`, comillas o saltos de línea.
+- **Streaming:** la API lee la tabla con `request.stream` de `mssql` y escribe el CSV a medida que llegan las filas, sin cargar todo en memoria. El proxy del frontend reenvía el flujo sin acumularlo.
+- Orden: `CodigoPT`, `SortPath`. Incluye la fila del nivel 1 de cada producto, con sus totales.
+
+Columnas:
+
+| Encabezado | Columna |
+|---|---|
+| Código producto | `CodigoPT` |
+| Producto | `Descripcion` del nivel 1 del mismo `CodigoPT` |
+| Nivel | `Nivel` |
+| Código | `Codigo` |
+| Descripción | `Descripcion` |
+| UM | `UnidadMedida` |
+| Bodega | `Bodega` |
+| Clasificación | `Clasificacion` |
+| Cantidad | `Cantidad` |
+| Costo unitario | `Costo_Unitario` |
+| Costo MP | `Costo_Mp` |
+| Costo MO | `Costo_Mo` |
+| Costo CIF | `Costo_Cif` |
+| Costo total | `Costo_Total` |
+| Alerta | `Alerta` |
+| Fecha de carga | `FechaCarga` |
+
+Errores: si la consulta falla antes de enviar la primera fila, 502 como en los demás endpoints. Si falla a mitad del flujo, la API corta la conexión y el navegador marca la descarga como fallida; el error queda en el log de la API.
 
 Consulta de apoyo para fijar el tope de líneas (solo lectura):
 
