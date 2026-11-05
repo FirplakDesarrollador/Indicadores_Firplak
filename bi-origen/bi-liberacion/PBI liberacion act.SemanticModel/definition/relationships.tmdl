@@ -1,0 +1,43 @@
+relationship 77d8d7e9-d622-4bd1-9050-a7b34fce7fb7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: BD.'Fecha Prometida de Entrega'
+	toColumn: LocalDateTable_320e3a86-6292-4e16-8aa2-f6900e0f878b.Date
+
+relationship 3d006df3-085d-4699-9f64-b0c3c74a94ca
+	joinOnDateBehavior: datePartOnly
+	fromColumn: BD.'Fecha de Actualización'
+	toColumn: LocalDateTable_90109db5-0a88-4420-95e2-ddd92fdd4ec2.Date
+
+relationship 649d258a-c09d-4231-a727-706772847da7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: BD.'Fecha de Contabilización'
+	toColumn: LocalDateTable_c210c96d-9ba9-4eb6-b6d2-b7958c27136f.Date
+
+relationship 14077af6-1e14-42e8-9088-15da22bdc4b5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: BD.'Fecha Prometida de Entrega Ítem'
+	toColumn: LocalDateTable_f4895507-97b8-459c-ab51-62e45a47f3aa.Date
+
+relationship 43a509e7-3ea3-4c08-b87c-673f43e97646
+	joinOnDateBehavior: datePartOnly
+	fromColumn: BD.'Fecha Recomendada de Entrega'
+	toColumn: LocalDateTable_22a055b8-bbd9-4150-9da4-84270b06a727.Date
+
+relationship 8a1b42c5-fce6-40b5-8fcb-bc887112de45
+	fromColumn: RazonesIncumplimiento.'No Orden'
+	toColumn: BD.'Código OP'
+
+relationship 492453bd-5248-4240-86df-205ffa0016ed
+	joinOnDateBehavior: datePartOnly
+	fromColumn: BD.'Fecha Real de Liberación'
+	toColumn: LocalDateTable_d350f898-7ed7-47c8-895d-62d87c4f0ed1.Date
+
+relationship 6da71417-bf55-4608-bff7-3f25795f68f4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calendario.Fecha
+	toColumn: LocalDateTable_0c833e56-7e08-4d73-9a94-dcdccf5f437e.Date
+
+relationship 34013ee9-d105-96c2-a192-c80b40809517
+	fromColumn: BD.'Fecha Recomendada de Liberación'
+	toColumn: Calendario.Fecha
+

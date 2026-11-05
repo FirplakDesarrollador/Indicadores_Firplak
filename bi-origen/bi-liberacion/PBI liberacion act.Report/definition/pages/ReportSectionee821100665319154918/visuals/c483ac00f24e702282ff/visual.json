@@ -1,0 +1,187 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c483ac00f24e702282ff",
+  "position": {
+    "x": 34.439461883408072,
+    "y": 79.899551569506727,
+    "z": 3000,
+    "height": 448.55229547808074,
+    "width": 380.15602347255776,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BD"
+                    }
+                  },
+                  "Property": "Código OP"
+                }
+              },
+              "queryRef": "BD.Código OP",
+              "nativeQueryRef": "Código OP"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BD"
+                    }
+                  },
+                  "Property": "Descripción de SKU"
+                }
+              },
+              "queryRef": "BD.Descripción de SKU",
+              "nativeQueryRef": "Descripción de SKU"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RazonesIncumplimiento"
+                    }
+                  },
+                  "Property": "OBSERVACIONES PLANEACIÓN"
+                }
+              },
+              "queryRef": "RazonesIncumplimiento.OBSERVACIONES PLANEACIÓN",
+              "nativeQueryRef": "OBSERVACIONES PLANEACIÓN"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BD"
+                    }
+                  },
+                  "Property": "Fecha Recomendada de Liberación"
+                }
+              },
+              "queryRef": "BD.Fecha Recomendada de Liberación",
+              "nativeQueryRef": "Fecha Recomendada de Liberación"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "BD"
+                    }
+                  },
+                  "Property": "Tipo"
+                }
+              },
+              "queryRef": "BD.Tipo",
+              "nativeQueryRef": "Tipo"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "BD"
+                  }
+                },
+                "Property": "Descripción de SKU"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "3a9105851c080265c0ca",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "RazonesIncumplimiento"
+              }
+            },
+            "Property": "OBSERVACIONES PLANEACIÓN"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "r",
+              "Entity": "RazonesIncumplimiento",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Not": {
+                  "Expression": {
+                    "In": {
+                      "Expressions": [
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "r"
+                              }
+                            },
+                            "Property": "OBSERVACIONES PLANEACIÓN"
+                          }
+                        }
+                      ],
+                      "Values": [
+                        [
+                          {
+                            "Literal": {
+                              "Value": "'CUMPLE'"
+                            }
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "objects": {
+          "general": [
+            {
+              "properties": {
+                "isInvertedSelectionMode": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "true"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

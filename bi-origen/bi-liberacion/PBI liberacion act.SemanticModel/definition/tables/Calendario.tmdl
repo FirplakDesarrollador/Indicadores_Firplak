@@ -1,0 +1,54 @@
+table Calendario
+	lineageTag: 8f4224d5-0188-4852-9ba8-4f80285cf1a9
+
+	column Fecha
+		formatString: General Date
+		lineageTag: 9d638d6b-33ff-465d-9717-ec735f5ca3e1
+		summarizeBy: none
+		sourceColumn: [Date]
+
+		variation Variación
+			isDefault
+			relationship: 6da71417-bf55-4608-bff7-3f25795f68f4
+			defaultHierarchy: LocalDateTable_0c833e56-7e08-4d73-9a94-dcdccf5f437e.'Jerarquía de fechas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Num = MONTH(Calendario[Fecha])
+		formatString: 0
+		lineageTag: 7fd86b5e-bc82-4e2e-a351-e5cf42f6dd9d
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Año = YEAR(Calendario[Fecha])
+		dataType: string
+		lineageTag: f8ea03ef-c249-4cfb-a569-27d19258fd85
+		summarizeBy: none
+
+		changedProperty = DataType
+
+		changedProperty = FormatString
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Text =
+			SWITCH(Calendario[Mes_Num], 1, "Ene", 2, "Feb", 3, "Mar", 4, "Abr"
+			
+			, 5, "May", 6, "Jun", 7, "Jul", 8, "Ago"
+			
+			, 9, "Sep", 10, "Oct", 11, "Nov", 12, "Dic")
+		lineageTag: c93e2628-eda2-4642-9cd9-99afc9c5ac9a
+		summarizeBy: none
+		sortByColumn: Mes_Num
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendario-54f7873c-b494-498c-869f-180cfee43c34 = calculated
+		mode: import
+		source = CALENDAR(MIN(BD[Fecha Recomendada de Liberación]),DATE(2026,12,31))
+
+	annotation PBI_Id = c89768085a954e33b9d07b510919bc06
+

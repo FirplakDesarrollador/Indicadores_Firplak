@@ -1,0 +1,225 @@
+expression 'Errores en Consulta1' =
+		let
+		Origen = BD,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"Código OP", "Tipo", "SKU", "Destino", "Fecha Prometida de Entrega", "Fecha Real de Liberación", "Familia de Producción", "Cantidad Total", "Cantidad Pendiente", "Fecha de Actualización", "Num. Lote", "Descripción de SKU", "Estado", "Fecha de Contabilización", "Cantidad Total Item", "Cantidad Pendiente Item", "Linea", "Fecha Prometida de Entrega Ítem", "Fecha Recomendada de Liberación", "Fecha Recomendada de Entrega", "Color Recomendado", "Costo Unitario", "Planta", "CumplimientoLiberacion"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "Código OP", "Tipo", "SKU", "Destino", "Fecha Prometida de Entrega", "Fecha Real de Liberación", "Familia de Producción", "Cantidad Total", "Cantidad Pendiente", "Fecha de Actualización", "Num. Lote", "Descripción de SKU", "Estado", "Fecha de Contabilización", "Cantidad Total Item", "Cantidad Pendiente Item", "Linea", "Fecha Prometida de Entrega Ítem", "Fecha Recomendada de Liberación", "Fecha Recomendada de Entrega", "Color Recomendado", "Costo Unitario", "Planta", "CumplimientoLiberacion"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: c4d16d9a-5bca-4398-b552-cbce52e0e2dc
+	queryGroup: 'Errores en las consultas: 23/03/2022 10:57:38 a  m'
+
+	annotation PBI_ResultType = Exception
+
+expression 'Errores en RazonesIncumplimiento' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "Columna1"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "Columna1"}),
+		    #"Filas filtradas" = Table.SelectRows(#"Columnas reordenadas", each true)
+		in
+		  #"Filas filtradas"
+	lineageTag: 90ef3676-0703-4eef-9aac-0bf29b2d340d
+	queryGroup: 'Errores en las consultas: 4/04/2022 11:29:56 a  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+expression 'Errores en RazonesIncumplimiento (2)' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "Columna1"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "Columna1"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: 9741e66a-64d4-4e50-8aab-48e6f8baffe7
+	queryGroup: 'Errores en las consultas: 4/04/2022 4:45:16 p  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+expression 'Errores en RazonesIncumplimiento (3)' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "Columna1", "Columna2"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "Columna1", "Columna2"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: a355cda7-3e3c-4efb-8a11-01b3a413b92c
+	queryGroup: 'Errores en las consultas: 5/02/2024 9:35:29 a  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression 'Errores en RazonesIncumplimiento (4)' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "Columna1", "Columna2"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "Columna1", "Columna2"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: be0be26d-1403-4bb8-ba99-245fd10964d7
+	queryGroup: 'Errores en las consultas: 5/02/2024 9:43:30 a  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression 'Errores en RazonesIncumplimiento (5)' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: 7f5a8ff4-bcf5-46d7-babf-5ac467045fba
+	queryGroup: 'Errores en las consultas: 16/09/2025 11:50:05 a  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression 'Errores en RazonesIncumplimiento (6)' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: 6b4a7d22-e6ee-41df-bd8b-91206e94ab49
+	queryGroup: 'Errores en las consultas: 7/10/2025 11:00:49 a  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression 'Errores en RazonesIncumplimiento (7)' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: 58453355-4dac-4d3a-a75c-68c94d96cda9
+	queryGroup: 'Errores en las consultas: 7/10/2025 11:52:07 a  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression 'Errores en RazonesIncumplimiento (8)' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: 2ab27844-0051-47f4-91c4-fa363a16d282
+	queryGroup: 'Errores en las consultas: 8/10/2025 11:27:11 a  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+
+expression 'Errores en RazonesIncumplimiento (9)' =
+		let
+		Origen = RazonesIncumplimiento,
+		  #"Errores de coincidencia detectados" = let
+		    tableWithOnlyPrimitiveTypes = Table.SelectColumns(Origen, Table.ColumnsOfType(Origen, {type nullable number, type nullable text, type nullable logical, type nullable date, type nullable datetime, type nullable datetimezone, type nullable time, type nullable duration})),
+		    recordTypeFields = Type.RecordFields(Type.TableRow(Value.Type(tableWithOnlyPrimitiveTypes))),
+		    fieldNames = Record.FieldNames(recordTypeFields),
+		    fieldTypes = List.Transform(Record.ToList(recordTypeFields), each [Type]),
+		    pairs = List.Transform(List.Positions(fieldNames), (i) => {fieldNames{i}, (v) => if v = null or Value.Is(v, fieldTypes{i}) then v else error [Message = "El tipo del valor no coincide con el tipo de la columna.", Detail = v], fieldTypes{i}})
+		in
+		    Table.TransformColumns(Origen, pairs),
+		  #"Índice agregado" = Table.AddIndexColumn(#"Errores de coincidencia detectados", "Número de fila" ,1),
+		  #"Conservar errores" = Table.SelectRowsWithErrors(#"Índice agregado", {"No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1", "Columna2"}),
+		  #"Columnas reordenadas" = Table.ReorderColumns(#"Conservar errores", {"Número de fila", "No Orden", "OBSERVACIONES PLANEACIÓN", "COMENTARIOS", "FECHA", "Columna1", "Columna2"})
+		in
+		  #"Columnas reordenadas"
+	lineageTag: dcf886c9-6d39-410d-9d63-cad951eba475
+	queryGroup: 'Errores en las consultas: 24/11/2025 11:26:17 a  m'
+
+	annotation PBI_NavigationStepName = Navegación
+
+	annotation PBI_ResultType = Table
+

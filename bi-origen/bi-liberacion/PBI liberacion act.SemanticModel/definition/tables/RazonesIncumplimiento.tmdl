@@ -1,0 +1,57 @@
+table RazonesIncumplimiento
+	lineageTag: 9311f49f-6e28-431e-98ba-b11b17a9bb64
+
+	measure TOTAL_RAZONES = COUNTROWS(RazonesIncumplimiento)
+		formatString: 0
+		lineageTag: f538cade-02b3-4455-a0d7-3946ab400d9e
+
+	column 'No Orden'
+		dataType: double
+		lineageTag: 596b30e2-3ca4-4ee2-b59c-6e79822bc9d6
+		summarizeBy: none
+		sourceColumn: No Orden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'OBSERVACIONES PLANEACIÓN'
+		dataType: string
+		lineageTag: ac5430bb-6448-45da-9799-4bf8061b733a
+		summarizeBy: none
+		sourceColumn: OBSERVACIONES PLANEACIÓN
+
+		annotation SummarizationSetBy = User
+
+	column COMENTARIOS
+		dataType: string
+		lineageTag: faa220cf-d814-41d9-8e2f-8d33e323bedc
+		summarizeBy: none
+		sourceColumn: COMENTARIOS
+
+		annotation SummarizationSetBy = Automatic
+
+	column FECHA
+		dataType: string
+		lineageTag: c73f3568-f40c-400d-93a7-d4133d362b91
+		summarizeBy: none
+		sourceColumn: FECHA
+
+		annotation SummarizationSetBy = Automatic
+
+	partition RazonesIncumplimiento-e46e52bc-5e8c-4735-b88a-59aaf4becb15 = m
+		mode: import
+		source =
+				let
+				    Origen = SharePoint.Files("https://firplaksa.sharepoint.com/sites/LOGSTICASEGUIMIENTO", [ApiVersion = 15]),
+				    #"Filas ordenadas" = Table.Sort(Origen,{{"Name", Order.Descending}}),
+				    #"Razones incumplimiento lib xlsx_https://firplaksa sharepoint com/sites/LOGSTICASEGUIMIENTO/Shared Documents/07  PLANEACIÓN DE PXN Y ABASTECIMIENTO PTC/1  PLANEACIÓN DE PRODUCCIÓN/" = #"Filas ordenadas"{[Name="Razones incumplimiento lib.xlsx",#"Folder Path"="https://firplaksa.sharepoint.com/sites/LOGSTICASEGUIMIENTO/Shared Documents/07. PLANEACIÓN DE PXN Y ABASTECIMIENTO PTC/1. PLANEACIÓN DE PRODUCCIÓN/"]}[Content],
+				    #"Libro de Excel importado" = Excel.Workbook(#"Razones incumplimiento lib xlsx_https://firplaksa sharepoint com/sites/LOGSTICASEGUIMIENTO/Shared Documents/07  PLANEACIÓN DE PXN Y ABASTECIMIENTO PTC/1  PLANEACIÓN DE PRODUCCIÓN/"),
+				    Obs_Plan_Table = #"Libro de Excel importado"{[Item="Obs_Plan",Kind="Table"]}[Data]
+				in
+				    Obs_Plan_Table
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navegación
+

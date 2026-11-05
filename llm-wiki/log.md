@@ -363,3 +363,23 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - **Power BI:** retiro programado para el 2026-11-06; hasta entonces queda en paralelo como respaldo.
 - **Rollback:** está en la sección 7 de [la ficha](bi/notas-credito.md), separado para la API, el frontend y el SP.
 - La ficha pasa a `status: migrado` y `fase: 7`.
+
+## [2026-11-03] bi | Liberación: inventario y análisis (fases 0 y 1)
+
+- Nueva ficha [Liberación](bi/liberacion.md), a partir del proyecto `bi-origen/bi-liberacion/PBI liberacion act.pbip`. Dueño de negocio: Logística; desarrollador responsable: Milton Rendón; prioridad media; uso diario. Rama `bi/liberacion` en este repositorio y en `reporting-api`.
+- Se agregó `bi-origen/bi-liberacion/.gitignore` para no subir `.pbi/cache.abf` ni `.pbi/localSettings.json`.
+- Hallazgos: la tabla principal sale de `Planos_Symphony.dbo.Indicador_Liberacion` (sin documentar aún) y las razones de incumplimiento de un Excel en SharePoint, que la API no puede leer. El calendario del BI termina el 2026-12-31.
+- `pendiente`: consultas de validación del desarrollador y respuestas de Logística a las 10 preguntas de la ficha.
+
+## [2026-11-04] bi | Liberación: resultados de las consultas de validación
+
+- `Planos_Symphony.dbo.Indicador_Liberacion` es una tabla con una fila por OP (30 323), desde el 2025-07-10. La escriben los SP `FPK_INDICADOR_LIBERACION` y `FPK_INDICADOR_LIBERACION_OPTIMIZADO` y la actualiza el job `Actualizacion Indicador Liberacion.Subplán_1`.
+- Sus 23 columnas son `nvarchar`, incluidas las fechas: es el punto a resolver en la fase 2.
+- Resultados y consultas siguientes (6 y 7: definición de los SP y horario del job) en [la ficha](bi/liberacion.md#resultados-ejecutadas-por-el-desarrollador-el-2026-11-04). Se agregaron las preguntas 11 (tipo O/S) y 12 (historia) para Logística.
+
+## [2026-11-04] bi | Liberación: análisis del SP de carga
+
+- El job ejecuta `Planos_Symphony.dbo.FPK_INDICADOR_LIBERACION` (lunes a viernes, 17:00, unos 15 s). Recalcula todo desde SAP (`OWOR`, `ORDR`/`RDR1`, amortiguadores, días de distribución y días no laborables) y hace `TRUNCATE` + `INSERT`, con una ventana de 365 días sobre la fecha prometida: la historia se pierde y los meses cerrados pueden cambiar.
+- `FPK_INDICADOR_LIBERACION_OPTIMIZADO` es una copia que escribe en `Indicador_Liberacion_Prueba`; no interviene en el BI.
+- Propuesta para la fase 2 (`pendiente` aprobación): no tocar el SP actual y agregar uno nuevo que copie a una tabla tipada con `MERGE`, para conservar historia. Detalle en [la ficha](bi/liberacion.md#cómo-se-carga-indicador_liberacion-código-compartido-por-el-desarrollador-2026-11-04).
+- Pregunta 11 resuelta en parte (O = `STANDARD`, S = `STOCK`); se agregó la pregunta 14 (regla de la fecha recomendada) para Logística.
