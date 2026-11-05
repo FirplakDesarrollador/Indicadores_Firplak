@@ -532,8 +532,13 @@ Implementado el 2026-11-05 en `reporting-api`, rama `bi/costo-actual-pt`, commit
 - Archivos tocados en `reporting-api`: `src/types.ts`, `src/db.ts` (`productCostSource`, `getExportPool`, `getProductCostReport`, `getProductCostExportInfo`, `openProductCostExport`), `src/server.ts` (rutas, `productCostFiltersFrom`, `sendProductCostExport`), `README.md` y `.env.example`.
 - Variables nuevas en `.env.example`: `REPORT_COSTO_PT_TABLE_SCHEMA=dbo`, `REPORT_COSTO_PT_TABLE=Informe_costo_pt` y `REPORT_DB_EXPORT_TIMEOUT_MS=600000`.
 - Verificación: `npm run build` sin errores. SQL revisado a mano: 8 `SELECT` leídos como recordsets 0 a 7 en el principal y 2 en la información de la descarga. Escapes de `LIKE`, CSV y BOM probados con un script local.
-- Paquete: `reporting-api-dist-a28da32.zip`, en la carpeta padre de los repositorios.
-- Prueba contra la base: `pendiente` (desarrollador).
+- Paquete: `reporting-api-dist-aeb3f5b.zip` (reemplaza a `a28da32`), en la carpeta padre de los repositorios.
+- Prueba contra la base (desarrollador, 2026-11-05, servidor `127.0.0.1:8090`, versión `a28da32`):
+  - Búsqueda `search=CBAN12`: devuelve `CBAN12-0027-000-0406`. OK.
+  - Producto `CBAN12-0027-000-0406`: 39 líneas. OK. El CSV del producto trae un total de 235.170,505, 1,20 menos que el 2026-11-04 por un cambio del costo promedio en SAP (la carga es horaria).
+  - Descarga del producto: encabezado y filas correctos, coma decimal y tildes bien.
+  - Descarga completa: 104,1 MB. Duración `pendiente`.
+  - Corrección `aeb3f5b`: `loadedAt` salía en UTC (`15:05:00Z`) por el estilo 127 de `CONVERT`; con el 126 conserva el desfase (`10:05:00-05:00`) y el nombre del archivo usa la hora local.
 
 ## 5. Dashboard
 

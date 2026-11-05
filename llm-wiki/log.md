@@ -454,3 +454,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Contrato aprobado por Daniel Jimenez. En `reporting-api`, rama `bi/costo-actual-pt` (desde `bi/notas-credito-2`), commit `a28da32`: `GET /api/v1/costo-actual-pt` y la descarga `GET /api/v1/costo-actual-pt/export` en CSV con streaming. Compila sin errores.
 - Variables nuevas: `REPORT_COSTO_PT_TABLE_SCHEMA`, `REPORT_COSTO_PT_TABLE` y `REPORT_DB_EXPORT_TIMEOUT_MS`. Paquete `reporting-api-dist-a28da32.zip`.
 - Pendiente: la prueba contra la base y el despliegue en el servidor.
+
+## [2026-11-05] fix | Costo actual de PT: prueba del endpoint y hora de carga
+
+- Prueba en el servidor: búsqueda, producto y descargas correctas. La descarga completa pesa 104,1 MB.
+- `loadedAt` salía en UTC por el estilo 127 de `CONVERT`; se cambió al 126 para conservar el desfase (commit `aeb3f5b` en `reporting-api`, paquete `reporting-api-dist-aeb3f5b.zip`).
