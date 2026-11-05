@@ -1,4 +1,4 @@
-import { FileMinus, ShieldCheck, Table2, TrendingUp, type LucideIcon } from "lucide-react";
+import { Boxes, FileMinus, ShieldCheck, Table2, TrendingUp, type LucideIcon } from "lucide-react";
 
 export type DashboardNavItem = { href: string; label: string; icon: LucideIcon };
 export type DashboardNavGroup = { label: string; items: DashboardNavItem[] };
@@ -12,6 +12,11 @@ export const billingNavigation: DashboardNavGroup[] = [
 export const creditNoteNavigation: DashboardNavGroup[] = [
   { label: "MENÚ PRINCIPAL", items: [{ href: "/notas-credito", label: "Notas crédito", icon: FileMinus }] },
   { label: "ANÁLISIS", items: [{ href: "/notas-credito/detalle", label: "Detalle de notas crédito", icon: Table2 }] },
+];
+
+// Costo de PT tiene una sola vista: el detalle es la lista de materiales del producto elegido.
+export const productCostNavigation: DashboardNavGroup[] = [
+  { label: "MENÚ PRINCIPAL", items: [{ href: "/costo-actual-pt", label: "Costo de producto", icon: Boxes }] },
 ];
 
 export const adminNavigation: DashboardNavGroup[] = [

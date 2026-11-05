@@ -363,3 +363,115 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - **Power BI:** retiro programado para el 2026-11-06; hasta entonces queda en paralelo como respaldo.
 - **Rollback:** está en la sección 7 de [la ficha](bi/notas-credito.md), separado para la API, el frontend y el SP.
 - La ficha pasa a `status: migrado` y `fase: 7`.
+
+## [2026-11-04] bi | Costo actual de producto terminado: inventario y análisis (fases 0 y 1)
+
+- Ficha nueva: [`bi/costo-actual-pt.md`](bi/costo-actual-pt.md). El dueño de negocio es Contabilidad, la prioridad es alta y el uso es diario. Rama `bi/costo-actual-pt`.
+- Fuente: proyecto `.pbip` en `bi-origen/bi-costo-actual-pt/`. Es la explosión de la lista de materiales (4 niveles) desde SAP `FIRPLAK_SA`, con costo de MP, MO y CIF.
+- **Decisión del desarrollador:** la migración usa [`query-optimizado.sql`](../bi-origen/bi-costo-actual-pt/query-optimizado.sql), sin cursores y con reglas corregidas, en lugar del SQL del Power BI. Las diferencias de reglas (D1–D8) están en la ficha y afectarán la conciliación.
+- Propuesta: tabla `Informe_costo_pt` con **carga completa** diaria, no incremental (nombre y horario pendientes).
+- Pendiente: la validación de Contabilidad (preguntas P1–P9) y los resultados de las consultas V1–V7.
+
+## [2026-11-04] bi | Costo actual de producto terminado: resultados de validación V1–V6
+
+- El query optimizado tarda 33 s y devuelve 449.018 filas, así que la carga completa diaria es viable.
+- D1 y D7 no tienen efecto: `validFor` y `frozenFor` son complementarios, y no hay artículos que sean MO y CIF a la vez.
+- Hallazgos para Contabilidad: 3.421 productos tienen listas de más de 4 niveles (P10) y 13.019 líneas no tienen costo en SAP (P11). Las consultas de seguimiento V4b y V5b y la comparación V7 de tres productos están en la [ficha](bi/costo-actual-pt.md#resultados-ejecutados-por-el-desarrollador-el-2026-11-04).
+
+## [2026-11-04] bi | Costo actual de producto terminado: V4b, V5b y primer producto de V7
+
+- V4b: solo 1 producto llega al nivel 6 (24 líneas). Explotar todos los niveles (P10) es viable.
+- V5b: todas las hojas sin costo son MP. 12.055 líneas son de artículos que no son de inventario y 982 líneas (630 artículos) son de inventario sin costo en SAP. P11 queda reformulada sobre esos dos grupos.
+- V7: `CBAN12-0027-000-0406` (un nivel, con MO y CIF) cuadra exacto con el Power BI: total 235.171,705. Falta comparar `VHPT09-0006-073-0100` y `CBAN05-0002-000-0438`, que no salieron en la ejecución.
+
+## [2026-11-04] bi | Costo actual de producto terminado: comparación V7 de los tres productos
+
+- `VHPT09-0006-073-0100` y `CBAN05-0002-000-0438` están inactivos y se reemplazaron por `CBAN05-0001-000-0438` y `CMPD04-0268-000-0000`.
+- `CBAN05-0001`: el query da 1.817,70 más que el Power BI. El Power BI deja en 0 la MP de un canto que sí tiene costo unitario (regla D3), y el query lo corrige.
+- `CMPD04-0268`: MO y CIF iguales. La MP difiere en 2.094,88 en cuatro hojas del nivel 3 con distinto costo unitario. Puede deberse a D5/D6 o a un cambio del costo promedio desde la última actualización del Power BI. La consulta V7b queda pendiente.
+
+## [2026-11-04] bi | Costo actual de producto terminado: causa de la diferencia de `CMPD04-0268` verificada
+
+- El desarrollador confirma un error conocido del SQL original: en las hojas del nivel 3 no consulta la bodega alternativa y se queda con el costo de la bodega de la lista (D3/D5). El query optimizado lo corrige.
+- Se retira la consulta V7b. La validación con datos (V1–V7) queda completa. Para cerrar la fase 1 falta la validación de Contabilidad (P1–P11).
+
+## [2026-11-04] bi | Costo actual de producto terminado: respuestas de Contabilidad P1, P7, P10 y P11
+
+- P1: se aceptan las reglas corregidas del query optimizado.
+- P7: se incluyen los semielaborados (todo artículo activo con lista de materiales).
+- P10: se desglosan todos los niveles. Es una diferencia nueva respecto del query optimizado (**D9**): el SP de la fase 2 hará la explosión recursiva con control de ciclos.
+- P11: las líneas sin costo quedan en 0 y se controlan con la columna `Alerta`, que el portal mostrará.
+- Pendiente: P2 a P6, el indicador de P8 y P9.
+
+## [2026-11-04] bi | Costo actual de producto terminado: respuestas de Contabilidad P2 a P9
+
+- P2: los artículos que son MO y CIF a la vez no deberían existir. El SP los cuenta una vez como MO y los marca con la alerta `MO Y CIF A LA VEZ`.
+- P3: la tabla muestra MP, MO, CIF y Total. P4: la torta excluye el CIF por clasificación de SAP, no por texto.
+- P5: se decide en el dashboard. P8: se muestra `Alerta` y un indicador de líneas con alerta, que resalte `ITEM INACTIVO`. P9: solo costo actual, sin historia.
+- Pendiente: aclarar P6 (tarjetas sin producto seleccionado) y confirmar que la mano de obra queda en la torta.
+
+## [2026-11-04] bi | Costo actual de producto terminado: fase 1 cerrada
+
+- P6: las tarjetas solo se muestran con un producto seleccionado (opción a). P4: confirmado que la mano de obra queda en la torta.
+- Contabilidad aprobó las reglas por medio del desarrollador. Solo queda P5, que se decide en la fase 5. Sigue la fase 2 (tabla y SP).
+
+## [2026-11-04] bi | Costo actual de producto terminado: fase 2, script de tabla y SP
+
+- Script nuevo: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../sql/costo-actual-pt/01_informe_costo_pt.sql). Crea `Informe_costo_pt`, `Informe_costo_pt_Carga` y `sp_Actualizar_Informe_costo_pt`, que desglosa todos los niveles (D9) con tope de 15 y control de ciclos.
+- Precisión del desarrollador sobre P2: los artículos MO+CIF **no se costean** (costo 0) y se marcan con la alerta `MO Y CIF A LA VEZ`.
+- Carga completa **cada hora** con intercambio por `ALTER TABLE … SWITCH`. Bitácora en `dbo.Cargas_Log`, existente.
+- Pendiente: que el desarrollador verifique las columnas de `Cargas_Log`, ejecute el script, la primera carga y las validaciones 4.1–4.6, y cree el job.
+
+## [2026-11-04] fix | Costo actual de PT: líneas de ITT1 sin código
+
+- La primera carga falló con el error 515 (`NULL` en `#BOM.Codigo`): hay líneas de `ITT1` sin `Code`, probablemente líneas de texto.
+- El SP las excluye del desglose. No tienen costo, así que los totales no cambian frente al query optimizado; solo cambia el número de filas. Se agregó una consulta de diagnóstico por `ITT1.Type`.
+
+## [2026-11-04] fix | Costo actual de PT: rendimiento de la explosión
+
+- La primera carga llevaba más de 9 minutos (1.145 s de CPU) en el `INSERT` del `WHILE`, con `#BOM` ya en las ~463.000 filas esperadas. Causa: el plan compilado con el nivel 1 se reutilizaba sobre todo `#BOM`.
+- Corrección: tabla `#Frontera` con solo los encabezados del nivel en curso y `OPTION (RECOMPILE)` en el `INSERT` del desglose, el `INSERT` final y el `UPDATE` de totales.
+- Segunda corrección (2026-11-04): la frontera no bastó (la carga anterior tardó 10 min). Causa probable: `LEFT JOIN #ConLista` (varchar) contra `ITT1.Code` (nvarchar en SAP B1) forzaba una conversión implícita y un recorrido completo de `#ConLista` por cada línea. Se reemplazó por `EXISTS` sobre `ITT1`, como en el query optimizado. Tipos de `ITT1`: `pendiente` de confirmar.
+
+## [2026-11-04] bi | Costo actual de PT: primera carga validada y script del job
+
+- La carga final (`Cargas_Log` 1238) tarda 32 s e inserta 463.592 filas: 11.253 productos y listas hasta el nivel 6. Validaciones 4.1–4.5 correctas: el nivel 1 suma sus líneas, no hay MO+CIF ni problemas de estructura, y los tres productos de V7 cuadran exacto.
+- Script del job: [`sql/costo-actual-pt/02_job_costo_pt.sql`](../sql/costo-actual-pt/02_job_costo_pt.sql), cada hora al minuto 05. Pendiente: crearlo y ver la primera ejecución programada.
+
+## [2026-11-04] bi | Costo actual de PT: fase 2 cerrada y contrato del endpoint propuesto
+
+- El job `BI - Costo PT carga completa` quedó creado y funcionando (desarrollador). Fase 2 cerrada.
+- Contrato propuesto para `GET /api/v1/costo-actual-pt` en la [ficha](bi/costo-actual-pt.md#3-contrato-del-endpoint): selección de un producto por `codigo`, búsqueda de productos con `search`, lista completa sin paginar, resumen de costos y alertas, y composición sin CIF. Sin periodo; `loadedAt` muestra la última carga. Pendiente la aprobación.
+
+## [2026-11-05] bi | Costo actual de PT: ajustes al contrato
+
+- Se mantienen las tarjetas de promedio del Power BI (`averageCost`, `averageCostWithoutOverhead`), visibles solo con un producto elegido.
+- Descarga nueva `GET /api/v1/costo-actual-pt/export` en CSV para Excel (UTF-8 con BOM, `;`, coma decimal), en streaming: todos los productos sin `codigo`, o solo el producto elegido.
+- El máximo real es de 331 líneas por producto; el tope de 5.000 del endpoint principal se mantiene.
+
+## [2026-11-05] bi | Costo actual de PT: endpoint implementado (fase 4)
+
+- Contrato aprobado por Daniel Jimenez. En `reporting-api`, rama `bi/costo-actual-pt` (desde `bi/notas-credito-2`), commit `a28da32`: `GET /api/v1/costo-actual-pt` y la descarga `GET /api/v1/costo-actual-pt/export` en CSV con streaming. Compila sin errores.
+- Variables nuevas: `REPORT_COSTO_PT_TABLE_SCHEMA`, `REPORT_COSTO_PT_TABLE` y `REPORT_DB_EXPORT_TIMEOUT_MS`. Paquete `reporting-api-dist-a28da32.zip`.
+- Pendiente: la prueba contra la base y el despliegue en el servidor.
+
+## [2026-11-05] fix | Costo actual de PT: prueba del endpoint y hora de carga
+
+- Prueba en el servidor: búsqueda, producto y descargas correctas. La descarga completa pesa 104,1 MB.
+- `loadedAt` salía en UTC por el estilo 127 de `CONVERT`; se cambió al 126 para conservar el desfase (commit `aeb3f5b` en `reporting-api`, paquete `reporting-api-dist-aeb3f5b.zip`).
+
+## [2026-11-05] bi | Costo actual de PT: fase 4 cerrada
+
+- Versión `aeb3f5b` desplegada en el servidor y verificada: resumen correcto, `loadedAt` con desfase `-05:00` y descarga completa de 104,1 MB en 16,2 s dentro del servidor.
+
+## [2026-11-05] bi | Costo actual de PT: dashboard (fase 5)
+
+- Página `/costo-actual-pt` con buscador de producto, tarjetas de costo, panel de alertas, composición sin CIF, lista de materiales en árbol y botón de descarga (todo o el producto elegido). Proxys `/api/costo-actual-pt` y `/api/costo-actual-pt/export` (streaming, `maxDuration = 300`).
+- `ShareList` pasa de notas crédito a `components/dashboard/` para compartirla.
+- Lint y build sin errores. Revisión visual a 375, 820 y 1440 px con una API falsa; se movieron las alertas debajo del componente para que la tabla quepa a 1440 px.
+- Pendiente: asignar permisos, probar con sesión real y probar la descarga completa a través de Vercel.
+
+## [2026-11-05] cambio | Costo actual de PT: sin tarjetas de promedio
+
+- A pedido del desarrollador se quitan las tarjetas "Costo promedio" y "Costo promedio sin CIF" del dashboard, porque con un producto elegido repetían el total. Quedan "Costo total" y "Costo sin CIF" en una cuadrícula de dos columnas.
+- La API no cambia: `summary.averageCost` y `averageCostWithoutOverhead` quedan sin uso en el portal.

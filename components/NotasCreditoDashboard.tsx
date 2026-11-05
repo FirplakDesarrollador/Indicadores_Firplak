@@ -20,6 +20,7 @@ import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Too
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import FilterSelect from "@/components/dashboard/FilterSelect";
 import { MetricCard, MetricSkeleton } from "@/components/dashboard/MetricCard";
+import ShareList from "@/components/dashboard/ShareList";
 import TablePager from "@/components/dashboard/TablePager";
 import { chartColors, chartTooltipStyle } from "@/lib/brand";
 import { readJsonPayload } from "@/lib/dashboard/fetch";
@@ -78,16 +79,6 @@ function monthLabel(year: number, month: number, withYear: boolean) {
   const name = new Intl.DateTimeFormat("es-CO", { month: "short" }).format(new Date(year, month - 1, 1)).replace(".", "");
   const label = name.charAt(0).toUpperCase() + name.slice(1);
   return withYear ? `${label} ${year}` : label;
-}
-
-// Barras horizontales con el peso de cada categoría sobre el total de notas (solo valores positivos).
-function ShareList({ items, emptyText }: { items: Array<{ name: string; value: number; detail?: string }>; emptyText: string }) {
-  const total = items.reduce((sum, item) => sum + Math.max(item.value, 0), 0) || 1;
-  if (!items.length) return <div className="billing-empty">{emptyText}</div>;
-  return <div className="billing-zone-list">{items.map((item) => {
-    const share = Math.max(item.value, 0) / total;
-    return <div className="billing-zone-row" key={item.name}><div className="billing-zone-label"><span title={item.name}>{item.name}</span><strong>{formatCompactCurrency(item.value)}</strong></div><div className="billing-progress"><span style={{ width: `${Math.round(share * 100)}%` }} /></div><small>{formatPercent(share)} de las notas{item.detail ? ` · ${item.detail}` : ""}</small></div>;
-  })}</div>;
 }
 
 function ChartTooltip({ active, payload, label, rows }: TooltipProps<number, string> & { rows: (data: Record<string, unknown>) => Array<[string, string]> }) {

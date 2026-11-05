@@ -1,4 +1,4 @@
-import { FileMinus, ReceiptText, type LucideIcon } from "lucide-react";
+import { Boxes, FileMinus, ReceiptText, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
 // Un informe nuevo no lo ve nadie hasta que un administrador lo asigna en /admin/permisos.
@@ -30,6 +30,16 @@ export const reports: ReportDefinition[] = [
     icon: FileMinus,
     pagePaths: ["/notas-credito"],
     apiPaths: ["/api/notas-credito"],
+  },
+  {
+    slug: "costo-actual-pt",
+    title: "Costo de producto terminado",
+    subtitle: "Costo actual en MP, MO y CIF por lista de materiales",
+    href: "/costo-actual-pt",
+    icon: Boxes,
+    pagePaths: ["/costo-actual-pt"],
+    // Incluye /api/costo-actual-pt/export (la descarga en CSV).
+    apiPaths: ["/api/costo-actual-pt"],
   },
 ];
 
