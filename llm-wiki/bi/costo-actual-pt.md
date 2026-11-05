@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 3
+fase: 4
 updated: 2026-11-04
 sources:
   - ../../bi-origen/bi-costo-actual-pt/
@@ -523,7 +523,7 @@ GROUP BY CodigoPT
 ORDER BY Lineas DESC;
 ```
 
-**Aprobación del contrato:** nombre — fecha — `pendiente`
+**Aprobación del contrato:** Daniel Jimenez — 2026-11-05 — aprobado (endpoint principal y descarga).
 
 ## 4. Endpoint
 
