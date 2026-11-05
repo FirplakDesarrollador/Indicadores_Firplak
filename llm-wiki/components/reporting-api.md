@@ -54,6 +54,15 @@ Agregado en la rama `bi/notas-credito` y desplegado en el servidor el 2026-10-27
 - Código: `getCreditNoteReport` en `src/db.ts` y `creditNoteFiltersFrom` en `src/server.ts`.
 - Reglas: [ficha de Notas crédito](../bi/notas-credito.md#3-contrato-del-endpoint).
 
+### `GET /api/v1/costo-actual-pt` y `/api/v1/costo-actual-pt/export`
+
+Agregados en la rama `bi/costo-actual-pt` (commit `a28da32`, creada desde `bi/notas-credito-2`). Despliegue `pendiente`. Consultan `Informe_costo_pt` (`REPORT_COSTO_PT_TABLE`), que el SP `sp_Actualizar_Informe_costo_pt` recalcula cada hora. Mismo Bearer token.
+
+- Principal: `codigo`, `search` y `alerta`. Sin periodo ni paginación: devuelve la lista de materiales completa del producto (tope de 5.000 líneas), el resumen de costos y alertas, los productos que coinciden con la búsqueda y `loadedAt`.
+- Descarga: CSV para Excel en español (UTF-8 con BOM, `;`, coma decimal), en streaming con `request.toReadableStream()` de `mssql` y contrapresión. Con `codigo`, un producto; sin él, todos. Usa un pool aparte con `REPORT_DB_EXPORT_TIMEOUT_MS` (10 min por defecto).
+- Código: `getProductCostReport`, `getProductCostExportInfo` y `openProductCostExport` en `src/db.ts`; `productCostFiltersFrom` y `sendProductCostExport` en `src/server.ts`.
+- Reglas: [ficha de Costo actual de PT](../bi/costo-actual-pt.md#3-contrato-del-endpoint).
+
 ## Configuración SQL
 
 ```env
@@ -66,6 +75,8 @@ REPORTING_API_TOKEN=<secreto>
 ```
 
 La tabla de entregas se configura con `REPORT_DELIVERIES_TABLE_SCHEMA=dbo` y `REPORT_DELIVERIES_TABLE=Informe_entregas`.
+
+La tabla de costo de PT se configura con `REPORT_COSTO_PT_TABLE_SCHEMA=dbo` y `REPORT_COSTO_PT_TABLE=Informe_costo_pt`. Las descargas usan `REPORT_DB_EXPORT_TIMEOUT_MS=600000`.
 
 El contrato SQL vigente usa `FechaContabilizacion`, `DocNum` y `TipoVentas` para fecha, documento y canal, respectivamente.
 

@@ -527,9 +527,13 @@ ORDER BY Lineas DESC;
 
 ## 4. Endpoint
 
-- Archivos tocados en `reporting-api`:
-- Variables nuevas en `.env.example`:
-- Prueba contra la base: fecha — resultado
+Implementado el 2026-11-05 en `reporting-api`, rama `bi/costo-actual-pt`, commit `a28da32`. La rama sale de `bi/notas-credito-2`, que tiene el endpoint de notas crédito ya desplegado y todavía no está en `main`: así el `dist/` nuevo no lo borra.
+
+- Archivos tocados en `reporting-api`: `src/types.ts`, `src/db.ts` (`productCostSource`, `getExportPool`, `getProductCostReport`, `getProductCostExportInfo`, `openProductCostExport`), `src/server.ts` (rutas, `productCostFiltersFrom`, `sendProductCostExport`), `README.md` y `.env.example`.
+- Variables nuevas en `.env.example`: `REPORT_COSTO_PT_TABLE_SCHEMA=dbo`, `REPORT_COSTO_PT_TABLE=Informe_costo_pt` y `REPORT_DB_EXPORT_TIMEOUT_MS=600000`.
+- Verificación: `npm run build` sin errores. SQL revisado a mano: 8 `SELECT` leídos como recordsets 0 a 7 en el principal y 2 en la información de la descarga. Escapes de `LIKE`, CSV y BOM probados con un script local.
+- Paquete: `reporting-api-dist-a28da32.zip`, en la carpeta padre de los repositorios.
+- Prueba contra la base: `pendiente` (desarrollador).
 
 ## 5. Dashboard
 

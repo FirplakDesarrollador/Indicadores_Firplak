@@ -448,3 +448,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Se mantienen las tarjetas de promedio del Power BI (`averageCost`, `averageCostWithoutOverhead`), visibles solo con un producto elegido.
 - Descarga nueva `GET /api/v1/costo-actual-pt/export` en CSV para Excel (UTF-8 con BOM, `;`, coma decimal), en streaming: todos los productos sin `codigo`, o solo el producto elegido.
 - El máximo real es de 331 líneas por producto; el tope de 5.000 del endpoint principal se mantiene.
+
+## [2026-11-05] bi | Costo actual de PT: endpoint implementado (fase 4)
+
+- Contrato aprobado por Daniel Jimenez. En `reporting-api`, rama `bi/costo-actual-pt` (desde `bi/notas-credito-2`), commit `a28da32`: `GET /api/v1/costo-actual-pt` y la descarga `GET /api/v1/costo-actual-pt/export` en CSV con streaming. Compila sin errores.
+- Variables nuevas: `REPORT_COSTO_PT_TABLE_SCHEMA`, `REPORT_COSTO_PT_TABLE` y `REPORT_DB_EXPORT_TIMEOUT_MS`. Paquete `reporting-api-dist-a28da32.zip`.
+- Pendiente: la prueba contra la base y el despliegue en el servidor.
