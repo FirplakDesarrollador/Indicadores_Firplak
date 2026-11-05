@@ -160,7 +160,7 @@ Preguntas para Contabilidad:
 - **P4.** La torta "sin CIF" excluye los componentes por el **texto** "CIF" en la descripción, no por su clasificación en SAP. ¿La excluimos por clasificación (`QryGroup40`)? ¿La mano de obra debe aparecer en la torta?
   - **Respuesta (2026-11-04):** sí. La torta excluye el CIF por su clasificación en SAP (`QryGroup40 = 'Y'`), no por el texto. La mano de obra se mantiene en la torta (confirmado).
 - **P5.** La tarjeta de arriba se titula "Promedio Costo Total sin CIF", pero muestra la **suma**. ¿Se renombra a "Costo total sin CIF"?
-  - **Respuesta (2026-11-04):** se decide al construir el dashboard (fase 5).
+  - **Respuesta (2026-11-05):** las cuatro tarjetas se titulan "Costo total", "Costo promedio", "Costo sin CIF" y "Costo promedio sin CIF" (aprobado por el desarrollador con el plan de la fase 5).
 - **P6.** Sin producto seleccionado, "Total Costo" suma el costo de **todos** los productos, una cifra sin sentido de negocio. ¿Las tarjetas se muestran solo con un producto seleccionado, o se reemplazan por el número de productos y el costo promedio?
   - **Respuesta (2026-11-04):** opción a. Las tarjetas solo se muestran con un producto seleccionado. Sin selección, el dashboard invita a elegir un producto.
 - **P7.** El universo incluye todo artículo con lista de materiales, también semielaborados y subensambles. ¿Se limita a producto terminado? Si es así, ¿con qué criterio de SAP (grupo de artículos, propiedad)?
