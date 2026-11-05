@@ -383,7 +383,7 @@ Validación (desarrollador, 2026-11-04):
 **Diferencias con el patrón de facturación**, porque el informe es una foto del costo de un producto y no una serie en el tiempo:
 
 - **Sin periodo:** no hay `anio`, `mes`, `fechaDesde`, `fechaHasta` ni `years` (P9). En su lugar, `loadedAt` indica la hora de la última carga (`MAX(FechaCarga)`), que el dashboard debe mostrar porque los datos se recalculan cada hora.
-- **Sin paginación de `rows`:** se devuelve la lista de materiales completa del producto elegido, en orden jerárquico, para que el frontend pueda armar el árbol. Hoy el promedio es de 41 líneas por producto; la API pone un tope de 5.000 líneas (`truncated: true` si se alcanza). Máximo real: `pendiente` (consulta abajo).
+- **Sin paginación de `rows`:** se devuelve la lista de materiales completa del producto elegido, en orden jerárquico, para que el frontend pueda armar el árbol. Hoy el promedio es de 41 líneas por producto; la API pone un tope de 5.000 líneas (`truncated: true` si se alcanza). Máximo real: 331 líneas (`VCOC03-0630-000-0001` y `VCOC03-0370-000-0001`, consulta del 2026-11-05), así que el tope deja un margen de 15 veces.
 - **Selector de productos por búsqueda:** son 11.253 productos, demasiados para un catálogo completo en cada respuesta. `filterOptions.products` devuelve hasta 50 coincidencias de `search`, como el buscador del `AttributeSlicer` del Power BI.
 
 ### Parámetros
