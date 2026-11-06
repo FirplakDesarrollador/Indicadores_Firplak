@@ -498,3 +498,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 ## [2026-11-06] cambio | Costo actual de PT: seis tarjetas de costo
 
 - A pedido del desarrollador, el dashboard muestra tarjetas separadas de MP, MO y CIF (con su participación en el total) y los totales: costo total, sin CIF (MP + MO) y sin MO (MP + CIF). "Sin MO" se calcula en el navegador con `totalCost - laborCost`; la API no cambia.
+
+## [2026-11-06] bi | Costo actual de PT: valores del Power BI de la muestra
+
+- Con la exportación "Lista de Materiales" del Power BI se comparan 6 productos: `CBAN12-0027`, `CMPD04-0268` y `CMPD04-0261` coinciden. `VHPT05-0015` difiere en +477.436,48 (D9). `VCOC03-0370` difiere en −54.770,47 y `VBAN33-0005` en −4.799,75, solo en MP (`pendiente` de C3).
+- `CMPD04-0268` coincide hoy y el 2026-11-04 no: confirma que H1 hace variar el resultado del Power BI entre actualizaciones.
+- La exportación llegó cortada; faltan los totales de 4 productos.
