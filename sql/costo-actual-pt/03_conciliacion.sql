@@ -137,6 +137,17 @@ LEFT JOIN FIRPLAK_SA.dbo.OITM i WITH (NOLOCK)
 WHERE l.CodigoPT = @Codigo
 ORDER BY l.SortPath;
 
+/* ───────────── C3b. Costo de un componente en todas las bodegas ─────────────
+   Sirve para encontrar de qué bodega sacó el Power BI un costo unitario que no coincide con la bodega
+   de la lista ni con MP-01. En el SQL original, las hojas del nivel 3 se costean con la bodega guardada
+   en @Bodega3_ (línea 331 de query-original-powerbi.sql), que puede venir de otro componente. */
+
+SELECT w.ItemCode, w.WhsCode, w.AvgPrice, w.OnHand
+FROM FIRPLAK_SA.dbo.OITW w WITH (NOLOCK)
+WHERE w.ItemCode IN (N'COMP02-0033-000-0000', N'COMP02-0027-000-0000', N'COMP02-0036-000-0000', N'CIPR01-0028-000-0000')
+  AND w.AvgPrice <> 0
+ORDER BY w.ItemCode, w.WhsCode;
+
 /* ───────────── C4. Comparación completa contra el query optimizado ─────────────
    Es la consulta 4.6 de 01_informe_costo_pt.sql. En la MISMA ventana de SSMS: ejecutar
    bi-origen/bi-costo-actual-pt/query-optimizado.sql sin su DROP TABLE final y luego la 4.6.

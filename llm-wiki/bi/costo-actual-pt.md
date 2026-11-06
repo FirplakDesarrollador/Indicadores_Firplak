@@ -316,6 +316,8 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
 
   **Causa verificada por el desarrollador (2026-11-04):** es un error conocido del SQL original, identificado al escribir el query optimizado. En estas hojas del nivel 3, el original no consulta la bodega alternativa (`MP-01`) y se queda con el costo que tiene el componente en la bodega de la lista de materiales. Corresponde a **D3/D5**, y el query optimizado lo corrige con la cascada de la regla 4.
 
+  **Precisión (2026-11-06, con la consulta C3 de la fase 6):** el efecto es el descrito, pero el mecanismo es otro. El portal usa el costo de la bodega de la lista (`MP-03`). El Power BI usó, en tres de las cuatro hojas, exactamente el costo de `MP-01`: tubo 2.562,83, varilla 4.508,07 y soldadura 16.134,45. En el [SQL original, línea 331](../../bi-origen/bi-costo-actual-pt/query-original-powerbi.sql), la hoja de este nivel se costea con `WhsCode = @Bodega3_`, que es la variable del nivel siguiente, y no con `@Bodega2_`, la bodega de su propia línea. `@Bodega3_` solo cambia cuando el cursor del nivel siguiente lee una fila, así que conserva la bodega de un componente anterior, que puede ser de otro producto. Si el artículo cuesta 0 en esa bodega, el original pasa a `MP-01`. La tuerca (293,14) no coincide con `MP-01` (197,16) y queda `pendiente` de verificar con la consulta C3b. El efecto encaja con D6: valores que se arrastran de otro componente.
+
   Este artículo es un herraje (semielaborado), no un producto terminado: es un ejemplo de lo que pregunta P7.
 
 
@@ -585,14 +587,24 @@ Plan aprobado por el desarrollador el 2026-11-06. Consultas de solo lectura: [`s
 
 ### Totales globales (C1)
 
-Hora de carga: `pendiente`. Hora de actualización del Power BI: `pendiente`.
+Hora de carga del portal: 2026-11-06 08:05:00. Hora de actualización del Power BI: `pendiente`.
 
-| Grupo | Fuente | Productos | Costo total | Costo sin CIF | Diferencia | Causa |
-|---|---|---|---|---|---|---|
-| Hasta 4 niveles | Portal | | | | | |
-| Más de 4 niveles | Portal | | | | | D9 |
-| Total | Portal | | | | | |
-| Total | Power BI | | | | | |
+| Grupo | Fuente | Productos | Costo total | Costo sin CIF |
+|---|---|---|---|---|
+| Hasta 4 niveles | Portal | 7.832 | 4.047.079.421,71 | 3.457.986.218,92 |
+| Más de 4 niveles | Portal | 3.444 | 3.018.572.802,94 | 2.542.680.261,28 |
+| Total | Portal | 11.276 | 7.065.652.224,66 | 6.000.666.480,20 |
+| Total | Power BI | `pendiente` | 6.959.525.480 (tarjeta "6.959.525,48 mil") | 5.918.759.760 (tarjeta "5.918.759,76 mil") |
+| **Diferencia** | Portal − Power BI | | **+106.126.744,66 (+1,52 %)** | **+81.906.720,20 (+1,38 %)** |
+
+El CIF del portal (1.064.985.744,46) supera al del Power BI en unos 24.220.024. Las tarjetas del Power BI están redondeadas a 10 pesos.
+
+**Cómo se reparte la diferencia (`pendiente` de C4):** el query optimizado aplica las reglas corregidas, pero corta en el nivel 4, igual que el Power BI. Con su total se separan las dos causas:
+
+- Portal − query optimizado = efecto de desglosar todos los niveles (D9; P2 hoy no tiene artículos).
+- Query optimizado − Power BI = efecto de las reglas corregidas (D1–D8, sobre todo D3, D5 y D6).
+
+El universo pasó de 11.244 productos (V2, 2026-11-04) a 11.276: son productos creados en SAP desde entonces.
 
 ### Muestra por producto (C2)
 
@@ -600,28 +612,28 @@ Los códigos de los casos 4 a 11 salen de C2.
 
 | # | Caso | Producto | Fuente | Costo total | Costo sin CIF | MP | MO | CIF | Diferencia | Causa (D#) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 1 | Un nivel con MO y CIF (V7) | `CBAN12-0027-000-0406` | Portal | | | | | | | |
+| 1 | Un nivel con MO y CIF (V7) | `CBAN12-0027-000-0406` | Portal | 235.170,51 | 124.378,51 | 91.818,51 | 32.560,00 | 110.792,00 | | |
 | | | | Power BI | | | | | | | |
-| 2 | Diferencia D3 (V7) | `CBAN05-0001-000-0438` | Portal | | | | | | | |
+| 2 | Diferencia D3 (V7); también tiene `SIN COSTO EN SAP` (caso 9) | `CBAN05-0001-000-0438` | Portal | 9.424,54 | 9.424,54 | 9.424,54 | 0,00 | 0,00 | | D3 esperada |
 | | | | Power BI | | | | | | | |
-| 3 | Tres niveles, D3/D5 (V7) | `CMPD04-0268-000-0000` | Portal | | | | | | | |
+| 3 | Tres niveles, D3/D5 (V7) | `CMPD04-0268-000-0000` | Portal | 99.590,90 | 72.806,90 | 53.846,90 | 18.960,00 | 26.784,00 | | H1 |
 | | | | Power BI | | | | | | | |
-| 4 | Un nivel, solo MP, sin alertas | | Portal | | | | | | | |
+| 4 | Un nivel, solo MP, sin alertas | `CBAN19-0001-000-0000` | Portal | 85.696,44 | 85.696,44 | 85.696,44 | 0,00 | 0,00 | | |
 | | | | Power BI | | | | | | | |
-| 5 | Hasta 4 niveles, con MO y CIF | | Portal | | | | | | | |
+| 5 | Hasta 4 niveles, con MO y CIF (3 niveles, 193 líneas) | `VBAN33-0005-000-1358` | Portal | 3.832.824,00 | 2.672.802,00 | 2.029.533,00 | 643.269,00 | 1.160.022,00 | | |
 | | | | Power BI | | | | | | | |
-| 6 | Más de 4 niveles | | Portal | | | | | | | |
+| 6 | Más de 4 niveles (6 niveles, 261 líneas) | `VHPT05-0015-000-0100` | Portal | 6.196.220,70 | 5.338.016,70 | 4.727.736,20 | 610.280,50 | 858.204,00 | | D9 esperada |
 | | | | Power BI | | | | | | | |
-| 7 | Hoja de nivel 2 sin costo en su bodega | | Portal | | | | | | | |
+| 7 | Hoja de nivel 2 sin costo en su bodega (1 línea) | `CEXH01-0008-000-0000` | Portal | 360.000,00 | 360.000,00 | 360.000,00 | 0,00 | 0,00 | | D3 esperada |
 | | | | Power BI | | | | | | | |
-| 8 | Con ítem inactivo | | Portal | | | | | | | |
+| 8 | Con ítem inactivo | `CMPD04-0130-000-0000` | Portal | 107.435,21 | 107.435,21 | 107.435,21 | 0,00 | 0,00 | | |
 | | | | Power BI | | | | | | | |
-| 9 | Con línea `SIN COSTO EN SAP` | | Portal | | | | | | | |
+| 10 | Semielaborado (P7, 4 niveles) | `CMPD04-0261-000-0000` | Portal | 146.060,60 | 101.331,32 | 69.668,12 | 31.663,20 | 44.729,28 | | |
 | | | | Power BI | | | | | | | |
-| 10 | Semielaborado (P7) | | Portal | | | | | | | |
+| 11 | El de más líneas (5 niveles, 330 líneas) | `VCOC03-0370-000-0001` | Portal | 3.652.516,41 | 3.210.354,21 | 3.027.785,21 | 182.569,00 | 442.162,20 | | D9 esperada |
 | | | | Power BI | | | | | | | |
-| 11 | El de más líneas | | Portal | | | | | | | |
-| | | | Power BI | | | | | | | |
+
+El caso 9 (`SIN COSTO EN SAP`) eligió el mismo producto que el caso 2, así que queda cubierto ahí. Frente a la V7 del 2026-11-04, `CBAN12-0027` sigue en 235.170,505 y `CBAN05-0001` bajó 0,80 (9.425,34 → 9.424,54) por movimientos en SAP.
 
 ### Comparación contra el query optimizado (C4)
 
@@ -632,7 +644,7 @@ Los códigos de los casos 4 a 11 salen de C2.
 
 ### Hallazgos
 
-Ninguno registrado (`pendiente` de la ejecución).
+- **H1 (2026-11-06), causa de la diferencia del nivel 3 de `CMPD04-0268`:** el SQL original costea las hojas de ese nivel con `@Bodega3_`, una bodega que viene de otro componente (línea 331), y no con la de su propia línea. Ver la precisión en la V7. No cambia el portal: aplica la cascada aprobada (bodega de la lista → `MP-01` → `PT-01`). Falta confirmar el costo de la tuerca con C3b.
 
 **Aprobación del dueño de negocio (Contabilidad):** nombre — fecha — medio — `pendiente`
 
