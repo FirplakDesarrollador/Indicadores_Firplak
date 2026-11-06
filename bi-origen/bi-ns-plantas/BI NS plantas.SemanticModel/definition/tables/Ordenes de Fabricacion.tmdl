@@ -1,0 +1,249 @@
+table 'Ordenes de Fabricacion'
+	lineageTag: f38199f2-6886-4c12-9621-7344e86f521a
+
+	column 'Fecha de Creación'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e89ee995-7693-4729-a28e-fa67ce6a6496
+		summarizeBy: none
+		sourceColumn: Fecha de Creación
+
+		variation Variación
+			isDefault
+			relationship: 32f5274c-21bd-4fa5-ad84-50b24fcf8a0b
+			defaultHierarchy: LocalDateTable_147f7ce9-e614-4d27-a28f-844fb3108b27.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column '# Documento'
+		dataType: int64
+		formatString: 0
+		lineageTag: c8818b16-7833-4aa8-a39f-d1ceb65c3cdb
+		summarizeBy: sum
+		sourceColumn: # Documento
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cod Artículo'
+		dataType: string
+		lineageTag: acc7afcd-60c2-4ea4-aef2-cebca5969848
+		summarizeBy: none
+		sourceColumn: Cod Artículo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Artículo
+		dataType: string
+		lineageTag: b2c0f1a9-e76e-42fc-a87d-409fc81fc1ba
+		summarizeBy: none
+		sourceColumn: Artículo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cantidad Planeada'
+		dataType: double
+		lineageTag: fbd1fee6-a6ff-463b-b48a-f5020ad07801
+		summarizeBy: sum
+		sourceColumn: Cantidad Planeada
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Tipo Orden'
+		dataType: string
+		lineageTag: 01d1581f-c08a-4ae5-a9be-e6b3e71a5830
+		summarizeBy: none
+		sourceColumn: Tipo Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fecha Real de Liberación'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: fca6d8d4-47c6-40e7-915c-c8aaac2a9245
+		summarizeBy: none
+		sourceColumn: Fecha Real de Liberación
+
+		variation Variación
+			isDefault
+			relationship: 1323257d-d8ad-4995-9366-924518fd23fc
+			defaultHierarchy: LocalDateTable_f348ccca-c946-42bd-bd5c-47a6c84dfe84.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Fecha de Cierre Real'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d578950d-d0e7-496a-a8fa-c542dde4e2cb
+		summarizeBy: none
+		sourceColumn: Fecha de Cierre Real
+
+		variation Variación
+			isDefault
+			relationship: 05f5fca3-1568-4520-91e9-d8dd9f67f042
+			defaultHierarchy: LocalDateTable_4569556c-71c4-45ce-bcff-e3eb70001b5c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Familia Producción'
+		dataType: string
+		lineageTag: 095d510f-ef47-4849-9cd2-f74a45a24f2a
+		summarizeBy: none
+		sourceColumn: Familia Producción
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation __PBI_SemanticLinks = [{"LinkTarget":{"TableName":"Ordenes de Fabricacion","TableItemName":"Familia Producción (grupos)","ObjectType":4},"LinkType":"UsedInGroup"}]
+
+	column 'Estado Orden'
+		dataType: string
+		lineageTag: 261a30e4-0ef3-454b-a021-99977a718420
+		summarizeBy: none
+		sourceColumn: Estado Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Razón de Retrazo'
+		dataType: string
+		lineageTag: f93a83a6-d0d2-44d4-8480-683c0d5a698a
+		summarizeBy: none
+		sourceColumn: Razón de Retrazo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Razón de Retrazo 2'
+		dataType: string
+		lineageTag: dab51fbe-b958-493b-bdc0-b5fc5bd53057
+		summarizeBy: none
+		sourceColumn: Razón de Retrazo 2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amortiguador
+		dataType: double
+		lineageTag: e64afb0e-6495-4046-b0c2-0dcef456c714
+		summarizeBy: sum
+		sourceColumn: Amortiguador
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Fecha ideal Entrega'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1c957a13-9d53-4ae5-8ebe-8a573c6cecef
+		summarizeBy: none
+		sourceColumn: Fecha ideal Entrega
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cumplio = ```
+			IF('Ordenes de Fabricacion'[Fecha de Cierre Real 2]>'Ordenes de Fabricacion'[Fecha ideal Entrega], "INCUMPLIÓ", 
+			                IF(ISBLANK('Ordenes de Fabricacion'[Fecha de Cierre Real 2])&&'Ordenes de Fabricacion'[Fecha ideal Entrega]<TODAY(), "INCUMPLIÓ", 
+			                    IF(ISBLANK('Ordenes de Fabricacion'[Fecha de Cierre Real 2])&&'Ordenes de Fabricacion'[Fecha ideal Entrega]>=TODAY(),"","CUMPLIÓ")))
+			```
+		lineageTag: 62d25c0b-c87e-4e43-a4e9-988a3172f0e8
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Semana = WEEKDAY('Ordenes de Fabricacion'[Fecha de Cierre Real])
+		formatString: 0
+		lineageTag: 9cfb1d88-97f5-4d4b-b859-0ac4cf374502
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fecha de Cierre Real 2' = IF('Ordenes de Fabricacion'[Semana] = 7, 'Ordenes de Fabricacion'[Fecha de Cierre Real]-1,'Ordenes de Fabricacion'[Fecha de Cierre Real])
+		formatString: General Date
+		lineageTag: 08cdb5e7-7e4a-4a45-a3b8-4ee4398d0867
+		summarizeBy: none
+
+		variation Variación
+			isDefault
+			relationship: 54f6faee-6aec-430d-97a0-b7e6d4a861b4
+			defaultHierarchy: LocalDateTable_1a355e83-ccfb-4801-a897-93aaee8efd72.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column U_TipoPedidos
+		dataType: string
+		lineageTag: f9dff3a8-4442-49e5-ac30-3e51b5a70e9a
+		summarizeBy: none
+		sourceColumn: U_TipoPedidos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Familia Producción (grupos)' =
+			SWITCH(
+			  TRUE,
+			  ISBLANK('Ordenes de Fabricacion'[Familia Producción]),
+			  "(En blanco)",
+			  'Ordenes de Fabricacion'[Familia Producción] IN {"FV",
+			    "FVH",
+			    "FVHM",
+			    "FVHMP",
+			    "FVHMPM",
+			    "FVM"},
+			  "FIBRA",
+			  'Ordenes de Fabricacion'[Familia Producción] IN {"PA",
+			    "PAM",
+			    "PC",
+			    "PCM"},
+			  "MARMOL",
+			  'Ordenes de Fabricacion'[Familia Producción] IN {"MBL",
+			    "MBLM",
+			    "PTTM"},
+			  "MUEBLE",
+			  'Ordenes de Fabricacion'[Familia Producción] IN {"RTM",
+			    "RTMM"},
+			  "RTM",
+			  'Ordenes de Fabricacion'[Familia Producción]
+			)
+		lineageTag: 81aecb59-cc24-40e2-9cdc-b89eb7214930
+		summarizeBy: none
+
+		extendedProperty GroupingMetadata =
+				{
+				  "version": 0,
+				  "groupedColumns": [
+				    {
+				      "Column": {
+				        "Expression": {
+				          "SourceRef": {
+				            "Entity": "Ordenes de Fabricacion"
+				          }
+				        },
+				        "Property": "Familia Producción"
+				      }
+				    }
+				  ]
+				}
+
+		annotation GroupingDesignState = {"Version":0,"Sources":[{"Name":"o","Entity":"Ordenes de Fabricacion"}],"GroupedColumns":[{"Column":{"Expression":{"SourceRef":{"Source":"o"}},"Property":"Familia Producción"}}],"GroupItems":[{"DisplayName":"(En blanco)","BlankDefaultPlaceholder":true},{"DisplayName":"FIBRA","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"o"}},"Property":"Familia Producción"}}],"Values":[[{"Literal":{"Value":"'FV'"}}],[{"Literal":{"Value":"'FVH'"}}],[{"Literal":{"Value":"'FVHM'"}}],[{"Literal":{"Value":"'FVHMP'"}}],[{"Literal":{"Value":"'FVHMPM'"}}],[{"Literal":{"Value":"'FVM'"}}]]}}},{"DisplayName":"MARMOL","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"o"}},"Property":"Familia Producción"}}],"Values":[[{"Literal":{"Value":"'PA'"}}],[{"Literal":{"Value":"'PAM'"}}],[{"Literal":{"Value":"'PC'"}}],[{"Literal":{"Value":"'PCM'"}}]]}}},{"DisplayName":"MUEBLE","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"o"}},"Property":"Familia Producción"}}],"Values":[[{"Literal":{"Value":"'MBL'"}}],[{"Literal":{"Value":"'MBLM'"}}],[{"Literal":{"Value":"'PTTM'"}}]]}}},{"DisplayName":"RTM","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"o"}},"Property":"Familia Producción"}}],"Values":[[{"Literal":{"Value":"'RTM'"}}],[{"Literal":{"Value":"'RTMM'"}}]]}}}]}
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Ordenes de Fabricacion-277e16d3-f12f-4eaf-8300-0a58f75daa0a' = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("Itplakinfo", "Firplak_SA", [Query="SELECT #(lf)    T0.CreateDate 'Fecha de Creación',#(lf)    T0.DocNum '# Documento',#(lf)    T0.ItemCode 'Cod Artículo',#(lf)    T0.ProdName 'Artículo',#(lf)    CONVERT(NUMERIC(18,0), T0.PlannedQty) 'Cantidad Planeada',#(lf)    T0.U_Tipo_Orden 'Tipo Orden',#(lf)    T0.RlsDate 'Fecha Real de Liberación',#(lf)    T0.CloseDate 'Fecha de Cierre Real',#(lf)    T3.U_FIR_FAM 'Familia Producción',#(lf)    CASE#(lf)        When T0.Status = 'R' then 'Liberado'#(lf)        When T0.Status = 'P' then 'Planificado'#(lf)        When T0.Status = 'L' then 'Cerrado'#(lf)    END 'Estado Orden',#(lf)    T0.U_U_Razonderetraso 'Razón de Retrazo',#(lf)    T0.U_U_Razonderetraso2 'Razón de Retrazo 2',#(lf)    convert(numeric(2,0), T4.U_Amortiguador) 'Amortiguador',#(lf)    CASE #(lf)        WHEN T4.U_Amortiguador = 1 THEN T0.RlsDate#(lf)        ELSE #(lf)            DATEADD(DAY, #(lf)                (#(lf)                    SELECT TOP 1 numeros.n#(lf)                    FROM (#(lf)                        SELECT n, #(lf)                               n + 1 - #(lf)                               (SELECT COUNT(1) #(lf)                                FROM [Firplak_SA].[dbo].[@FIR_FECHAS_PROD] fp #(lf)                                WHERE fp.U_Fecha BETWEEN DATEADD(DAY, 1, T0.RlsDate) #(lf)                                    AND DATEADD(DAY, n, T0.RlsDate)#(lf)                                    -- Agregamos filtro de fecha máxima para optimizar#(lf)                                    AND fp.U_Fecha <= DATEADD(DAY, T4.U_Amortiguador * 3, T0.RlsDate)#(lf)                               ) as dias_habiles#(lf)                        FROM (#(lf)                            -- Reducimos a un máximo de días más realista#(lf)                            SELECT TOP 30 ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n#(lf)                            FROM (VALUES (1),(1),(1),(1),(1)) t1(n)#(lf)                            CROSS JOIN (VALUES (1),(1),(1),(1),(1),(1)) t2(n)#(lf)                        ) AS nums#(lf)                        -- Agregamos filtro para reducir el conjunto de datos#(lf)                        WHERE n <= T4.U_Amortiguador * 3#(lf)                    ) AS numeros#(lf)                    WHERE numeros.dias_habiles = T4.U_Amortiguador#(lf)                    ORDER BY numeros.n#(lf)                ), #(lf)                T0.RlsDate#(lf)            )#(lf)    END as 'Fecha ideal Entrega',#(lf)    t2.U_TipoPedidos#(lf)FROM #(lf)    OWOR t0 #(lf)    INNER JOIN oitm t1 ON t0.ItemCode = t1.ItemCode #(lf)    INNER JOIN [Firplak_SA].[dbo].[ORDR] T2 ON T0.OriginNum = T2.DocNum#(lf)    INNER JOIN [Firplak_SA].[dbo].[@FIR_FAM_SYMPH] T3 ON t1.U_Familia = t3.U_FIR_FAM_MAES #(lf)        AND t3.U_FIR_TIPO_PED = T2.U_TipoPedidos#(lf)    INNER JOIN [Firplak_SA].[dbo].[@FIR_AMORTIGUADORES] T4 ON t3.U_FIR_FAM = T4.Name#(lf)    Collate SQL_Latin1_General_CP1_CI_AS#(lf)WHERE #(lf)    T0.CreateDate >= DATEADD(YEAR, -1, GETDATE())#(lf)    AND T0.RlsDate is not null#(lf)    AND T0.Status not in ('C','P')#(lf)    AND T0.U_NumLote <> ''#(lf)    AND T0.Warehouse in ('PT-01','PT-02','PT-08')#(lf)ORDER BY#(lf)    T0.DocNum DESC;"]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Fecha de Creación", type date}, {"# Documento", type text}, {"Fecha Real de Liberación", type date}, {"Fecha de Cierre Real", type date}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

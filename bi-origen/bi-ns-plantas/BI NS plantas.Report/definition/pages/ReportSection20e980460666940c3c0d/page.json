@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ReportSection20e980460666940c3c0d",
+  "displayName": "Duplicado de NS PLantas",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "ba21cb5c0691ec16b896",
+      "target": "75b96302a90d680b11e2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "7918a1faad60289b4a60",
+      "target": "e1277c4134c4dca79494",
+      "type": "NoFilter"
+    },
+    {
+      "source": "7918a1faad60289b4a60",
+      "target": "75b96302a90d680b11e2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "a2c28625c7a13b1879e1",
+      "target": "75b96302a90d680b11e2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "15826f1be6100cc0eb34",
+      "target": "75b96302a90d680b11e2",
+      "type": "NoFilter"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+table CalendarioOF
+	lineageTag: 91997142-e650-4c05-ad53-815ba4aead4c
+
+	column Fecha
+		formatString: General Date
+		lineageTag: 891f1faf-a233-4022-ad1b-12186a7cc972
+		summarizeBy: none
+		sourceColumn: [Date]
+
+		variation Variación
+			isDefault
+			relationship: 7fd164ae-bd42-4794-9c3d-2e7cd6568f01
+			defaultHierarchy: LocalDateTable_b5b1567c-9c58-4b76-8264-acfe8c5b0c80.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Año = YEAR(CalendarioOF[Fecha])
+		formatString: 0
+		lineageTag: 282563fe-d33e-40fd-8c03-0a7950ef9cc2
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes = MONTH(CalendarioOF[Fecha])
+		formatString: 0
+		lineageTag: dba25b47-591c-4cfe-9470-3b5f8dc0dc6a
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dia = Day(CalendarioOF[Fecha])
+		formatString: 0
+		lineageTag: 55390c75-e6ef-482a-b71e-daee8e30fd5f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Dia Semana' = WEEKDAY(CalendarioOF[Fecha],2)
+		formatString: 0
+		lineageTag: 0fdf2264-ff8a-4f4f-a80d-465277eff5f2
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'FIN DE SEMANA' = IF(CalendarioOF[Dia Semana] = 7,1)
+		formatString: 0
+		lineageTag: f91d76ba-220c-47fe-ab4a-eb68c8f97b3c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Semana = WEEKNUM(CalendarioOF[Fecha])
+		formatString: 0
+		lineageTag: c91fcdf1-ade2-4372-901d-e5d404e9f3fc
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition CalendarioOF-d647952d-29cd-4fa3-a7cb-cdb019e03cd4 = calculated
+		mode: import
+		source = CALENDAR(min('Ordenes de Fabricacion'[Fecha ideal Entrega]),max('Ordenes de Fabricacion'[Fecha ideal Entrega]))
+
+	annotation PBI_Id = d68e6905bed34977bb680a4c24f2d929
+

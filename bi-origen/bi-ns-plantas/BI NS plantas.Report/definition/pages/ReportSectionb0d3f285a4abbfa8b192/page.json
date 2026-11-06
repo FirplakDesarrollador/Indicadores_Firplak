@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ReportSectionb0d3f285a4abbfa8b192",
+  "displayName": "NS PLantas",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "8d3b9a63d3ad428c2083",
+      "target": "d91eddc1a65dd305cb7e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "53e39d98498dc05b80e1",
+      "target": "a35aafc2bcfe225a0f9f",
+      "type": "NoFilter"
+    },
+    {
+      "source": "53e39d98498dc05b80e1",
+      "target": "d91eddc1a65dd305cb7e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "ea63fa866d9960d4bbb6",
+      "target": "d91eddc1a65dd305cb7e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1c7fae247287d4048991",
+      "target": "d91eddc1a65dd305cb7e",
+      "type": "NoFilter"
+    }
+  ]
+}

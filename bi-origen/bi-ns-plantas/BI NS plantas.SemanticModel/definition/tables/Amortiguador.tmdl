@@ -1,0 +1,42 @@
+table Amortiguador
+	lineageTag: 76d34943-4a1f-4b3e-bd86-8c4f77ef7fa1
+
+	column Codigo
+		dataType: string
+		lineageTag: ac1105d5-5b8e-492b-bb57-73b180b3f877
+		summarizeBy: none
+		sourceColumn: Codigo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Familia
+		dataType: string
+		lineageTag: 8dcb9635-51d9-43ed-a7c5-937273c5d707
+		summarizeBy: none
+		sourceColumn: Familia
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amortiguador
+		dataType: double
+		lineageTag: c5c73728-a623-443c-bd8f-1676355fb1bd
+		summarizeBy: none
+		sourceColumn: Amortiguador
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Amortiguador-0db2f69a-2fa2-41bc-b29a-c21b0df6604b = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("ITPLAKINFO", "FIRPLAK_SA", [Query="select * from [dbo].[@FIR_AMORTIGUADORES]"]),
+				    #"Columnas con nombre cambiado" = Table.RenameColumns(Origen,{{"Code", "Codigo"}, {"Name", "Familia"}, {"U_Amortiguador", "Amortiguador"}})
+				in
+				    #"Columnas con nombre cambiado"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

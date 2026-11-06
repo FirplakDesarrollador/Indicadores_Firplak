@@ -363,3 +363,23 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - **Power BI:** retiro programado para el 2026-11-06; hasta entonces queda en paralelo como respaldo.
 - **Rollback:** está en la sección 7 de [la ficha](bi/notas-credito.md), separado para la API, el frontend y el SP.
 - La ficha pasa a `status: migrado` y `fase: 7`.
+
+## [2026-11-05] bi | NS Plantas: inventario y análisis (fases 0 y 1)
+
+- Nueva ficha [NS Plantas](bi/ns-plantas.md), a partir del proyecto `bi-origen/bi-ns-plantas/BI NS plantas.pbip`. Dueño de negocio: Manufactura; desarrollador responsable: Milton Rendón; prioridad media; usuario inicial `hector.chinchilla@firplak.com`. Rama `bi/ns-plantas`.
+- Se agregó `bi-origen/bi-ns-plantas/.gitignore` para no subir `.pbi/cache.abf` ni `.pbi/localSettings.json`.
+- Hallazgos: una sola fuente SQL en `Firplak_SA` (SAP: `OWOR`, `ORDR`, `@FIR_FAM_SYMPH`, `@FIR_AMORTIGUADORES`, `@FIR_FECHAS_PROD`), con ventana móvil de 12 meses por fecha de creación. Indicador principal: `% CUMPLIMIENTO` (nivel de servicio), es decir, OP cerradas en o antes de la fecha ideal (liberación más amortiguador en días hábiles), contando solo las que ya vencieron. Sin RLS.
+- `pendiente`: consultas de validación del desarrollador y respuestas de Manufactura a las 10 preguntas de la ficha.
+
+## [2026-11-05] bi | NS Plantas: resultados de las consultas de validación
+
+- Script ejecutable en `bi-origen/bi-ns-plantas/sql/validacion-fase1.sql` (paso 0 con la tabla temporal `#ns`, consultas 1 a 8 y limpieza opcional).
+- Confirmado: 27 908 OP sin duplicados, ninguna sin fecha ideal; 18 familias con un amortiguador cada una, cuatro sin grupo (`ESPGAB`, `MBL CEFI`, `MBLP`, `PFZ-CEMA`); `@FIR_FECHAS_PROD` guarda días no laborables.
+- Nivel de servicio mensual entre 55 % y 84 % (tabla en [la ficha](bi/ns-plantas.md#resultados-ejecutadas-por-el-desarrollador-el-2026-11-05)); noviembre de 2025 incompleto por la ventana de 12 meses.
+- Hallazgos: solo 456 de 7 170 OP incumplidas tienen razón de retraso (pregunta 11). Hay demasiados sábados y domingos en `@FIR_FECHAS_PROD` para un año: `pendiente` la consulta 8 (fechas repetidas).
+
+## [2026-11-05] bi | NS Plantas: consulta 8 (calendario de días no laborables)
+
+- `@FIR_FECHAS_PROD` no tiene fechas repetidas: 268 filas y 268 fechas distintas entre el 2025-11-08 y el 2028-01-01. Los sábados y domingos de más de la consulta 7 son fechas futuras ya cargadas. No tiene columna de planta.
+- Nuevo riesgo en [la ficha](bi/ns-plantas.md): el calendario vence el 2028-01-01. Se amplió la pregunta 1 (quién lo mantiene).
+- Las consultas de validación de la fase 1 quedan completas; falta la validación de Manufactura.

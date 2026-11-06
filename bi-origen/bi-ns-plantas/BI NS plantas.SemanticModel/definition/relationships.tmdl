@@ -1,0 +1,33 @@
+relationship 1323257d-d8ad-4995-9366-924518fd23fc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Ordenes de Fabricacion'.'Fecha Real de Liberación'
+	toColumn: LocalDateTable_f348ccca-c946-42bd-bd5c-47a6c84dfe84.Date
+
+relationship 05f5fca3-1568-4520-91e9-d8dd9f67f042
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Ordenes de Fabricacion'.'Fecha de Cierre Real'
+	toColumn: LocalDateTable_4569556c-71c4-45ce-bcff-e3eb70001b5c.Date
+
+relationship 4a2c53d2-108c-4b4b-8a99-ac9766c17394
+	fromColumn: 'Ordenes de Fabricacion'.'Familia Producción'
+	toColumn: Amortiguador.Familia
+
+relationship 32f5274c-21bd-4fa5-ad84-50b24fcf8a0b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Ordenes de Fabricacion'.'Fecha de Creación'
+	toColumn: LocalDateTable_147f7ce9-e614-4d27-a28f-844fb3108b27.Date
+
+relationship 7fd164ae-bd42-4794-9c3d-2e7cd6568f01
+	joinOnDateBehavior: datePartOnly
+	fromColumn: CalendarioOF.Fecha
+	toColumn: LocalDateTable_b5b1567c-9c58-4b76-8264-acfe8c5b0c80.Date
+
+relationship f6aa96fd-d9ee-4e84-9929-858c1c74d3d9
+	fromColumn: 'Ordenes de Fabricacion'.'Fecha ideal Entrega'
+	toColumn: CalendarioOF.Fecha
+
+relationship 54f6faee-6aec-430d-97a0-b7e6d4a861b4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Ordenes de Fabricacion'.'Fecha de Cierre Real 2'
+	toColumn: LocalDateTable_1a355e83-ccfb-4801-a897-93aaee8efd72.Date
+
