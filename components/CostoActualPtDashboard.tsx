@@ -196,7 +196,7 @@ export default function CostoActualPtDashboard() {
 
   return <DashboardShell navigation={productCostNavigation} activeHref="/costo-actual-pt" title="Costo de producto terminado" className="product-cost-shell">
     <div className="billing-heading-row"><div><div className="billing-eyebrow">CENTRO DE INDICADORES <span>·</span> CONTABILIDAD</div><h1>Costo de producto terminado</h1><p>Consulta el costo actual de un producto desglosado en materia prima, mano de obra y CIF, con su lista de materiales completa.</p></div>
-      <div className="billing-heading-actions"><a className="billing-secondary-button pc-download-button" href={exportHref} download aria-label={applied.code ? `Descargar la lista de materiales de ${applied.code} en CSV` : "Descargar el informe completo de todos los productos en CSV"}><Download size={16} /> {applied.code ? "Descargar producto" : "Descargar todo"}</a></div></div>
+      <div className="billing-heading-actions"><a className="billing-secondary-button pc-download-button" href={exportHref} download aria-label={applied.code ? `Descargar la lista de materiales de ${applied.code} en Excel` : "Descargar el informe completo de todos los productos en Excel"}><Download size={16} /> {applied.code ? "Descargar producto" : "Descargar todo"}</a></div></div>
 
     <form className="billing-filterbar" onSubmit={applyFilters}>
       <div className="billing-filterbar-primary pc-filterbar-primary">
@@ -212,7 +212,7 @@ export default function CostoActualPtDashboard() {
 
     {error && <div className="billing-alert"><Database size={16} /><span>{error}</span><button onClick={() => void loadData()}>Reintentar</button></div>}
 
-    {!applied.code && !error && <section className="billing-panel pc-empty-panel"><PackageSearch size={28} aria-hidden="true" /><h2>Elige un producto</h2><p>Busca un producto por su código o descripción para ver su costo y su lista de materiales. Con <strong>Descargar todo</strong> obtienes el informe completo de todos los productos en CSV para Excel.</p></section>}
+    {!applied.code && !error && <section className="billing-panel pc-empty-panel"><PackageSearch size={28} aria-hidden="true" /><h2>Elige un producto</h2><p>Busca un producto por su código o descripción para ver su costo y su lista de materiales. Con <strong>Descargar todo</strong> obtienes el informe completo de todos los productos en Excel (.xlsx).</p></section>}
 
     {applied.code && !error && <>
       <section className="billing-panel pc-product-panel"><span className="billing-panel-kicker">PRODUCTO</span>

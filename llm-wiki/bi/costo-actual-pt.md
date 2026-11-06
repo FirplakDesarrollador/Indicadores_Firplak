@@ -489,10 +489,14 @@ Decisión del desarrollador (2026-11-05): un botón "Descargar" en el dashboard.
 
 Respuesta:
 
-- `Content-Type: text/csv; charset=utf-8` y `Content-Disposition: attachment; filename="costo-actual-pt_<codigo o todos>_<AAAAMMDD-HHmm de loadedAt>.csv"`.
-- **Formato para Excel:** UTF-8 con BOM, separador `;` y textos entre comillas cuando tengan `;`, comillas o saltos de línea.
-- **Números:** coma de miles, punto decimal y sin ceros sobrantes a la derecha (`1,234,567.89`). Lo pidió Contabilidad en la revisión del 2026-11-06, porque su Excel usa esa configuración y con la coma decimal tenía que corregir los números a mano. Antes, la descarga salía con coma decimal y sin separador de miles.
-- **Streaming:** la API lee la tabla con `request.stream` de `mssql` y escribe el CSV a medida que llegan las filas, sin cargar todo en memoria. El proxy del frontend reenvía el flujo sin acumularlo.
+- `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` y `Content-Disposition: attachment; filename="costo-actual-pt_<codigo o todos>_<AAAAMMDD-HHmm de loadedAt>.xlsx"`.
+- **Formato: libro de Excel (`.xlsx`)**, decidido por el desarrollador el 2026-11-06. En la revisión, Contabilidad tenía que corregir a mano los números del CSV, que salía con coma decimal, y su Excel usa punto decimal. En el `.xlsx` cada número va guardado como número, así que Excel lo muestra con la configuración regional de cada equipo. Se descartó el CSV con punto decimal (`d1c65c2`, nunca desplegado), porque seguía dependiendo de esa configuración.
+  - Hoja `Costo PT`, con el encabezado en negrita, la primera fila fija, filtros y anchos de columna.
+  - Códigos y descripciones como texto. Nivel como entero. Cantidad y costo unitario con formato `#,##0.00####`, costos MP, MO, CIF y total con `#,##0.00`, y fecha de carga como fecha y hora (`yyyy-mm-dd hh:mm`).
+  - Si el informe superara 1.048.575 filas (hoy ~463.600), sigue en una hoja `Costo PT (2)`.
+- **Generación:** [`src/xlsx.ts`](../../../reporting-api/src/xlsx.ts) de la API, sin dependencias (XML de la hoja comprimido con `zlib` dentro de un ZIP), para que el despliegue siga siendo copiar `dist\`.
+- **Rendimiento medido (2026-11-06, filas sintéticas en el equipo de desarrollo):** 463.600 filas en 6,5 s de CPU, 24,3 MB, frente a ~104 MB del CSV. Excel abrió el archivo en 6,7 s sin pedir reparación. Con datos reales, el tiempo y el tamaño quedan `pendiente` de medir en el servidor.
+- **Streaming:** la API lee la tabla con `request.toReadableStream()` de `mssql` y escribe el libro a medida que llegan las filas, sin cargar todo en memoria. Espera la primera fila antes de enviar los encabezados, así que un error de la consulta todavía sale como JSON. El proxy del frontend reenvía el flujo sin acumularlo.
 - Orden: `CodigoPT`, `SortPath`. Incluye la fila del nivel 1 de cada producto, con sus totales.
 
 Columnas:
@@ -516,7 +520,7 @@ Columnas:
 | Alerta | `Alerta` |
 | Fecha de carga | `FechaCarga` |
 
-Errores: si la consulta falla antes de enviar la primera fila, 502 como en los demás endpoints. Si falla a mitad del flujo, la API corta la conexión y el navegador marca la descarga como fallida; el error queda en el log de la API.
+Errores: si la consulta falla antes de la primera fila, 502 como en los demás endpoints. Si falla a mitad del flujo, la API corta la conexión y el navegador marca la descarga como fallida; el error queda en el log de la API.
 
 Consulta de apoyo para fijar el tope de líneas (solo lectura):
 

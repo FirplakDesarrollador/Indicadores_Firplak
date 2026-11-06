@@ -488,8 +488,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - C2: registrados los valores del portal de 10 productos; faltan los del Power BI.
 - C3 de `CMPD04-0268-000-0000`: el Power BI tomó el costo de `MP-01` en tres hojas del nivel 3. La causa está en la línea 331 del SQL original (`@Bodega3_` en lugar de `@Bodega2_`), y se precisa la explicación de la V7 (hallazgo H1). Se agrega la consulta C3b.
 
-## [2026-11-06] cambio | Costo actual de PT: formato de números de la descarga
+## [2026-11-06] cambio | Costo actual de PT: descarga en Excel (.xlsx)
 
-- A pedido de Contabilidad, la descarga CSV pasa de coma decimal sin separador de miles a coma de miles y punto decimal, sin ceros sobrantes a la derecha (`1,234,567.89`). Se mantienen el separador `;` y el BOM UTF-8.
-- Cambio en `reporting-api` (`src/db.ts` y `src/server.ts`). Requiere desplegar la API.
-- Rollback: volver a desplegar el paquete `dist` anterior (`aeb3f5b`).
+- En la revisión, Contabilidad tenía que corregir a mano los números del CSV. Primero se cambió el CSV a coma de miles y punto decimal (`d1c65c2`), pero el desarrollador decidió pasar a `.xlsx` sin desplegar ese cambio, porque el CSV depende de la configuración regional de Excel.
+- La API genera el `.xlsx` en streaming con `src/xlsx.ts`, sin dependencias nuevas: números como números, códigos como texto, encabezado fijo, filtros y formato `#,##0.00`. El portal solo cambia el proxy y los textos.
+- Medido con 463.600 filas sintéticas: 6,5 s de CPU y 24,3 MB (el CSV pesaba ~104 MB). Excel lo abre en 6,7 s sin reparación. Si el usuario cancela a mitad, la generación falla limpia y se cancela la consulta.
+- Despliegue: primero la API y después el portal. Rollback: volver a desplegar el paquete `dist` anterior (`aeb3f5b`, CSV con coma decimal) y revertir el commit del portal.
