@@ -640,21 +640,30 @@ Los códigos de los casos 4 a 11 salen de C2.
 
 Valores del Power BI tomados el 2026-11-06 de la tabla "Lista de Materiales" exportada a Excel por el desarrollador (`pbi_LdeM/pbi-lista-materiales.xlsx`, sin versionar). En los 10 productos, la fila de nivel 1 del Power BI es igual a la suma de sus líneas.
 
-**Resumen:** 5 de 10 productos coinciden exactamente (`CBAN12-0027`, `CMPD04-0268`, `CBAN19-0001`, `CMPD04-0130` y `CMPD04-0261`). Tres tienen causas confirmadas: `CBAN05-0001` y `CEXH01-0008` (D3) y `VHPT05-0015` (D9). Quedan dos con diferencia solo en MP y causa probable sin confirmar: `VCOC03-0370` (D9) y `VBAN33-0005` (H1). Para cerrarlos hace falta C3 de esos dos productos.
+**Resumen:** 5 de 10 productos coinciden exactamente (`CBAN12-0027`, `CMPD04-0268`, `CBAN19-0001`, `CMPD04-0130` y `CMPD04-0261`). Tres tienen causas confirmadas: `CBAN05-0001` y `CEXH01-0008` (D3) y `VHPT05-0015` (D9). Quedan dos con diferencia solo en MP y causa probable sin confirmar: `VCOC03-0370` (D9) y `VBAN33-0005` (H1). Para cerrarlos hace falta C3 de esos dos productos. La C4 ya muestra que en los productos de hasta 4 niveles, como `VBAN33-0005`, el portal es idéntico al query optimizado, así que su diferencia con el Power BI viene de una regla corregida y no de un error del portal.
 
 El caso 9 (`SIN COSTO EN SAP`) eligió el mismo producto que el caso 2, así que queda cubierto ahí. Frente a la V7 del 2026-11-04, `CBAN12-0027` sigue en 235.170,505 y `CBAN05-0001` bajó 0,80 (9.425,34 → 9.424,54) por movimientos en SAP.
 
 ### Comparación contra el query optimizado (C4)
 
-| Grupo | Productos | Con diferencia | Total tabla | Total query optimizado |
-|---|---|---|---|---|
-| Hasta 4 niveles | | | | |
-| Más de 4 niveles | | | | |
+Ejecutada por el desarrollador el 2026-11-06, con una carga posterior a la de C1 (11.280 productos).
+
+| Grupo | Productos | Con diferencia | Total tabla | Total query optimizado | Diferencia |
+|---|---|---|---|---|---|
+| Hasta 4 niveles | 7.835 | **0** | 4.048.280.586,06 | 4.048.280.586,06 | 0 |
+| Más de 4 niveles | 3.445 | 3.445 | 3.019.086.374,49 | 2.947.103.675,04 | +71.982.699,46 (D9) |
+
+**Conclusión:** en los productos de hasta 4 niveles, la tabla del portal da exactamente lo mismo que el query optimizado aprobado (P1). La única diferencia está en los productos de más de 4 niveles y se debe a que el portal desglosa todos los niveles (D9, P10). No hay artículos MO+CIF (P2) que la alteren.
+
+**Reparto aproximado de la diferencia global con el Power BI (C1, +106.126.744,66).** Es aproximado porque C1 y C4 se tomaron en cargas distintas:
+
+- D9, desglose de todos los niveles: unos +71,98 millones (C4).
+- Reglas corregidas del query optimizado (D1–D8 y H1): unos +35,86 millones. Es el total optimizado (6.995.384.261,10) menos el total del Power BI (6.959.525.480).
 
 ### Hallazgos
 
 - **H1, actualización (2026-11-06, exportación del Power BI):** hoy el Power BI da para `CMPD04-0268` lo mismo que el portal, con los costos de `MP-03` (tuerca 196,74, tubo 2.579,18, varilla 4.520,32, soldadura 16.134,41). El 2026-11-04 daba 2.094,88 más. Esto confirma el mecanismo: estas hojas son componentes del nivel 3 sin lista propia, así que el original las costea en la rama `Else` (líneas 326 a 331) con la bodega que quedó en `@Bodega3_` del último componente leído, que puede ser de otro producto. El resultado del Power BI depende entonces del orden en que procesa los productos y puede cambiar de una actualización a otra sin que cambie SAP. El portal no tiene este problema.
-- **H1 (2026-11-06), causa de la diferencia del nivel 3 de `CMPD04-0268`:** el SQL original costea las hojas de ese nivel con `@Bodega3_`, una bodega que viene de otro componente (línea 331), y no con la de su propia línea. Ver la precisión en la V7. No cambia el portal: aplica la cascada aprobada (bodega de la lista → `MP-01` → `PT-01`). Falta confirmar el costo de la tuerca con C3b.
+- **H1 (2026-11-06), causa de la diferencia del nivel 3 de `CMPD04-0268`:** el SQL original costea las hojas de ese nivel con `@Bodega3_`, una bodega que viene de otro componente (línea 331), y no con la de su propia línea. Ver la precisión en la V7. No cambia el portal: aplica la cascada aprobada (bodega de la lista → `MP-01` → `PT-01`). Confirmado con C3b (2026-11-06): la tuerca cuesta 293,14 exactamente en `MP-05`. Ni el tubo ni la varilla tienen costo en `MP-05`, así que el original pasó a `MP-01` (2.562,83 y 4.508,07). La soldadura cuesta en `MP-05` lo mismo que en `MP-01` (16.134,45). Las cuatro cifras del Power BI del 2026-11-04 salen de `@Bodega3_ = 'MP-05'`, una bodega que no es la de la lista (`MP-03`) y que quedó de otro componente.
 
 **Aprobación del dueño de negocio (Contabilidad):** nombre — fecha — medio — `pendiente`
 
