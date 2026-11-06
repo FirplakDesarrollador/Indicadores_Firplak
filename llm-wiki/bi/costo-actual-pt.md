@@ -636,7 +636,7 @@ Los códigos de los casos 4 a 11 salen de C2.
 | 10 | Semielaborado (P7, 4 niveles) | `CMPD04-0261-000-0000` | Portal | 146.060,60 | 101.331,32 | 69.668,12 | 31.663,20 | 44.729,28 | | |
 | | | | Power BI | 146.060,60 | 101.331,32 | 69.668,12 | 31.663,20 | 44.729,28 | 0 | Coincide |
 | 11 | El de más líneas (5 niveles, 330 líneas) | `VCOC03-0370-000-0001` | Portal | 3.652.516,41 | 3.210.354,21 | 3.027.785,21 | 182.569,00 | 442.162,20 | | |
-| | | | Power BI | 3.707.286,88 | 3.265.124,68 | 3.082.555,68 | 182.569,00 | 442.162,20 | −54.770,47 (solo MP) | Desglosada con C3: placa de cuarzo `CQUA01-0001` −59.366,50 (`pendiente` de C3b), H1 +5.955,31, D9 −1.334,63 y movimientos de SAP −61,08 |
+| | | | Power BI | 3.707.286,88 | 3.265.124,68 | 3.082.555,68 | 182.569,00 | 442.162,20 | −54.770,47 (solo MP) | H1 (−53.411,19, sobre todo la placa de cuarzo `CQUA01-0001` costeada en `MP-10`), D9 −1.334,63 y movimientos de SAP −61,08 |
 
 Valores del Power BI tomados el 2026-11-06 de la tabla "Lista de Materiales" exportada a Excel por el desarrollador (`pbi_LdeM/pbi-lista-materiales.xlsx`, sin versionar). En los 10 productos, la fila de nivel 1 del Power BI es igual a la suma de sus líneas.
 
@@ -646,12 +646,12 @@ Valores del Power BI tomados el 2026-11-06 de la tabla "Lista de Materiales" exp
 
 | Causa | Efecto | Detalle |
 |---|---|---|
-| Placa `CQUA01-0001-000-0000` (salpicadero de cuarzo 210X60 blanco polar) | −59.366,50 | El portal usa 279.457,50, el costo de la bodega de la lista (`MP-05`). El Power BI usa 338.824, que no es el costo de `MP-05`, ni el de `MP-01` (272.646,25), ni el de `PT-01` (0), y no aparece en otro artículo de la exportación. `pendiente`: C3b de esa placa en todas las bodegas y en la lista de precios 10. |
+| Placa `CQUA01-0001-000-0000` (salpicadero de cuarzo 210X60 blanco polar) | −59.366,50 | H1. El portal usa 279.457,50, el costo de la bodega de la lista (`MP-05`). El Power BI usa 338.824, que es exactamente su costo en `MP-10` (C3b del 2026-11-06; también es el precio de la lista 59, que el original no consulta). En el orden del Power BI, las líneas anteriores a la placa son los componentes de nivel 4 de la mezcla de polímero (cristalán, peróxido y carbonato), que están en `MP-10`: al costear la placa, una hoja del nivel 3, el original reutilizó esa bodega guardada en `@Bodega3_`. |
 | H1: el Power BI usó el costo de `MP-01` | +5.955,31 | Placa `CQUA01-0003` +5.893,92, riel `CMPD07-0037` +1.053,70, platero `CMPD07-0041` −676,35, tablero `CMPD06-0001` −319,09 y otros menores. |
 | D9: el portal desglosa la mezcla de carbonato `CMPD02-0011` en el nivel 5 | −1.334,63 | El Power BI la costea como hoja (436,79 × 11,6 = 5.066,76). El portal suma sus dos carbonatos (1.291,72 + 2.440,41). |
 | Movimientos de SAP entre la toma del Power BI y la C3 | −61,08 | Cristalán `CMPD01-0020` (−60,20) y dos etiquetas. |
 
-Al pasar la C3 a Excel, la configuración regional leyó el punto decimal como separador de miles: las celdas numéricas quedaron multiplicadas por 1.000.000. Se corrigieron al leerlas. Solo falta la C3b de la placa `CQUA01-0001`. La C4 ya muestra que en los productos de hasta 4 niveles, como `VBAN33-0005`, el portal es idéntico al query optimizado, así que su diferencia con el Power BI viene de una regla corregida y no de un error del portal.
+Al pasar la C3 a Excel, la configuración regional leyó el punto decimal como separador de miles: las celdas numéricas quedaron multiplicadas por 1.000.000. Se corrigieron al leerlas. **Muestra cerrada (2026-11-06):** las diferencias de los 10 productos están explicadas: 5 coinciden y 5 difieren por D3, D9 y H1. No queda ninguna diferencia sin causa. La C4 ya muestra que en los productos de hasta 4 niveles, como `VBAN33-0005`, el portal es idéntico al query optimizado, así que su diferencia con el Power BI viene de una regla corregida y no de un error del portal.
 
 El caso 9 (`SIN COSTO EN SAP`) eligió el mismo producto que el caso 2, así que queda cubierto ahí. Frente a la V7 del 2026-11-04, `CBAN12-0027` sigue en 235.170,505 y `CBAN05-0001` bajó 0,80 (9.425,34 → 9.424,54) por movimientos en SAP.
 
@@ -675,6 +675,8 @@ Ejecutada por el desarrollador el 2026-11-06, con una carga posterior a la de C1
 
 - **H1, actualización (2026-11-06, exportación del Power BI):** hoy el Power BI da para `CMPD04-0268` lo mismo que el portal, con los costos de `MP-03` (tuerca 196,74, tubo 2.579,18, varilla 4.520,32, soldadura 16.134,41). El 2026-11-04 daba 2.094,88 más. Esto confirma el mecanismo: estas hojas son componentes del nivel 3 sin lista propia, así que el original las costea en la rama `Else` (líneas 326 a 331) con la bodega que quedó en `@Bodega3_` del último componente leído, que puede ser de otro producto. El resultado del Power BI depende entonces del orden en que procesa los productos y puede cambiar de una actualización a otra sin que cambie SAP. El portal no tiene este problema.
 - **H1 (2026-11-06), causa de la diferencia del nivel 3 de `CMPD04-0268`:** el SQL original costea las hojas de ese nivel con `@Bodega3_`, una bodega que viene de otro componente (línea 331), y no con la de su propia línea. Ver la precisión en la V7. No cambia el portal: aplica la cascada aprobada (bodega de la lista → `MP-01` → `PT-01`). Confirmado con C3b (2026-11-06): la tuerca cuesta 293,14 exactamente en `MP-05`. Ni el tubo ni la varilla tienen costo en `MP-05`, así que el original pasó a `MP-01` (2.562,83 y 4.508,07). La soldadura cuesta en `MP-05` lo mismo que en `MP-01` (16.134,45). Las cuatro cifras del Power BI del 2026-11-04 salen de `@Bodega3_ = 'MP-05'`, una bodega que no es la de la lista (`MP-03`) y que quedó de otro componente.
+
+**Estado de la fase 6:** C1, C2, C3, C3b y C4 ejecutadas y explicadas. Solo falta la aprobación de Contabilidad.
 
 **Aprobación del dueño de negocio (Contabilidad):** nombre — fecha — medio — `pendiente`
 
