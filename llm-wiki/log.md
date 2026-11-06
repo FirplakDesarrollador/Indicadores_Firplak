@@ -510,3 +510,13 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `VCOC03-0370` desglosado con C3: −59.366,50 de la placa de cuarzo `CQUA01-0001` (el Power BI usa 338.824, fuente `pendiente`), +5.955,31 de H1, −1.334,63 de D9 y −61,08 de movimientos de SAP.
 - C3b de la placa `CQUA01-0001`: 338.824 es su costo en `MP-10`, la bodega de los componentes que el Power BI leyó justo antes (H1). Los 10 productos de la muestra quedan explicados; la fase 6 solo espera la aprobación de Contabilidad.
 - Resumen de la conciliación enviado a Contabilidad por Teams. Las fases 6 y 7 se cierran con su respuesta, previsto para el martes 2026-11-10.
+
+## [2026-11-06] cambio | Permisos por cargo y trazabilidad
+
+- Decisión del desarrollador: los permisos se dan por **cargo** (uno por persona), no por área, con excepciones individuales. Los cargos se crean a medida que se necesitan.
+- Cada informe tiene `area` en `lib/reports.ts`; el portal agrupa las cards por área. Los tipos de informe (indicador, visualización, descarga) quedan para después.
+- Todo cambio exige soporte: correo o tarea de Planner (enlace), quién lo solicitó y quién lo aprobó (texto libre). Quién lo hizo y cuándo los pone el servidor.
+- Migración `20261106_permisos_por_cargo.sql`: tablas `job_roles`, `job_role_reports`, `user_job_roles` y `access_change_requests`, historial ampliado, `current_user_access()` y `apply_access_change()`. El navegador ya no escribe directo en las tablas.
+- `/admin/permisos` se rehace con las pestañas Usuarios, Cargos, Informes e Historial, el diálogo de soporte, "Dar acceso" a varios correos y el aviso "Ver personas" al cambiar un cargo.
+- Probado en PGlite y validado por el desarrollador en Supabase y en el portal. La migración se ejecuta antes de desplegar el portal. Detalle en [Seguridad](concepts/security-and-secrets.md#permisos-por-informe).
+- La solicitud de acceso desde el portal, con aprobación del jefe, queda para una segunda etapa.

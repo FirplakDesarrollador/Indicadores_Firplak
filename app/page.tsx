@@ -12,7 +12,7 @@ import {
 import BrandPeak from "@/components/BrandPeak";
 import UserMenu from "@/components/dashboard/UserMenu";
 import { canViewReport, getUserAccess, type UserAccess } from "@/lib/auth/access";
-import { reports } from "@/lib/reports";
+import { groupReportsByArea, reports } from "@/lib/reports";
 import { createClient } from "@/lib/supabase/client";
 
 function initialsFrom(name: string) {
@@ -41,7 +41,7 @@ export default function HomePage() {
           (email.split("@")[0] || "Usuario Firplak"),
       );
       try {
-        setAccess(await getUserAccess(supabase, email));
+        setAccess(await getUserAccess(supabase));
       } catch {
         setAccessError(true);
       }
@@ -110,16 +110,23 @@ export default function HomePage() {
           {accessError && <p className="portal-notice" role="alert"><Info size={16} /> No fue posible cargar tus permisos. Recarga la p&aacute;gina; si el problema sigue, avisa a un administrador.</p>}
           {access && !accessCards.length && <p className="portal-notice"><Info size={16} /> A&uacute;n no tienes informes asignados. Pide acceso a un administrador.</p>}
 
-          <div className="access-grid" aria-label="Accesos habilitados" aria-busy={!access && !accessError}>
-            {accessCards.map(({ slug, title, subtitle, href, icon: Icon }) => (
-              <Link className="access-card" href={href} key={slug}>
-                <div className="access-icon"><Icon size={40} strokeWidth={1.75} /></div>
-                <div className="access-card-copy">
-                  <span className="access-type">BUSINESS INTELLIGENCE</span>
-                  <h2>{title}</h2>
-                  <p>{subtitle}</p>
+          <div className="portal-area-list" aria-busy={!access && !accessError}>
+            {groupReportsByArea(accessCards).map((area) => (
+              <section className="portal-area" key={area.id} aria-labelledby={`area-${area.id}`}>
+                <h3 className="portal-area-title" id={`area-${area.id}`}>{area.label}</h3>
+                <div className="access-grid" aria-label={area.label}>
+                  {area.items.map(({ slug, title, subtitle, href, icon: Icon }) => (
+                    <Link className="access-card" href={href} key={slug}>
+                      <div className="access-icon"><Icon size={40} strokeWidth={1.75} /></div>
+                      <div className="access-card-copy">
+                        <span className="access-type">BUSINESS INTELLIGENCE</span>
+                        <h2>{title}</h2>
+                        <p>{subtitle}</p>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              </Link>
+              </section>
             ))}
           </div>
         </section>

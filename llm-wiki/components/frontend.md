@@ -24,7 +24,7 @@ sources:
 
 ## Rutas
 
-- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver (catálogo en `lib/reports.ts`). El perfil del encabezado (nombre y correo) abre, solo para administradores, el menú con "Permisos de informes"; la barra lateral de los dashboards tiene el mismo menú en el perfil.
+- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver, agrupados por área (catálogo en `lib/reports.ts`). El perfil del encabezado (nombre y correo) abre, solo para administradores, el menú con "Permisos de informes"; la barra lateral de los dashboards tiene el mismo menú en el perfil.
 - `/login`: inicio de sesión Microsoft 365.
 - `/facturacion-diaria`: dashboard comercial.
 - `/facturacion-diaria/detalle`: página independiente para el detalle paginado de documentos de facturación.
@@ -36,7 +36,7 @@ sources:
 - `/costo-actual-pt`: costo actual de producto terminado para Contabilidad ([`CostoActualPtDashboard.tsx`](../../components/CostoActualPtDashboard.tsx); reglas en la [ficha del BI](../bi/costo-actual-pt.md)). Sin vista de detalle: la lista de materiales del producto elegido está en la misma página.
 - `/api/costo-actual-pt`: proxy server-side hacia `GET /api/v1/costo-actual-pt`.
 - `/api/costo-actual-pt/export`: proxy de la descarga en CSV. Reenvía el flujo de la API sin acumularlo (`maxDuration = 300`) y cancela la petición si el usuario aborta la descarga.
-- `/admin/permisos`: administración de permisos por informe, solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
+- `/admin/permisos`: administración de permisos por cargo, con excepciones e historial con soporte; solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
 
 ## Comportamiento del dashboard
 

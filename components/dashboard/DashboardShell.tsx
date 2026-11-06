@@ -36,7 +36,7 @@ export default function DashboardShell({ navigation, activeHref, title, classNam
       const name = data.user?.user_metadata?.full_name ?? data.user?.user_metadata?.name ?? (email.split("@")[0] || "Usuario Firplak");
       setUserProfile({ name, email });
       // Si no se pueden leer los permisos, el perfil se muestra sin menú; el middleware sigue protegiendo /admin.
-      const access = await getUserAccess(supabase, email).catch(() => null);
+      const access = await getUserAccess(supabase).catch(() => null);
       setIsAdmin(Boolean(access?.isAdmin));
     });
   }, [supabase]);
