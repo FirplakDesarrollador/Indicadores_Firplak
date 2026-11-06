@@ -506,3 +506,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - La exportación llegó cortada; faltan los totales de 4 productos.
 - Con la exportación completa (`pbi_LdeM/`): `CBAN19-0001` y `CMPD04-0130` coinciden; `CBAN05-0001` (+1.817,70) y `CEXH01-0008` (+360.000) difieren por D3, como se esperaba. C4 queda escrita completa en `03_conciliacion.sql`, con el nombre de tres partes de la tabla.
 - C4: 7.835 productos de hasta 4 niveles sin ninguna diferencia contra el query optimizado; 3.445 de más de 4 niveles con +71,98 millones (D9). C3b confirma H1: el costo de 293,14 de la tuerca es el de `MP-05`, una bodega que quedó de otro componente.
+- `VBAN33-0005` explicado al peso con C3: −4.799,75 por H1 (el Power BI usó el costo de `MP-01` en 20 artículos). Los artículos sin costo en ninguna bodega valen 0 en las dos fuentes. Falta la C3 completa de `VCOC03-0370`.
