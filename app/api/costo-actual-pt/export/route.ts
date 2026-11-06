@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-// La descarga completa pesa unos 100 MB. Se reenvía en streaming (sin acumularla en memoria), así que
+// La descarga completa (.xlsx) pesa unos 25 MB. Se reenvía en streaming (sin acumularla en memoria), así que
 // no aplica el límite de 4,5 MB de las respuestas normales de Vercel; sí aplica la duración máxima.
 export const maxDuration = 300;
 
 const noStore = { "Cache-Control": "no-store, max-age=0" };
+const xlsxContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
 export async function GET(request: NextRequest) {
   const reportingApiUrl = process.env.REPORTING_API_URL?.replace(/\/+$/, "");
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
     const target = new URL(`${reportingApiUrl}/api/v1/costo-actual-pt/export`);
     const code = request.nextUrl.searchParams.get("codigo");
     if (code) target.searchParams.set("codigo", code);
-    const headers = new Headers({ Accept: "text/csv" });
+    const headers = new Headers({ Accept: xlsxContentType });
     const apiToken = process.env.REPORTING_API_TOKEN;
     if (apiToken) headers.set("Authorization", `Bearer ${apiToken}`);
 
@@ -41,8 +42,8 @@ export async function GET(request: NextRequest) {
       status: 200,
       headers: {
         ...noStore,
-        "Content-Type": response.headers.get("content-type") ?? "text/csv; charset=utf-8",
-        "Content-Disposition": response.headers.get("content-disposition") ?? 'attachment; filename="costo-actual-pt.csv"',
+        "Content-Type": response.headers.get("content-type") ?? xlsxContentType,
+        "Content-Disposition": response.headers.get("content-disposition") ?? 'attachment; filename="costo-actual-pt.xlsx"',
       },
     });
   } catch (error) {

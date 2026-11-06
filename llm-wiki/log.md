@@ -475,3 +475,22 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - A pedido del desarrollador se quitan las tarjetas "Costo promedio" y "Costo promedio sin CIF" del dashboard, porque con un producto elegido repetían el total. Quedan "Costo total" y "Costo sin CIF" en una cuadrícula de dos columnas.
 - La API no cambia: `summary.averageCost` y `averageCostWithoutOverhead` quedan sin uso en el portal.
+
+## [2026-11-06] bi | Costo actual de PT: fase 5 cerrada y plan de conciliación (fase 6)
+
+- El desarrollador asignó los permisos y probó el dashboard en la vista previa de Vercel, con sesión real y la descarga. PR: Indicadores_Firplak#2 y firplak-reporting-api#3.
+- Fase 6: consultas de solo lectura en [`sql/costo-actual-pt/03_conciliacion.sql`](../sql/costo-actual-pt/03_conciliacion.sql) (C1 totales globales, C2 muestra de 11 productos por caso, C3 detalle con costos de SAP por bodega, C4 comparación contra el query optimizado) y tablas por llenar en la sección 6 de la [ficha](bi/costo-actual-pt.md).
+- La conciliación es por producto, no por periodo (P9). Las diferencias con el Power BI deben tener causa D1–D9.
+
+## [2026-11-06] bi | Costo actual de PT: primeros resultados de la conciliación
+
+- C1: el portal suma 7.065.652.224,66 (11.276 productos) y el Power BI 6.959.525.480: +106,1 millones (+1,52 %). Sin CIF: +81,9 millones (+1,38 %). Falta C4 para separar el efecto de D9 del de las reglas corregidas.
+- C2: registrados los valores del portal de 10 productos; faltan los del Power BI.
+- C3 de `CMPD04-0268-000-0000`: el Power BI tomó el costo de `MP-01` en tres hojas del nivel 3. La causa está en la línea 331 del SQL original (`@Bodega3_` en lugar de `@Bodega2_`), y se precisa la explicación de la V7 (hallazgo H1). Se agrega la consulta C3b.
+
+## [2026-11-06] cambio | Costo actual de PT: descarga en Excel (.xlsx)
+
+- En la revisión, Contabilidad tenía que corregir a mano los números del CSV. Primero se cambió el CSV a coma de miles y punto decimal (`d1c65c2`), pero el desarrollador decidió pasar a `.xlsx` sin desplegar ese cambio, porque el CSV depende de la configuración regional de Excel.
+- La API genera el `.xlsx` en streaming con `src/xlsx.ts`, sin dependencias nuevas: números como números, códigos como texto, encabezado fijo, filtros y formato `#,##0.00`. El portal solo cambia el proxy y los textos.
+- Medido con 463.600 filas sintéticas: 6,5 s de CPU y 24,3 MB (el CSV pesaba ~104 MB). Excel lo abre en 6,7 s sin reparación. Si el usuario cancela a mitad, la generación falla limpia y se cancela la consulta.
+- Despliegue: primero la API y después el portal. Rollback: volver a desplegar el paquete `dist` anterior (`aeb3f5b`, CSV con coma decimal) y revertir el commit del portal.

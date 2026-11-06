@@ -1,7 +1,7 @@
 ---
 status: en-migracion
-fase: 5
-updated: 2026-11-04
+fase: 6
+updated: 2026-11-06
 sources:
   - ../../bi-origen/bi-costo-actual-pt/
 ---
@@ -316,6 +316,8 @@ En el Power BI, seleccionar cada producto y anotar "Total Costo" y las dos tarje
 
   **Causa verificada por el desarrollador (2026-11-04):** es un error conocido del SQL original, identificado al escribir el query optimizado. En estas hojas del nivel 3, el original no consulta la bodega alternativa (`MP-01`) y se queda con el costo que tiene el componente en la bodega de la lista de materiales. Corresponde a **D3/D5**, y el query optimizado lo corrige con la cascada de la regla 4.
 
+  **Precisión (2026-11-06, con la consulta C3 de la fase 6):** el efecto es el descrito, pero el mecanismo es otro. El portal usa el costo de la bodega de la lista (`MP-03`). El Power BI usó, en tres de las cuatro hojas, exactamente el costo de `MP-01`: tubo 2.562,83, varilla 4.508,07 y soldadura 16.134,45. En el [SQL original, línea 331](../../bi-origen/bi-costo-actual-pt/query-original-powerbi.sql), la hoja de este nivel se costea con `WhsCode = @Bodega3_`, que es la variable del nivel siguiente, y no con `@Bodega2_`, la bodega de su propia línea. `@Bodega3_` solo cambia cuando el cursor del nivel siguiente lee una fila, así que conserva la bodega de un componente anterior, que puede ser de otro producto. Si el artículo cuesta 0 en esa bodega, el original pasa a `MP-01`. La tuerca (293,14) no coincide con `MP-01` (197,16) y queda `pendiente` de verificar con la consulta C3b. El efecto encaja con D6: valores que se arrastran de otro componente.
+
   Este artículo es un herraje (semielaborado), no un producto terminado: es un ejemplo de lo que pregunta P7.
 
 
@@ -487,9 +489,14 @@ Decisión del desarrollador (2026-11-05): un botón "Descargar" en el dashboard.
 
 Respuesta:
 
-- `Content-Type: text/csv; charset=utf-8` y `Content-Disposition: attachment; filename="costo-actual-pt_<codigo o todos>_<AAAAMMDD-HHmm de loadedAt>.csv"`.
-- **Formato para Excel en español:** UTF-8 con BOM, separador `;`, decimales con coma, sin separador de miles y textos entre comillas cuando tengan `;`, comillas o saltos de línea.
-- **Streaming:** la API lee la tabla con `request.stream` de `mssql` y escribe el CSV a medida que llegan las filas, sin cargar todo en memoria. El proxy del frontend reenvía el flujo sin acumularlo.
+- `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` y `Content-Disposition: attachment; filename="costo-actual-pt_<codigo o todos>_<AAAAMMDD-HHmm de loadedAt>.xlsx"`.
+- **Formato: libro de Excel (`.xlsx`)**, decidido por el desarrollador el 2026-11-06. En la revisión, Contabilidad tenía que corregir a mano los números del CSV, que salía con coma decimal, y su Excel usa punto decimal. En el `.xlsx` cada número va guardado como número, así que Excel lo muestra con la configuración regional de cada equipo. Se descartó el CSV con punto decimal (`d1c65c2`, nunca desplegado), porque seguía dependiendo de esa configuración.
+  - Hoja `Costo PT`, con el encabezado en negrita, la primera fila fija, filtros y anchos de columna.
+  - Códigos y descripciones como texto. Nivel como entero. Cantidad y costo unitario con formato `#,##0.00####`, costos MP, MO, CIF y total con `#,##0.00`, y fecha de carga como fecha y hora (`yyyy-mm-dd hh:mm`).
+  - Si el informe superara 1.048.575 filas (hoy ~463.600), sigue en una hoja `Costo PT (2)`.
+- **Generación:** [`src/xlsx.ts`](../../../reporting-api/src/xlsx.ts) de la API, sin dependencias (XML de la hoja comprimido con `zlib` dentro de un ZIP), para que el despliegue siga siendo copiar `dist\`.
+- **Rendimiento medido (2026-11-06, filas sintéticas en el equipo de desarrollo):** 463.600 filas en 6,5 s de CPU, 24,3 MB, frente a ~104 MB del CSV. Excel abrió el archivo en 6,7 s sin pedir reparación. Con datos reales, el tiempo y el tamaño quedan `pendiente` de medir en el servidor.
+- **Streaming:** la API lee la tabla con `request.toReadableStream()` de `mssql` y escribe el libro a medida que llegan las filas, sin cargar todo en memoria. Espera la primera fila antes de enviar los encabezados, así que un error de la consulta todavía sale como JSON. El proxy del frontend reenvía el flujo sin acumularlo.
 - Orden: `CodigoPT`, `SortPath`. Incluye la fila del nivel 1 de cada producto, con sus totales.
 
 Columnas:
@@ -513,7 +520,7 @@ Columnas:
 | Alerta | `Alerta` |
 | Fecha de carga | `FechaCarga` |
 
-Errores: si la consulta falla antes de enviar la primera fila, 502 como en los demás endpoints. Si falla a mitad del flujo, la API corta la conexión y el navegador marca la descarga como fallida; el error queda en el log de la API.
+Errores: si la consulta falla antes de la primera fila, 502 como en los demás endpoints. Si falla a mitad del flujo, la API corta la conexión y el navegador marca la descarga como fallida; el error queda en el log de la API.
 
 Consulta de apoyo para fijar el tope de líneas (solo lectura):
 
@@ -549,7 +556,7 @@ Implementado el 2026-11-05 en la rama `bi/costo-actual-pt` de este repositorio.
 
 - Ruta: `/costo-actual-pt` ([`CostoActualPtDashboard.tsx`](../../components/CostoActualPtDashboard.tsx), estilos en [`product-cost.css`](../../app/styles/product-cost.css)).
 - Proxys: [`app/api/costo-actual-pt/route.ts`](../../app/api/costo-actual-pt/route.ts) y [`app/api/costo-actual-pt/export/route.ts`](../../app/api/costo-actual-pt/export/route.ts) (streaming, `maxDuration = 300`).
-- Catálogo: `costo-actual-pt` en [`lib/reports.ts`](../../lib/reports.ts) y `productCostNavigation` en [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Permisos: `pendiente` de asignar en `/admin/permisos` a las usuarias de la sección 0.
+- Catálogo: `costo-actual-pt` en [`lib/reports.ts`](../../lib/reports.ts) y `productCostNavigation` en [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Permisos asignados en `/admin/permisos` (confirmado por el desarrollador el 2026-11-06).
 - Componentes reutilizados: `DashboardShell`, `MetricCard`/`MetricSkeleton` y `ShareList`, que se extrajo de notas crédito a `components/dashboard/`.
 - Comportamiento:
   - **Buscador de producto:** consulta con la lupa, Enter o "Aplicar filtros", y muestra hasta 50 resultados. Al elegir uno se carga el producto.
@@ -562,14 +569,89 @@ Implementado el 2026-11-05 en la rama `bi/costo-actual-pt` de este repositorio.
 - Verificación (2026-11-05):
   - `npm run lint` y `npm run build` sin errores ni advertencias.
   - Revisión visual a 375, 820 y 1440 px con una copia temporal sin middleware y una API falsa con los datos de `CMPD04-0268-000-0000` de la validación. Se revisaron el producto, el estado vacío y la búsqueda. Sin desborde horizontal de la página; la tabla se desplaza en su propio contenedor a 375 y 820 px.
-  - `pendiente`: la prueba con sesión real y datos reales, y la descarga completa (~104 MB) a través de Vercel. Si la descarga falla por duración o tamaño, el plan B es un enlace firmado de corta duración directo a la API.
+  - Probado por el desarrollador en la vista previa de Vercel con sesión y datos reales, incluida la descarga (2026-11-06). PR: [Indicadores_Firplak#2](https://github.com/FirplakDesarrollador/Indicadores_Firplak/pull/2) (portal) y [firplak-reporting-api#3](https://github.com/Firplak/firplak-reporting-api/pull/3) (API, sobre `bi/notas-credito-2`).
+- **Fase 5 cerrada el 2026-11-06.**
 
 ## 6. Conciliación con Power BI
 
-| Indicador | Periodo | Dashboard | Power BI | Diferencia | Causa |
-|---|---|---|---|---|---|
+Plan aprobado por el desarrollador el 2026-11-06. Consultas de solo lectura: [`sql/costo-actual-pt/03_conciliacion.sql`](../../sql/costo-actual-pt/03_conciliacion.sql).
 
-**Firma del dueño de negocio:** nombre — fecha — `pendiente`
+**Qué se demuestra.** El informe muestra solo el costo actual (P9), así que no hay periodos: la comparación va por producto. Por las reglas aprobadas (P1, P10), las cifras **no tienen que coincidir exactas** con el Power BI. La conciliación demuestra dos cosas:
+
+1. El portal aplica las reglas aprobadas: la comparación contra el query optimizado (C4) no tiene diferencias en los productos de hasta 4 niveles.
+2. Cada diferencia con el Power BI tiene una causa D1–D9. Una diferencia mayor a 0,01 sin causa conocida es un hallazgo y se documenta aquí antes de seguir.
+
+**Procedimiento (desarrollador):**
+
+1. Esperar a que se actualicen el Power BI y la tabla (job en el minuto 05) y tomar todos los valores en la misma hora. El costo promedio de SAP cambia con cada movimiento: `CBAN12-0027-000-0406` bajó 1,20 entre el 2026-11-04 y el 2026-11-05.
+2. Ejecutar C1 y anotar la hora de carga y los totales globales. En el Power BI, sin producto elegido, anotar "Total Costo" y las dos tarjetas "sin CIF".
+3. Ejecutar C2. Para cada producto: en el Power BI, anotar "Total Costo" y "sin CIF"; en el portal, "Costo total" y "Costo sin CIF".
+4. Si un producto tiene diferencia, ejecutar C3 con su código y compararlo con la tabla "Lista de Materiales" del Power BI exportada a Excel.
+5. Ejecutar C4 (la validación 4.6).
+6. Presentar la tabla a Contabilidad y registrar la aprobación: quién, cuándo y por qué medio (correo, Teams o reunión).
+
+### Totales globales (C1)
+
+Hora de carga del portal: 2026-11-06 08:05:00. Hora de actualización del Power BI: `pendiente`.
+
+| Grupo | Fuente | Productos | Costo total | Costo sin CIF |
+|---|---|---|---|---|
+| Hasta 4 niveles | Portal | 7.832 | 4.047.079.421,71 | 3.457.986.218,92 |
+| Más de 4 niveles | Portal | 3.444 | 3.018.572.802,94 | 2.542.680.261,28 |
+| Total | Portal | 11.276 | 7.065.652.224,66 | 6.000.666.480,20 |
+| Total | Power BI | `pendiente` | 6.959.525.480 (tarjeta "6.959.525,48 mil") | 5.918.759.760 (tarjeta "5.918.759,76 mil") |
+| **Diferencia** | Portal − Power BI | | **+106.126.744,66 (+1,52 %)** | **+81.906.720,20 (+1,38 %)** |
+
+El CIF del portal (1.064.985.744,46) supera al del Power BI en unos 24.220.024. Las tarjetas del Power BI están redondeadas a 10 pesos.
+
+**Cómo se reparte la diferencia (`pendiente` de C4):** el query optimizado aplica las reglas corregidas, pero corta en el nivel 4, igual que el Power BI. Con su total se separan las dos causas:
+
+- Portal − query optimizado = efecto de desglosar todos los niveles (D9; P2 hoy no tiene artículos).
+- Query optimizado − Power BI = efecto de las reglas corregidas (D1–D8, sobre todo D3, D5 y D6).
+
+El universo pasó de 11.244 productos (V2, 2026-11-04) a 11.276: son productos creados en SAP desde entonces.
+
+### Muestra por producto (C2)
+
+Los códigos de los casos 4 a 11 salen de C2.
+
+| # | Caso | Producto | Fuente | Costo total | Costo sin CIF | MP | MO | CIF | Diferencia | Causa (D#) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | Un nivel con MO y CIF (V7) | `CBAN12-0027-000-0406` | Portal | 235.170,51 | 124.378,51 | 91.818,51 | 32.560,00 | 110.792,00 | | |
+| | | | Power BI | | | | | | | |
+| 2 | Diferencia D3 (V7); también tiene `SIN COSTO EN SAP` (caso 9) | `CBAN05-0001-000-0438` | Portal | 9.424,54 | 9.424,54 | 9.424,54 | 0,00 | 0,00 | | D3 esperada |
+| | | | Power BI | | | | | | | |
+| 3 | Tres niveles, D3/D5 (V7) | `CMPD04-0268-000-0000` | Portal | 99.590,90 | 72.806,90 | 53.846,90 | 18.960,00 | 26.784,00 | | H1 |
+| | | | Power BI | | | | | | | |
+| 4 | Un nivel, solo MP, sin alertas | `CBAN19-0001-000-0000` | Portal | 85.696,44 | 85.696,44 | 85.696,44 | 0,00 | 0,00 | | |
+| | | | Power BI | | | | | | | |
+| 5 | Hasta 4 niveles, con MO y CIF (3 niveles, 193 líneas) | `VBAN33-0005-000-1358` | Portal | 3.832.824,00 | 2.672.802,00 | 2.029.533,00 | 643.269,00 | 1.160.022,00 | | |
+| | | | Power BI | | | | | | | |
+| 6 | Más de 4 niveles (6 niveles, 261 líneas) | `VHPT05-0015-000-0100` | Portal | 6.196.220,70 | 5.338.016,70 | 4.727.736,20 | 610.280,50 | 858.204,00 | | D9 esperada |
+| | | | Power BI | | | | | | | |
+| 7 | Hoja de nivel 2 sin costo en su bodega (1 línea) | `CEXH01-0008-000-0000` | Portal | 360.000,00 | 360.000,00 | 360.000,00 | 0,00 | 0,00 | | D3 esperada |
+| | | | Power BI | | | | | | | |
+| 8 | Con ítem inactivo | `CMPD04-0130-000-0000` | Portal | 107.435,21 | 107.435,21 | 107.435,21 | 0,00 | 0,00 | | |
+| | | | Power BI | | | | | | | |
+| 10 | Semielaborado (P7, 4 niveles) | `CMPD04-0261-000-0000` | Portal | 146.060,60 | 101.331,32 | 69.668,12 | 31.663,20 | 44.729,28 | | |
+| | | | Power BI | | | | | | | |
+| 11 | El de más líneas (5 niveles, 330 líneas) | `VCOC03-0370-000-0001` | Portal | 3.652.516,41 | 3.210.354,21 | 3.027.785,21 | 182.569,00 | 442.162,20 | | D9 esperada |
+| | | | Power BI | | | | | | | |
+
+El caso 9 (`SIN COSTO EN SAP`) eligió el mismo producto que el caso 2, así que queda cubierto ahí. Frente a la V7 del 2026-11-04, `CBAN12-0027` sigue en 235.170,505 y `CBAN05-0001` bajó 0,80 (9.425,34 → 9.424,54) por movimientos en SAP.
+
+### Comparación contra el query optimizado (C4)
+
+| Grupo | Productos | Con diferencia | Total tabla | Total query optimizado |
+|---|---|---|---|---|
+| Hasta 4 niveles | | | | |
+| Más de 4 niveles | | | | |
+
+### Hallazgos
+
+- **H1 (2026-11-06), causa de la diferencia del nivel 3 de `CMPD04-0268`:** el SQL original costea las hojas de ese nivel con `@Bodega3_`, una bodega que viene de otro componente (línea 331), y no con la de su propia línea. Ver la precisión en la V7. No cambia el portal: aplica la cascada aprobada (bodega de la lista → `MP-01` → `PT-01`). Falta confirmar el costo de la tuerca con C3b.
+
+**Aprobación del dueño de negocio (Contabilidad):** nombre — fecha — medio — `pendiente`
 
 ## 7. Despliegue y retiro
 
