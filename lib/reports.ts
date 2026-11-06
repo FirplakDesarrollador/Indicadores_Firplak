@@ -1,9 +1,21 @@
 import { Boxes, FileMinus, ReceiptText, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
-// Un informe nuevo no lo ve nadie hasta que un administrador lo asigna en /admin/permisos.
+// Un informe nuevo no lo ve nadie hasta que un administrador lo agrega a un cargo o lo asigna a una persona en /admin/permisos.
+
+// Áreas que agrupan los informes en el portal y en la administración, en este orden.
+export const reportAreas = [
+  { id: "ventas", label: "Informes de ventas", short: "Ventas" },
+  { id: "contabilidad", label: "Informes de contabilidad", short: "Contabilidad" },
+  { id: "financiera", label: "Informes financieros", short: "Financiera" },
+  { id: "logistica", label: "Informes de logística", short: "Logística" },
+] as const;
+
+export type ReportArea = (typeof reportAreas)[number]["id"];
+
 export type ReportDefinition = {
   slug: string;
+  area: ReportArea;
   title: string;
   subtitle: string;
   href: string;
@@ -15,6 +27,7 @@ export type ReportDefinition = {
 export const reports: ReportDefinition[] = [
   {
     slug: "facturacion-diaria",
+    area: "ventas",
     title: "Facturación diaria",
     subtitle: "Indicadores comerciales y operativos",
     href: "/facturacion-diaria",
@@ -24,6 +37,7 @@ export const reports: ReportDefinition[] = [
   },
   {
     slug: "notas-credito",
+    area: "ventas",
     title: "Notas crédito",
     subtitle: "Notas crédito frente a la facturación y sus causas",
     href: "/notas-credito",
@@ -33,6 +47,7 @@ export const reports: ReportDefinition[] = [
   },
   {
     slug: "costo-actual-pt",
+    area: "contabilidad",
     title: "Costo de producto terminado",
     subtitle: "Costo actual en MP, MO y CIF por lista de materiales",
     href: "/costo-actual-pt",
@@ -42,6 +57,13 @@ export const reports: ReportDefinition[] = [
     apiPaths: ["/api/costo-actual-pt"],
   },
 ];
+
+// Informes agrupados por área; omite las áreas que aún no tienen informes.
+export function groupReportsByArea<T extends { area: ReportArea }>(items: T[]) {
+  return reportAreas
+    .map((area) => ({ ...area, items: items.filter((item) => item.area === area.id) }))
+    .filter((group) => group.items.length > 0);
+}
 
 export const adminPath = "/admin";
 

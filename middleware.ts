@@ -50,7 +50,7 @@ export async function middleware(request: NextRequest) {
   if (user && (report || needsAdmin)) {
     let allowed = false;
     try {
-      const access = await getUserAccess(supabase, user.email ?? "");
+      const access = await getUserAccess(supabase);
       allowed = needsAdmin ? access.isAdmin : canViewReport(access, report!.slug);
     } catch (error) {
       console.error("No fue posible verificar los permisos del usuario", error);
