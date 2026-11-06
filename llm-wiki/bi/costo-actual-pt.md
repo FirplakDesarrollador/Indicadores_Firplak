@@ -636,13 +636,22 @@ Los códigos de los casos 4 a 11 salen de C2.
 | 10 | Semielaborado (P7, 4 niveles) | `CMPD04-0261-000-0000` | Portal | 146.060,60 | 101.331,32 | 69.668,12 | 31.663,20 | 44.729,28 | | |
 | | | | Power BI | 146.060,60 | 101.331,32 | 69.668,12 | 31.663,20 | 44.729,28 | 0 | Coincide |
 | 11 | El de más líneas (5 niveles, 330 líneas) | `VCOC03-0370-000-0001` | Portal | 3.652.516,41 | 3.210.354,21 | 3.027.785,21 | 182.569,00 | 442.162,20 | | |
-| | | | Power BI | 3.707.286,88 | 3.265.124,68 | 3.082.555,68 | 182.569,00 | 442.162,20 | −54.770,47 (solo MP) | Probable D9: el nivel 5 solo tiene MP, y el Power BI costea el subensamble del nivel 4 con su propio costo promedio (`pendiente` de C3) |
+| | | | Power BI | 3.707.286,88 | 3.265.124,68 | 3.082.555,68 | 182.569,00 | 442.162,20 | −54.770,47 (solo MP) | Desglosada con C3: placa de cuarzo `CQUA01-0001` −59.366,50 (`pendiente` de C3b), H1 +5.955,31, D9 −1.334,63 y movimientos de SAP −61,08 |
 
 Valores del Power BI tomados el 2026-11-06 de la tabla "Lista de Materiales" exportada a Excel por el desarrollador (`pbi_LdeM/pbi-lista-materiales.xlsx`, sin versionar). En los 10 productos, la fila de nivel 1 del Power BI es igual a la suma de sus líneas.
 
 **Resumen:** 5 de 10 productos coinciden exactamente (`CBAN12-0027`, `CMPD04-0268`, `CBAN19-0001`, `CMPD04-0130` y `CMPD04-0261`). Tres tienen causas confirmadas: `CBAN05-0001` y `CEXH01-0008` (D3) y `VHPT05-0015` (D9). **`VBAN33-0005` confirmado (2026-11-06, C3 del portal frente a la exportación del Power BI):** con los costos unitarios del portal y las cantidades del Power BI, la materia prima da exactamente 2.029.533,00, igual que el portal, y la diferencia exactamente −4.799,75. En los 20 artículos que difieren, el costo unitario del Power BI es el `AvgPrice` de `MP-01` y el del portal el de la bodega de la lista (`MP-12` en los muebles, `MP-05` en los mesones): es H1. Las diferencias se compensan entre sí. Las mayores son los laterales de cajón `CMPD07-0249` (−18.123,63), la bisagra `CMPD07-0059` (+6.377,10), el tablero Candelaria `CMPD06-0015` (+4.475,82) y la manija `CMPD07-0321` (+3.991,44). Los artículos sin costo en ninguna bodega (`CMPD09-0201` a `CMPD09-0205` y los planos de calidad) valen 0 en las dos fuentes, así que no explican la diferencia: en este producto no actúa D6.
 
-Queda uno con diferencia solo en MP y causa probable sin confirmar: `VCOC03-0370` (D9). Para cerrarlo hace falta la C3 completa de ese producto. La C4 ya muestra que en los productos de hasta 4 niveles, como `VBAN33-0005`, el portal es idéntico al query optimizado, así que su diferencia con el Power BI viene de una regla corregida y no de un error del portal.
+**`VCOC03-0370` desglosado (2026-11-06, C3 del portal `pbi_LdeM/c3-vcoc03.xlsx` frente a la exportación del Power BI).** Con la carga de ese momento, la MP del portal es 3.027.748,77 y la del Power BI 3.082.555,68: −54.806,91. Línea por línea:
+
+| Causa | Efecto | Detalle |
+|---|---|---|
+| Placa `CQUA01-0001-000-0000` (salpicadero de cuarzo 210X60 blanco polar) | −59.366,50 | El portal usa 279.457,50, el costo de la bodega de la lista (`MP-05`). El Power BI usa 338.824, que no es el costo de `MP-05`, ni el de `MP-01` (272.646,25), ni el de `PT-01` (0), y no aparece en otro artículo de la exportación. `pendiente`: C3b de esa placa en todas las bodegas y en la lista de precios 10. |
+| H1: el Power BI usó el costo de `MP-01` | +5.955,31 | Placa `CQUA01-0003` +5.893,92, riel `CMPD07-0037` +1.053,70, platero `CMPD07-0041` −676,35, tablero `CMPD06-0001` −319,09 y otros menores. |
+| D9: el portal desglosa la mezcla de carbonato `CMPD02-0011` en el nivel 5 | −1.334,63 | El Power BI la costea como hoja (436,79 × 11,6 = 5.066,76). El portal suma sus dos carbonatos (1.291,72 + 2.440,41). |
+| Movimientos de SAP entre la toma del Power BI y la C3 | −61,08 | Cristalán `CMPD01-0020` (−60,20) y dos etiquetas. |
+
+Al pasar la C3 a Excel, la configuración regional leyó el punto decimal como separador de miles: las celdas numéricas quedaron multiplicadas por 1.000.000. Se corrigieron al leerlas. Solo falta la C3b de la placa `CQUA01-0001`. La C4 ya muestra que en los productos de hasta 4 niveles, como `VBAN33-0005`, el portal es idéntico al query optimizado, así que su diferencia con el Power BI viene de una regla corregida y no de un error del portal.
 
 El caso 9 (`SIN COSTO EN SAP`) eligió el mismo producto que el caso 2, así que queda cubierto ahí. Frente a la V7 del 2026-11-04, `CBAN12-0027` sigue en 235.170,505 y `CBAN05-0001` bajó 0,80 (9.425,34 → 9.424,54) por movimientos en SAP.
 
