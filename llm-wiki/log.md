@@ -475,3 +475,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - A pedido del desarrollador se quitan las tarjetas "Costo promedio" y "Costo promedio sin CIF" del dashboard, porque con un producto elegido repetían el total. Quedan "Costo total" y "Costo sin CIF" en una cuadrícula de dos columnas.
 - La API no cambia: `summary.averageCost` y `averageCostWithoutOverhead` quedan sin uso en el portal.
+
+## [2026-11-06] bi | Costo actual de PT: fase 5 cerrada y plan de conciliación (fase 6)
+
+- El desarrollador asignó los permisos y probó el dashboard en la vista previa de Vercel, con sesión real y la descarga. PR: Indicadores_Firplak#2 y firplak-reporting-api#3.
+- Fase 6: consultas de solo lectura en [`sql/costo-actual-pt/03_conciliacion.sql`](../sql/costo-actual-pt/03_conciliacion.sql) (C1 totales globales, C2 muestra de 11 productos por caso, C3 detalle con costos de SAP por bodega, C4 comparación contra el query optimizado) y tablas por llenar en la sección 6 de la [ficha](bi/costo-actual-pt.md).
+- La conciliación es por producto, no por periodo (P9). Las diferencias con el Power BI deben tener causa D1–D9.

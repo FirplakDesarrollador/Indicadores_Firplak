@@ -1,7 +1,7 @@
 ---
 status: en-migracion
-fase: 5
-updated: 2026-11-04
+fase: 6
+updated: 2026-11-06
 sources:
   - ../../bi-origen/bi-costo-actual-pt/
 ---
@@ -549,7 +549,7 @@ Implementado el 2026-11-05 en la rama `bi/costo-actual-pt` de este repositorio.
 
 - Ruta: `/costo-actual-pt` ([`CostoActualPtDashboard.tsx`](../../components/CostoActualPtDashboard.tsx), estilos en [`product-cost.css`](../../app/styles/product-cost.css)).
 - Proxys: [`app/api/costo-actual-pt/route.ts`](../../app/api/costo-actual-pt/route.ts) y [`app/api/costo-actual-pt/export/route.ts`](../../app/api/costo-actual-pt/export/route.ts) (streaming, `maxDuration = 300`).
-- Catálogo: `costo-actual-pt` en [`lib/reports.ts`](../../lib/reports.ts) y `productCostNavigation` en [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Permisos: `pendiente` de asignar en `/admin/permisos` a las usuarias de la sección 0.
+- Catálogo: `costo-actual-pt` en [`lib/reports.ts`](../../lib/reports.ts) y `productCostNavigation` en [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Permisos asignados en `/admin/permisos` (confirmado por el desarrollador el 2026-11-06).
 - Componentes reutilizados: `DashboardShell`, `MetricCard`/`MetricSkeleton` y `ShareList`, que se extrajo de notas crédito a `components/dashboard/`.
 - Comportamiento:
   - **Buscador de producto:** consulta con la lupa, Enter o "Aplicar filtros", y muestra hasta 50 resultados. Al elegir uno se carga el producto.
@@ -562,14 +562,79 @@ Implementado el 2026-11-05 en la rama `bi/costo-actual-pt` de este repositorio.
 - Verificación (2026-11-05):
   - `npm run lint` y `npm run build` sin errores ni advertencias.
   - Revisión visual a 375, 820 y 1440 px con una copia temporal sin middleware y una API falsa con los datos de `CMPD04-0268-000-0000` de la validación. Se revisaron el producto, el estado vacío y la búsqueda. Sin desborde horizontal de la página; la tabla se desplaza en su propio contenedor a 375 y 820 px.
-  - `pendiente`: la prueba con sesión real y datos reales, y la descarga completa (~104 MB) a través de Vercel. Si la descarga falla por duración o tamaño, el plan B es un enlace firmado de corta duración directo a la API.
+  - Probado por el desarrollador en la vista previa de Vercel con sesión y datos reales, incluida la descarga (2026-11-06). PR: [Indicadores_Firplak#2](https://github.com/FirplakDesarrollador/Indicadores_Firplak/pull/2) (portal) y [firplak-reporting-api#3](https://github.com/Firplak/firplak-reporting-api/pull/3) (API, sobre `bi/notas-credito-2`).
+- **Fase 5 cerrada el 2026-11-06.**
 
 ## 6. Conciliación con Power BI
 
-| Indicador | Periodo | Dashboard | Power BI | Diferencia | Causa |
-|---|---|---|---|---|---|
+Plan aprobado por el desarrollador el 2026-11-06. Consultas de solo lectura: [`sql/costo-actual-pt/03_conciliacion.sql`](../../sql/costo-actual-pt/03_conciliacion.sql).
 
-**Firma del dueño de negocio:** nombre — fecha — `pendiente`
+**Qué se demuestra.** El informe muestra solo el costo actual (P9), así que no hay periodos: la comparación va por producto. Por las reglas aprobadas (P1, P10), las cifras **no tienen que coincidir exactas** con el Power BI. La conciliación demuestra dos cosas:
+
+1. El portal aplica las reglas aprobadas: la comparación contra el query optimizado (C4) no tiene diferencias en los productos de hasta 4 niveles.
+2. Cada diferencia con el Power BI tiene una causa D1–D9. Una diferencia mayor a 0,01 sin causa conocida es un hallazgo y se documenta aquí antes de seguir.
+
+**Procedimiento (desarrollador):**
+
+1. Esperar a que se actualicen el Power BI y la tabla (job en el minuto 05) y tomar todos los valores en la misma hora. El costo promedio de SAP cambia con cada movimiento: `CBAN12-0027-000-0406` bajó 1,20 entre el 2026-11-04 y el 2026-11-05.
+2. Ejecutar C1 y anotar la hora de carga y los totales globales. En el Power BI, sin producto elegido, anotar "Total Costo" y las dos tarjetas "sin CIF".
+3. Ejecutar C2. Para cada producto: en el Power BI, anotar "Total Costo" y "sin CIF"; en el portal, "Costo total" y "Costo sin CIF".
+4. Si un producto tiene diferencia, ejecutar C3 con su código y compararlo con la tabla "Lista de Materiales" del Power BI exportada a Excel.
+5. Ejecutar C4 (la validación 4.6).
+6. Presentar la tabla a Contabilidad y registrar la aprobación: quién, cuándo y por qué medio (correo, Teams o reunión).
+
+### Totales globales (C1)
+
+Hora de carga: `pendiente`. Hora de actualización del Power BI: `pendiente`.
+
+| Grupo | Fuente | Productos | Costo total | Costo sin CIF | Diferencia | Causa |
+|---|---|---|---|---|---|---|
+| Hasta 4 niveles | Portal | | | | | |
+| Más de 4 niveles | Portal | | | | | D9 |
+| Total | Portal | | | | | |
+| Total | Power BI | | | | | |
+
+### Muestra por producto (C2)
+
+Los códigos de los casos 4 a 11 salen de C2.
+
+| # | Caso | Producto | Fuente | Costo total | Costo sin CIF | MP | MO | CIF | Diferencia | Causa (D#) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | Un nivel con MO y CIF (V7) | `CBAN12-0027-000-0406` | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 2 | Diferencia D3 (V7) | `CBAN05-0001-000-0438` | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 3 | Tres niveles, D3/D5 (V7) | `CMPD04-0268-000-0000` | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 4 | Un nivel, solo MP, sin alertas | | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 5 | Hasta 4 niveles, con MO y CIF | | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 6 | Más de 4 niveles | | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 7 | Hoja de nivel 2 sin costo en su bodega | | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 8 | Con ítem inactivo | | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 9 | Con línea `SIN COSTO EN SAP` | | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 10 | Semielaborado (P7) | | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+| 11 | El de más líneas | | Portal | | | | | | | |
+| | | | Power BI | | | | | | | |
+
+### Comparación contra el query optimizado (C4)
+
+| Grupo | Productos | Con diferencia | Total tabla | Total query optimizado |
+|---|---|---|---|---|
+| Hasta 4 niveles | | | | |
+| Más de 4 niveles | | | | |
+
+### Hallazgos
+
+Ninguno registrado (`pendiente` de la ejecución).
+
+**Aprobación del dueño de negocio (Contabilidad):** nombre — fecha — medio — `pendiente`
 
 ## 7. Despliegue y retiro
 
