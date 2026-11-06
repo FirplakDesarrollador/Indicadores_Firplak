@@ -123,7 +123,7 @@ SELECT l.SortPath, l.Nivel, l.Codigo, l.Descripcion, l.Bodega, l.Clasificacion,
        wp.AvgPrice AS AvgPrice_PT01,
        lp.Price    AS Precio_Lista10,
        i.AvgPrice  AS AvgPrice_Articulo
-FROM dbo.Informe_costo_pt l
+FROM Planos_Symphony.dbo.Informe_costo_pt l   -- nombre completo: funciona aunque la ventana esté en FIRPLAK_SA
 LEFT JOIN FIRPLAK_SA.dbo.OITW wb WITH (NOLOCK)
        ON wb.ItemCode COLLATE DATABASE_DEFAULT = l.Codigo AND wb.WhsCode COLLATE DATABASE_DEFAULT = l.Bodega
 LEFT JOIN FIRPLAK_SA.dbo.OITW wm WITH (NOLOCK)
