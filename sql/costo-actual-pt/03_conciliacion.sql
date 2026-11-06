@@ -123,7 +123,7 @@ SELECT l.SortPath, l.Nivel, l.Codigo, l.Descripcion, l.Bodega, l.Clasificacion,
        wp.AvgPrice AS AvgPrice_PT01,
        lp.Price    AS Precio_Lista10,
        i.AvgPrice  AS AvgPrice_Articulo
-FROM dbo.Informe_costo_pt l
+FROM Planos_Symphony.dbo.Informe_costo_pt l   -- nombre completo: funciona aunque la ventana esté en FIRPLAK_SA
 LEFT JOIN FIRPLAK_SA.dbo.OITW wb WITH (NOLOCK)
        ON wb.ItemCode COLLATE DATABASE_DEFAULT = l.Codigo AND wb.WhsCode COLLATE DATABASE_DEFAULT = l.Bodega
 LEFT JOIN FIRPLAK_SA.dbo.OITW wm WITH (NOLOCK)
@@ -149,7 +149,40 @@ WHERE w.ItemCode IN (N'COMP02-0033-000-0000', N'COMP02-0027-000-0000', N'COMP02-
 ORDER BY w.ItemCode, w.WhsCode;
 
 /* ───────────── C4. Comparación completa contra el query optimizado ─────────────
-   Es la consulta 4.6 de 01_informe_costo_pt.sql. En la MISMA ventana de SSMS: ejecutar
-   bi-origen/bi-costo-actual-pt/query-optimizado.sql sin su DROP TABLE final y luego la 4.6.
+   Es la consulta 4.6 de 01_informe_costo_pt.sql, con el nombre completo de la tabla.
+   Pasos, todos en la MISMA ventana de SSMS (las tablas # viven mientras la ventana siga abierta):
+     1. Abrir bi-origen/bi-costo-actual-pt/query-optimizado.sql, con la base FIRPLAK_SA elegida.
+     2. Comentar o borrar las dos partes del final: el SELECT de "RESULTADO FINAL" (devolvería
+        ~460.000 filas a la pantalla) y la línea "DROP TABLE IF EXISTS ..." de "Limpieza".
+     3. Ejecutarlo. Deja lleno #Resultado.
+     4. En la misma ventana, ejecutar las dos consultas de abajo.
    Esperado: "Hasta 4 niveles" con ConDiferencia = 0 (salvo artículos MO+CIF, P2, hoy ninguno);
-   "Más de 4 niveles" con diferencias por D9. */
+   "Más de 4 niveles" con diferencias por D9. La resta TotalTabla - TotalOptimizado es el efecto de D9. */
+
+;WITH Tabla AS (
+    SELECT CodigoPT, MAX(Nivel) AS NivelMax,
+           SUM(CASE WHEN Nivel = 1 THEN Costo_Total END) AS Total
+    FROM Planos_Symphony.dbo.Informe_costo_pt GROUP BY CodigoPT
+), Opt AS (
+    SELECT RootCode, CostoTotal AS Total FROM #Resultado WHERE Nivel = 1
+)
+SELECT CASE WHEN t.NivelMax > 4 THEN 'Más de 4 niveles' ELSE 'Hasta 4 niveles' END AS Grupo,
+       COUNT(1) AS Productos,
+       SUM(CASE WHEN ABS(t.Total - o.Total) > 0.01 THEN 1 ELSE 0 END) AS ConDiferencia,
+       SUM(t.Total) AS TotalTabla, SUM(o.Total) AS TotalOptimizado
+FROM Tabla t
+INNER JOIN Opt o ON o.RootCode COLLATE DATABASE_DEFAULT = t.CodigoPT
+GROUP BY CASE WHEN t.NivelMax > 4 THEN 'Más de 4 niveles' ELSE 'Hasta 4 niveles' END;
+
+-- Si "Hasta 4 niveles" tiene diferencias: los 20 productos con mayor diferencia.
+;WITH Tabla AS (
+    SELECT CodigoPT, MAX(Nivel) AS NivelMax,
+           SUM(CASE WHEN Nivel = 1 THEN Costo_Total END) AS Total
+    FROM Planos_Symphony.dbo.Informe_costo_pt GROUP BY CodigoPT
+)
+SELECT TOP (20) t.CodigoPT, t.NivelMax, t.Total AS TotalTabla, o.CostoTotal AS TotalOptimizado,
+       t.Total - o.CostoTotal AS Diferencia
+FROM Tabla t
+INNER JOIN #Resultado o ON o.Nivel = 1 AND o.RootCode COLLATE DATABASE_DEFAULT = t.CodigoPT
+WHERE t.NivelMax <= 4 AND ABS(t.Total - o.CostoTotal) > 0.01
+ORDER BY ABS(t.Total - o.CostoTotal) DESC;

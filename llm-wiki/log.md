@@ -498,3 +498,15 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 ## [2026-11-06] cambio | Costo actual de PT: seis tarjetas de costo
 
 - A pedido del desarrollador, el dashboard muestra tarjetas separadas de MP, MO y CIF (con su participación en el total) y los totales: costo total, sin CIF (MP + MO) y sin MO (MP + CIF). "Sin MO" se calcula en el navegador con `totalCost - laborCost`; la API no cambia.
+
+## [2026-11-06] bi | Costo actual de PT: valores del Power BI de la muestra
+
+- Con la exportación "Lista de Materiales" del Power BI se comparan 6 productos: `CBAN12-0027`, `CMPD04-0268` y `CMPD04-0261` coinciden. `VHPT05-0015` difiere en +477.436,48 (D9). `VCOC03-0370` difiere en −54.770,47 y `VBAN33-0005` en −4.799,75, solo en MP (`pendiente` de C3).
+- `CMPD04-0268` coincide hoy y el 2026-11-04 no: confirma que H1 hace variar el resultado del Power BI entre actualizaciones.
+- La exportación llegó cortada; faltan los totales de 4 productos.
+- Con la exportación completa (`pbi_LdeM/`): `CBAN19-0001` y `CMPD04-0130` coinciden; `CBAN05-0001` (+1.817,70) y `CEXH01-0008` (+360.000) difieren por D3, como se esperaba. C4 queda escrita completa en `03_conciliacion.sql`, con el nombre de tres partes de la tabla.
+- C4: 7.835 productos de hasta 4 niveles sin ninguna diferencia contra el query optimizado; 3.445 de más de 4 niveles con +71,98 millones (D9). C3b confirma H1: el costo de 293,14 de la tuerca es el de `MP-05`, una bodega que quedó de otro componente.
+- `VBAN33-0005` explicado al peso con C3: −4.799,75 por H1 (el Power BI usó el costo de `MP-01` en 20 artículos). Los artículos sin costo en ninguna bodega valen 0 en las dos fuentes. Falta la C3 completa de `VCOC03-0370`.
+- `VCOC03-0370` desglosado con C3: −59.366,50 de la placa de cuarzo `CQUA01-0001` (el Power BI usa 338.824, fuente `pendiente`), +5.955,31 de H1, −1.334,63 de D9 y −61,08 de movimientos de SAP.
+- C3b de la placa `CQUA01-0001`: 338.824 es su costo en `MP-10`, la bodega de los componentes que el Power BI leyó justo antes (H1). Los 10 productos de la muestra quedan explicados; la fase 6 solo espera la aprobación de Contabilidad.
+- Resumen de la conciliación enviado a Contabilidad por Teams. Las fases 6 y 7 se cierran con su respuesta, previsto para el martes 2026-11-10.
