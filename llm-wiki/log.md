@@ -1,5 +1,20 @@
 # Registro de mantenimiento
 
+## [2026-11-05] feat | Histórico de Due Date vs Atrasadas en Historial & Flujo
+
+- Se agregó un nuevo gráfico de área situado directamente arriba del gráfico de tareas creadas en `HistorialSubView.tsx`.
+- Muestra la comparativa de tareas con fecha de vencimiento (due date) en azul (`#2563eb`) vs tareas atrasadas en rojo (`theme.red`).
+- Cuenta con el mismo diseño, selector de granularidad (`Diario` por defecto, `Semanal` y `Mensual`) y sincronización con la fecha de corte activa (`fechaCorte`).
+- Se validó con `npx tsc --noEmit`.
+
+## [2026-11-05] feat | Selector de granularidad temporal en Historial & Flujo
+
+- Se agregó un control segmentado para alternar la visualización del gráfico de flujo acumulado en `HistorialSubView.tsx`: `Diario` (por defecto, últimos 30 días), `Semanal` (últimas 12 semanas) y `Mensual` (últimos 10 meses).
+- La granularidad diaria es ahora la opción por defecto según requerimiento de usuario.
+- Se optimizaron las etiquetas del eje X con formato adaptativo (`d.toLocaleDateString` sin conectores largos) y control de espaciado `minTickGap` para evitar colisiones visuales.
+- Se validó la compilación sin errores con `npx tsc --noEmit`.
+
+
 ## [2026-10-29] merge | Integración de main en Ale
 
 - Se sincronizó la rama local `main` con `origin/main` y se fusionó en `Ale`.

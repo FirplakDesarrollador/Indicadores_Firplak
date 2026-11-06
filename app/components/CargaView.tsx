@@ -1920,7 +1920,11 @@ export default function CargaView() {
           }}
         />
       ) : activeSubView === "historial" ? (
-        <HistorialSubView tasks={filteredRows} throughputMap={apiData?.throughputMap} />
+        <HistorialSubView
+          tasks={filteredRows}
+          throughputMap={apiData?.throughputMap}
+          fechaCorte={apiData?.fechaCorte}
+        />
       ) : activeSubView === "macro" ? (
         <MacroSubView
           tasks={filteredRows}
