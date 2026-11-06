@@ -59,7 +59,7 @@ Agregado en la rama `bi/notas-credito` y desplegado en el servidor el 2026-10-27
 Agregados en la rama `bi/costo-actual-pt` (commit `a28da32`, creada desde `bi/notas-credito-2`). Despliegue `pendiente`. Consultan `Informe_costo_pt` (`REPORT_COSTO_PT_TABLE`), que el SP `sp_Actualizar_Informe_costo_pt` recalcula cada hora. Mismo Bearer token.
 
 - Principal: `codigo`, `search` y `alerta`. Sin periodo ni paginación: devuelve la lista de materiales completa del producto (tope de 5.000 líneas), el resumen de costos y alertas, los productos que coinciden con la búsqueda y `loadedAt`.
-- Descarga: CSV para Excel en español (UTF-8 con BOM, `;`, coma decimal), en streaming con `request.toReadableStream()` de `mssql` y contrapresión. Con `codigo`, un producto; sin él, todos. Usa un pool aparte con `REPORT_DB_EXPORT_TIMEOUT_MS` (10 min por defecto).
+- Descarga: CSV para Excel (UTF-8 con BOM, `;`, números con coma de miles y punto decimal), en streaming con `request.toReadableStream()` de `mssql` y contrapresión. Con `codigo`, un producto; sin él, todos. Usa un pool aparte con `REPORT_DB_EXPORT_TIMEOUT_MS` (10 min por defecto).
 - Código: `getProductCostReport`, `getProductCostExportInfo` y `openProductCostExport` en `src/db.ts`; `productCostFiltersFrom` y `sendProductCostExport` en `src/server.ts`.
 - Reglas: [ficha de Costo actual de PT](../bi/costo-actual-pt.md#3-contrato-del-endpoint).
 

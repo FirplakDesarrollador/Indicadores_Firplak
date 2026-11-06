@@ -487,3 +487,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - C1: el portal suma 7.065.652.224,66 (11.276 productos) y el Power BI 6.959.525.480: +106,1 millones (+1,52 %). Sin CIF: +81,9 millones (+1,38 %). Falta C4 para separar el efecto de D9 del de las reglas corregidas.
 - C2: registrados los valores del portal de 10 productos; faltan los del Power BI.
 - C3 de `CMPD04-0268-000-0000`: el Power BI tomó el costo de `MP-01` en tres hojas del nivel 3. La causa está en la línea 331 del SQL original (`@Bodega3_` en lugar de `@Bodega2_`), y se precisa la explicación de la V7 (hallazgo H1). Se agrega la consulta C3b.
+
+## [2026-11-06] cambio | Costo actual de PT: formato de números de la descarga
+
+- A pedido de Contabilidad, la descarga CSV pasa de coma decimal sin separador de miles a coma de miles y punto decimal, sin ceros sobrantes a la derecha (`1,234,567.89`). Se mantienen el separador `;` y el BOM UTF-8.
+- Cambio en `reporting-api` (`src/db.ts` y `src/server.ts`). Requiere desplegar la API.
+- Rollback: volver a desplegar el paquete `dist` anterior (`aeb3f5b`).

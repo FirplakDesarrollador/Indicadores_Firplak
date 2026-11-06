@@ -490,7 +490,8 @@ Decisión del desarrollador (2026-11-05): un botón "Descargar" en el dashboard.
 Respuesta:
 
 - `Content-Type: text/csv; charset=utf-8` y `Content-Disposition: attachment; filename="costo-actual-pt_<codigo o todos>_<AAAAMMDD-HHmm de loadedAt>.csv"`.
-- **Formato para Excel en español:** UTF-8 con BOM, separador `;`, decimales con coma, sin separador de miles y textos entre comillas cuando tengan `;`, comillas o saltos de línea.
+- **Formato para Excel:** UTF-8 con BOM, separador `;` y textos entre comillas cuando tengan `;`, comillas o saltos de línea.
+- **Números:** coma de miles, punto decimal y sin ceros sobrantes a la derecha (`1,234,567.89`). Lo pidió Contabilidad en la revisión del 2026-11-06, porque su Excel usa esa configuración y con la coma decimal tenía que corregir los números a mano. Antes, la descarga salía con coma decimal y sin separador de miles.
 - **Streaming:** la API lee la tabla con `request.stream` de `mssql` y escribe el CSV a medida que llegan las filas, sin cargar todo en memoria. El proxy del frontend reenvía el flujo sin acumularlo.
 - Orden: `CodigoPT`, `SortPath`. Incluye la fila del nivel 1 de cada producto, con sus totales.
 
