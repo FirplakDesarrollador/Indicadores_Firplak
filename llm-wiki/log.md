@@ -509,3 +509,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `VBAN33-0005` explicado al peso con C3: −4.799,75 por H1 (el Power BI usó el costo de `MP-01` en 20 artículos). Los artículos sin costo en ninguna bodega valen 0 en las dos fuentes. Falta la C3 completa de `VCOC03-0370`.
 - `VCOC03-0370` desglosado con C3: −59.366,50 de la placa de cuarzo `CQUA01-0001` (el Power BI usa 338.824, fuente `pendiente`), +5.955,31 de H1, −1.334,63 de D9 y −61,08 de movimientos de SAP.
 - C3b de la placa `CQUA01-0001`: 338.824 es su costo en `MP-10`, la bodega de los componentes que el Power BI leyó justo antes (H1). Los 10 productos de la muestra quedan explicados; la fase 6 solo espera la aprobación de Contabilidad.
+- Resumen de la conciliación enviado a Contabilidad por Teams. Las fases 6 y 7 se cierran con su respuesta, previsto para el martes 2026-11-10.
