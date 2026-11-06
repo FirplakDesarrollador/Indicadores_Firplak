@@ -7,16 +7,20 @@ import {
   Coins,
   Database,
   Download,
+  Factory,
   Layers,
+  Package,
   PackageSearch,
   Search,
   TriangleAlert,
+  Users,
+  Wrench,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import { MetricCard, MetricSkeleton } from "@/components/dashboard/MetricCard";
 import ShareList from "@/components/dashboard/ShareList";
 import { readJsonPayload } from "@/lib/dashboard/fetch";
-import { formatCompactCurrency, formatCurrency, formatDateTime, formatNumber } from "@/lib/dashboard/format";
+import { formatCurrency, formatDateTime, formatNumber, formatPercent } from "@/lib/dashboard/format";
 import { productCostNavigation } from "@/lib/dashboard/navigation";
 import type { ProductCostAlert, ProductCostPayload, ProductCostProduct, ProductCostRow, ProductCostSummary } from "@/lib/costo-actual-pt/types";
 
@@ -49,6 +53,11 @@ function ancestorsOf(path: string, level: number) {
 function classificationLabel(row: ProductCostRow) {
   if (row.hasChildren) return "Subensamble";
   return row.classification ?? "—";
+}
+
+// Detalle de las tarjetas MP, MO y CIF: participación en el costo total del producto.
+function shareOfTotal(value: number, total: number, label: string) {
+  return total > 0 ? `${label}: ${formatPercent(value / total)} del total` : label;
 }
 
 export default function CostoActualPtDashboard() {
@@ -219,9 +228,13 @@ export default function CostoActualPtDashboard() {
         {loading || !product ? <div className="billing-zone-skeleton"><span /><span /></div> : <><h2>{product.description}</h2><p><strong>{product.code}</strong> · {product.unit || "Sin unidad"} · {formatNumber(product.lines)} líneas en {formatNumber(Math.max(product.levels - 1, 0))} nivel{product.levels === 2 ? "" : "es"} de la lista</p></>}
       </section>
 
-      <div className="pc-metrics-grid">{loading || !summary ? Array.from({ length: 2 }, (_, index) => <MetricSkeleton key={index} />) : <>
-        <MetricCard label="Costo total" value={formatCurrency(summary.totalCost)} detail={`MP ${formatCompactCurrency(summary.rawMaterialCost)} · MO ${formatCompactCurrency(summary.laborCost)} · CIF ${formatCompactCurrency(summary.overheadCost)}`} icon={Coins} />
-        <MetricCard label="Costo sin CIF" value={formatCurrency(summary.costWithoutOverhead)} detail="Materia prima más mano de obra" icon={Layers} />
+      <div className="pc-metrics-grid">{loading || !summary ? Array.from({ length: 6 }, (_, index) => <MetricSkeleton key={index} />) : <>
+        <MetricCard label="Costo MP" value={formatCurrency(summary.rawMaterialCost)} detail={shareOfTotal(summary.rawMaterialCost, summary.totalCost, "Materia prima")} icon={Package} />
+        <MetricCard label="Costo MO" value={formatCurrency(summary.laborCost)} detail={shareOfTotal(summary.laborCost, summary.totalCost, "Mano de obra")} icon={Users} />
+        <MetricCard label="Costo CIF" value={formatCurrency(summary.overheadCost)} detail={shareOfTotal(summary.overheadCost, summary.totalCost, "Costos indirectos")} icon={Factory} />
+        <MetricCard label="Costo total" value={formatCurrency(summary.totalCost)} detail="MP + MO + CIF" icon={Coins} />
+        <MetricCard label="Costo sin CIF" value={formatCurrency(summary.costWithoutOverhead)} detail="MP + MO" icon={Layers} />
+        <MetricCard label="Costo sin MO" value={formatCurrency(summary.totalCost - summary.laborCost)} detail="MP + CIF" icon={Wrench} />
       </>}</div>
 
       <div className="pc-two-column-grid">

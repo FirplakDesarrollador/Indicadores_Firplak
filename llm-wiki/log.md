@@ -494,3 +494,7 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - La API genera el `.xlsx` en streaming con `src/xlsx.ts`, sin dependencias nuevas: números como números, códigos como texto, encabezado fijo, filtros y formato `#,##0.00`. El portal solo cambia el proxy y los textos.
 - Medido con 463.600 filas sintéticas: 6,5 s de CPU y 24,3 MB (el CSV pesaba ~104 MB). Excel lo abre en 6,7 s sin reparación. Si el usuario cancela a mitad, la generación falla limpia y se cancela la consulta.
 - Despliegue: primero la API y después el portal. Rollback: volver a desplegar el paquete `dist` anterior (`aeb3f5b`, CSV con coma decimal) y revertir el commit del portal.
+
+## [2026-11-06] cambio | Costo actual de PT: seis tarjetas de costo
+
+- A pedido del desarrollador, el dashboard muestra tarjetas separadas de MP, MO y CIF (con su participación en el total) y los totales: costo total, sin CIF (MP + MO) y sin MO (MP + CIF). "Sin MO" se calcula en el navegador con `totalCost - laborCost`; la API no cambia.
