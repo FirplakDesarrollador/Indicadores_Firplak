@@ -619,29 +619,28 @@ Los códigos de los casos 4 a 11 salen de C2.
 |---|---|---|---|---|---|---|---|---|---|---|
 | 1 | Un nivel con MO y CIF (V7) | `CBAN12-0027-000-0406` | Portal | 235.170,51 | 124.378,51 | 91.818,51 | 32.560,00 | 110.792,00 | | |
 | | | | Power BI | 235.170,51 | 124.378,51 | 91.818,51 | 32.560,00 | 110.792,00 | 0 | Coincide |
-| 2 | Diferencia D3 (V7); también tiene `SIN COSTO EN SAP` (caso 9) | `CBAN05-0001-000-0438` | Portal | 9.424,54 | 9.424,54 | 9.424,54 | 0,00 | 0,00 | | D3 esperada |
-| | | | Power BI | | | | | | | |
+| 2 | Diferencia D3 (V7); también tiene `SIN COSTO EN SAP` (caso 9) | `CBAN05-0001-000-0438` | Portal | 9.424,54 | 9.424,54 | 9.424,54 | 0,00 | 0,00 | | |
+| | | | Power BI | 7.606,84 | 7.606,84 | 7.606,84 | 0,00 | 0,00 | +1.817,70 | D3: canto `CMPD06-0003-000-0438` (7,3 × 249) con MP 0 en el Power BI |
 | 3 | Tres niveles, D3/D5 (V7) | `CMPD04-0268-000-0000` | Portal | 99.590,90 | 72.806,90 | 53.846,90 | 18.960,00 | 26.784,00 | | |
 | | | | Power BI | 99.590,90 | 72.806,90 | 53.846,90 | 18.960,00 | 26.784,00 | 0 | Coincide hoy; el 2026-11-04 difería en 2.094,88 (H1) |
 | 4 | Un nivel, solo MP, sin alertas | `CBAN19-0001-000-0000` | Portal | 85.696,44 | 85.696,44 | 85.696,44 | 0,00 | 0,00 | | |
-| | | | Power BI | | | | | | | |
+| | | | Power BI | 85.696,44 | 85.696,44 | 85.696,44 | 0,00 | 0,00 | 0 | Coincide |
 | 5 | Hasta 4 niveles, con MO y CIF (3 niveles, 193 líneas) | `VBAN33-0005-000-1358` | Portal | 3.832.824,00 | 2.672.802,00 | 2.029.533,00 | 643.269,00 | 1.160.022,00 | | |
 | | | | Power BI | 3.837.623,75 | 2.677.601,75 | 2.034.332,75 | 643.269,00 | 1.160.022,00 | −4.799,75 (solo MP) | `pendiente` de C3; probable H1 (hojas del nivel 3) |
 | 6 | Más de 4 niveles (6 niveles, 261 líneas) | `VHPT05-0015-000-0100` | Portal | 6.196.220,70 | 5.338.016,70 | 4.727.736,20 | 610.280,50 | 858.204,00 | | |
 | | | | Power BI | 5.718.784,22 | 5.333.764,22 | 5.061.214,22 | 272.550,00 | 385.020,00 | +477.436,48 (MP −333.478,02; MO +337.730,50; CIF +473.184,00) | D9: el portal desglosa los niveles 5 y 6, que tienen MO y CIF; el Power BI costea los subensambles del nivel 4 como MP |
-| 7 | Hoja de nivel 2 sin costo en su bodega (1 línea) | `CEXH01-0008-000-0000` | Portal | 360.000,00 | 360.000,00 | 360.000,00 | 0,00 | 0,00 | | D3 esperada |
-| | | | Power BI | | | | | | | |
+| 7 | Hoja de nivel 2 sin costo en su bodega (1 línea) | `CEXH01-0008-000-0000` | Portal | 360.000,00 | 360.000,00 | 360.000,00 | 0,00 | 0,00 | | |
+| | | | Power BI | 0,00 | 0,00 | 0,00 | 0,00 | 0,00 | +360.000,00 | D3: el exhibidor `CEXH01-0004-000-0000` (3 unidades) no tiene costo en su bodega; el portal lo toma de la cascada |
 | 8 | Con ítem inactivo | `CMPD04-0130-000-0000` | Portal | 107.435,21 | 107.435,21 | 107.435,21 | 0,00 | 0,00 | | |
-| | | | Power BI | | | | | | | |
+| | | | Power BI | 107.435,21 | 107.435,21 | 107.435,21 | 0,00 | 0,00 | 0 | Coincide |
 | 10 | Semielaborado (P7, 4 niveles) | `CMPD04-0261-000-0000` | Portal | 146.060,60 | 101.331,32 | 69.668,12 | 31.663,20 | 44.729,28 | | |
 | | | | Power BI | 146.060,60 | 101.331,32 | 69.668,12 | 31.663,20 | 44.729,28 | 0 | Coincide |
 | 11 | El de más líneas (5 niveles, 330 líneas) | `VCOC03-0370-000-0001` | Portal | 3.652.516,41 | 3.210.354,21 | 3.027.785,21 | 182.569,00 | 442.162,20 | | |
 | | | | Power BI | 3.707.286,88 | 3.265.124,68 | 3.082.555,68 | 182.569,00 | 442.162,20 | −54.770,47 (solo MP) | Probable D9: el nivel 5 solo tiene MP, y el Power BI costea el subensamble del nivel 4 con su propio costo promedio (`pendiente` de C3) |
 
-Valores del Power BI tomados el 2026-11-06 de la tabla "Lista de Materiales" exportada (filas de nivel 1). La exportación llegó cortada: faltan las filas de nivel 1 de los casos 2, 4, 7 y 8 (`pendiente`). Por las líneas que sí llegaron:
+Valores del Power BI tomados el 2026-11-06 de la tabla "Lista de Materiales" exportada a Excel por el desarrollador (`pbi_LdeM/pbi-lista-materiales.xlsx`, sin versionar). En los 10 productos, la fila de nivel 1 del Power BI es igual a la suma de sus líneas.
 
-- **Caso 2 (`CBAN05-0001`):** el canto `CMPD06-0003-000-0438` sigue con costo unitario 249 y `Costo_Mp` 0 (D3). Se espera que el Power BI dé 1.817,70 menos que el portal.
-- **Caso 7 (`CEXH01-0008`):** el exhibidor `CEXH01-0004-000-0000` (3 unidades) sale con costo 0. El portal le asigna 360.000 por la cascada (D3).
+**Resumen:** 5 de 10 productos coinciden exactamente (`CBAN12-0027`, `CMPD04-0268`, `CBAN19-0001`, `CMPD04-0130` y `CMPD04-0261`). Tres tienen causas confirmadas: `CBAN05-0001` y `CEXH01-0008` (D3) y `VHPT05-0015` (D9). Quedan dos con diferencia solo en MP y causa probable sin confirmar: `VCOC03-0370` (D9) y `VBAN33-0005` (H1). Para cerrarlos hace falta C3 de esos dos productos.
 
 El caso 9 (`SIN COSTO EN SAP`) eligió el mismo producto que el caso 2, así que queda cubierto ahí. Frente a la V7 del 2026-11-04, `CBAN12-0027` sigue en 235.170,505 y `CBAN05-0001` bajó 0,80 (9.425,34 → 9.424,54) por movimientos en SAP.
 

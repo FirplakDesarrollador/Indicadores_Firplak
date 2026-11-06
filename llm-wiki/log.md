@@ -504,3 +504,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Con la exportación "Lista de Materiales" del Power BI se comparan 6 productos: `CBAN12-0027`, `CMPD04-0268` y `CMPD04-0261` coinciden. `VHPT05-0015` difiere en +477.436,48 (D9). `VCOC03-0370` difiere en −54.770,47 y `VBAN33-0005` en −4.799,75, solo en MP (`pendiente` de C3).
 - `CMPD04-0268` coincide hoy y el 2026-11-04 no: confirma que H1 hace variar el resultado del Power BI entre actualizaciones.
 - La exportación llegó cortada; faltan los totales de 4 productos.
+- Con la exportación completa (`pbi_LdeM/`): `CBAN19-0001` y `CMPD04-0130` coinciden; `CBAN05-0001` (+1.817,70) y `CEXH01-0008` (+360.000) difieren por D3, como se esperaba. C4 queda escrita completa en `03_conciliacion.sql`, con el nombre de tres partes de la tabla.
