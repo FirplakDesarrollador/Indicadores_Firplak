@@ -5,6 +5,7 @@ import {
   CalendarDays,
   ChevronRight,
   Database,
+  Download,
   Filter,
   Gauge,
   RefreshCw,
@@ -102,6 +103,21 @@ function normalizeFilters(filters: DashboardFilters): DashboardFilters {
   return { ...filters, search: filters.search.trim() };
 }
 
+// Filtros aplicados como parámetros de la API; la tabla y la descarga usan los mismos.
+function filterParams({ year, month, zone, channel, city, company, subgroup, group, search }: DashboardFilters) {
+  const params = new URLSearchParams();
+  if (year !== "Todos") params.set("anio", year);
+  if (month !== "Todos") params.set("mes", month);
+  if (zone !== "Todas") params.set("zona", zone);
+  if (channel !== "Todos") params.set("mercado", channel);
+  if (city !== "Todas") params.set("ciudad", city);
+  if (company !== "Todas") params.set("empresa", company);
+  if (subgroup !== "Todos") params.set("subgrupoCliente", subgroup);
+  if (group !== "Todos") params.set("grupoCliente", group);
+  if (search) params.set("search", search);
+  return params;
+}
+
 function sameFilters(a: DashboardFilters, b: DashboardFilters) {
   return (Object.keys(a) as Array<keyof DashboardFilters>).every((key) => a[key] === b[key]);
 }
@@ -145,17 +161,9 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
     setLoading(true);
     setIsRefreshing(true);
     try {
-      const params = new URLSearchParams({ page: String(targetPage), pageSize: "50" });
-      const { year, month, zone, channel, city, company, subgroup, group, search } = appliedFilters;
-      if (year !== "Todos") params.set("anio", year);
-      if (month !== "Todos") params.set("mes", month);
-      if (zone !== "Todas") params.set("zona", zone);
-      if (channel !== "Todos") params.set("mercado", channel);
-      if (city !== "Todas") params.set("ciudad", city);
-      if (company !== "Todas") params.set("empresa", company);
-      if (subgroup !== "Todos") params.set("subgrupoCliente", subgroup);
-      if (group !== "Todos") params.set("grupoCliente", group);
-      if (search) params.set("search", search);
+      const params = filterParams(appliedFilters);
+      params.set("page", String(targetPage));
+      params.set("pageSize", "50");
 
       const [billingResponse, deliveryResponse] = await Promise.all([
         fetch(`/api/facturacion-diaria?${params.toString()}`, { cache: "no-store" }),
@@ -365,10 +373,12 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
   };
   const detailDrawer = selectedRow && <><button className="billing-drawer-backdrop" onClick={() => setSelectedRow(null)} aria-label="Cerrar detalle" /><aside className="billing-detail-drawer"><div className="billing-drawer-header"><div><span className="billing-panel-kicker">DETALLE DEL DOCUMENTO</span><h2>{selectedRow.docnum}</h2></div><button onClick={() => setSelectedRow(null)} aria-label="Cerrar detalle"><X size={19} /></button></div><div className="billing-drawer-status"><span className="billing-status-dot" /> Documento contabilizado <span>{formatDate(selectedRow.date)}</span></div><div className="billing-drawer-total"><span>Total neto</span><strong>{formatCurrency(selectedRow.net)}</strong><small>Facturado {formatCurrency(selectedRow.invoiced)} · NC {formatCurrency(selectedRow.creditNote)}</small></div><dl className="billing-detail-list"><div><dt>Empresa</dt><dd>{selectedRow.company ?? "—"}</dd></div><div><dt>Cliente</dt><dd>{selectedRow.customer}</dd></div><div><dt>Grupo de cliente</dt><dd>{selectedRow.customerGroup}</dd></div><div><dt>Subgrupo de cliente</dt><dd>{selectedRow.customerSubgroup ?? "—"}</dd></div><div><dt>Canal</dt><dd>{selectedRow.channel}</dd></div><div><dt>Zona</dt><dd>{selectedRow.zone}</dd></div><div><dt>Ciudad</dt><dd>{selectedRow.city}</dd></div></dl></aside></>;
 
+  const exportQuery = filterParams(appliedFilters).toString();
+  const exportHref = `/api/facturacion-diaria/export${exportQuery ? `?${exportQuery}` : ""}`;
   const complianceDetail = (target: number) => target ? "Real frente a la meta acumulada a la fecha" : "Sin meta acumulada a la fecha";
 
-  return <DashboardShell navigation={billingNavigation} activeHref={isDetailView ? "/facturacion-diaria/detalle" : "/facturacion-diaria"} title="Facturación diaria" className={isDetailView ? "billing-shell-detail" : ""} overlay={detailDrawer}>
-        <div className="billing-heading-row"><div><div className="billing-eyebrow">CENTRO DE INDICADORES <span>·</span> COMERCIAL</div><h1>Facturación detallada</h1><p>Consulta el comportamiento de la facturación, las entregas y su cumplimiento frente a las metas del periodo.</p></div><div className="billing-heading-actions"><button className="billing-secondary-button" onClick={() => setShowFilters((visible) => !visible)}><SlidersHorizontal size={16} /> Filtros</button></div></div>
+  return <DashboardShell navigation={billingNavigation} activeHref={isDetailView ? "/facturacion-diaria/detalle" : "/facturacion-diaria"} title="Facturación y entregas diaria" className={isDetailView ? "billing-shell-detail" : ""} overlay={detailDrawer}>
+        <div className="billing-heading-row"><div><div className="billing-eyebrow">CENTRO DE INDICADORES <span>·</span> COMERCIAL</div><h1>{isDetailView ? "Detalle de facturas" : "Facturación y entregas diaria"}</h1><p>{isDetailView ? "Facturas y notas crédito por documento, con los filtros aplicados." : "Consulta el comportamiento de la facturación, las entregas y su cumplimiento frente a las metas del periodo."}</p></div><div className="billing-heading-actions">{isDetailView && <a className="billing-secondary-button billing-download-button" href={exportHref} download aria-label="Descargar en Excel las facturas con los filtros aplicados"><Download size={16} /> Descargar</a>}<button className="billing-secondary-button" onClick={() => setShowFilters((visible) => !visible)}><SlidersHorizontal size={16} /> Filtros</button></div></div>
         <form className="billing-filterbar" onSubmit={applyFilters}>
           <div className="billing-filterbar-primary">
             <label><CalendarDays size={15} /><span>Periodo</span><select value={draftFilters.year} onChange={(event) => updateDraft("year")(event.target.value)}><option value="Todos">Todos los años</option>{years.map((year) => <option key={year} value={year}>{year}</option>)}</select></label>
@@ -391,12 +401,12 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
         {!error && apiLacksCompanyFilters && <div className="billing-alert"><Database size={16} /><span>La API de informes conectada es una versión anterior: los filtros Empresa y Subgrupo de cliente no se aplican hasta desplegar la versión nueva.</span></div>}
         <div className="billing-metrics-grid" aria-label="Ventas frente a la meta">{loading ? Array.from({ length: 3 }, (_, index) => <MetricSkeleton key={index} />) : <>
           <MetricCard label="Ventas netas" value={formatCompactCurrency(totals.net)} detail={`Facturación ${formatCompactCurrency(totals.invoiced)} − NC ${formatCompactCurrency(totals.creditNote)}`} icon={TrendingUp} />
-          <MetricCard label="Ventas acumuladas (meta)" value={billingTargetToDate ? formatCompactCurrency(billingTargetToDate) : "Sin meta"} detail={targetDetail(targetSeries?.billingTotal ?? 0)} icon={Target} />
-          <MetricCard label="Cumplimiento de ventas" value={billingTargetToDate ? formatPercent(totals.net / billingTargetToDate) : "—"} detail={complianceDetail(billingTargetToDate)} icon={Gauge} />
+          <MetricCard label="Meta" value={billingTargetToDate ? formatCompactCurrency(billingTargetToDate) : "Sin meta"} detail={targetDetail(targetSeries?.billingTotal ?? 0)} icon={Target} />
+          <MetricCard label="Cumplimiento de facturación" value={billingTargetToDate ? formatPercent(totals.net / billingTargetToDate) : "—"} detail={complianceDetail(billingTargetToDate)} icon={Gauge} />
         </>}</div>
         <div className="billing-metrics-grid billing-metrics-grid-deliveries" aria-label="Entregas frente a la meta">{loading ? Array.from({ length: 3 }, (_, index) => <MetricSkeleton key={index} />) : <>
           <MetricCard label="Entregas netas" value={formatCompactCurrency(netDeliveries)} detail={deliveryTotals.returns !== undefined ? `Entregas ${formatCompactCurrency(deliveryTotals.delivered ?? 0)} − devoluciones ${formatCompactCurrency(deliveryTotals.returns)}` : "Valor sin IVA de las entregas del periodo"} icon={Truck} />
-          <MetricCard label="Entregas acumuladas (meta)" value={deliveryTargetToDate ? formatCompactCurrency(deliveryTargetToDate) : "Sin meta"} detail={targetDetail(targetSeries?.deliveryTotal ?? 0)} icon={Target} />
+          <MetricCard label="Meta" value={deliveryTargetToDate ? formatCompactCurrency(deliveryTargetToDate) : "Sin meta"} detail={targetDetail(targetSeries?.deliveryTotal ?? 0)} icon={Target} />
           <MetricCard label="Cumplimiento de entregas" value={deliveryTargetToDate ? formatPercent(netDeliveries / deliveryTargetToDate) : "—"} detail={complianceDetail(deliveryTargetToDate)} icon={Gauge} />
         </>}</div>
         <div className="billing-cumulative-grid">
