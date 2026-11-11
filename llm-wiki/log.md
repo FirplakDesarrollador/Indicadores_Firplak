@@ -570,3 +570,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Decisiones del desarrollador (2026-11-10): las NC de devolución de entregas son las de `U_TIPOSNC = '01'`, y Viventta queda fuera de `Informe_entregas` porque no tiene entregas en SAP. La meta de entregas del portal ya no suma la meta de Viventta ([`lib/metas/targets.ts`](../lib/metas/targets.ts)).
 - Ajuste del desarrollador (2026-11-10): CEFI vende en Nacional y en Exterior, así que Empresa CEFI + Mercado filtra por `TipoVentas` (`addFilters` y `addDeliveryFilters` en `reporting-api/src/db.ts`). Sin empresa, el mercado sigue excluyendo CEFI.
 - Decisión del desarrollador (2026-11-10): la meta de CEFI se divide en CEFI Nacional y CEFI Exterior ([`20261110_metas_cefi_mercado.sql`](../supabase/migrations/20261110_metas_cefi_mercado.sql), probada en PGlite). La pantalla de metas tiene cinco columnas y `segmentsFor` usa los segmentos de CEFI según el mercado.
+
+## [2026-11-11] ux | Una gráfica de acumulados y nuevo orden del resumen diario
+
+- Ventas y entregas acumuladas quedan en una sola gráfica ([`CumulativeChart.tsx`](../components/dashboard/CumulativeChart.tsx)): ventas en navy, entregas en ocre (`chartColors.delivery`); una sola meta acumulada punteada, porque es la misma para ventas y entregas.
+- Tabla "Facturación y entregas por día": Año, Mes, Día, Entr día, Entr mes, Fac día neta, Fac mes neta, Meta día, Meta acumulada, Total NC, Fac día bruta. El acumulado mensual ahora es neto (antes bruto).
+- Validación: `tsc --noEmit` y ESLint sin errores.

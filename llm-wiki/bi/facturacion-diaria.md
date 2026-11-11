@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-11-09
+updated: 2026-11-11
 sources:
   - ../../components/FacturacionDashboard.tsx
   - ../../components/EntregasDetalleDashboard.tsx
@@ -27,7 +27,7 @@ Cambios pedidos por el desarrollador (Daniel Jimenez) el 2026-11-09 sobre `/fact
 | 4.1 | Cards de ventas | 3 cards: **Ventas netas** = facturación − NC; **Ventas acumuladas (meta)** = meta mensual / días laborales × días laborales transcurridos a la fecha; **Cumplimiento** = ventas netas / ventas acumuladas a la fecha. |
 | 4.2 | Cards de entregas | **Entregas netas**, **Entregas acumuladas (meta)** y **Cumplimiento**, con la misma regla. |
 | 5 | Ventas por zona | Botón "Ver todas (n)" / "Ver principales" (5 por defecto). |
-| 6 | Gráfica de ventas acumuladas | Dos líneas ascendentes: ventas netas acumuladas (continua, hasta la fecha de corte) y meta acumulada (punteada, todo el periodo). |
+| 6 | Gráfica de acumulados | Una sola gráfica (desde 2026-11-11) con ventas netas (navy) y entregas netas (ocre) acumuladas, líneas continuas hasta la fecha de corte, y una sola meta acumulada punteada (gris salvia), porque la meta es la misma para ambas. |
 | 7 | Detalle de entregas | `/facturacion-diaria/entregas`: líneas paginadas con filtros (periodo, mes, búsqueda, empresa, subgrupo, grupo) y panel lateral. |
 | 8 | Devoluciones y NC de devoluciones en entregas | Nuevo `SP_Generar_Informe_Entregas` ([script](../../sql/facturacion-diaria/01_informe_entregas_devoluciones.sql)); ver [Entregas con devoluciones](#entregas-con-devoluciones). Ejecución `pendiente`. |
 | 9 | Quitar Cliente, agregar Subgrupo de cliente (después de Grupo de cliente) | `SubgrupoCliente` en `Informe_ventas` y, con el punto 8, en `Informe_entregas`. Parámetro `subgrupoCliente` en los dos endpoints. |
@@ -54,7 +54,7 @@ Meta que se compara según los filtros (`segmentsFor` en [`targets.ts`](../../li
 ## Una sola meta y gráficas acumuladas (2026-11-09)
 
 - **Una sola meta:** el negocio confirmó que la meta de ventas y la de entregas son la misma. La pantalla de metas tiene una sola tabla. Al guardar se escribe el mismo valor en `billing_target` y `delivery_target`, y el portal usa `billing_target` para las dos (`buildTargetSeries`).
-- **Gráficas acumuladas** ([`CumulativeChart.tsx`](../../components/dashboard/CumulativeChart.tsx)): una de ventas netas y otra de entregas netas, cada una frente a la meta acumulada. Solo se dibujan los días laborales (lunes a viernes sin festivos). Lo de sábados, domingos y festivos sí suma al acumulado y se ve en el siguiente día laboral (`buildCumulativeData`).
+- **Gráficas acumuladas** ([`CumulativeChart.tsx`](../../components/dashboard/CumulativeChart.tsx)): desde 2026-11-11 es una sola gráfica con ventas netas (navy, `chartColors.primary`) y entregas netas (ocre, `chartColors.delivery`), y una sola línea de meta acumulada punteada, porque la meta es la misma para ambas. Solo se dibujan los días laborales (lunes a viernes sin festivos). Lo de sábados, domingos y festivos sí suma al acumulado y se ve en el siguiente día laboral (`buildCumulativeData`).
 
 ## Reglas de cálculo
 
@@ -105,3 +105,7 @@ Migración [`20261109_metas_comerciales.sql`](../../supabase/migrations/20261109
 - Validado (2026-11-10): las devoluciones basadas en una entrega facturada suman solo $27,7 M en 2026, así que el doble conteo con las NC es mínimo. Viventta no tiene entregas en 2026.
 - `pendiente`: despliegue. Orden: 1) migración en Supabase, 2) script SQL de entregas y carga `COMPLETA`, 3) API, 4) portal. Dar el informe `metas-comerciales` al cargo que edita las metas en `/admin/permisos`.
 - Rollback: el bloque comentado al final de la migración (borra las metas), el rollback del script SQL y volver a desplegar la API y el portal anteriores.
+
+## Tabla de resumen diario (2026-11-11)
+
+Orden de columnas pedido por el desarrollador: Año, Mes, Día, Entr día, Entr mes, Fac día neta, Fac mes neta, Meta día, Meta acumulada, Total NC, Fac día bruta. "Fac mes neta" es el acumulado mensual de facturación − NC (antes acumulaba la facturación bruta). Fuente: [`FacturacionDashboard.tsx`](../../components/FacturacionDashboard.tsx).

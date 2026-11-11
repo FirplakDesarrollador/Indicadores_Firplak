@@ -273,25 +273,35 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
 
   // Ventas netas acumuladas frente a la meta acumulada, día a día: dos líneas ascendentes.
   // En la gráfica solo aparecen los días laborales; lo de sábados y festivos suma al acumulado (buildCumulativeData).
+  // Ventas y entregas comparten una sola gráfica: ambas series usan las mismas fechas para quedar alineadas.
   const hasCumulativeTarget = Boolean(targetSeries?.billingTotal);
   const cumulativeData = useMemo(() => {
-    const valuesByDate = new Map(totals.daily.map((item) => [item.date, dailyNet(item)]));
-    return buildCumulativeData({
-      dates: targetSeries ? targetSeries.points.map((point) => point.date) : Array.from(valuesByDate.keys()).sort(),
-      valuesByDate,
+    const billingByDate = new Map(totals.daily.map((item) => [item.date, dailyNet(item)]));
+    const deliveryByDate = new Map(deliveryTotals.daily.map((item) => [item.date, deliveryNet(item)]));
+    const dates = targetSeries
+      ? targetSeries.points.map((point) => point.date)
+      : Array.from(new Set([...billingByDate.keys(), ...deliveryByDate.keys()])).sort();
+    const billing = buildCumulativeData({
+      dates,
+      valuesByDate: billingByDate,
       targetByDate: hasCumulativeTarget ? new Map(targetSeries?.points.map((point) => [point.date, point.billingCumulative]) ?? []) : null,
       cutoff,
     });
-  }, [cutoff, hasCumulativeTarget, targetSeries, totals.daily]);
-  const deliveryCumulativeData = useMemo(() => {
-    const valuesByDate = new Map(deliveryTotals.daily.map((item) => [item.date, deliveryNet(item)]));
-    return buildCumulativeData({
-      dates: targetSeries ? targetSeries.points.map((point) => point.date) : Array.from(valuesByDate.keys()).sort(),
-      valuesByDate,
-      targetByDate: hasCumulativeTarget ? new Map(targetSeries?.points.map((point) => [point.date, point.deliveryCumulative]) ?? []) : null,
-      cutoff,
-    });
-  }, [cutoff, deliveryTotals.daily, hasCumulativeTarget, targetSeries]);
+    const delivery = buildCumulativeData({ dates, valuesByDate: deliveryByDate, targetByDate: null, cutoff });
+    return billing.map((point, index) => ({
+      date: point.date,
+      label: point.label,
+      ventas: point.real,
+      entregas: delivery[index]?.real ?? null,
+      meta: point.meta,
+    }));
+  }, [cutoff, deliveryTotals.daily, hasCumulativeTarget, targetSeries, totals.daily]);
+  const cumulativeLines = [
+    { dataKey: "ventas", name: "Ventas netas acumuladas", color: chartColors.primary },
+    { dataKey: "entregas", name: "Entregas netas acumuladas", color: chartColors.delivery },
+    // Ventas y entregas comparten la meta: se dibuja una sola línea de meta acumulada.
+    ...(hasCumulativeTarget ? [{ dataKey: "meta", name: "Meta acumulada", color: chartColors.secondary, dashed: true }] : []),
+  ];
   const missingTargetNote = !loading && !hasCumulativeTarget && targetYear !== null
     ? <p className="billing-panel-note">No hay meta registrada para este periodo y empresa.{canEditTargets && <> Regístrala en <Link href="/metas-comerciales">Metas comerciales</Link>.</>}</p>
     : null;
@@ -309,7 +319,8 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
       const delivery = deliveryByDate.get(dateValueKey);
       const deliveryDay = delivery ? deliveryNet(delivery) : 0;
       const monthKey = dateValueKey.slice(0, 7);
-      const cumulative = (cumulativeBillingByMonth.get(monthKey) ?? 0) + item.invoiced;
+      const net = dailyNet(item);
+      const cumulative = (cumulativeBillingByMonth.get(monthKey) ?? 0) + net;
       const deliveryMonthTotal = (cumulativeDeliveryByMonth.get(monthKey) ?? 0) + deliveryDay;
       cumulativeBillingByMonth.set(monthKey, cumulative);
       cumulativeDeliveryByMonth.set(monthKey, deliveryMonthTotal);
@@ -322,8 +333,8 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
         year: date.getFullYear(),
         month: new Intl.DateTimeFormat("es-CO", { month: "long" }).format(date),
         day: date.getDate(),
-        monthTotal: cumulative,
-        net: dailyNet(item),
+        monthNetTotal: cumulative,
+        net,
         targetDay: target?.billingDay ?? 0,
         targetCumulative: target?.billingCumulative ?? 0,
       };
@@ -389,14 +400,13 @@ export default function FacturacionDashboard({ mode = "overview" }: FacturacionD
           <MetricCard label="Cumplimiento de entregas" value={deliveryTargetToDate ? formatPercent(netDeliveries / deliveryTargetToDate) : "—"} detail={complianceDetail(deliveryTargetToDate)} icon={Gauge} />
         </>}</div>
         <div className="billing-cumulative-grid">
-          <CumulativeChart kicker="VENTAS ACUMULADAS" title="Ventas netas frente a la meta" realLabel="Ventas netas acumuladas" data={cumulativeData} loading={loading} ariaLabel={`Ventas netas acumuladas ${formatCompactCurrency(totals.net)} frente a una meta acumulada a la fecha de ${formatCompactCurrency(billingTargetToDate)}`} emptyText="No hay ventas para los filtros seleccionados." note={missingTargetNote} />
-          <CumulativeChart kicker="ENTREGAS ACUMULADAS" title="Entregas netas frente a la meta" realLabel="Entregas netas acumuladas" data={deliveryCumulativeData} loading={loading} ariaLabel={`Entregas netas acumuladas ${formatCompactCurrency(netDeliveries)} frente a una meta acumulada a la fecha de ${formatCompactCurrency(deliveryTargetToDate)}`} emptyText="No hay entregas para los filtros seleccionados." note={missingTargetNote} />
+          <CumulativeChart kicker="ACUMULADOS" title="Ventas y entregas netas frente a la meta" lines={cumulativeLines} data={cumulativeData} loading={loading} ariaLabel={`Ventas netas acumuladas ${formatCompactCurrency(totals.net)} frente a una meta a la fecha de ${formatCompactCurrency(billingTargetToDate)}; entregas netas acumuladas ${formatCompactCurrency(netDeliveries)} frente a una meta a la fecha de ${formatCompactCurrency(deliveryTargetToDate)}`} emptyText="No hay ventas ni entregas para los filtros seleccionados." note={missingTargetNote} />
         </div>
         <div className="billing-analysis-grid"><section className="billing-panel billing-chart-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">EVOLUCIÓN DIARIA</span><h2>Facturación y notas crédito</h2></div><span className="billing-period-caption">{dailyData.length ? `${formatDate(dailyData[0].sort)} — ${formatDate(dailyData[dailyData.length - 1].sort)}` : "Sin datos"}</span></div><div className="billing-chart-legend"><span><i className="facturado" /> Facturado</span><span><i className="notas" /> Notas crédito</span></div>{loading ? <div className="billing-chart-skeleton"><span /><span /><span /></div> : <div className="billing-chart"><ResponsiveContainer width="100%" height="100%"><AreaChart data={dailyData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}><defs><linearGradient id="facturadoGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={chartColors.primary} stopOpacity={0.18} /><stop offset="100%" stopColor={chartColors.primary} stopOpacity={0} /></linearGradient></defs><CartesianGrid vertical={false} stroke={chartColors.grid} /><XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} /><YAxis axisLine={false} tickLine={false} tick={{ fill: chartColors.axis, fontSize: 12 }} tickFormatter={millionsTick} width={64} /><Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: chartColors.primary, fontWeight: 600 }} formatter={(value) => formatCurrency(Number(value))} /><Area type="monotone" dataKey="facturado" name="Facturado" stroke={chartColors.primary} strokeWidth={2.5} fill="url(#facturadoGradient)" /><Area type="monotone" dataKey="notas" name="Notas crédito" stroke={chartColors.secondary} strokeWidth={2} fill="none" /></AreaChart></ResponsiveContainer></div>}</section>
           <section className="billing-panel billing-zone-panel"><div className="billing-panel-heading"><div><span className="billing-panel-kicker">DISTRIBUCIÓN</span><h2>Ventas netas por zona</h2></div>{zoneData.length > visibleZoneCount && <button className="billing-secondary-button small" type="button" onClick={() => setShowAllZones((visible) => !visible)} aria-expanded={showAllZones}>{showAllZones ? "Ver principales" : `Ver todas (${zoneData.length})`}</button>}</div>{loading ? <div className="billing-zone-skeleton"><span /><span /><span /></div> : <div className="billing-zone-list">{displayedZones.length ? displayedZones.map((item) => <div className="billing-zone-row" key={item.name}><div className="billing-zone-label"><span>{item.name}</span><strong>{formatCompactCurrency(item.value)}</strong></div><div className="billing-progress"><span style={{ width: `${item.percent}%` }} /></div><small>{item.percent}%</small></div>) : <div className="billing-empty">No hay zonas para los filtros seleccionados.</div>}</div>}</section></div>
         <section className="billing-panel billing-daily-summary-panel">
-          <div className="billing-table-heading"><div><span className="billing-panel-kicker">RESUMEN DIARIO</span><h2>Facturación y entregas por día</h2><p>Acumulado mensual, entregas netas y meta diaria de facturación</p>{hasUnfilteredDeliveryCriteria && <p>Las columnas de entregas no se filtran por zona ni ciudad: esos datos no existen en la tabla de entregas.</p>}</div><div className="billing-daily-summary-actions"><span className="billing-daily-summary-count">{dailySummaryRows.length ? `${dailySummaryRows.length} días` : "Sin datos"}</span>{dailySummaryRows.length > 7 && <button className="billing-secondary-button small" type="button" onClick={() => setShowAllDailySummary((visible) => !visible)}>{showAllDailySummary ? "Mostrar menos" : "Ver todos los días"}</button>}</div></div>
-          <div className="billing-table-scroll"><table className="billing-data-table billing-daily-summary-table"><thead><tr><th>Año</th><th>Mes</th><th>Día</th><th className="align-right">Ent día</th><th className="align-right">Ent mes total</th><th className="align-right">Fac día total</th><th className="align-right">Fac mes total</th><th className="align-right">Total NC</th><th className="align-right">Fac - NC</th><th className="align-right">Meta día</th><th className="align-right">Meta acumulada</th></tr></thead><tbody>{loading ? Array.from({ length: 5 }, (_, index) => <tr key={index} className="billing-skeleton-row"><td colSpan={11}><span className="billing-skeleton billing-skeleton-row-fill" /></td></tr>) : dailySummaryRows.length ? displayedDailySummaryRows.map((item) => <tr key={item.date}><td>{item.year}</td><td>{item.month}</td><td>{item.day}</td><td className="align-right delivery-cell">{item.deliveryDay ? formatCurrency(item.deliveryDay) : "—"}</td><td className="align-right delivery-cell">{item.deliveryMonthTotal ? formatCurrency(item.deliveryMonthTotal) : "—"}</td><td className="align-right number-cell">{formatCurrency(item.invoiced)}</td><td className="align-right number-cell">{formatCurrency(item.monthTotal)}</td><td className="align-right credit-cell">{item.creditNote ? formatCurrency(item.creditNote) : "—"}</td><td className="align-right net-cell">{formatCurrency(item.net)}</td><td className="align-right">{item.targetDay ? formatCurrency(item.targetDay) : "—"}</td><td className="align-right">{item.targetCumulative ? formatCurrency(item.targetCumulative) : "—"}</td></tr>) : <tr><td colSpan={11} className="billing-table-state"><strong>Sin datos diarios</strong></td></tr>}</tbody></table></div>
+          <div className="billing-table-heading"><div><span className="billing-panel-kicker">RESUMEN DIARIO</span><h2>Facturación y entregas por día</h2><p>Entregas netas, facturación neta (facturación − NC) con su acumulado mensual y meta diaria</p>{hasUnfilteredDeliveryCriteria && <p>Las columnas de entregas no se filtran por zona ni ciudad: esos datos no existen en la tabla de entregas.</p>}</div><div className="billing-daily-summary-actions"><span className="billing-daily-summary-count">{dailySummaryRows.length ? `${dailySummaryRows.length} días` : "Sin datos"}</span>{dailySummaryRows.length > 7 && <button className="billing-secondary-button small" type="button" onClick={() => setShowAllDailySummary((visible) => !visible)}>{showAllDailySummary ? "Mostrar menos" : "Ver todos los días"}</button>}</div></div>
+          <div className="billing-table-scroll"><table className="billing-data-table billing-daily-summary-table"><thead><tr><th>Año</th><th>Mes</th><th>Día</th><th className="align-right">Entr día</th><th className="align-right">Entr mes</th><th className="align-right">Fac día neta</th><th className="align-right">Fac mes neta</th><th className="align-right">Meta día</th><th className="align-right">Meta acumulada</th><th className="align-right">Total NC</th><th className="align-right">Fac día bruta</th></tr></thead><tbody>{loading ? Array.from({ length: 5 }, (_, index) => <tr key={index} className="billing-skeleton-row"><td colSpan={11}><span className="billing-skeleton billing-skeleton-row-fill" /></td></tr>) : dailySummaryRows.length ? displayedDailySummaryRows.map((item) => <tr key={item.date}><td>{item.year}</td><td>{item.month}</td><td>{item.day}</td><td className="align-right delivery-cell">{item.deliveryDay ? formatCurrency(item.deliveryDay) : "—"}</td><td className="align-right delivery-cell">{item.deliveryMonthTotal ? formatCurrency(item.deliveryMonthTotal) : "—"}</td><td className="align-right net-cell">{formatCurrency(item.net)}</td><td className="align-right net-cell">{formatCurrency(item.monthNetTotal)}</td><td className="align-right">{item.targetDay ? formatCurrency(item.targetDay) : "—"}</td><td className="align-right">{item.targetCumulative ? formatCurrency(item.targetCumulative) : "—"}</td><td className="align-right credit-cell">{item.creditNote ? formatCurrency(item.creditNote) : "—"}</td><td className="align-right number-cell">{formatCurrency(item.invoiced)}</td></tr>) : <tr><td colSpan={11} className="billing-table-state"><strong>Sin datos diarios</strong></td></tr>}</tbody></table></div>
         </section>
         <section className="billing-panel billing-table-panel"><div className="billing-table-heading"><div><span className="billing-panel-kicker">DETALLE OPERATIVO</span><h2>Documentos de facturación</h2><p>{formatNumber(pagination.total)} registros encontrados · página {pagination.page} de {pagination.totalPages}</p></div><div className="billing-table-actions"><button className="billing-secondary-button small" onClick={() => void loadData(pagination.page)} disabled={isRefreshing}><RefreshCw size={15} className={isRefreshing ? "billing-spin" : ""} /> Actualizar</button></div></div><div className="billing-tabs" role="tablist">{(["Todos", "Facturación", "Notas crédito"] as View[]).map((view) => <button key={view} className={activeView === view ? "active" : ""} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}{view === "Notas crédito" && <span>{formatNumber(rows.filter((row) => row.creditNote > 0).length)}</span>}</button>)}</div><div className="billing-table-scroll"><table className="billing-data-table"><thead><tr><th>Fecha</th><th>DOCNUM</th><th>Empresa</th><th>Grupo de cliente</th><th>Canal</th><th>Zona</th><th>Ciudad</th><th className="align-right">Facturado</th><th className="align-right">NC</th><th className="align-right">Neto</th><th aria-label="Abrir detalle" /></tr></thead><tbody>{loading ? Array.from({ length: 6 }, (_, index) => <tr key={index} className="billing-skeleton-row"><td colSpan={11}><span className="billing-skeleton billing-skeleton-row-fill" /></td></tr>) : visibleRows.length ? visibleRows.map((row) => <tr key={row.id} tabIndex={0} onClick={() => setSelectedRow(row)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedRow(row); } }}><td><span className="billing-date-cell">{formatDate(row.date)}</span><small>{dateValue(row.date).getFullYear()}</small></td><td><strong className="billing-docnum">{row.docnum}</strong></td><td>{row.company ?? "—"}</td><td><span className="billing-group-cell">{row.customerGroup}</span><small>{row.customer}</small></td><td>{row.channel}</td><td><span className={`billing-zone-tag ${row.zone.toLowerCase().replaceAll(" ", "-")}`}>{row.zone}</span></td><td>{row.city}</td><td className="align-right number-cell">{formatCurrency(row.invoiced)}</td><td className="align-right number-cell credit-cell">{row.creditNote ? formatCurrency(row.creditNote) : "—"}</td><td className="align-right number-cell net-cell">{formatCurrency(row.net)}</td><td><ChevronRight size={16} className="billing-row-chevron" /></td></tr>) : <tr><td colSpan={11} className="billing-table-state"><Search size={22} /><strong>No encontramos documentos</strong><span>Prueba cambiando los filtros o el texto de búsqueda.</span></td></tr>}</tbody></table></div><TablePager shown={visibleRows.length} total={pagination.total} page={pagination.page} totalPages={pagination.totalPages} loading={loading} noun="documentos" onPageChange={changePage} /></section>
         <footer className="billing-footer"><span>{lastUpdated ? `Actualizado ${formatDateTime(lastUpdated)}` : "Actualización automática"}</span><span>Firplak · Portal interno</span></footer>
