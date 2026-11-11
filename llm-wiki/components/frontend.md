@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-11-09
+updated: 2026-11-11
 sources:
   - ../../app/page.tsx
   - ../../app/login/page.tsx
@@ -46,7 +46,7 @@ sources:
 
 El catálogo de años del filtro proviene de `years` en la respuesta de la Reporting API; no se calcula solamente con la página visible de 50 filas. Esto permite mostrar años antiguos sin descargar todos los documentos.
 
-El dashboard incluye una tabla de resumen diario con `Ent día` y `Ent mes total`, calculados desde los agregados diarios de `GET /api/v1/entregas` usando `ValorSinIVA`. Las columnas de facturación y metas se mantienen en la misma tabla.
+El dashboard incluye una tabla de resumen diario con `Entr día` y `Entr mes` (orden de columnas vigente en [Facturación diaria](../bi/facturacion-diaria.md)), calculados desde los agregados diarios de `GET /api/v1/entregas` usando `ValorSinIVA`. Las columnas de facturación y metas se mantienen en la misma tabla.
 
 La distribución de facturación neta por zona muestra las cinco primeras zonas. La tabla diaria muestra todas las fechas del periodo. Al iniciar o restablecer filtros, se seleccionan el año y mes actuales del navegador.
 La tabla diaria se presenta en orden descendente por fecha, comenzando por el día más reciente y continuando hacia atrás. Los acumulados mensuales se calculan antes de invertir la presentación para conservar sus valores correctos.
