@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-27
+updated: 2026-11-09
 sources:
   - ../../app/page.tsx
   - ../../app/login/page.tsx
@@ -28,6 +28,8 @@ sources:
 - `/login`: inicio de sesión Microsoft 365.
 - `/facturacion-diaria`: dashboard comercial.
 - `/facturacion-diaria/detalle`: página independiente para el detalle paginado de documentos de facturación.
+- `/facturacion-diaria/entregas`: detalle paginado de líneas de entrega ([`EntregasDetalleDashboard.tsx`](../../components/EntregasDetalleDashboard.tsx)).
+- `/metas-comerciales` (se abre desde el menú del perfil; sin card en el portal): metas mensuales de facturación y entregas por empresa y días laborales ([`MetasComercialesDashboard.tsx`](../../components/MetasComercialesDashboard.tsx); reglas en [Facturación diaria](../bi/facturacion-diaria.md)).
 - `/api/facturacion-diaria`: proxy server-side hacia la Reporting API.
 - `/api/entregas`: proxy server-side hacia `GET /api/v1/entregas`.
 - `/notas-credito`: dashboard de notas crédito para Cartera ([`NotasCreditoDashboard.tsx`](../../components/NotasCreditoDashboard.tsx); reglas en la [ficha del BI](../bi/notas-credito.md)).
@@ -39,6 +41,8 @@ sources:
 - `/admin/permisos`: administración de permisos por cargo, con excepciones e historial con soporte; solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
 
 ## Comportamiento del dashboard
+
+> Desde el 2026-11-09: cards de ventas y entregas frente a la meta, gráfica de ventas acumuladas, filtro Empresa, Subgrupo de cliente en lugar de Cliente y todas las zonas con un botón. Reglas en [Facturación diaria](../bi/facturacion-diaria.md); lo que sigue describe la base anterior y prevalece ese documento donde difieran.
 
 El catálogo de años del filtro proviene de `years` en la respuesta de la Reporting API; no se calcula solamente con la página visible de 50 filas. Esto permite mostrar años antiguos sin descargar todos los documentos.
 

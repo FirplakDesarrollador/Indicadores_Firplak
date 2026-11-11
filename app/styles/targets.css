@@ -1,0 +1,39 @@
+/* Metas comerciales. Reutiliza las clases billing-* y solo agrega lo propio. Tokens: app/globals.css */
+
+/* El orden de billing.css es de facturación; aquí manda el orden del DOM. */
+.targets-shell .billing-content > * { order: 0; }
+
+.targets-toolbar { align-items: stretch; display: flex; flex-direction: column; gap: var(--space-3); }
+.targets-year { align-items: center; border: 1px solid var(--color-border-control); border-radius: var(--radius-sm); display: flex; gap: var(--space-2); min-height: var(--control-height); padding: 0 var(--space-3); }
+.targets-year:focus-within { outline: 2px solid var(--color-focus); outline-offset: 1px; }
+.targets-year svg { color: var(--color-accent-text); flex: none; }
+.targets-year span { color: var(--color-text-muted); font-size: .8125rem; }
+.billing-tabs.targets-tabs { border-bottom: 0; margin: 0; padding: 0; }
+.targets-actions { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: flex-end; }
+.targets-actions > span { color: var(--color-text-muted); font-size: .8125rem; margin-right: auto; }
+.targets-actions .billing-reset-button:disabled { opacity: .45; text-decoration: none; }
+
+.targets-notice { background: rgb(61 110 85 / .08); border: 1px solid rgb(61 110 85 / .25); border-radius: var(--radius-sm); color: var(--success); font-size: .875rem; padding: var(--space-3) var(--space-4); }
+
+.targets-panel { overflow: hidden; padding: var(--space-5) 0 0; }
+.targets-year-total { display: flex; flex-direction: column; text-align: right; }
+.targets-year-total span { color: var(--color-text-muted); font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.targets-year-total strong { color: var(--color-text); font-size: 1.25rem; font-variant-numeric: tabular-nums; font-weight: 500; }
+
+.billing-data-table.targets-table { min-width: 1220px; }
+.billing-data-table.targets-table tbody tr { cursor: default; }
+.targets-table tfoot td { background: var(--color-surface-muted); border-bottom: 0; font-weight: 600; }
+.targets-table input { background: var(--color-surface); border: 1px solid var(--color-border-control); border-radius: var(--radius-sm); color: var(--color-text); font: inherit; font-variant-numeric: tabular-nums; min-height: 40px; padding: 0 var(--space-2); text-align: right; }
+.targets-table input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
+.targets-table input.invalid { border-color: var(--danger); }
+.targets-amount { width: 160px; }
+.targets-days { align-items: center; display: inline-flex; gap: var(--space-1); }
+.targets-days input { width: 56px; }
+.targets-days button { align-items: center; background: transparent; border: 0; border-radius: var(--radius-sm); color: var(--color-accent-text); display: flex; height: 32px; justify-content: center; width: 32px; }
+.targets-days button:hover { background: var(--navy-50); }
+
+@container (min-width: 900px) {
+  .targets-toolbar { align-items: center; flex-direction: row; }
+  .targets-year { min-width: 180px; }
+  .targets-actions { flex: 1; }
+}

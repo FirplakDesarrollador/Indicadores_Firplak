@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import BrandPeak from "@/components/BrandPeak";
 import UserMenu from "@/components/dashboard/UserMenu";
-import { getUserAccess } from "@/lib/auth/access";
+import { canViewReport, getUserAccess } from "@/lib/auth/access";
 import type { DashboardNavGroup } from "@/lib/dashboard/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -29,6 +29,7 @@ export default function DashboardShell({ navigation, activeHref, title, classNam
   const supabase = useMemo(() => createClient(), []);
   const [userProfile, setUserProfile] = useState({ name: "Usuario Firplak", email: "" });
   const [isAdmin, setIsAdmin] = useState(false);
+  const [canEditTargets, setCanEditTargets] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -38,6 +39,7 @@ export default function DashboardShell({ navigation, activeHref, title, classNam
       // Si no se pueden leer los permisos, el perfil se muestra sin menú; el middleware sigue protegiendo /admin.
       const access = await getUserAccess(supabase).catch(() => null);
       setIsAdmin(Boolean(access?.isAdmin));
+      setCanEditTargets(Boolean(access && canViewReport(access, "metas-comerciales")));
     });
   }, [supabase]);
 
@@ -56,7 +58,7 @@ export default function DashboardShell({ navigation, activeHref, title, classNam
       <BrandPeak className="brand-peak billing-sidebar-peak" />
       <div className="billing-brand-row"><Image className="brand-logo" src="/brand/firplak-wordmark-negativo.png" alt="Firplak" width={536} height={82} priority /><button className="billing-close-menu" onClick={() => setIsSidebarOpen(false)} aria-label="Cerrar menú"><X size={18} /></button></div>
       <nav className="billing-nav" aria-label="Navegación de indicadores">{navigation.map((group, groupIndex) => <Fragment key={group.label}><span className={`billing-nav-label ${groupIndex > 0 ? "billing-nav-label-spaced" : ""}`}>{group.label}</span>{group.items.map(({ href, label, icon: Icon }) => <Link key={href} className={`billing-nav-item ${href === activeHref ? "active" : ""}`} href={href}><Icon size={17} /> {label}</Link>)}</Fragment>)}</nav>
-      <div className="billing-sidebar-bottom"><div className="billing-profile"><UserMenu isAdmin={isAdmin} variant="sidebar"><span className="billing-avatar" aria-hidden="true">{initialsFrom(userProfile.name)}</span><span className="user-menu-text"><strong title={userProfile.name}>{userProfile.name}</strong><span title={userProfile.email}>{userProfile.email || "Sesión Microsoft 365"}</span></span></UserMenu><button className="billing-signout" onClick={handleSignOut} aria-label="Cerrar sesión"><LogOut size={15} /></button></div></div>
+      <div className="billing-sidebar-bottom"><div className="billing-profile"><UserMenu isAdmin={isAdmin} canEditTargets={canEditTargets} variant="sidebar"><span className="billing-avatar" aria-hidden="true">{initialsFrom(userProfile.name)}</span><span className="user-menu-text"><strong title={userProfile.name}>{userProfile.name}</strong><span title={userProfile.email}>{userProfile.email || "Sesión Microsoft 365"}</span></span></UserMenu><button className="billing-signout" onClick={handleSignOut} aria-label="Cerrar sesión"><LogOut size={15} /></button></div></div>
     </aside>
 
     <section className="billing-main"><header className="billing-topbar"><div className="billing-breadcrumbs"><button className="billing-mobile-menu" onClick={() => setIsSidebarOpen(true)} aria-label="Abrir menú"><Menu size={19} /></button><Home size={14} /><ChevronRight size={14} /><Link className="billing-breadcrumb-link" href="/">Indicadores</Link><ChevronRight size={14} /><strong>{title}</strong></div></header>

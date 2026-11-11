@@ -1,4 +1,4 @@
-import { Boxes, FileMinus, ReceiptText, type LucideIcon } from "lucide-react";
+import { Boxes, FileMinus, ReceiptText, Target, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
 // Un informe nuevo no lo ve nadie hasta que un administrador lo agrega a un cargo o lo asigna a una persona en /admin/permisos.
@@ -22,6 +22,9 @@ export type ReportDefinition = {
   icon: LucideIcon;
   pagePaths: string[];
   apiPaths: string[];
+  // Herramienta de gestión: se asigna en /admin/permisos como un informe, pero no tiene card en el portal;
+  // se abre desde el menú del perfil.
+  tool?: boolean;
 };
 
 export const reports: ReportDefinition[] = [
@@ -34,6 +37,19 @@ export const reports: ReportDefinition[] = [
     icon: ReceiptText,
     pagePaths: ["/facturacion-diaria"],
     apiPaths: ["/api/facturacion-diaria", "/api/entregas"],
+  },
+  {
+    // Edición de metas mensuales y días laborales. Las metas se guardan en Supabase (commercial_targets) y su RLS
+    // usa este mismo slug: quien ve facturacion-diaria solo las lee; quien tiene metas-comerciales las edita.
+    slug: "metas-comerciales",
+    area: "ventas",
+    title: "Metas comerciales",
+    subtitle: "Metas mensuales de facturación y entregas por empresa",
+    href: "/metas-comerciales",
+    icon: Target,
+    pagePaths: ["/metas-comerciales"],
+    apiPaths: [],
+    tool: true,
   },
   {
     slug: "notas-credito",
