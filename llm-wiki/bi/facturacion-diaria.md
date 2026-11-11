@@ -108,4 +108,12 @@ Migración [`20261109_metas_comerciales.sql`](../../supabase/migrations/20261109
 
 ## Tabla de resumen diario (2026-11-11)
 
-Orden de columnas pedido por el desarrollador: Año, Mes, Día, Entr día, Entr mes, Fac día neta, Fac mes neta, Meta día, Meta acumulada, Total NC, Fac día bruta. "Fac mes neta" es el acumulado mensual de facturación − NC (antes acumulaba la facturación bruta). Fuente: [`FacturacionDashboard.tsx`](../../components/FacturacionDashboard.tsx).
+Orden de columnas vigente (2026-11-11): Día (columna fija al desplazar), Año, Mes, Entr día, Entr mes, Fac día neta, Meta día, Fac mes neta, Meta mes, Diferencia, Fac día bruta, Total NC. **Diferencia** = Fac mes neta − Meta mes de ese día (negativa en rojo: por debajo de la meta). Antes (2026-11-11, primera versión): Año, Mes, Día, …, Meta acumulada, Total NC, Fac día bruta. "Fac mes neta" es el acumulado mensual de facturación − NC (antes acumulaba la facturación bruta). Fuente: [`FacturacionDashboard.tsx`](../../components/FacturacionDashboard.tsx).
+
+## Filtros, "Hasta ayer" y diferencia en la gráfica (2026-11-11)
+
+- **Barra de filtros compacta y fija** (decisión del desarrollador): Año, Mes, Empresa y Mercado siempre visibles, con los botones Más filtros, Hasta ayer y Limpiar encima; la búsqueda, Grupo, Subgrupo, Zona y Ciudad en "Más filtros". Desde 768 px de ancho la barra queda fija bajo la barra superior al desplazarse. **Los filtros se aplican al elegirlos**; solo la búsqueda espera Enter o la lupa.
+- **Tarjetas compactas**: ícono al lado del texto y las 6 en una fila cuando el contenido mide 1240 px o más.
+- **Hasta ayer** (decisión del desarrollador: corta meta y real): el corte pasa a ser el día anterior a hoy y se aplica a **toda la página**: las consultas a facturación y entregas llevan `fechaHasta` = ayer, así que tarjetas, gráficas, zonas, evolución diaria y tabla diaria quedan hasta ese día, y la meta acumulada también se corta ahí.
+- Filtros que no pueden aplicar a todo por falta de datos: Zona y Ciudad no existen en `Informe_entregas` (las entregas no se filtran por ellas; la pantalla lo avisa), y las metas solo existen por empresa y mercado (Grupo, Subgrupo, Zona, Ciudad y búsqueda no cambian la meta).
+- **Recuadro de la gráfica de acumulados**: además de cada línea muestra "Diferencia facturación neta vs. meta" del día (ventas netas acumuladas − meta acumulada), sin dibujarla como línea (`tooltipExtras` en [`CumulativeChart.tsx`](../../components/dashboard/CumulativeChart.tsx)).
