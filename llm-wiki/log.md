@@ -585,3 +585,12 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - La descarga de facturas trae todas las columnas de `Informe_ventas` menos los campos internos de SAP como `DocEntry` y `LineNum` (leídas de la tabla en cada descarga) más Empresa (portal), Facturado, NC y Neto.
 - `pendiente`: desplegar la Reporting API (`reporting-api-dist-descargas.zip`) y probar las descargas contra SQL Server.
 - Cards: "Ventas acumuladas (meta)" y "Entregas acumuladas (meta)" pasan a "Meta"; "Cumplimiento de ventas" pasa a "Cumplimiento de facturación".
+
+## [2026-11-11] ux | Tabla diaria, Hasta ayer y filtros compactos
+
+- Resumen diario: Día como primera columna fija, "Meta acumulada" pasa a "Meta mes", nueva columna Diferencia (Fac mes neta − Meta mes) y Fac día bruta antes de Total NC.
+- Botón **Hasta ayer**: corta toda la página en el día anterior (`fechaHasta` en las consultas) y la meta acumulada.
+- Barra de filtros compacta y fija; los filtros se aplican al elegirlos. Tarjetas compactas (6 en una fila en pantallas anchas).
+- Recuadro de la gráfica de acumulados con la diferencia entre la facturación neta y la meta.
+- Detalle en [Facturación diaria](bi/facturacion-diaria.md). Validación: `tsc` y ESLint sin errores; `pendiente` revisar en el navegador.
+- Resumen diario: cada meta queda junto a su facturación (Fac día neta, Meta día, Fac mes neta, Meta mes).

@@ -317,3 +317,52 @@
 .billing-data-table td small.delivery-reference { max-width: 32ch; overflow: hidden; text-overflow: ellipsis; }
 .billing-detail-sub { color: var(--color-text-muted); display: block; font-size: .75rem; font-weight: 400; margin-top: 2px; }
 .billing-metrics-grid-deliveries { margin-top: calc(var(--space-1) * -1); }
+
+/* ── Facturación y entregas diaria: barra de filtros compacta y fija (2026-11-11) ── */
+.billing-filterbar-sticky { padding: var(--space-2) var(--space-3); }
+.billing-quick-filters { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.billing-quick-filter { align-items: center; background: var(--color-surface); border: 1px solid var(--color-border-control); border-radius: var(--radius-sm); display: flex; flex: 1 0 auto; gap: var(--space-2); min-height: 40px; min-width: 0; padding: 0 var(--space-3); }
+.billing-quick-filter:focus-within { border-color: var(--color-focus); outline: 2px solid var(--color-focus); outline-offset: 1px; }
+.billing-quick-filter svg { color: var(--color-accent-text); flex: none; }
+.billing-quick-filter span { color: var(--color-text-muted); font-size: .8125rem; white-space: nowrap; }
+/* Los selectores toman el ancho de su opción más larga para no cortar el texto; si no caben, pasan a otra línea. */
+.billing-filterbar .billing-quick-filter select { flex: 1 0 auto; min-width: max-content; }
+.billing-advanced-search { grid-column: 1 / -1; min-height: var(--control-height); }
+.billing-quick-actions { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: flex-end; margin-bottom: var(--space-2); }
+.billing-secondary-button.active { background: var(--navy-700); border-color: var(--navy-700); color: var(--white); }
+.billing-secondary-button.active:hover:not(:disabled) { background: var(--navy-900); }
+.billing-filter-count { background: var(--navy-700); border-radius: 999px; color: var(--white); font-size: .6875rem; font-weight: 600; line-height: 1; padding: 3px 7px; }
+.billing-secondary-button.active .billing-filter-count { background: var(--white); color: var(--navy-700); }
+.billing-filterbar-sticky .billing-advanced-filters { margin-top: var(--space-3); padding-top: var(--space-3); }
+
+/* Fija bajo la barra superior al desplazarse; en celular queda en su lugar para no tapar la pantalla. */
+@media (min-width: 768px) {
+  .billing-filterbar-sticky { position: sticky; top: 72px; z-index: 15; }
+  .billing-filterbar-sticky .billing-advanced-filters { max-height: 50vh; overflow-y: auto; }
+}
+
+/* Tarjetas compactas: ícono al lado del texto y valores más bajos; 6 en una fila cuando hay espacio. */
+.billing-metrics-compact { gap: var(--space-3); }
+.billing-metrics-compact .billing-metric-card { align-items: flex-start; flex-direction: row; gap: var(--space-3); padding: var(--space-3) var(--space-4); }
+.billing-metrics-compact .billing-metric-icon { height: 32px; width: 32px; }
+.billing-metrics-compact .billing-metric-copy span { font-size: .6875rem; letter-spacing: .08em; }
+.billing-metrics-compact .billing-metric-copy strong { font-size: 1.5rem; margin-top: var(--space-1); }
+.billing-metrics-compact .billing-metric-copy small { font-size: .75rem; margin-top: 2px; }
+@container (min-width: 520px) { .billing-metrics-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container (min-width: 760px) { .billing-metrics-compact { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container (min-width: 1240px) { .billing-metrics-compact { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+
+/* Resumen diario: el día es la columna fija al desplazar la tabla. */
+.billing-daily-summary-table th:first-child, .billing-daily-summary-table td:first-child { box-shadow: inset -1px 0 0 var(--color-border); min-width: 64px; }
+.billing-daily-summary-table .billing-day-cell { font-weight: 600; }
+.billing-data-table .billing-difference-cell { color: var(--success); font-weight: 600; }
+.billing-data-table .billing-difference-cell.negative { color: var(--danger); }
+
+/* Recuadro de la gráfica de acumulados */
+.cumulative-tooltip { display: flex; flex-direction: column; gap: 4px; padding: var(--space-2) var(--space-3); }
+.cumulative-tooltip strong { color: var(--navy-700); font-weight: 600; }
+.cumulative-tooltip span { align-items: center; display: flex; font-variant-numeric: tabular-nums; gap: 6px; }
+.cumulative-tooltip i { border-radius: 2px; display: inline-block; height: 8px; width: 8px; }
+.cumulative-tooltip .cumulative-tooltip-extra { border-top: 1px solid var(--color-border); font-weight: 600; margin-top: 2px; padding-top: 4px; }
+.cumulative-tooltip .cumulative-tooltip-extra.positive { color: var(--success); }
+.cumulative-tooltip .cumulative-tooltip-extra.negative { color: var(--danger); }
