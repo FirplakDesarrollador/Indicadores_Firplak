@@ -40,7 +40,8 @@
 .billing-topbar { align-items: center; background: var(--color-surface); border-bottom: 1px solid var(--color-border); display: flex; gap: var(--space-3); justify-content: space-between; min-height: 64px; padding: 0 var(--space-4); position: sticky; top: 0; z-index: 20; }
 .billing-breadcrumbs { align-items: center; color: var(--color-text-muted); display: flex; font-size: .8125rem; gap: var(--space-2); min-width: 0; }
 .billing-breadcrumbs > svg { color: var(--color-accent); flex: none; }
-.billing-breadcrumbs strong { color: var(--color-text); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.billing-breadcrumbs strong { color: var(--color-text); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .billing-breadcrumb-link { border-radius: var(--radius-sm); color: inherit; text-decoration: none; }
 .billing-breadcrumb-link:hover { color: var(--color-text); text-decoration: underline; }
 .billing-breadcrumb-link:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
@@ -51,12 +52,13 @@
 
 /* Orden visual y vistas (resumen / detalle) */
 .billing-heading-row, .billing-filterbar, .billing-alert { order: 1; }
-.billing-metrics-grid { order: 2; }
+.billing-metrics-grid, .billing-cumulative-grid { order: 2; }
 .billing-daily-summary-panel { order: 3; }
 .billing-analysis-grid { order: 4; }
 .billing-table-panel { order: 5; }
 .billing-footer { order: 6; }
 .billing-shell-detail .billing-metrics-grid,
+.billing-shell-detail .billing-cumulative-grid,
 .billing-shell-detail .billing-daily-summary-panel,
 .billing-shell-detail .billing-analysis-grid { display: none; }
 .billing-shell:not(.billing-shell-detail) .billing-table-panel { display: none; }
@@ -142,6 +144,13 @@
 .billing-chart-legend i { border-radius: 3px; height: 10px; width: 10px; }
 .billing-chart-legend .facturado { background: var(--navy-700); }
 .billing-chart-legend .notas { background: var(--sage-500); }
+/* Ventas acumuladas: línea continua (real) y punteada (meta); la identidad no depende solo del color. */
+.billing-chart-legend .cumulative-real, .billing-chart-legend .cumulative-target { border-radius: 0; height: 0; width: 20px; }
+.billing-chart-legend .cumulative-real { border-top: 2.5px solid var(--navy-700); }
+.billing-chart-legend .cumulative-target { border-top: 2px dashed var(--sage-500); }
+.billing-cumulative-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
+.billing-panel-note { color: var(--color-text-muted); font-size: .8125rem; margin-top: var(--space-3); }
+.billing-panel-note a { color: var(--color-accent-text); font-weight: 500; }
 .billing-chart, .billing-chart-skeleton { height: 220px; margin-top: var(--space-3); width: 100%; }
 .billing-chart-skeleton { align-items: flex-end; display: flex; gap: var(--space-2); }
 .billing-chart-skeleton span { animation: skeleton-pulse 1.4s ease-in-out infinite; background: linear-gradient(90deg, var(--gray-100) 25%, var(--white) 50%, var(--gray-100) 75%); background-size: 200% 100%; border-radius: 6px; flex: 1; }
@@ -286,9 +295,13 @@
 /* Barra de filtros en una sola fila solo cuando el contenido tiene espacio para periodo, mes, búsqueda y acciones */
 @container (min-width: 1040px) {
   .billing-filterbar-primary { grid-template-columns: minmax(255px, 1fr) minmax(255px, 1fr) minmax(220px, 1.6fr) auto; }
-  .billing-advanced-filters { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .billing-advanced-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .billing-filterbar-primary > label:nth-child(2), .billing-search, .billing-filter-actions { grid-column: auto; }
   .billing-advanced-filters-footer { display: none; }
+}
+
+@container (min-width: 1280px) {
+  .billing-advanced-filters { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 
 @container (min-width: 700px) {
@@ -296,5 +309,12 @@
 }
 
 @container (min-width: 960px) {
+  .billing-cumulative-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .billing-analysis-grid { grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr); }
 }
+
+/* ── Detalle de entregas ── */
+.billing-zone-tag.delivery-return { background: rgb(158 67 53 / .08); color: var(--danger); }
+.billing-data-table td small.delivery-reference { max-width: 32ch; overflow: hidden; text-overflow: ellipsis; }
+.billing-detail-sub { color: var(--color-text-muted); display: block; font-size: .75rem; font-weight: 400; margin-top: 2px; }
+.billing-metrics-grid-deliveries { margin-top: calc(var(--space-1) * -1); }

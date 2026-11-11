@@ -50,7 +50,7 @@ export default function HomePage() {
 
   const accessCards = useMemo(() => {
     if (!access) return [];
-    return reports.filter((report) => canViewReport(access, report.slug));
+    return reports.filter((report) => !report.tool && canViewReport(access, report.slug));
   }, [access]);
 
   const handleSignOut = async () => {
@@ -75,7 +75,7 @@ export default function HomePage() {
           <div className="portal-brand-subtitle">Portal de indicadores</div>
         </div>
 
-        <UserMenu isAdmin={Boolean(access?.isAdmin)} variant="header">
+        <UserMenu isAdmin={Boolean(access?.isAdmin)} canEditTargets={Boolean(access && canViewReport(access, "metas-comerciales"))} variant="header">
           <span className="portal-avatar" aria-hidden="true">{initialsFrom(userName)}</span>
           <span className="portal-welcome">
             <span>&iexcl;Bienvenido!</span>

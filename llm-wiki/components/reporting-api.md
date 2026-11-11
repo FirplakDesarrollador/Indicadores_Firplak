@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-26
+updated: 2026-11-09
 sources:
   - https://github.com/Firplak/firplak-reporting-api/blob/main/src/server.ts
   - https://github.com/Firplak/firplak-reporting-api/blob/main/src/db.ts
@@ -28,7 +28,7 @@ Requiere:
 Authorization: Bearer <REPORTING_API_TOKEN>
 ```
 
-Parámetros: `page`, `pageSize`, `fechaDesde`, `fechaHasta`, `anio`, `mes`, `zona`, `grupoCliente`, `mercado` (`TipoVentas`), `ciudad` (`Ciudad`), `cliente` (`CodCliente`) y `search`.
+Parámetros: `page`, `pageSize`, `fechaDesde`, `fechaHasta`, `anio`, `mes`, `zona`, `grupoCliente`, `mercado` (`TipoVentas`), `ciudad` (`Ciudad`), `cliente` (`CodCliente`), `subgrupoCliente` (`SubgrupoCliente`), `empresa` (`Firplak` | `Viventta` | `CEFI`, regla en `companySql`) y `search`. Los dos últimos, desde la rama `feat/facturacion-metas-empresa` ([Facturación diaria](../bi/facturacion-diaria.md#reporting-api), despliegue `pendiente`).
 
 La respuesta incluye `filterOptions` (`markets`, `cities`, `zones`, `customerGroups` y `customers` con `code`/`name`): los valores distintos del periodo, calculados solo con los filtros de fecha para que las listas no se reduzcan; la excepción es `cities`, que con `zona` activa solo trae las ciudades de esa zona. `cityZones` trae las parejas zona-ciudad del periodo sin limitar por zona. Disponible desde la rama `fix/filtros-mercado-ciudad` de la API (`pendiente` de despliegue).
 
@@ -41,9 +41,9 @@ Respuestas principales:
 
 ### `GET /api/v1/entregas`
 
-Consulta `Planos_Symphony.dbo.Informe_entregas` y requiere el mismo Bearer token. Acepta paginación y filtros por `fechaDesde`, `fechaHasta`, `anio`, `mes`, `estadoEntrega`, `estadoItem`, `cancelado`, `grupoCliente`, `cliente` (`CodCliente`) y `search`. La tabla no tiene mercado, zona ni ciudad.
+Consulta `Planos_Symphony.dbo.Informe_entregas` y requiere el mismo Bearer token. Acepta paginación y filtros por `fechaDesde`, `fechaHasta`, `anio`, `mes`, `estadoEntrega`, `estadoItem`, `cancelado`, `grupoCliente`, `cliente` (`CodCliente`), `subgrupoCliente`, `empresa` y `search`. La tabla no tiene mercado, zona ni ciudad. Desde la rama `feat/facturacion-metas-empresa` incluye devoluciones y NC de devolución en negativo y totales `delivered`/`returns`/`net` sin anulados ([Facturación diaria](../bi/facturacion-diaria.md#entregas-con-devoluciones); despliegue `pendiente`).
 
-La respuesta incluye el detalle de entregas, los años disponibles y resúmenes diarios/mensuales con `Cantidad`, `CantidadFacturada` y `ValorSinIVA`. La tabla usa `(DocEntry, LineNum)` como clave y `FechaEntrega` como fecha principal.
+La respuesta incluye el detalle de entregas, los años disponibles y resúmenes diarios/mensuales con `Cantidad`, `CantidadFacturada` y `ValorSinIVA`. Con el script `01_informe_entregas_devoluciones.sql` la clave pasa de `(DocEntry, LineNum)` a `(Empresa, TipoMovimiento, DocEntry, LineNum)`; `FechaEntrega` sigue siendo la fecha principal.
 
 ### `GET /api/v1/notas-credito`
 

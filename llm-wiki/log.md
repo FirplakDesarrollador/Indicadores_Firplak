@@ -520,3 +520,53 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `/admin/permisos` se rehace con las pestañas Usuarios, Cargos, Informes e Historial, el diálogo de soporte, "Dar acceso" a varios correos y el aviso "Ver personas" al cambiar un cargo.
 - Probado en PGlite y validado por el desarrollador en Supabase y en el portal. La migración se ejecuta antes de desplegar el portal. Detalle en [Seguridad](concepts/security-and-secrets.md#permisos-por-informe).
 - La solicitud de acceso desde el portal, con aprobación del jefe, queda para una segunda etapa.
+
+## [2026-11-09] cambio | Facturación diaria: metas, empresas y entregas
+
+- Pedido del desarrollador en 9 puntos; decisiones y reglas en [Facturación diaria](bi/facturacion-diaria.md).
+- Nuevo informe `metas-comerciales` (`/metas-comerciales`): meta mensual de facturación y de entregas por empresa y días laborales (lunes a viernes menos festivos de Colombia, editables). Migración `20261109_metas_comerciales.sql` con RLS e historial, probada en PGlite.
+- `/facturacion-diaria`: 3 cards de ventas (netas, acumuladas según la meta, cumplimiento) y 3 de entregas, gráfica de ventas netas acumuladas frente a la meta, botón para ver todas las zonas, filtro Empresa y Subgrupo de cliente en lugar de Cliente. Se retiran las metas fijas del código.
+- Nueva página `/facturacion-diaria/entregas`.
+- Reporting API: parámetros `empresa` y `subgrupoCliente` en facturación.
+- `pendiente`: SP de `Informe_entregas` con devoluciones y NC de devoluciones (punto 8), confirmar la columna `CentroCostos` en `Informe_ventas` y desplegar.
+
+## [2026-11-09] cambio | Entregas con devoluciones y NC de devolución (punto 8)
+
+- El desarrollador compartió `SP_Generar_Informe_Entregas` y confirmó que la columna de `Informe_ventas` es `CentroCostos`.
+- Script `sql/facturacion-diaria/01_informe_entregas_devoluciones.sql`: columnas `Empresa`, `TipoMovimiento`, `SubgrupoCliente` y `DocumentoBase`, nueva clave, devoluciones (`ORDN`) y NC de devolución (`ORIN`, sin las basadas en una devolución) en negativo, y Viventta. Con validación y rollback. Ejecución `pendiente`.
+- Reporting API: `empresa` y `subgrupoCliente` en entregas; totales `delivered`/`returns`/`net` sin anulados; `filterOptions`. El portal muestra entregas netas, devoluciones y documento base.
+- Reglas y riesgos en [Facturación diaria](bi/facturacion-diaria.md#entregas-con-devoluciones).
+
+## [2026-11-09] ajuste | Metas en el menú del perfil y orden de filtros
+
+- Revisión del desarrollador en el portal local. Metas comerciales deja de ser card del portal y botón de facturación: queda en el menú del perfil junto a "Permisos de informes", visible solo con el permiso `metas-comerciales` (`tool: true` en `lib/reports.ts`).
+- Grupo de cliente va antes de Subgrupo de cliente.
+- Empresa y Subgrupo no funcionaban porque el portal local consulta la API desplegada (`api.firplak.com`), aún sin la rama `feat/facturacion-metas-empresa`. El dashboard ahora avisa cuando la API conectada no envía `filterOptions.companies`.
+
+## [2026-11-09] cambio | Metas de Firplak divididas en Nacional y Exterior
+
+- Pedido del desarrollador: la meta de Firplak se divide en Nacional y Exterior, en facturación y en entregas. Segmentos: Firplak Nacional, Firplak Exterior, Viventta y CEFI.
+- Filtro: Mercado Nacional = Firplak Nacional + Viventta; Exterior = Firplak Exterior; Empresa CEFI = solo CEFI. Reglas en [Facturación diaria](bi/facturacion-diaria.md#metas-por-segmento-nacional--exterior).
+- Migración `20261109_metas_nacional_exterior.sql`, probada en PGlite (convierte las metas `Firplak` en Firplak Nacional).
+- `Informe_entregas` agrega `TipoVentas` (script 01, repetible) y la API acepta `mercado` en entregas.
+
+## [2026-11-09] cambio | CEFI fuera del filtro de mercado
+
+- Decisión del desarrollador: con Mercado Nacional o Exterior, los datos de facturación y entregas excluyen CEFI, igual que la meta. Con la empresa CEFI el mercado no se aplica.
+- El desarrollador confirmó que el despliegue de las metas por segmento, `TipoVentas` en entregas y la API quedó funcionando. Falta desplegar este ajuste de la API.
+
+## [2026-11-09] cambio | Una sola meta y gráfica acumulada de entregas
+
+- La meta de ventas y la de entregas son la misma (confirmado por el negocio): la pantalla de metas queda con una sola tabla.
+- Las gráficas acumuladas de ventas y entregas solo muestran días laborales; lo de sábados y festivos suma al siguiente día laboral.
+- `pendiente`: diagnosticar el reporte de "entregas en 0".
+
+
+## 2026-11-10 — Carga incremental de entregas
+
+- Las corridas INCREMENTAL de `SP_Generar_Informe_Entregas` fallaban con el error 468 (conflicto de intercalación entre `SQL_Latin1_General_CP850_CI_AS` y `SQL_Latin1_General_CP1_CI_AS`) en el `DELETE` que une `#Docs` con `Informe_entregas`. Las tablas temporales tomaban la intercalación de tempdb. Era un error de compilación y no pasaba por el `CATCH`, así que `Cargas_Log` quedaba con `Fin` en NULL. La carga COMPLETA no ejecuta ese `DELETE` y por eso funcionaba.
+- Corrección en [`01_informe_entregas_devoluciones.sql`](../sql/facturacion-diaria/01_informe_entregas_devoluciones.sql): las columnas de texto de `#Docs` y `#Facturas` usan `COLLATE DATABASE_DEFAULT`, y el `TRY` cubre también la preparación.
+- `pendiente`: entender por qué Viventta no carga entregas (posible exclusión del cliente `CN890927404-01`) y revisar el posible doble conteo entre devoluciones y NC de devolución.
+- Decisiones del desarrollador (2026-11-10): las NC de devolución de entregas son las de `U_TIPOSNC = '01'`, y Viventta queda fuera de `Informe_entregas` porque no tiene entregas en SAP. La meta de entregas del portal ya no suma la meta de Viventta ([`lib/metas/targets.ts`](../lib/metas/targets.ts)).
+- Ajuste del desarrollador (2026-11-10): CEFI vende en Nacional y en Exterior, así que Empresa CEFI + Mercado filtra por `TipoVentas` (`addFilters` y `addDeliveryFilters` en `reporting-api/src/db.ts`). Sin empresa, el mercado sigue excluyendo CEFI.
+- Decisión del desarrollador (2026-11-10): la meta de CEFI se divide en CEFI Nacional y CEFI Exterior ([`20261110_metas_cefi_mercado.sql`](../supabase/migrations/20261110_metas_cefi_mercado.sql), probada en PGlite). La pantalla de metas tiene cinco columnas y `segmentsFor` usa los segmentos de CEFI según el mercado.
