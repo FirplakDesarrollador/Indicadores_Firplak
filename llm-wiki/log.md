@@ -576,3 +576,12 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Ventas y entregas acumuladas quedan en una sola gráfica ([`CumulativeChart.tsx`](../components/dashboard/CumulativeChart.tsx)): ventas en navy, entregas en ocre (`chartColors.delivery`); una sola meta acumulada punteada, porque es la misma para ventas y entregas.
 - Tabla "Facturación y entregas por día": Año, Mes, Día, Entr día, Entr mes, Fac día neta, Fac mes neta, Meta día, Meta acumulada, Total NC, Fac día bruta. El acumulado mensual ahora es neto (antes bruto).
 - Validación: `tsc --noEmit` y ESLint sin errores.
+
+## [2026-11-11] cambio | Nombre del informe y descargas de los detalles
+
+- El informe se llama "Facturación y entregas diaria" (portal, encabezado y menú). "Detalle de documentos" pasa a "Detalle de facturas".
+- Botón **Descargar** en Detalle de facturas y Detalle de entregas: `.xlsx` con los filtros aplicados, números y fechas como celdas numéricas para Excel ([reporting-api](components/reporting-api.md), [frontend](components/frontend.md)).
+- Validación: `tsc` y ESLint del portal sin errores; `tsc` de la API sin errores; el escritor `.xlsx` se probó con datos de ejemplo (openpyxl lee fechas y números con formato).
+- La descarga de facturas trae todas las columnas de `Informe_ventas` menos los campos internos de SAP como `DocEntry` y `LineNum` (leídas de la tabla en cada descarga) más Empresa (portal), Facturado, NC y Neto.
+- `pendiente`: desplegar la Reporting API (`reporting-api-dist-descargas.zip`) y probar las descargas contra SQL Server.
+- Cards: "Ventas acumuladas (meta)" y "Entregas acumuladas (meta)" pasan a "Meta"; "Cumplimiento de ventas" pasa a "Cumplimiento de facturación".

@@ -1,7 +1,7 @@
 "use client";
 
 import { type FormEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { CalendarDays, ChevronRight, Database, Filter, RefreshCw, Search, SlidersHorizontal, X } from "lucide-react";
+import { CalendarDays, ChevronRight, Database, Download, Filter, RefreshCw, Search, SlidersHorizontal, X } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import FilterSelect from "@/components/dashboard/FilterSelect";
 import TablePager from "@/components/dashboard/TablePager";
@@ -33,6 +33,18 @@ const initialFilters: DeliveryFilters = {
   group: "Todos",
 };
 
+// Filtros aplicados como parámetros de la API; la tabla y la descarga usan los mismos.
+function filterParams({ year, month, search, company, subgroup, group }: DeliveryFilters) {
+  const params = new URLSearchParams();
+  if (year !== "Todos") params.set("anio", year);
+  if (month !== "Todos") params.set("mes", month);
+  if (company !== "Todas") params.set("empresa", company);
+  if (subgroup !== "Todos") params.set("subgrupoCliente", subgroup);
+  if (group !== "Todos") params.set("grupoCliente", group);
+  if (search) params.set("search", search);
+  return params;
+}
+
 function sameFilters(a: DeliveryFilters, b: DeliveryFilters) {
   return (Object.keys(a) as Array<keyof DeliveryFilters>).every((key) => a[key] === b[key]);
 }
@@ -63,14 +75,9 @@ export default function EntregasDetalleDashboard() {
   const loadData = useCallback(async (targetPage = 1) => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({ page: String(targetPage), pageSize: String(pageSize) });
-      const { year, month, search, company, subgroup, group } = appliedFilters;
-      if (year !== "Todos") params.set("anio", year);
-      if (month !== "Todos") params.set("mes", month);
-      if (company !== "Todas") params.set("empresa", company);
-      if (subgroup !== "Todos") params.set("subgrupoCliente", subgroup);
-      if (group !== "Todos") params.set("grupoCliente", group);
-      if (search) params.set("search", search);
+      const params = filterParams(appliedFilters);
+      params.set("page", String(targetPage));
+      params.set("pageSize", String(pageSize));
       const response = await fetch(`/api/entregas?${params.toString()}`, { cache: "no-store" });
       const payload = await readJsonPayload<DeliveryPayload & { error?: string }>(response, "La API de entregas");
       if (!response.ok) throw new Error(payload.error ?? "No fue posible cargar las entregas.");
@@ -155,8 +162,11 @@ export default function EntregasDetalleDashboard() {
     </dl>
   </aside></>;
 
+  const exportQuery = filterParams(appliedFilters).toString();
+  const exportHref = `/api/entregas/export${exportQuery ? `?${exportQuery}` : ""}`;
+
   return <DashboardShell navigation={billingNavigation} activeHref="/facturacion-diaria/entregas" title="Detalle de entregas" className="billing-shell-detail" overlay={detailDrawer}>
-    <div className="billing-heading-row"><div><div className="billing-eyebrow">CENTRO DE INDICADORES <span>·</span> COMERCIAL</div><h1>Detalle de entregas</h1><p>Entregas, devoluciones y notas crédito de devolución por línea, con su valor sin IVA.</p></div><div className="billing-heading-actions"><button className="billing-secondary-button" onClick={() => setShowFilters((visible) => !visible)}><SlidersHorizontal size={16} /> Filtros</button></div></div>
+    <div className="billing-heading-row"><div><div className="billing-eyebrow">CENTRO DE INDICADORES <span>·</span> COMERCIAL</div><h1>Detalle de entregas</h1><p>Entregas, devoluciones y notas crédito de devolución por línea, con su valor sin IVA.</p></div><div className="billing-heading-actions"><a className="billing-secondary-button billing-download-button" href={exportHref} download aria-label="Descargar en Excel las entregas con los filtros aplicados"><Download size={16} /> Descargar</a><button className="billing-secondary-button" onClick={() => setShowFilters((visible) => !visible)}><SlidersHorizontal size={16} /> Filtros</button></div></div>
     <form className="billing-filterbar" onSubmit={applyFilters}>
       <div className="billing-filterbar-primary">
         <label><CalendarDays size={15} /><span>Periodo</span><select value={draftFilters.year} onChange={(event) => updateDraft("year")(event.target.value)}><option value="Todos">Todos los años</option>{years.map((year) => <option key={year} value={year}>{year}</option>)}</select></label>

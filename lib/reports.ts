@@ -31,7 +31,7 @@ export const reports: ReportDefinition[] = [
   {
     slug: "facturacion-diaria",
     area: "ventas",
-    title: "Facturación diaria",
+    title: "Facturación y entregas diaria",
     subtitle: "Indicadores comerciales y operativos",
     href: "/facturacion-diaria",
     icon: ReceiptText,

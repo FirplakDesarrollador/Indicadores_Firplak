@@ -66,9 +66,9 @@ El dashboard no usa datos demo en el flujo actual. Solicita `pageSize=50` a fact
 
 El consumo de las APIs valida el tipo de contenido antes de parsear JSON y muestra un mensaje específico si la sesión expiró o si un proxy devuelve una respuesta no válida.
 
-En la composición visual del dashboard, la tabla de acumulados aparece inmediatamente después de las cards de KPIs. La tabla operativa no se muestra en la vista principal: la opción lateral `Detalle de documentos` enlaza a `/facturacion-diaria/detalle`, una página independiente con filtros, paginación y detalle de documentos.
+En la composición visual del dashboard, la tabla de acumulados aparece inmediatamente después de las cards de KPIs. La tabla operativa no se muestra en la vista principal: la opción lateral `Detalle de facturas` (antes `Detalle de documentos`) enlaza a `/facturacion-diaria/detalle`, una página independiente con filtros, paginación y detalle de documentos.
 
-La navegación lateral sale de [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Desde el 2026-10-27, por decisión del desarrollador, cada reporte solo muestra su vista principal y su detalle: facturación (`billingNavigation`) muestra Facturación y Detalle de documentos; notas crédito (`creditNoteNavigation`) muestra Notas crédito y Detalle de notas crédito. Para volver al portal se usa el enlace "Indicadores" de las migas de pan. No muestra `Comparativos`; el encabezado no muestra el estado de conexión SQL Server ni un botón de exportación.
+La navegación lateral sale de [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Desde el 2026-10-27, por decisión del desarrollador, cada reporte solo muestra su vista principal y su detalle: facturación (`billingNavigation`) muestra Facturación y entregas, Detalle de facturas y Detalle de entregas; notas crédito (`creditNoteNavigation`) muestra Notas crédito y Detalle de notas crédito. Para volver al portal se usa el enlace "Indicadores" de las migas de pan. No muestra `Comparativos`; el encabezado no muestra el estado de conexión SQL Server ni un botón de exportación.
 
 ## Componentes comunes de dashboard
 
@@ -102,3 +102,7 @@ La interfaz aplica el [manual de identidad web](../../docs/manual-identidad-web.
 - `REPORTING_API_TOKEN`
 
 Las dos últimas son server-side y no deben tener prefijo `NEXT_PUBLIC_`.
+
+## Descargas de los detalles (2026-11-11)
+
+`Detalle de facturas` y `Detalle de entregas` tienen un botón **Descargar** que baja un `.xlsx` con los filtros aplicados (no los que están sin aplicar). Los proxies [`app/api/facturacion-diaria/export/route.ts`](../../app/api/facturacion-diaria/export/route.ts) y [`app/api/entregas/export/route.ts`](../../app/api/entregas/export/route.ts) usan [`lib/dashboard/xlsxExportProxy.ts`](../../lib/dashboard/xlsxExportProxy.ts) y reenvían la respuesta de la Reporting API en streaming. Las pestañas Todos / Facturación / Notas crédito del detalle de facturas filtran solo en pantalla; la descarga incluye ambos tipos de documento.

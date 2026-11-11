@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-11-09
+updated: 2026-11-11
 sources:
   - https://github.com/Firplak/firplak-reporting-api/blob/main/src/server.ts
   - https://github.com/Firplak/firplak-reporting-api/blob/main/src/db.ts
@@ -62,6 +62,17 @@ Agregados en la rama `bi/costo-actual-pt` (commit `a28da32`, creada desde `bi/no
 - Descarga: libro de Excel `.xlsx` generado por `src/xlsx.ts` (sin dependencias; números como números, códigos como texto), en streaming con `request.toReadableStream()` de `mssql` y contrapresión. Con `codigo`, un producto; sin él, todos. Usa un pool aparte con `REPORT_DB_EXPORT_TIMEOUT_MS` (10 min por defecto).
 - Código: `getProductCostReport`, `getProductCostExportInfo` y `openProductCostExport` en `src/db.ts`; `productCostFiltersFrom` y `sendProductCostExport` en `src/server.ts`.
 - Reglas: [ficha de Costo actual de PT](../bi/costo-actual-pt.md#3-contrato-del-endpoint).
+
+### `GET /api/v1/facturacion-diaria/export` y `/api/v1/entregas/export`
+
+Agregados el 2026-11-11 en la rama `feat/facturacion-metas-empresa`. Despliegue `pendiente`; no se probaron contra SQL Server porque no hay `.env` local de la API.
+
+- Mismos filtros que `GET /api/v1/facturacion-diaria` y `GET /api/v1/entregas` (`addFilters` y `addDeliveryFilters`), sin paginación: descargan todas las filas filtradas en un `.xlsx`.
+- Facturas: **todas las columnas de `Informe_ventas`** en el orden de la tabla (pedido del desarrollador, 2026-11-11), menos los campos internos de SAP (`DocEntry`, `LineNum` y, si existieran, `VisOrder`, `ObjType`, `BaseEntry`, `BaseType`, `BaseLine`, `TransId`, `LogInstanc`, `UserSign`, `UserSign2`), que se confunden con el número de documento. Se leen con `SELECT TOP (0) *` en cada descarga, así que una columna nueva aparece sin cambiar el código. Al final van las calculadas del portal: Empresa (portal, con CEFI), Facturado, NC y Neto (misma regla de nota crédito que los totales).
+- Entregas: todas las columnas de la línea, con cantidades, `ValorSinIVA` y fechas.
+- El tipo SQL de cada columna decide la celda: enteros y `bit` como enteros, `decimal`/`numeric`/`money`/`float` como números, `date` como fecha y `datetime*` como fecha y hora; el resto como texto.
+- Los números salen de SQL como texto con punto decimal (`CONVERT(varchar(60), decimal(38, 6))`) y se escriben como celdas numéricas con formato `#,##0.00`. Las fechas se escriben como fecha de Excel (`yyyy-mm-dd`, tipo `date` agregado a `src/xlsx.ts`).
+- Código: `openBillingExport` (con `exportColumnFor`), `openDeliveryExport` y `deliveryExportColumns` en `src/db.ts`; `exportRoutes` y `streamXlsx` en `src/server.ts`.
 
 ## Configuración SQL
 
