@@ -49,11 +49,12 @@ export async function GET(req: NextRequest) {
         ? requestedDate
         : fechasCorteDisponibles[0] || requestedDate || todayBogota;
 
-    // 2. Query de todas las asignaciones del corte del día
+    // 2. Query de todas las asignaciones del corte del día (con límite para abarcar todo el personal)
     const { data: rows, error } = await supabase
       .from("fact_planner_corte_diario")
       .select("id, task_id, titulo_tarea, plan_id, titulo_plan, bucket_id, titulo_bucket, assigned_user_name, area, fecha_creacion_tarea, fecha_entrega, percent_complete, es_atrasado, dias_abierto")
-      .eq("fecha_corte", targetDate);
+      .eq("fecha_corte", targetDate)
+      .limit(10000);
 
     if (error) throw error;
 

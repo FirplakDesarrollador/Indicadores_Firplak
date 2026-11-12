@@ -76,11 +76,11 @@ export const reports: ReportDefinition[] = [
   {
     slug: "carga",
     area: "operaciones",
-    title: "Capacidad & WIPL",
-    subtitle: "Control de límites WIPL y seguimiento de tareas Planner",
+    title: "Dashboard de gestión",
+    subtitle: "Desempeño del personal, control de capacidad operativa y límites WIPL",
     href: "/carga",
     icon: Layers,
-    pagePaths: ["/carga", "/planner"],
+    pagePaths: ["/carga", "/planner", "/gestion"],
     apiPaths: ["/api/carga"],
   },
 ];

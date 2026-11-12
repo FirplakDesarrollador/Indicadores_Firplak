@@ -1,8 +1,8 @@
 import CargaView from "@/app/components/CargaView";
 
 export const metadata = {
-  title: "Capacidad & WIPL | Firplak",
-  description: "Monitoreo de Capacidad Operativa y Límite WIPL en Planner.",
+  title: "Dashboard de Gestión | Firplak",
+  description: "Desempeño del personal, control de capacidad operativa y límites WIPL en Planner.",
 };
 
 export default function CargaPage() {

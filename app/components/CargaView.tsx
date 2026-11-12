@@ -28,6 +28,7 @@ import {
   Download,
   Calendar,
   ExternalLink,
+  Award,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -42,6 +43,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import DesempenoSubView from "./carga/DesempenoSubView";
 import AreasSubView from "./carga/AreasSubView";
 import AplazamientosSubView from "./carga/AplazamientosSubView";
 import HuerfanasSubView from "./carga/HuerfanasSubView";
@@ -364,8 +366,8 @@ export default function CargaView() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [activeSubView, setActiveSubView] = useState<
-    "tablero" | "areas" | "historial" | "aplazamientos" | "huerfanas" | "macro" | "configuracion"
-  >("tablero");
+    "tablero" | "desempeno" | "areas" | "historial" | "aplazamientos" | "huerfanas" | "macro" | "configuracion"
+  >("desempeno");
 
   // Configuración de Colaboradores WIPL
   const [userConfigs, setUserConfigs] = useState<Record<string, CollaboratorConfig>>({});
@@ -378,7 +380,7 @@ export default function CargaView() {
   const [selectedFechaCorte, setSelectedFechaCorte] = useState<string>("");
   const [vencimientoMode, setVencimientoMode] = useState<
     "hoy_mas_atrasadas" | "todos" | "atrasadas" | "atiempo" | "fecha_especifica"
-  >("hoy_mas_atrasadas");
+  >("todos");
   const [selectedFechaEntrega, setSelectedFechaEntrega] = useState<string>("");
 
   const [selectedAreas, setSelectedAreas] = useState<Set<string>>(new Set());
@@ -821,7 +823,7 @@ export default function CargaView() {
     setSelectedPlanes(new Set());
     setSelectedUsers(new Set());
     setStatusFilter("all");
-    setVencimientoMode("hoy_mas_atrasadas");
+    setVencimientoMode(activeSubView === "desempeno" ? "todos" : "hoy_mas_atrasadas");
     setSelectedFechaEntrega("");
     setOnlyOverloaded(false);
     setSearchTerm("");
@@ -1043,10 +1045,10 @@ export default function CargaView() {
               </span>
             </div>
             <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 800, color: theme.ink, letterSpacing: "-0.5px" }}>
-              Capacidad Operativa & Límite WIPL
+              Dashboard de gestión
             </h1>
             <p style={{ margin: "4px 0 0", fontSize: "13px", color: theme.inkMuted }}>
-              Monitoreo de Trabajo en Proceso (WIP) vs Límite Saludable (WIPL) por Colaborador y Áreas (Opción A: Checklist).
+              Monitoreo de Desempeño Operativo, Capacidad y Límite WIPL por Colaborador y Áreas (Planner).
             </p>
           </div>
 
@@ -1111,7 +1113,38 @@ export default function CargaView() {
           }}
         >
           <button
-            onClick={() => setActiveSubView("tablero")}
+            onClick={() => {
+              setActiveSubView("desempeno");
+              if (vencimientoMode === "hoy_mas_atrasadas") {
+                setVencimientoMode("todos");
+              }
+            }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "8px 14px",
+              borderRadius: "8px 8px 0 0",
+              borderBottom: `2px solid ${activeSubView === "desempeno" ? theme.teal : "transparent"}`,
+              color: activeSubView === "desempeno" ? theme.tealDark : theme.inkMuted,
+              fontWeight: activeSubView === "desempeno" ? 700 : 600,
+              fontSize: "12px",
+              background: activeSubView === "desempeno" ? "#f0fdfa" : "transparent",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <Award size={15} color={activeSubView === "desempeno" ? theme.tealDark : theme.teal} />
+            <span>Desempeño</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveSubView("tablero");
+              if (vencimientoMode === "todos") {
+                setVencimientoMode("hoy_mas_atrasadas");
+              }
+            }}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -1901,6 +1934,18 @@ export default function CargaView() {
             </table>
           </div>
         </div>
+      ) : activeSubView === "desempeno" ? (
+        <DesempenoSubView
+          tasks={filteredRows}
+          fechaCorte={apiData?.fechaCorte || ""}
+          allAreas={apiData?.masterCatalog.areas || []}
+          totalSnapshotTasks={apiData?.snapshotRows.length || 0}
+          onClearFilters={clearAllFilters}
+          onSelectPerson={(person) => {
+            setSelectedUsers(new Set([person]));
+            setActiveSubView("tablero");
+          }}
+        />
       ) : activeSubView === "areas" ? (
         <AreasSubView
           tasks={filteredRows}
