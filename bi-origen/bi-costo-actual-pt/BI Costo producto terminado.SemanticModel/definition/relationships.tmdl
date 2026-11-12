@@ -1,0 +1,4 @@
+relationship 512d5b86-f21c-4768-a278-793aea978c86
+	fromColumn: Maestro.Padre
+	toColumn: 'Nivel 1'.Codigo
+

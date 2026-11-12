@@ -1,0 +1,50 @@
+/* Dashboard de notas crédito. Reutiliza las clases billing-* y solo agrega lo propio. Tokens: app/globals.css */
+
+/* El orden de billing.css es de facturación; aquí manda el orden del DOM. */
+.credit-notes-shell .billing-content > * { order: 0; }
+
+.credit-metrics-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
+.credit-two-column-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
+.credit-panel-note { color: var(--color-text-muted); font-size: .8125rem; margin-top: var(--space-1); }
+
+/* Leyendas: línea continua, punteada y meta (la identidad no depende solo del color). */
+.billing-chart-legend .credit-legend-solid,
+.billing-chart-legend .credit-legend-dashed,
+.billing-chart-legend .credit-legend-target { border-radius: 0; height: 0; width: 20px; }
+.billing-chart-legend .credit-legend-solid { border-top: 2px solid var(--navy-700); }
+.billing-chart-legend .credit-legend-dashed { border-top: 2px dashed var(--sage-500); }
+.billing-chart-legend .credit-legend-target { border-top: 2px dotted var(--gray-600); }
+
+.credit-chart-tooltip { display: flex; flex-direction: column; gap: var(--space-1); min-width: 200px; padding: var(--space-3); }
+.credit-chart-tooltip strong { color: var(--color-text); font-weight: 600; margin-bottom: var(--space-1); }
+.credit-chart-tooltip div { display: flex; gap: var(--space-4); justify-content: space-between; }
+.credit-chart-tooltip span { color: var(--color-text-muted); }
+.credit-chart-tooltip b { color: var(--color-text); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+/* Tablas visibles en este dashboard (billing.css oculta .billing-table-panel fuera de la vista de detalle). */
+.credit-table-panel { overflow: hidden; padding: var(--space-5) 0 0; }
+.credit-table-panel .billing-table-scroll { margin-top: var(--space-4); }
+
+.credit-seller-table tbody tr { cursor: default; }
+.credit-seller-toggle { align-items: center; background: none; border: 0; border-radius: var(--radius-sm); color: var(--color-text); cursor: pointer; display: inline-flex; font: inherit; font-weight: 500; gap: var(--space-2); min-height: 44px; padding: 0 var(--space-2) 0 0; text-align: left; }
+.credit-seller-toggle:hover { color: var(--color-text-strong); }
+.credit-seller-toggle:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.credit-junior-row td { background: var(--color-surface-muted); }
+.credit-junior-row td:first-child { padding-left: calc(var(--space-4) + var(--space-5)); }
+.credit-junior-row small { display: block; line-height: 1.5; max-width: 72ch; white-space: normal; }
+
+@media (min-width: 640px) {
+  .credit-junior-row td:first-child { padding-left: calc(var(--space-5) + var(--space-5)); }
+}
+
+@container (min-width: 560px) {
+  .credit-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@container (min-width: 1040px) {
+  .credit-metrics-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@container (min-width: 960px) {
+  .credit-two-column-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

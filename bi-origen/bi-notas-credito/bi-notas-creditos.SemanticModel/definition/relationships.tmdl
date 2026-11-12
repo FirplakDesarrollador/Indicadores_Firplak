@@ -1,0 +1,18 @@
+relationship 23f4ffa0-db75-4daf-a5e9-5c169eb6a039
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Facturas.'Fecha Fin Novedad'
+	toColumn: LocalDateTable_2ef7aa7e-7cff-4d0e-973f-002d3e2d7f22.Date
+
+relationship 8ba0883c-35c7-411c-a753-b62e29a4287a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: calendario.Date
+	toColumn: LocalDateTable_a0e18613-e41c-4cd1-9c56-c78370ce9fd6.Date
+
+relationship a4aa1218-698c-03a7-7a79-8e3d2288a3fe
+	fromColumn: Facturas.'Fecha contabilización'
+	toColumn: calendario.Date
+
+relationship 9256f8b3-faa9-20c6-7d9e-092decaf1beb
+	fromColumn: NotasCreditos.'Fecha contabilización'
+	toColumn: calendario.Date
+

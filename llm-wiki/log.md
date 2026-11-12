@@ -1,5 +1,12 @@
 # Registro de mantenimiento
 
+## [2026-11-12] merge | Integración de main en Ale
+
+- Se sincronizó la rama local `main` con `origin/main` (PRs #1 a #11) y se fusionó en `Ale`.
+- Se resolvieron conflictos en `app/page.tsx` adoptando la arquitectura de componentes y diseño vigente de `main` (`BrandPeak`, `UserMenu`, permisos por informe).
+- Se registró el módulo de Capacidad & WIPL (`/carga`, `/planner`, `/api/carga`) en el catálogo central de `lib/reports.ts` bajo el área `operaciones`.
+- Se verificó compilación exitosa mediante `npx tsc --noEmit` y `npm run build`.
+
 ## [2026-11-05] feat | Histórico de Due Date vs Atrasadas en Historial & Flujo
 
 - Se agregó un nuevo gráfico de área situado directamente arriba del gráfico de tareas creadas en `HistorialSubView.tsx`.
@@ -159,3 +166,461 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Se añadió un log seguro que muestra la base, esquema y tabla/vista que la API está consultando, sin imprimir credenciales ni filtros de búsqueda.
 - Esto permite distinguir una configuración `.env` correcta de un proceso que ejecuta otro `dist/` o inicia desde otra carpeta.
 - El arranque también informa el directorio de trabajo, porque `dotenv` busca `.env` relativo al proceso iniciado.
+
+## [2026-10-27] ingest | Manual de identidad web (borrador v0.1)
+
+- Se creó `docs/manual-identidad-web.md` a partir del Brand Book Firplak (PDF) para traducir la identidad a aplicaciones web responsive.
+- Incluye escala de color derivada, colores funcionales propuestos, contrastes WCAG verificados, tipografía Montserrat/Jost, breakpoints 640/1024/1440, componentes, visualización de datos y tokens CSS.
+- Pendientes: SVG oficial del logo, licencia web de Orborn y validación de colores funcionales por Mercadeo. El frontend todavía no aplica estos lineamientos.
+
+## [2026-10-27] cambio | Aplicación del manual de identidad web al frontend
+
+- Se reescribió el CSS: `app/globals.css` (tokens y base) y `app/styles/{login,portal,billing}.css`. Se eliminaron unas 100 clases sin uso de un dashboard anterior y tres capas de estilos superpuestas.
+- Se reemplazaron DM Sans y Manrope por Montserrat y Jost (`next/font`), y la paleta no oficial (verde azulado, coral) por navy, sage y crema.
+- Los logos dejan de recortarse con posiciones negativas: hay PNG recortados (`firplak-wordmark-*`, `firplak-eslogan-*`). Se agregaron el monograma `BrandPeak` y el favicon `app/icon.svg`.
+- Responsive mobile-first con cortes en 640/1024/1440 px y container queries para las cuadrículas del dashboard.
+- Formatos `es-CO` en millones y porcentajes, filas de la tabla accesibles con teclado, `Esc` para cerrar paneles, colores de Recharts centralizados en `lib/brand.ts`.
+- Validación: `npm run lint` y `npm run build` sin errores; revisión visual a 375, 820 y 1440 px en una copia temporal sin middleware.
+- Rollback: revertir el commit; no hay cambios de datos, API ni configuración.
+- Pendientes: los KPIs "Cumplimiento 94,8 %" y las tendencias "12,4 %" / "4,7 %" siguen fijos en el código; el avatar "DJ" y "Usuario Firplak" están fijos en la barra lateral.
+
+## [2026-10-27] ingest | Manual de marca Firplak v1-030726
+
+- Llegó una nueva versión del Brand Book (v1-030726, 23 páginas). Cambios relevantes para web: negro `#000000` como color complementario "para texto y detalles", logo monocromático en negro con versión en escala de grises, combinación "crema sobre negro", y títulos de sección en Montserrat Light (Jost/Orborn solo en portadas).
+- El manual web pasa a la v0.2: se agrega el negro (token `--black`, no se usa para texto de interfaz), las nuevas versiones del logo, contrastes medidos (negro/crema 18,97; navy/negro 2,07) y dos niveles de titular.
+- Código: Montserrat suma el peso 300; los títulos del dashboard y del panel de detalle pasan de Jost a Montserrat 300. Jost queda en el login y la cabecera del portal.
+- Pendientes con Mercadeo: licencia de Orborn (su muestra se ve como Jost), peso real del H1 de la escala y confirmación de que el texto de interfaz puede seguir en navy.
+- Validación: `npm run lint` y `npm run build`. Rollback: revertir el commit.
+
+## [2026-10-27] decisión | Respuestas de Mercadeo al manual web
+
+- Mercadeo (Gabriel Molina Isaza) respondió: todo en Montserrat (Orborn es secundaria y el "Jost" de la escala del Brand Book es un error), titulares de gran volumen, fondo blanco en lugar de crema con navy para bloques de volumen, y texto en navy o negro sobre blanco.
+- Manual web v0.3: decisiones registradas al inicio del documento; paleta con fondo blanco y neutros fríos (`--gray-100`, `--gray-200`); crema solo como texto sobre navy; una sola familia tipográfica; escala de titulares más grande; pendientes de tipografía, negro y fondo cerrados. Myriad no se adopta (licencia paga de Adobe).
+- Código: se retira Jost; `--color-bg` pasa a blanco; skeletons, barra de progreso, encabezados de tabla y panel de detalle usan grises fríos; favicon blanco sobre navy; colores de Recharts actualizados en `lib/brand.ts`.
+- Validación: `npm run lint`, `npm run build` y revisión visual a 375 y 1440 px. Rollback: revertir el commit.
+
+## [2026-10-27] fix | Filtros de Mercado, Ciudad y Cliente
+
+- Causa: la Reporting API solo aceptaba `zona` y `grupoCliente`. Cliente, Mercado y Ciudad se aplicaban en el navegador sobre las 50 filas visibles, que solo alimentan la tabla de detalle, y no disparaban una nueva consulta; Mercado además comparaba `TipoVentas` contra opciones fijas. Las listas de opciones salían de la página visible.
+- API (rama `fix/filtros-mercado-ciudad`): nuevos parámetros `mercado`, `ciudad` y `cliente`; `filterOptions` con los valores del periodo; entregas acepta `grupoCliente` y `cliente`; normalización de espacios.
+- Frontend (rama `fix/filtros-mercado-ciudad`): envía todos los filtros, vuelve a consultar al cambiarlos, usa `filterOptions` con respaldo en las filas visibles y avisa que entregas no se filtra por mercado, zona ni ciudad.
+- Orden de despliegue: primero la API (recompilar y reiniciar en IIS), después el frontend. Si el frontend sale antes, los filtros nuevos se ignoran sin errores.
+- Validación: `tsc` en la API y `npm run lint`/`tsc` en el frontend. `pendiente` probar contra SQL Server: valores reales de `TipoVentas` y tiempo de respuesta de los catálogos con "Todos los años".
+- Rollback: revertir los commits de ambas ramas; no hay cambios de esquema.
+
+## [2026-10-27] cambio | Ciudad dependiente de Zona
+
+- API (`fix/filtros-mercado-ciudad`, commit `8ef6968`): con `zona` activa, el catálogo `filterOptions.cities` solo incluye las ciudades de esa zona.
+- Frontend: al cambiar la zona, la ciudad seleccionada vuelve a `Todas`. Sin la API actualizada, la lista de respaldo (derivada de las filas visibles) ya queda limitada por zona, porque `zona` siempre se filtró en el servidor.
+- Requiere volver a copiar `dist/` de la API al servidor y reiniciar el servicio.
+
+## [2026-10-27] cambio | Búsqueda al pulsar la lupa
+
+- El buscador del dashboard deja de consultar la API con cada tecla: el texto se aplica al pulsar la lupa o Enter (formulario con `role="search"`). `Limpiar` borra también el texto escrito.
+- Se confirmó con datos reales que `Zona` es una zona comercial: con `zona=ANTIOQUIA` aparecen ciudades de otros departamentos. También hay nombres de ciudad duplicados (por ejemplo `ENVIGADO`/`ENVÍGADO`); su normalización corresponde al proceso que alimenta `Informe_ventas` (`pendiente`).
+
+## [2026-10-27] cambio | Botón para aplicar filtros
+
+- Los filtros del dashboard pasan a ser un borrador: elegir varias opciones ya no dispara una consulta por cada cambio. Se aplican con `Aplicar filtros`, la lupa o Enter.
+- API (`fix/filtros-mercado-ciudad`, commit `f69963b`): `filterOptions.cityZones` con las parejas zona-ciudad del periodo, para que la lista de ciudades siga a la zona del borrador sin otra consulta.
+- Diseño: la barra de filtros pasa a una sola fila con una consulta de contenedor (≥ 1040 px de contenido); el panel avanzado usa 3 o 5 columnas según el ancho disponible y muestra un segundo botón `Aplicar filtros` solo en pantallas angostas.
+- Requiere copiar `dist/` de la API al servidor y reiniciar (ZIP `reporting-api-dist-f69963b.zip`). Sin esa copia, todo funciona salvo que la lista de ciudades se ajusta a la zona solo después de aplicar.
+
+## [2026-10-27] cambio | Perfil real en la barra lateral
+
+- El perfil del dashboard deja de mostrar "DJ" y "Usuario Firplak" fijos: usa el nombre, el correo y las iniciales del usuario de Microsoft 365 obtenidos de Supabase.
+- Se desactiva `devIndicators` en `next.config.ts`; el círculo "N" solo aparecía en `npm run dev` y tapaba el avatar.
+
+## [2026-10-27] limpieza | Elementos sin funcionalidad
+
+- Dashboard: se quitan la tarjeta "Fuente de datos", los botones "Ayuda" (barra lateral y superior), los menús "···", la insignia "01", el botón "Ver documento", las tendencias fijas "12,4 %"/"4,7 %" y la tarjeta "Cumplimiento 94,8 %" (valores inventados). Los KPIs pasan a 3 tarjetas.
+- La pestaña "Resumen" pasa a "Todos" y "Facturación" ahora filtra las filas con valor facturado; antes ambas mostraban lo mismo.
+- Portal: se quitan la sección "Más aplicaciones próximamente", el correo en la cabecera y el texto "Accesos gestionados por tu organización" (tenía ícono de enlace sin serlo). El saludo usa el nombre o la parte local del correo.
+- Se eliminan del CSS los estilos de esos elementos. `pendiente`: volver a mostrar "Cumplimiento" cuando existan metas reales (hoy `monthlyTargets` solo cubre enero a abril de 2026).
+
+## [2026-10-27] proceso | Skills para migrar BI con IA
+
+- Se agregan cinco skills de proyecto en `.claude/skills/`: `migrar-bi` (coordina las 8 fases y los puntos de aprobación), `analizar-bi` (de un proyecto `.pbip` a la ficha del BI), `crear-tabla-incremental` (tabla, SP por ventana móvil, índices, bitácora y validación), `crear-endpoint` (contrato y endpoint en `reporting-api` con el patrón de facturación, más paquete de despliegue) y `crear-dashboard` (proxy, filtros en borrador, identidad Firplak y verificación responsive).
+- Plantillas: ficha del BI (`analizar-bi/plantilla-ficha-bi.md`) y script T-SQL (`crear-tabla-incremental/plantilla-tabla-sp.sql`). La tabla `dbo.Bitacora_Cargas_Informes` es una propuesta `pendiente` de confirmar con el DBA.
+- Reparto: la IA hace el trabajo operativo; el desarrollador decide, ejecuta scripts en SQL Server, revisa PR y despliega. La IA nunca escribe en la base ni despliega.
+- `pendiente`: extraer componentes comunes del dashboard antes del segundo BI, versión en `/health` de la API, permisos por usuario y conexión SQL de solo lectura para la IA.
+
+## [2026-10-27] migración | BI Notas crédito, fase 0
+
+- Se inicia la migración piloto del Power BI `bi-notas-creditos` (fuente en `bi-origen/bi-notas-credito/`), rama `bi/notas-credito`.
+- Ficha creada en [`llm-wiki/bi/notas-credito.md`](bi/notas-credito.md): dueño de negocio Daniel Jimenez, usuarios de Cartera, prioridad piloto.
+- Desarrollador responsable: Daniel Jimenez. Frecuencia de uso: diaria.
+
+## [2026-10-27] migración | BI Notas crédito, fase 1 (análisis)
+
+- Ficha completada con fuentes, transformaciones, relaciones, 6 medidas, visuales de 3 páginas, filtros y RLS (no hay): [`llm-wiki/bi/notas-credito.md`](bi/notas-credito.md).
+- Hallazgo: el BI lee de SAP (`ITPLAKINFO.Firplak_SA`, tablas `ORIN`/`RIN1` y `OINV`/`INV1`), no de `Planos_Symphony`. Las consultas de facturas y notas aplican exclusiones distintas (Donaciones, `DocType`, artículos `VZNOPE`, documentos retirados a mano).
+- Se propone la tabla `Informe_notas_credito` con grano de línea de nota crédito; el denominador de facturación queda `pendiente`.
+- Se agrega `bi-origen/bi-notas-credito/.gitignore` para no versionar `.pbi/cache.abf` (datos importados) ni `.pbi/localSettings.json`.
+- `pendiente`: validación del dueño de negocio (10 preguntas en la ficha) y resultados de las consultas de validación.
+
+## [2026-10-27] migración | BI Notas crédito, fase 1 validada
+
+- Daniel Jimenez (dueño de negocio) respondió las 10 preguntas. Facturas y notas aplicarán las mismas exclusiones (Donaciones, `DocType = 'S'`, `VZNOPE-0021`), lo que cambia el % frente al Power BI actual. Las exclusiones manuales por `DocNum` irán en una tabla. La meta del 3 % se mantiene. Se descarta `ÁREA` y se agregan al detalle ciudad, teléfono, obra y punto de venta.
+- Validación con datos: `Planos_Symphony` y `Firplak_SA` están en la misma instancia `ITPLAKINFO`. Con los datos reales, el tipo NC agrupado solo resulta en Devolución, Anulación y vacío; los prefijos de concepto 34–36 quedan sin departamento.
+
+## [2026-10-27] hallazgo | `Informe_ventas` frente a SAP
+
+- Durante la fase 2 de Notas crédito, `Informe_ventas` (`TipoDocumento = 'Factura'`) no cuadró con `Firplak_SA.dbo.OINV`: sobran documentos de `DOCNUM` bajo que no existen en `OINV` con esa fecha (unos 5 a 12 millones al mes) y falta al menos la factura de exportación 4316 (serie 276). Detalle en [la ficha de Notas crédito](bi/notas-credito.md#sirve-informe_ventas-como-denominador-2026-10-27).
+- Decisión: el BI de notas no usa `Informe_ventas` como denominador. `pendiente`: revisar el SP de `Informe_ventas` porque el dashboard de facturación podría estar afectado.
+
+## [2026-10-27] corrección | Documentos de Viventta en `Informe_ventas`
+
+- Los documentos de `DOCNUM` bajo del hallazgo anterior son de **Viventta**, compañía del grupo que `Informe_ventas` ya incluye en facturas y notas crédito. No es un error de `Informe_ventas`. El Power BI de notas crédito solo lee `Firplak_SA`.
+- Sigue `pendiente`: la factura 4316 (serie 276), que está en SAP pero no en `Informe_ventas`, y la decisión de incluir Viventta en el dashboard de notas crédito.
+
+## [2026-10-27] decisión | Notas crédito incluye Viventta
+
+- El dashboard de notas crédito incluirá Viventta (base `DBViventta`). Sus notas quedan sin tipo, concepto ni departamento porque no usa esos campos. Recarga completa los domingos a las 2:00.
+
+## [2026-10-27] ingesta | `SP_Generar_Informe_Ventas`
+
+- El desarrollador compartió la definición del SP que llena `Informe_ventas`. Ya incluye notas crédito de Firplak con tipo, concepto (por línea), comentarios y las columnas del detalle; además tiene `Empresa`, `DocEntry` y `LineNum`. La bitácora existente es `dbo.Cargas_Log`.
+- Diferencias con las decisiones del BI de Notas crédito: las facturas no excluyen `DocType = 'S'`; Viventta no excluye Donaciones; las exclusiones manuales son fijas en el SP. Detalle en la [ficha](bi/notas-credito.md#cómo-se-carga-informe_ventas-definición-compartida-por-el-desarrollador-2026-10-27).
+- `pendiente`: la plantilla de la skill `crear-tabla-incremental` propone `Bitacora_Cargas_Informes`; debería apuntar a `Cargas_Log`.
+
+## [2026-10-27] decisión | Notas crédito reutiliza `Informe_ventas`
+
+- El dashboard de notas crédito leerá notas y facturación de `Informe_ventas` (filtrando por `Empresa` y `TipoDocumento`). No se crean tablas, SP ni jobs nuevos y **no se modifican** las reglas de `SP_Generar_Informe_Ventas`.
+- Los jobs existentes ya cumplen la frecuencia pedida: incremental cada 15 minutos (6:00–20:00) y completa a las 2:00.
+- La factura 4316 queda explicada (`VZNOPE-0028`, excluida por `Informe_ventas`). `pendiente`: el concepto NC por línea difiere del concepto del encabezado en el 97 % de las líneas.
+
+## [2026-10-27] hallazgo | Concepto NC vacío en `Informe_ventas`
+
+- 5.928 de 5.929 líneas de notas de Firplak (desde 2025) no tienen `CodigoConceptoNC`. `SP_Generar_Informe_Ventas` lee el concepto de la línea (`RIN1.U_CONCEPTOSNC`, casi siempre `NULL`) y no del encabezado (`ORIN.U_CONCEPTOSNC`). Corrección propuesta en la [ficha de Notas crédito](bi/notas-credito.md); `pendiente` de aprobación.
+- Índices de `Informe_ventas` confirmados: PK clustered, `IX_Informe_ventas_Fecha` y columnstore `NCCI_Informe_ventas`.
+
+## [2026-10-27] cambio | Concepto NC en `SP_Generar_Informe_Ventas` (fase 2 de Notas crédito cerrada)
+
+- Las notas crédito de Firplak toman el concepto del encabezado (`ORIN.U_CONCEPTOSNC`) en lugar de la línea. Lo ejecutó el desarrollador en SSMS, con respaldo previo del SP.
+- Validación: líneas sin concepto desde 2025 de 5.928 a 25; facturación de enero a septiembre de 2026 sin cambios; carga completa de 260.204 filas sin error.
+- Rollback: ejecutar el respaldo como `ALTER PROCEDURE` y hacer una carga `COMPLETA`.
+- Impacto en otros consumidores de `Informe_ventas`: `CodigoConceptoNC` y `ConceptosNotasCredito` ahora tienen datos; antes venían vacíos.
+
+## [2026-10-27] migración | Notas crédito, fase 3 (contrato propuesto)
+
+- Contrato de `GET /api/v1/notas-credito` en la [ficha](bi/notas-credito.md#3-contrato-del-endpoint), sobre `Informe_ventas`, sin filtro de empresa (Firplak y Viventta sumadas, decisión del desarrollador). Departamento y tipo NC agrupado se calculan con `CASE` en SQL. `pendiente`: aprobación del desarrollador.
+
+## [2026-10-27] migración | Notas crédito, fase 4 (endpoint)
+
+- Contrato aprobado por Daniel Jimenez. Se implementa `GET /api/v1/notas-credito` en `reporting-api`, rama `bi/notas-credito`; compila sin errores. Documentado en [Reporting API](components/reporting-api.md#get-apiv1notas-credito).
+- `pendiente`: prueba del desarrollador contra la base y despliegue. Si el proxy de IIS limita rutas, hay que agregar `/api/v1/notas-credito`.
+
+## [2026-10-27] despliegue | `GET /api/v1/notas-credito` en el servidor
+
+- El desarrollador desplegó el `dist` de la rama `bi/notas-credito` en `C:\Apps\reporting-api`. La API escucha en `127.0.0.1:8090` (no en 8080, que pertenece a otra aplicación).
+- Prueba de septiembre de 2026: la facturación coincide con `Informe_ventas`; las notas suman 796.683.781,95 (13,49 % de la facturación). Detalle en la [ficha](bi/notas-credito.md#4-endpoint).
+- `pendiente`: el código desplegado aún no tiene commit en `reporting-api`; confirmar el respaldo del `dist` anterior.
+
+## [2026-10-27] migración | Notas crédito, fase 5 (dashboard) y componentes comunes
+
+- Commit `da3e0fc` en `reporting-api`, rama `bi/notas-credito`, con el endpoint ya desplegado.
+- Se extraen los componentes comunes de dashboard (`components/dashboard/`, `lib/dashboard/`) desde `FacturacionDashboard.tsx`, sin cambios visibles en facturación. Ver [Frontend](components/frontend.md#componentes-comunes-de-dashboard).
+- Nuevo dashboard `/notas-credito` con proxy `/api/notas-credito`, tarjeta en el portal y opción en el menú lateral. Lint y build sin errores; revisión visual a 375, 820 y 1440 px con datos ficticios en una copia temporal, ya borrada.
+- `lib/brand.ts` agrega `surface` (blanco, replica `--white`) para los puntos de los gráficos.
+- `pendiente`: prueba con sesión y datos reales, revisión de IIS para la ruta nueva y commit del frontend.
+
+## [2026-10-27] cambio | Menú lateral por reporte y selector de mes
+
+- Validación con datos reales del dashboard de notas crédito: hecha por el desarrollador.
+- Cada reporte muestra en el menú lateral solo su vista principal y su detalle (`billingNavigation`, `creditNoteNavigation`). Se quita "Resumen" del menú; "Indicadores" en las migas de pan pasa a ser el enlace al portal.
+- Nueva página `/notas-credito/detalle`. La vista principal de notas crédito ya no muestra la tabla de documentos.
+- `billing.css`: la columna del mes en la barra de filtros pasa de `minmax(180px, .8fr)` a `minmax(255px, 1fr)`, para que "Todos los meses" no se recorte en ninguno de los dos dashboards. Revisado a 1380 y 1440 px.
+
+## [2026-10-27] cambio | Notas crédito: filtros también sobre la facturación
+
+- Por decisión de Daniel Jimenez, cambia la decisión 4: `tipoVentas` y `vendedorSenior` filtran también la facturación, que es el denominador del %. Departamento, concepto, tipo NC y búsqueda siguen filtrando solo las notas, porque las facturas no tienen esos datos.
+- `reporting-api` (`src/db.ts`, `addCreditNoteFilters` devuelve `shared` y `notesOnly`) y su README actualizados. Compila. Paquete `reporting-api-dist-bi-notas-credito.zip` regenerado. `pendiente`: commit y despliegue en el servidor.
+- Frontend: el texto del panel de filtros avanzados lo indica.
+
+## [2026-10-27] proceso | Revisión de PR por el mismo desarrollador
+
+- Por falta de personal, los PR de las migraciones los revisa el mismo desarrollador responsable; ya no se exige un segundo revisor. Cambian las skills `migrar-bi` (definición de terminado) y `crear-dashboard` (regla "No hagas").
+- La IA crea los PR con `gh` (GitHub CLI, instalada y autenticada el 2026-10-27).
+
+## [2026-10-27] proceso | Migración de BI documentada en VibeWorkFlow
+
+- Se conecta el MCP `vibeworkflow` en Claude Code (configuración de usuario).
+- Se documenta el proceso en VibeWorkFlow: flujo estándar "Migración de reportes de Power BI al portal de Indicadores", entorno FIRPLAK, área Tecnología (id `5cb0a7af-a680-49ca-89a0-4bcb69efe3be`). Tiene 8 acciones (fases 0 a 7) con su documento, 4 soluciones (skills, ficha, Reporting API y portal), responsables por rol, 2 KPI, un deseo y el checklist de cierre.
+- Skill `migrar-bi`: la fase 7 exige subir la documentación del BI migrado a VibeWorkFlow (flujo estándar del indicador en el área del dueño de negocio) y enlazarla en la ficha. Se actualizan la definición de terminado y la plantilla de la ficha.
+- `pendiente`: subir la documentación del BI de notas crédito cuando llegue a la fase 7.
+
+## [2026-10-27] cambio | Permisos por informe
+
+- **Decisiones del desarrollador:**
+  - Los permisos se guardan en una tabla de Supabase, uno por usuario y por informe.
+  - La administración se hace en una página de la misma aplicación.
+  - Los administradores ven todos los informes.
+  - Administradores iniciales: analista.desarrollador, daniel.jimenez, milton.rendon, analista2.desarrollo (Esteban Muñoz), alejandro.isaza e ismael.correa (@firplak.com).
+  - Al lanzar, ningún usuario normal tiene informes.
+- **Implementación:**
+  - Script `supabase/migrations/20261027_permisos_informes.sql`: tablas, RLS, triggers de historial y de último administrador, y administradores iniciales.
+  - Catálogo `lib/reports.ts` y `lib/auth/access.ts`.
+  - El middleware responde 403 o redirige al portal.
+  - Registro de ingresos en el callback.
+  - Portal filtrado por permisos.
+  - Página `/admin/permisos`.
+- **Validación:**
+  - Lint y build sin errores.
+  - Revisión visual a 375, 820 y 1440 px con un Supabase simulado y usuarios ficticios, en una copia temporal ya borrada.
+- **Despliegue:** ejecutar el script **antes** de desplegar el frontend. Sin las tablas, el middleware niega todos los informes.
+- **Rollback:** revertir el PR. Las tablas se borran con el bloque de rollback del script.
+- **`pendiente`:**
+  - Ejecutar el script en Supabase.
+  - Probar con sesión real.
+- **Skills:** `migrar-bi` (fases 0 y 5) y `crear-dashboard` (paso 10) incluyen el catálogo y los permisos.
+
+## [2026-10-27] cambio | Permisos en el menú del perfil
+
+- Por decisión del desarrollador, el acceso a `/admin/permisos` deja de ser una tarjeta del portal y pasa a ser una opción ("Permisos de informes") del menú del perfil, el bloque con nombre y correo. Está en el encabezado del portal y en la barra lateral de los dashboards, y solo lo ven los administradores; para los demás, el perfil se muestra sin menú.
+- Componente `components/dashboard/UserMenu.tsx` y estilos en `app/styles/user-menu.css`. El portal muestra ahora el avatar y el correo del usuario.
+- Lint, tipos y build sin errores; revisión visual con el menú abierto en una copia temporal con datos ficticios, ya borrada.
+
+## [2026-10-28] bi | Notas crédito: conciliación firmada (fase 6)
+
+- El dueño de negocio (Daniel Jimenez) contrastó el dashboard con el Power BI y dio la conciliación por buena. Las cifras por indicador no quedaron registradas; las diferencias esperadas están en la sección 6 de [la ficha](bi/notas-credito.md).
+- La ficha pasa a `fase: 6` y la sección 7 registra el despliegue de la API y del frontend y el rollback de cada parte.
+
+## [2026-10-28] bi | Notas crédito: migración cerrada (fase 7)
+
+- **VibeWorkFlow:** flujo estándar "Consulta del indicador de notas crédito", área Tecnología, id `35bad5f7-8628-4bb1-9af3-4da057d07722`. Lo creó el agente después de una caída del servicio y lo revisó el desarrollador el 2026-10-28.
+- **Frontend:** desplegado en Vercel el 2026-10-28.
+- **Power BI:** retiro programado para el 2026-11-06; hasta entonces queda en paralelo como respaldo.
+- **Rollback:** está en la sección 7 de [la ficha](bi/notas-credito.md), separado para la API, el frontend y el SP.
+- La ficha pasa a `status: migrado` y `fase: 7`.
+
+## [2026-11-04] bi | Costo actual de producto terminado: inventario y análisis (fases 0 y 1)
+
+- Ficha nueva: [`bi/costo-actual-pt.md`](bi/costo-actual-pt.md). El dueño de negocio es Contabilidad, la prioridad es alta y el uso es diario. Rama `bi/costo-actual-pt`.
+- Fuente: proyecto `.pbip` en `bi-origen/bi-costo-actual-pt/`. Es la explosión de la lista de materiales (4 niveles) desde SAP `FIRPLAK_SA`, con costo de MP, MO y CIF.
+- **Decisión del desarrollador:** la migración usa [`query-optimizado.sql`](../bi-origen/bi-costo-actual-pt/query-optimizado.sql), sin cursores y con reglas corregidas, en lugar del SQL del Power BI. Las diferencias de reglas (D1–D8) están en la ficha y afectarán la conciliación.
+- Propuesta: tabla `Informe_costo_pt` con **carga completa** diaria, no incremental (nombre y horario pendientes).
+- Pendiente: la validación de Contabilidad (preguntas P1–P9) y los resultados de las consultas V1–V7.
+
+## [2026-11-04] bi | Costo actual de producto terminado: resultados de validación V1–V6
+
+- El query optimizado tarda 33 s y devuelve 449.018 filas, así que la carga completa diaria es viable.
+- D1 y D7 no tienen efecto: `validFor` y `frozenFor` son complementarios, y no hay artículos que sean MO y CIF a la vez.
+- Hallazgos para Contabilidad: 3.421 productos tienen listas de más de 4 niveles (P10) y 13.019 líneas no tienen costo en SAP (P11). Las consultas de seguimiento V4b y V5b y la comparación V7 de tres productos están en la [ficha](bi/costo-actual-pt.md#resultados-ejecutados-por-el-desarrollador-el-2026-11-04).
+
+## [2026-11-04] bi | Costo actual de producto terminado: V4b, V5b y primer producto de V7
+
+- V4b: solo 1 producto llega al nivel 6 (24 líneas). Explotar todos los niveles (P10) es viable.
+- V5b: todas las hojas sin costo son MP. 12.055 líneas son de artículos que no son de inventario y 982 líneas (630 artículos) son de inventario sin costo en SAP. P11 queda reformulada sobre esos dos grupos.
+- V7: `CBAN12-0027-000-0406` (un nivel, con MO y CIF) cuadra exacto con el Power BI: total 235.171,705. Falta comparar `VHPT09-0006-073-0100` y `CBAN05-0002-000-0438`, que no salieron en la ejecución.
+
+## [2026-11-04] bi | Costo actual de producto terminado: comparación V7 de los tres productos
+
+- `VHPT09-0006-073-0100` y `CBAN05-0002-000-0438` están inactivos y se reemplazaron por `CBAN05-0001-000-0438` y `CMPD04-0268-000-0000`.
+- `CBAN05-0001`: el query da 1.817,70 más que el Power BI. El Power BI deja en 0 la MP de un canto que sí tiene costo unitario (regla D3), y el query lo corrige.
+- `CMPD04-0268`: MO y CIF iguales. La MP difiere en 2.094,88 en cuatro hojas del nivel 3 con distinto costo unitario. Puede deberse a D5/D6 o a un cambio del costo promedio desde la última actualización del Power BI. La consulta V7b queda pendiente.
+
+## [2026-11-04] bi | Costo actual de producto terminado: causa de la diferencia de `CMPD04-0268` verificada
+
+- El desarrollador confirma un error conocido del SQL original: en las hojas del nivel 3 no consulta la bodega alternativa y se queda con el costo de la bodega de la lista (D3/D5). El query optimizado lo corrige.
+- Se retira la consulta V7b. La validación con datos (V1–V7) queda completa. Para cerrar la fase 1 falta la validación de Contabilidad (P1–P11).
+
+## [2026-11-04] bi | Costo actual de producto terminado: respuestas de Contabilidad P1, P7, P10 y P11
+
+- P1: se aceptan las reglas corregidas del query optimizado.
+- P7: se incluyen los semielaborados (todo artículo activo con lista de materiales).
+- P10: se desglosan todos los niveles. Es una diferencia nueva respecto del query optimizado (**D9**): el SP de la fase 2 hará la explosión recursiva con control de ciclos.
+- P11: las líneas sin costo quedan en 0 y se controlan con la columna `Alerta`, que el portal mostrará.
+- Pendiente: P2 a P6, el indicador de P8 y P9.
+
+## [2026-11-04] bi | Costo actual de producto terminado: respuestas de Contabilidad P2 a P9
+
+- P2: los artículos que son MO y CIF a la vez no deberían existir. El SP los cuenta una vez como MO y los marca con la alerta `MO Y CIF A LA VEZ`.
+- P3: la tabla muestra MP, MO, CIF y Total. P4: la torta excluye el CIF por clasificación de SAP, no por texto.
+- P5: se decide en el dashboard. P8: se muestra `Alerta` y un indicador de líneas con alerta, que resalte `ITEM INACTIVO`. P9: solo costo actual, sin historia.
+- Pendiente: aclarar P6 (tarjetas sin producto seleccionado) y confirmar que la mano de obra queda en la torta.
+
+## [2026-11-04] bi | Costo actual de producto terminado: fase 1 cerrada
+
+- P6: las tarjetas solo se muestran con un producto seleccionado (opción a). P4: confirmado que la mano de obra queda en la torta.
+- Contabilidad aprobó las reglas por medio del desarrollador. Solo queda P5, que se decide en la fase 5. Sigue la fase 2 (tabla y SP).
+
+## [2026-11-04] bi | Costo actual de producto terminado: fase 2, script de tabla y SP
+
+- Script nuevo: [`sql/costo-actual-pt/01_informe_costo_pt.sql`](../sql/costo-actual-pt/01_informe_costo_pt.sql). Crea `Informe_costo_pt`, `Informe_costo_pt_Carga` y `sp_Actualizar_Informe_costo_pt`, que desglosa todos los niveles (D9) con tope de 15 y control de ciclos.
+- Precisión del desarrollador sobre P2: los artículos MO+CIF **no se costean** (costo 0) y se marcan con la alerta `MO Y CIF A LA VEZ`.
+- Carga completa **cada hora** con intercambio por `ALTER TABLE … SWITCH`. Bitácora en `dbo.Cargas_Log`, existente.
+- Pendiente: que el desarrollador verifique las columnas de `Cargas_Log`, ejecute el script, la primera carga y las validaciones 4.1–4.6, y cree el job.
+
+## [2026-11-04] fix | Costo actual de PT: líneas de ITT1 sin código
+
+- La primera carga falló con el error 515 (`NULL` en `#BOM.Codigo`): hay líneas de `ITT1` sin `Code`, probablemente líneas de texto.
+- El SP las excluye del desglose. No tienen costo, así que los totales no cambian frente al query optimizado; solo cambia el número de filas. Se agregó una consulta de diagnóstico por `ITT1.Type`.
+
+## [2026-11-04] fix | Costo actual de PT: rendimiento de la explosión
+
+- La primera carga llevaba más de 9 minutos (1.145 s de CPU) en el `INSERT` del `WHILE`, con `#BOM` ya en las ~463.000 filas esperadas. Causa: el plan compilado con el nivel 1 se reutilizaba sobre todo `#BOM`.
+- Corrección: tabla `#Frontera` con solo los encabezados del nivel en curso y `OPTION (RECOMPILE)` en el `INSERT` del desglose, el `INSERT` final y el `UPDATE` de totales.
+- Segunda corrección (2026-11-04): la frontera no bastó (la carga anterior tardó 10 min). Causa probable: `LEFT JOIN #ConLista` (varchar) contra `ITT1.Code` (nvarchar en SAP B1) forzaba una conversión implícita y un recorrido completo de `#ConLista` por cada línea. Se reemplazó por `EXISTS` sobre `ITT1`, como en el query optimizado. Tipos de `ITT1`: `pendiente` de confirmar.
+
+## [2026-11-04] bi | Costo actual de PT: primera carga validada y script del job
+
+- La carga final (`Cargas_Log` 1238) tarda 32 s e inserta 463.592 filas: 11.253 productos y listas hasta el nivel 6. Validaciones 4.1–4.5 correctas: el nivel 1 suma sus líneas, no hay MO+CIF ni problemas de estructura, y los tres productos de V7 cuadran exacto.
+- Script del job: [`sql/costo-actual-pt/02_job_costo_pt.sql`](../sql/costo-actual-pt/02_job_costo_pt.sql), cada hora al minuto 05. Pendiente: crearlo y ver la primera ejecución programada.
+
+## [2026-11-04] bi | Costo actual de PT: fase 2 cerrada y contrato del endpoint propuesto
+
+- El job `BI - Costo PT carga completa` quedó creado y funcionando (desarrollador). Fase 2 cerrada.
+- Contrato propuesto para `GET /api/v1/costo-actual-pt` en la [ficha](bi/costo-actual-pt.md#3-contrato-del-endpoint): selección de un producto por `codigo`, búsqueda de productos con `search`, lista completa sin paginar, resumen de costos y alertas, y composición sin CIF. Sin periodo; `loadedAt` muestra la última carga. Pendiente la aprobación.
+
+## [2026-11-05] bi | Costo actual de PT: ajustes al contrato
+
+- Se mantienen las tarjetas de promedio del Power BI (`averageCost`, `averageCostWithoutOverhead`), visibles solo con un producto elegido.
+- Descarga nueva `GET /api/v1/costo-actual-pt/export` en CSV para Excel (UTF-8 con BOM, `;`, coma decimal), en streaming: todos los productos sin `codigo`, o solo el producto elegido.
+- El máximo real es de 331 líneas por producto; el tope de 5.000 del endpoint principal se mantiene.
+
+## [2026-11-05] bi | Costo actual de PT: endpoint implementado (fase 4)
+
+- Contrato aprobado por Daniel Jimenez. En `reporting-api`, rama `bi/costo-actual-pt` (desde `bi/notas-credito-2`), commit `a28da32`: `GET /api/v1/costo-actual-pt` y la descarga `GET /api/v1/costo-actual-pt/export` en CSV con streaming. Compila sin errores.
+- Variables nuevas: `REPORT_COSTO_PT_TABLE_SCHEMA`, `REPORT_COSTO_PT_TABLE` y `REPORT_DB_EXPORT_TIMEOUT_MS`. Paquete `reporting-api-dist-a28da32.zip`.
+- Pendiente: la prueba contra la base y el despliegue en el servidor.
+
+## [2026-11-05] fix | Costo actual de PT: prueba del endpoint y hora de carga
+
+- Prueba en el servidor: búsqueda, producto y descargas correctas. La descarga completa pesa 104,1 MB.
+- `loadedAt` salía en UTC por el estilo 127 de `CONVERT`; se cambió al 126 para conservar el desfase (commit `aeb3f5b` en `reporting-api`, paquete `reporting-api-dist-aeb3f5b.zip`).
+
+## [2026-11-05] bi | Costo actual de PT: fase 4 cerrada
+
+- Versión `aeb3f5b` desplegada en el servidor y verificada: resumen correcto, `loadedAt` con desfase `-05:00` y descarga completa de 104,1 MB en 16,2 s dentro del servidor.
+
+## [2026-11-05] bi | Costo actual de PT: dashboard (fase 5)
+
+- Página `/costo-actual-pt` con buscador de producto, tarjetas de costo, panel de alertas, composición sin CIF, lista de materiales en árbol y botón de descarga (todo o el producto elegido). Proxys `/api/costo-actual-pt` y `/api/costo-actual-pt/export` (streaming, `maxDuration = 300`).
+- `ShareList` pasa de notas crédito a `components/dashboard/` para compartirla.
+- Lint y build sin errores. Revisión visual a 375, 820 y 1440 px con una API falsa; se movieron las alertas debajo del componente para que la tabla quepa a 1440 px.
+- Pendiente: asignar permisos, probar con sesión real y probar la descarga completa a través de Vercel.
+
+## [2026-11-05] cambio | Costo actual de PT: sin tarjetas de promedio
+
+- A pedido del desarrollador se quitan las tarjetas "Costo promedio" y "Costo promedio sin CIF" del dashboard, porque con un producto elegido repetían el total. Quedan "Costo total" y "Costo sin CIF" en una cuadrícula de dos columnas.
+- La API no cambia: `summary.averageCost` y `averageCostWithoutOverhead` quedan sin uso en el portal.
+
+## [2026-11-06] bi | Costo actual de PT: fase 5 cerrada y plan de conciliación (fase 6)
+
+- El desarrollador asignó los permisos y probó el dashboard en la vista previa de Vercel, con sesión real y la descarga. PR: Indicadores_Firplak#2 y firplak-reporting-api#3.
+- Fase 6: consultas de solo lectura en [`sql/costo-actual-pt/03_conciliacion.sql`](../sql/costo-actual-pt/03_conciliacion.sql) (C1 totales globales, C2 muestra de 11 productos por caso, C3 detalle con costos de SAP por bodega, C4 comparación contra el query optimizado) y tablas por llenar en la sección 6 de la [ficha](bi/costo-actual-pt.md).
+- La conciliación es por producto, no por periodo (P9). Las diferencias con el Power BI deben tener causa D1–D9.
+
+## [2026-11-06] bi | Costo actual de PT: primeros resultados de la conciliación
+
+- C1: el portal suma 7.065.652.224,66 (11.276 productos) y el Power BI 6.959.525.480: +106,1 millones (+1,52 %). Sin CIF: +81,9 millones (+1,38 %). Falta C4 para separar el efecto de D9 del de las reglas corregidas.
+- C2: registrados los valores del portal de 10 productos; faltan los del Power BI.
+- C3 de `CMPD04-0268-000-0000`: el Power BI tomó el costo de `MP-01` en tres hojas del nivel 3. La causa está en la línea 331 del SQL original (`@Bodega3_` en lugar de `@Bodega2_`), y se precisa la explicación de la V7 (hallazgo H1). Se agrega la consulta C3b.
+
+## [2026-11-06] cambio | Costo actual de PT: descarga en Excel (.xlsx)
+
+- En la revisión, Contabilidad tenía que corregir a mano los números del CSV. Primero se cambió el CSV a coma de miles y punto decimal (`d1c65c2`), pero el desarrollador decidió pasar a `.xlsx` sin desplegar ese cambio, porque el CSV depende de la configuración regional de Excel.
+- La API genera el `.xlsx` en streaming con `src/xlsx.ts`, sin dependencias nuevas: números como números, códigos como texto, encabezado fijo, filtros y formato `#,##0.00`. El portal solo cambia el proxy y los textos.
+- Medido con 463.600 filas sintéticas: 6,5 s de CPU y 24,3 MB (el CSV pesaba ~104 MB). Excel lo abre en 6,7 s sin reparación. Si el usuario cancela a mitad, la generación falla limpia y se cancela la consulta.
+- Despliegue: primero la API y después el portal. Rollback: volver a desplegar el paquete `dist` anterior (`aeb3f5b`, CSV con coma decimal) y revertir el commit del portal.
+
+## [2026-11-06] cambio | Costo actual de PT: seis tarjetas de costo
+
+- A pedido del desarrollador, el dashboard muestra tarjetas separadas de MP, MO y CIF (con su participación en el total) y los totales: costo total, sin CIF (MP + MO) y sin MO (MP + CIF). "Sin MO" se calcula en el navegador con `totalCost - laborCost`; la API no cambia.
+
+## [2026-11-06] bi | Costo actual de PT: valores del Power BI de la muestra
+
+- Con la exportación "Lista de Materiales" del Power BI se comparan 6 productos: `CBAN12-0027`, `CMPD04-0268` y `CMPD04-0261` coinciden. `VHPT05-0015` difiere en +477.436,48 (D9). `VCOC03-0370` difiere en −54.770,47 y `VBAN33-0005` en −4.799,75, solo en MP (`pendiente` de C3).
+- `CMPD04-0268` coincide hoy y el 2026-11-04 no: confirma que H1 hace variar el resultado del Power BI entre actualizaciones.
+- La exportación llegó cortada; faltan los totales de 4 productos.
+- Con la exportación completa (`pbi_LdeM/`): `CBAN19-0001` y `CMPD04-0130` coinciden; `CBAN05-0001` (+1.817,70) y `CEXH01-0008` (+360.000) difieren por D3, como se esperaba. C4 queda escrita completa en `03_conciliacion.sql`, con el nombre de tres partes de la tabla.
+- C4: 7.835 productos de hasta 4 niveles sin ninguna diferencia contra el query optimizado; 3.445 de más de 4 niveles con +71,98 millones (D9). C3b confirma H1: el costo de 293,14 de la tuerca es el de `MP-05`, una bodega que quedó de otro componente.
+- `VBAN33-0005` explicado al peso con C3: −4.799,75 por H1 (el Power BI usó el costo de `MP-01` en 20 artículos). Los artículos sin costo en ninguna bodega valen 0 en las dos fuentes. Falta la C3 completa de `VCOC03-0370`.
+- `VCOC03-0370` desglosado con C3: −59.366,50 de la placa de cuarzo `CQUA01-0001` (el Power BI usa 338.824, fuente `pendiente`), +5.955,31 de H1, −1.334,63 de D9 y −61,08 de movimientos de SAP.
+- C3b de la placa `CQUA01-0001`: 338.824 es su costo en `MP-10`, la bodega de los componentes que el Power BI leyó justo antes (H1). Los 10 productos de la muestra quedan explicados; la fase 6 solo espera la aprobación de Contabilidad.
+- Resumen de la conciliación enviado a Contabilidad por Teams. Las fases 6 y 7 se cierran con su respuesta, previsto para el martes 2026-11-10.
+
+## [2026-11-06] cambio | Permisos por cargo y trazabilidad
+
+- Decisión del desarrollador: los permisos se dan por **cargo** (uno por persona), no por área, con excepciones individuales. Los cargos se crean a medida que se necesitan.
+- Cada informe tiene `area` en `lib/reports.ts`; el portal agrupa las cards por área. Los tipos de informe (indicador, visualización, descarga) quedan para después.
+- Todo cambio exige soporte: correo o tarea de Planner (enlace), quién lo solicitó y quién lo aprobó (texto libre). Quién lo hizo y cuándo los pone el servidor.
+- Migración `20261106_permisos_por_cargo.sql`: tablas `job_roles`, `job_role_reports`, `user_job_roles` y `access_change_requests`, historial ampliado, `current_user_access()` y `apply_access_change()`. El navegador ya no escribe directo en las tablas.
+- `/admin/permisos` se rehace con las pestañas Usuarios, Cargos, Informes e Historial, el diálogo de soporte, "Dar acceso" a varios correos y el aviso "Ver personas" al cambiar un cargo.
+- Probado en PGlite y validado por el desarrollador en Supabase y en el portal. La migración se ejecuta antes de desplegar el portal. Detalle en [Seguridad](concepts/security-and-secrets.md#permisos-por-informe).
+- La solicitud de acceso desde el portal, con aprobación del jefe, queda para una segunda etapa.
+
+## [2026-11-09] cambio | Facturación diaria: metas, empresas y entregas
+
+- Pedido del desarrollador en 9 puntos; decisiones y reglas en [Facturación diaria](bi/facturacion-diaria.md).
+- Nuevo informe `metas-comerciales` (`/metas-comerciales`): meta mensual de facturación y de entregas por empresa y días laborales (lunes a viernes menos festivos de Colombia, editables). Migración `20261109_metas_comerciales.sql` con RLS e historial, probada en PGlite.
+- `/facturacion-diaria`: 3 cards de ventas (netas, acumuladas según la meta, cumplimiento) y 3 de entregas, gráfica de ventas netas acumuladas frente a la meta, botón para ver todas las zonas, filtro Empresa y Subgrupo de cliente en lugar de Cliente. Se retiran las metas fijas del código.
+- Nueva página `/facturacion-diaria/entregas`.
+- Reporting API: parámetros `empresa` y `subgrupoCliente` en facturación.
+- `pendiente`: SP de `Informe_entregas` con devoluciones y NC de devoluciones (punto 8), confirmar la columna `CentroCostos` en `Informe_ventas` y desplegar.
+
+## [2026-11-09] cambio | Entregas con devoluciones y NC de devolución (punto 8)
+
+- El desarrollador compartió `SP_Generar_Informe_Entregas` y confirmó que la columna de `Informe_ventas` es `CentroCostos`.
+- Script `sql/facturacion-diaria/01_informe_entregas_devoluciones.sql`: columnas `Empresa`, `TipoMovimiento`, `SubgrupoCliente` y `DocumentoBase`, nueva clave, devoluciones (`ORDN`) y NC de devolución (`ORIN`, sin las basadas en una devolución) en negativo, y Viventta. Con validación y rollback. Ejecución `pendiente`.
+- Reporting API: `empresa` y `subgrupoCliente` en entregas; totales `delivered`/`returns`/`net` sin anulados; `filterOptions`. El portal muestra entregas netas, devoluciones y documento base.
+- Reglas y riesgos en [Facturación diaria](bi/facturacion-diaria.md#entregas-con-devoluciones).
+
+## [2026-11-09] ajuste | Metas en el menú del perfil y orden de filtros
+
+- Revisión del desarrollador en el portal local. Metas comerciales deja de ser card del portal y botón de facturación: queda en el menú del perfil junto a "Permisos de informes", visible solo con el permiso `metas-comerciales` (`tool: true` en `lib/reports.ts`).
+- Grupo de cliente va antes de Subgrupo de cliente.
+- Empresa y Subgrupo no funcionaban porque el portal local consulta la API desplegada (`api.firplak.com`), aún sin la rama `feat/facturacion-metas-empresa`. El dashboard ahora avisa cuando la API conectada no envía `filterOptions.companies`.
+
+## [2026-11-09] cambio | Metas de Firplak divididas en Nacional y Exterior
+
+- Pedido del desarrollador: la meta de Firplak se divide en Nacional y Exterior, en facturación y en entregas. Segmentos: Firplak Nacional, Firplak Exterior, Viventta y CEFI.
+- Filtro: Mercado Nacional = Firplak Nacional + Viventta; Exterior = Firplak Exterior; Empresa CEFI = solo CEFI. Reglas en [Facturación diaria](bi/facturacion-diaria.md#metas-por-segmento-nacional--exterior).
+- Migración `20261109_metas_nacional_exterior.sql`, probada en PGlite (convierte las metas `Firplak` en Firplak Nacional).
+- `Informe_entregas` agrega `TipoVentas` (script 01, repetible) y la API acepta `mercado` en entregas.
+
+## [2026-11-09] cambio | CEFI fuera del filtro de mercado
+
+- Decisión del desarrollador: con Mercado Nacional o Exterior, los datos de facturación y entregas excluyen CEFI, igual que la meta. Con la empresa CEFI el mercado no se aplica.
+- El desarrollador confirmó que el despliegue de las metas por segmento, `TipoVentas` en entregas y la API quedó funcionando. Falta desplegar este ajuste de la API.
+
+## [2026-11-09] cambio | Una sola meta y gráfica acumulada de entregas
+
+- La meta de ventas y la de entregas son la misma (confirmado por el negocio): la pantalla de metas queda con una sola tabla.
+- Las gráficas acumuladas de ventas y entregas solo muestran días laborales; lo de sábados y festivos suma al siguiente día laboral.
+- `pendiente`: diagnosticar el reporte de "entregas en 0".
+
+
+## 2026-11-10 — Carga incremental de entregas
+
+- Las corridas INCREMENTAL de `SP_Generar_Informe_Entregas` fallaban con el error 468 (conflicto de intercalación entre `SQL_Latin1_General_CP850_CI_AS` y `SQL_Latin1_General_CP1_CI_AS`) en el `DELETE` que une `#Docs` con `Informe_entregas`. Las tablas temporales tomaban la intercalación de tempdb. Era un error de compilación y no pasaba por el `CATCH`, así que `Cargas_Log` quedaba con `Fin` en NULL. La carga COMPLETA no ejecuta ese `DELETE` y por eso funcionaba.
+- Corrección en [`01_informe_entregas_devoluciones.sql`](../sql/facturacion-diaria/01_informe_entregas_devoluciones.sql): las columnas de texto de `#Docs` y `#Facturas` usan `COLLATE DATABASE_DEFAULT`, y el `TRY` cubre también la preparación.
+- `pendiente`: entender por qué Viventta no carga entregas (posible exclusión del cliente `CN890927404-01`) y revisar el posible doble conteo entre devoluciones y NC de devolución.
+- Decisiones del desarrollador (2026-11-10): las NC de devolución de entregas son las de `U_TIPOSNC = '01'`, y Viventta queda fuera de `Informe_entregas` porque no tiene entregas en SAP. La meta de entregas del portal ya no suma la meta de Viventta ([`lib/metas/targets.ts`](../lib/metas/targets.ts)).
+- Ajuste del desarrollador (2026-11-10): CEFI vende en Nacional y en Exterior, así que Empresa CEFI + Mercado filtra por `TipoVentas` (`addFilters` y `addDeliveryFilters` en `reporting-api/src/db.ts`). Sin empresa, el mercado sigue excluyendo CEFI.
+- Decisión del desarrollador (2026-11-10): la meta de CEFI se divide en CEFI Nacional y CEFI Exterior ([`20261110_metas_cefi_mercado.sql`](../supabase/migrations/20261110_metas_cefi_mercado.sql), probada en PGlite). La pantalla de metas tiene cinco columnas y `segmentsFor` usa los segmentos de CEFI según el mercado.
+
+## [2026-11-11] ux | Una gráfica de acumulados y nuevo orden del resumen diario
+
+- Ventas y entregas acumuladas quedan en una sola gráfica ([`CumulativeChart.tsx`](../components/dashboard/CumulativeChart.tsx)): ventas en navy, entregas en ocre (`chartColors.delivery`); una sola meta acumulada punteada, porque es la misma para ventas y entregas.
+- Tabla "Facturación y entregas por día": Año, Mes, Día, Entr día, Entr mes, Fac día neta, Fac mes neta, Meta día, Meta acumulada, Total NC, Fac día bruta. El acumulado mensual ahora es neto (antes bruto).
+- Validación: `tsc --noEmit` y ESLint sin errores.
+
+## [2026-11-11] cambio | Nombre del informe y descargas de los detalles
+
+- El informe se llama "Facturación y entregas diaria" (portal, encabezado y menú). "Detalle de documentos" pasa a "Detalle de facturas".
+- Botón **Descargar** en Detalle de facturas y Detalle de entregas: `.xlsx` con los filtros aplicados, números y fechas como celdas numéricas para Excel ([reporting-api](components/reporting-api.md), [frontend](components/frontend.md)).
+- Validación: `tsc` y ESLint del portal sin errores; `tsc` de la API sin errores; el escritor `.xlsx` se probó con datos de ejemplo (openpyxl lee fechas y números con formato).
+- La descarga de facturas trae todas las columnas de `Informe_ventas` menos los campos internos de SAP como `DocEntry` y `LineNum` (leídas de la tabla en cada descarga) más Empresa (portal), Facturado, NC y Neto.
+- `pendiente`: desplegar la Reporting API (`reporting-api-dist-descargas.zip`) y probar las descargas contra SQL Server.
+- Cards: "Ventas acumuladas (meta)" y "Entregas acumuladas (meta)" pasan a "Meta"; "Cumplimiento de ventas" pasa a "Cumplimiento de facturación".
+
+## [2026-11-11] ux | Tabla diaria, Hasta ayer y filtros compactos
+
+- Resumen diario: Día como primera columna fija, "Meta acumulada" pasa a "Meta mes", nueva columna Diferencia (Fac mes neta − Meta mes) y Fac día bruta antes de Total NC.
+- Botón **Hasta ayer**: corta toda la página en el día anterior (`fechaHasta` en las consultas) y la meta acumulada.
+- Barra de filtros compacta y fija; los filtros se aplican al elegirlos. Tarjetas compactas (6 en una fila en pantallas anchas).
+- Recuadro de la gráfica de acumulados con la diferencia entre la facturación neta y la meta.
+- Detalle en [Facturación diaria](bi/facturacion-diaria.md). Validación: `tsc` y ESLint sin errores; `pendiente` revisar en el navegador.
+- Resumen diario: cada meta queda junto a su facturación (Fac día neta, Meta día, Fac mes neta, Meta mes).

@@ -1,0 +1,5464 @@
+cultureInfo es-CO
+
+	linguisticMetadata =
+			{
+			  "Version": "3.5.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "notas_credito": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "notas credito": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "nota credito": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.78
+			          }
+			        },
+			        {
+			          "NotasCreditos": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.fecha_contabilización": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Fecha contabilización"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "fecha contabilización": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "date": {
+			            "State": "Generated",
+			            "Weight": 0.7
+			          }
+			        }
+			      ],
+			      "SemanticType": "Time"
+			    },
+			    "notas_credito.num_documento": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Num Documento"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "num documento": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "number documento": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.vendedor_senior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Vendedor Senior"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "vendedor senior": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "vendedor pensioner": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        },
+			        {
+			          "vendedor OAP": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.vendedor_junior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Vendedor Junior"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "vendedor junior": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "vendedor underling": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        },
+			        {
+			          "vendedor beginner": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        },
+			        {
+			          "vendedor trainee": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        },
+			        {
+			          "vendedor novice": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.tipo_venta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "TipoVentas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "tipo venta": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "TipoVentas": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.zona": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Zona"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "zona": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.territorio": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Territorio"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "territorio": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.grupo_de_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Grupo de Cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "grupo de cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.subgrupo_de_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Subgrupo de Cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "subgrupo de cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.cod_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Cod Cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cod cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.nombre_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Nombre Cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nombre cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.código_punto_de_venta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Código Punto de Venta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "código punto de venta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.descripción_punto_de_venta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Descripción Punto de Venta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "descripción punto de venta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.centro_de_costo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Centro de Costos"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "centro de costo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.grupo_de_articulo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Grupo de Articulo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "grupo de articulo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.familia": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Familia"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "familia": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.codigo_articulo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Codigo Articulo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "codigo articulo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.descripcion_de_articulo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Descripcion de Articulo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "descripcion de articulo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.cantidad": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Cantidad"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cantidad": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.precio_de_venta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Precio de venta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "precio de venta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.descuento": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "% Descuento"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "% descuento": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "percentage descuento": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "pct descuento": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.precio_tras_el_descuento": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Precio tras el descuento"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "precio tras el descuento": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "precio tra el descuento": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.78
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.valor_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Valor Total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "valor total": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "valor aggregate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "valor overall": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.costo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Costo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.costo_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Costo total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo total": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "costo aggregate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "costo overall": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.utilidad_bruta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Utilidad Bruta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "utilidad bruta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.margen_bruta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Margen Bruta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "margen bruta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.obra": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Obra"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "obra": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.ciudad": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Ciudad"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "ciudad": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.teléfono": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Teléfono"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "teléfono": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.segmento_del_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Segmento del cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "segmento del cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.codigo_del_tipo_NC": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Codigo del Tipo NC"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "codigo del tipo NC": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.tipos_NC": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "TiposNC"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "tipos NC": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "tipo NC": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.78
+			          }
+			        },
+			        {
+			          "TiposNC": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.codigo_concepto_nc": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Codigo Concepto Nc"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "codigo concepto nc": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.conceptos_notas_crédito": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Conceptos Notas Crédito"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "conceptos notas crédito": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "concepto nota crédito": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.78
+			          }
+			        },
+			        {
+			          "Concepto": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "notas_credito.comentario": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "NotasCreditos",
+			          "ConceptualProperty": "Comentarios"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "comentario": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "factura": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.fecha_contabilización": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Fecha contabilización"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "fecha contabilización": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "date": {
+			            "State": "Generated",
+			            "Weight": 0.7
+			          }
+			        }
+			      ],
+			      "SemanticType": "Time"
+			    },
+			    "factura.num_documento": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Num Documento"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "num documento": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "number documento": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "factura.vendedor_senior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Vendedor Senior"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "vendedor senior": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "vendedor pensioner": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        },
+			        {
+			          "vendedor OAP": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        }
+			      ]
+			    },
+			    "factura.vendedor_junior": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Vendedor Junior"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "vendedor junior": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "vendedor underling": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        },
+			        {
+			          "vendedor beginner": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        },
+			        {
+			          "vendedor trainee": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        },
+			        {
+			          "vendedor novice": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.451
+			          }
+			        }
+			      ]
+			    },
+			    "factura.tipo_venta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "TipoVentas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "tipo venta": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "TipoVentas": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "factura.zona": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Zona"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "zona": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.territorio": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Territorio"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "territorio": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.grupo_de_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Grupo de Cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "grupo de cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.subgrupo_de_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Subgrupo de Cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "subgrupo de cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.cod_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Cod Cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cod cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.nombre_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Nombre Cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nombre cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.código_punto_de_venta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Código Punto de Venta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "código punto de venta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.descripción_punto_de_venta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Descripción Punto de Venta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "descripción punto de venta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.centro_de_costo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Centro de Costos"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "centro de costo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.grupo_de_articulo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Grupo de Articulo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "grupo de articulo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.familia": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Familia"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "familia": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.codigo_articulo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Codigo Articulo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "codigo articulo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.descripcion_de_articulo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Descripcion de Articulo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "descripcion de articulo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.cantidad": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Cantidad"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cantidad": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.precio_de_venta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Precio de venta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "precio de venta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.descuento": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "% Descuento"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "% descuento": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "percentage descuento": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "pct descuento": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "factura.precio_tras_el_descuento": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Precio tras el descuento"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "precio tras el descuento": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "precio tra el descuento": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.78
+			          }
+			        }
+			      ]
+			    },
+			    "factura.valor_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Valor Total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "valor total": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "valor aggregate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "valor overall": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "factura.costo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Costo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.costo_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Costo total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo total": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "costo aggregate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "costo overall": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "factura.utilidad_bruta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Utilidad Bruta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "utilidad bruta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.margen_bruta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Margen Bruta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "margen bruta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.obra": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Obra"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "obra": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.ciudad": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Ciudad"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "ciudad": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.teléfono": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Teléfono"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "teléfono": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.fecha_fin_novedad": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Fecha Fin Novedad"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "fecha fin novedad": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "date": {
+			            "State": "Generated",
+			            "Weight": 0.7
+			          }
+			        }
+			      ],
+			      "SemanticType": "Time"
+			    },
+			    "factura.fecha_fin_novedad.variación.jerarquía_de_fecha": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "VariationSource": "Fecha Fin Novedad",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "jerarquía de fecha": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "VariationSource": "Fecha Fin Novedad",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas",
+			          "HierarchyLevel": "Año"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "año": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "fecha fin novedad año": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "VariationSource": "Fecha Fin Novedad",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas",
+			          "HierarchyLevel": "Trimestre"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "trimestre": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "fecha fin novedad trimestre": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "VariationSource": "Fecha Fin Novedad",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas",
+			          "HierarchyLevel": "Mes"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "me": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "fecha fin novedad me": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "VariationSource": "Fecha Fin Novedad",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas",
+			          "HierarchyLevel": "Día"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "día": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "fecha fin novedad día": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "factura.segmento_del_cliente": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Facturas",
+			          "ConceptualProperty": "Segmento del cliente"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "segmento del cliente": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "calendario": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "calendario"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "calendario": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "calendario.date": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "calendario",
+			          "ConceptualProperty": "Date"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "date": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "moment": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.736
+			          }
+			        },
+			        {
+			          "period": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.714
+			          }
+			        }
+			      ],
+			      "SemanticType": "Time"
+			    },
+			    "calendario.date.variación.jerarquía_de_fecha": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "calendario",
+			          "VariationSource": "Date",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "jerarquía de fecha": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "calendario.date.variación.jerarquía_de_fecha.año": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "calendario",
+			          "VariationSource": "Date",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas",
+			          "HierarchyLevel": "Año"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "año": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "date año": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "moment año": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "period año": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "calendario.date.variación.jerarquía_de_fecha.trimestre": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "calendario",
+			          "VariationSource": "Date",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas",
+			          "HierarchyLevel": "Trimestre"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "trimestre": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "date trimestre": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "moment trimestre": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "period trimestre": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "calendario.date.variación.jerarquía_de_fecha.me": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "calendario",
+			          "VariationSource": "Date",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas",
+			          "HierarchyLevel": "Mes"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "me": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "date me": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "moment me": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.75
+			          }
+			        },
+			        {
+			          "period me": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "calendario.date.variación.jerarquía_de_fecha.día": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "calendario",
+			          "VariationSource": "Date",
+			          "VariationSet": "Variación",
+			          "Hierarchy": "Jerarquía de fechas",
+			          "HierarchyLevel": "Día"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "día": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "date día": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "moment día": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.6
+			          }
+			        },
+			        {
+			          "period día": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "medida": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "medida": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.total_facturado": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Total Facturado"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "total facturado": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "aggregate facturado": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "overall facturado": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "medida.total_NC": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Total NC"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "total NC": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "NC": {
+			            "State": "Generated",
+			            "Weight": 0.97
+			          }
+			        },
+			        {
+			          "aggregate nc": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "overall nc": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "Total": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "medida.total_ventas": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Total Ventas"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "total ventas": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "aggregate venta": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        },
+			        {
+			          "overall venta": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.582
+			          }
+			        }
+			      ]
+			    },
+			    "medida.sobre_el_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "% Sobre el total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "% sobre el total": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "% sobre el aggregate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.748
+			          }
+			        },
+			        {
+			          "% sobre el overall": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.748
+			          }
+			        },
+			        {
+			          "percentage sobre el total": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.617
+			          }
+			        },
+			        {
+			          "pct sobre el total": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.599
+			          }
+			        }
+			      ]
+			    },
+			    "medida.meta": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "Meta"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "meta": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "medida.a_a__sobre_el_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Medidas",
+			          "ConceptualProperty": "A.A % Sobre el total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "a.a % sobre el total": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    }
+			  },
+			  "Relationships": {
+			    "calendario_date_variación_jerarquía_de_fecha_me_has_calendario_date_variación_jerarquía_de_fecha_día": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario.date.variación.jerarquía_de_fecha.me": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.me"
+			          }
+			        },
+			        "calendario.date.variación.jerarquía_de_fecha.día": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.día"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.me"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.día"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "me_have_días"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.día"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.me"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "días_have_me"
+			        },
+			        {
+			          "Preposition": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.día"
+			            },
+			            "Prepositions": [
+			              {
+			                "in": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.me"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "días_are_in_me1"
+			        }
+			      ]
+			    },
+			    "calendario_date_variación_jerarquía_de_fecha_trimestre_has_calendario_date_variación_jerarquía_de_fecha_me": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario.date.variación.jerarquía_de_fecha.trimestre": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			          }
+			        },
+			        "calendario.date.variación.jerarquía_de_fecha.me": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.me"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.me"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "trimestres_have_me"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.me"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "me_have_trimestres"
+			        },
+			        {
+			          "Preposition": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.me"
+			            },
+			            "Prepositions": [
+			              {
+			                "in": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "me_are_in_trimestres1"
+			        }
+			      ]
+			    },
+			    "calendario_date_variación_jerarquía_de_fecha_año_has_calendario_date_variación_jerarquía_de_fecha_trimestre": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario.date.variación.jerarquía_de_fecha.año": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.año"
+			          }
+			        },
+			        "calendario.date.variación.jerarquía_de_fecha.trimestre": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.año"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "años_have_trimestres"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.año"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "trimestres_have_años"
+			        },
+			        {
+			          "Preposition": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			            },
+			            "Prepositions": [
+			              {
+			                "in": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.año"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "trimestres_are_in_años1"
+			        }
+			      ]
+			    },
+			    "calendario_date_variación_jerarquía_de_fecha_has_día": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario.date.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha"
+			          }
+			        },
+			        "calendario.date.variación.jerarquía_de_fecha.día": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.día"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.día"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "jerarquía_de_fechas_have_días"
+			        }
+			      ]
+			    },
+			    "calendario_date_variación_jerarquía_de_fecha_has_me": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario.date.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha"
+			          }
+			        },
+			        "calendario.date.variación.jerarquía_de_fecha.me": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.me"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.me"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "jerarquía_de_fechas_have_me"
+			        }
+			      ]
+			    },
+			    "calendario_date_variación_jerarquía_de_fecha_has_trimestre": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario.date.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha"
+			          }
+			        },
+			        "calendario.date.variación.jerarquía_de_fecha.trimestre": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.trimestre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "jerarquía_de_fechas_have_trimestres"
+			        }
+			      ]
+			    },
+			    "calendario_date_variación_jerarquía_de_fecha_has_año": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario.date.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha"
+			          }
+			        },
+			        "calendario.date.variación.jerarquía_de_fecha.año": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha.año"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha.año"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "jerarquía_de_fechas_have_años"
+			        }
+			      ]
+			    },
+			    "calendario_date_has_variación_jerarquía_de_fecha": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario.date": {
+			          "Target": {
+			            "Entity": "calendario.date"
+			          }
+			        },
+			        "calendario.date.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "calendario.date.variación.jerarquía_de_fecha"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario.date"
+			            },
+			            "Object": {
+			              "Role": "calendario.date.variación.jerarquía_de_fecha"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "dates_have_jerarquía_de_fechas"
+			        }
+			      ]
+			    },
+			    "factura_fecha_fin_novedad_variación_jerarquía_de_fecha_me_has_factura_fecha_fin_novedad_variación_jerarquía_de_fecha_día": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			          }
+			        },
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "me_have_días1"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "días_have_me1"
+			        },
+			        {
+			          "Preposition": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día"
+			            },
+			            "Prepositions": [
+			              {
+			                "in": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "días_are_in_me"
+			        }
+			      ]
+			    },
+			    "factura_fecha_fin_novedad_variación_jerarquía_de_fecha_trimestre_has_factura_fecha_fin_novedad_variación_jerarquía_de_fecha_me": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			          }
+			        },
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "trimestres_have_me1"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "me_have_trimestres1"
+			        },
+			        {
+			          "Preposition": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			            },
+			            "Prepositions": [
+			              {
+			                "in": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "me_are_in_trimestres"
+			        }
+			      ]
+			    },
+			    "factura_fecha_fin_novedad_variación_jerarquía_de_fecha_año_has_factura_fecha_fin_novedad_variación_jerarquía_de_fecha_trimestre": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año"
+			          }
+			        },
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "años_have_trimestres1"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "trimestres_have_años1"
+			        },
+			        {
+			          "Preposition": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			            },
+			            "Prepositions": [
+			              {
+			                "in": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "trimestres_are_in_años"
+			        }
+			      ]
+			    },
+			    "factura_fecha_fin_novedad_variación_jerarquía_de_fecha_has_día": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			          }
+			        },
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.día"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "jerarquía_de_fechas_have_días1"
+			        }
+			      ]
+			    },
+			    "factura_fecha_fin_novedad_variación_jerarquía_de_fecha_has_me": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			          }
+			        },
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.me"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "jerarquía_de_fechas_have_me1"
+			        }
+			      ]
+			    },
+			    "factura_fecha_fin_novedad_variación_jerarquía_de_fecha_has_trimestre": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			          }
+			        },
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.trimestre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "jerarquía_de_fechas_have_trimestres1"
+			        }
+			      ]
+			    },
+			    "factura_fecha_fin_novedad_variación_jerarquía_de_fecha_has_año": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			          }
+			        },
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha.año"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "jerarquía_de_fechas_have_años1"
+			        }
+			      ]
+			    },
+			    "factura_fecha_fin_novedad_has_variación_jerarquía_de_fecha": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura.fecha_fin_novedad": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad"
+			          }
+			        },
+			        "factura.fecha_fin_novedad.variación.jerarquía_de_fecha": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura.fecha_fin_novedad"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad.variación.jerarquía_de_fecha"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "fecha_fin_novedads_have_jerarquía_de_fechas"
+			        }
+			      ]
+			    },
+			    "factura_has_calendario": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "calendario": {
+			          "Target": {
+			            "Entity": "calendario"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "calendario"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_calendarios"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario"
+			            },
+			            "Object": {
+			              "Role": "factura"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "calendarios_have_facturas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_calendario": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "calendario": {
+			          "Target": {
+			            "Entity": "calendario"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "calendario"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_calendarios"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario"
+			            },
+			            "Object": {
+			              "Role": "notas_credito"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "calendarios_have_notas_creditos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_medida_a_a__sobre_el_total": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "medida.a_a__sobre_el_total": {
+			          "Target": {
+			            "Entity": "medida.a_a__sobre_el_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "medida.a_a__sobre_el_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_a_a__sobre_el_total"
+			        }
+			      ]
+			    },
+			    "factura_has_medida_a_a__sobre_el_total": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "medida.a_a__sobre_el_total": {
+			          "Target": {
+			            "Entity": "medida.a_a__sobre_el_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "medida.a_a__sobre_el_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_a_a__sobre_el_total"
+			        }
+			      ]
+			    },
+			    "medida_has_meta": {
+			      "Binding": {
+			        "ConceptualEntity": "Medidas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "medida": {
+			          "Target": {
+			            "Entity": "medida"
+			          }
+			        },
+			        "medida.meta": {
+			          "Target": {
+			            "Entity": "medida.meta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "medida"
+			            },
+			            "Object": {
+			              "Role": "medida.meta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "medidas_have_meta"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_medida_sobre_el_total": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "medida.sobre_el_total": {
+			          "Target": {
+			            "Entity": "medida.sobre_el_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "medida.sobre_el_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have__sobre_el_total"
+			        }
+			      ]
+			    },
+			    "factura_has_medida_sobre_el_total": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "medida.sobre_el_total": {
+			          "Target": {
+			            "Entity": "medida.sobre_el_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "medida.sobre_el_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have__sobre_el_total"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_medida_total_ventas": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "medida.total_ventas": {
+			          "Target": {
+			            "Entity": "medida.total_ventas"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "medida.total_ventas"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_total_ventas"
+			        }
+			      ]
+			    },
+			    "factura_has_medida_total_ventas": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "medida.total_ventas": {
+			          "Target": {
+			            "Entity": "medida.total_ventas"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "medida.total_ventas"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_total_ventas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_medida_total_NC": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "medida.total_NC": {
+			          "Target": {
+			            "Entity": "medida.total_NC"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "medida.total_NC"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_total_NC"
+			        }
+			      ]
+			    },
+			    "factura_has_medida_total_facturado": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "medida.total_facturado": {
+			          "Target": {
+			            "Entity": "medida.total_facturado"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "medida.total_facturado"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_total_facturado"
+			        }
+			      ]
+			    },
+			    "calendario_has_date": {
+			      "Binding": {
+			        "ConceptualEntity": "calendario"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "calendario": {
+			          "Target": {
+			            "Entity": "calendario"
+			          }
+			        },
+			        "calendario.date": {
+			          "Target": {
+			            "Entity": "calendario.date"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "calendario"
+			            },
+			            "Object": {
+			              "Role": "calendario.date"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "calendarios_have_dates"
+			        }
+			      ]
+			    },
+			    "factura_has_segmento_del_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.segmento_del_cliente": {
+			          "Target": {
+			            "Entity": "factura.segmento_del_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.segmento_del_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_segmento_del_clientes"
+			        }
+			      ]
+			    },
+			    "factura_has_fecha_fin_novedad": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.fecha_fin_novedad": {
+			          "Target": {
+			            "Entity": "factura.fecha_fin_novedad"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_fin_novedad"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_fecha_fin_novedads"
+			        }
+			      ]
+			    },
+			    "factura_has_teléfono": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.teléfono": {
+			          "Target": {
+			            "Entity": "factura.teléfono"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.teléfono"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_teléfonos"
+			        }
+			      ]
+			    },
+			    "factura_has_ciudad": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.ciudad": {
+			          "Target": {
+			            "Entity": "factura.ciudad"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.ciudad"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_ciudad"
+			        }
+			      ]
+			    },
+			    "factura_has_obra": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.obra": {
+			          "Target": {
+			            "Entity": "factura.obra"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.obra"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_obras"
+			        }
+			      ]
+			    },
+			    "factura_has_margen_bruta": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.margen_bruta": {
+			          "Target": {
+			            "Entity": "factura.margen_bruta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.margen_bruta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_margen_brutas"
+			        }
+			      ]
+			    },
+			    "factura_has_utilidad_bruta": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.utilidad_bruta": {
+			          "Target": {
+			            "Entity": "factura.utilidad_bruta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.utilidad_bruta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_utilidad_brutas"
+			        }
+			      ]
+			    },
+			    "factura_has_costo_total": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.costo_total": {
+			          "Target": {
+			            "Entity": "factura.costo_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.costo_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_costo_totals"
+			        }
+			      ]
+			    },
+			    "factura_has_costo": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.costo": {
+			          "Target": {
+			            "Entity": "factura.costo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.costo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_costos"
+			        }
+			      ]
+			    },
+			    "factura_has_valor_total": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.valor_total": {
+			          "Target": {
+			            "Entity": "factura.valor_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.valor_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_valor_totals"
+			        }
+			      ]
+			    },
+			    "factura_has_precio_tras_el_descuento": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.precio_tras_el_descuento": {
+			          "Target": {
+			            "Entity": "factura.precio_tras_el_descuento"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.precio_tras_el_descuento"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_precio_tras_el_descuentos"
+			        }
+			      ]
+			    },
+			    "factura_has_descuento": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.descuento": {
+			          "Target": {
+			            "Entity": "factura.descuento"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.descuento"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have__descuentos"
+			        }
+			      ]
+			    },
+			    "factura_has_precio_de_venta": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.precio_de_venta": {
+			          "Target": {
+			            "Entity": "factura.precio_de_venta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.precio_de_venta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_precio_de_ventas"
+			        }
+			      ]
+			    },
+			    "factura_has_cantidad": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.cantidad": {
+			          "Target": {
+			            "Entity": "factura.cantidad"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.cantidad"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_cantidads"
+			        }
+			      ]
+			    },
+			    "factura_has_descripcion_de_articulo": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.descripcion_de_articulo": {
+			          "Target": {
+			            "Entity": "factura.descripcion_de_articulo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.descripcion_de_articulo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_descripcion_de_articulos"
+			        }
+			      ]
+			    },
+			    "factura_has_codigo_articulo": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.codigo_articulo": {
+			          "Target": {
+			            "Entity": "factura.codigo_articulo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.codigo_articulo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_codigo_articulos"
+			        }
+			      ]
+			    },
+			    "factura_has_familia": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.familia": {
+			          "Target": {
+			            "Entity": "factura.familia"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.familia"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_familias"
+			        }
+			      ]
+			    },
+			    "factura_has_grupo_de_articulo": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.grupo_de_articulo": {
+			          "Target": {
+			            "Entity": "factura.grupo_de_articulo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.grupo_de_articulo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_grupo_de_articulos"
+			        }
+			      ]
+			    },
+			    "factura_has_centro_de_costo": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.centro_de_costo": {
+			          "Target": {
+			            "Entity": "factura.centro_de_costo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.centro_de_costo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_centro_de_costos"
+			        }
+			      ]
+			    },
+			    "factura_has_descripción_punto_de_venta": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.descripción_punto_de_venta": {
+			          "Target": {
+			            "Entity": "factura.descripción_punto_de_venta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.descripción_punto_de_venta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_descripción_punto_de_ventas"
+			        }
+			      ]
+			    },
+			    "factura_has_código_punto_de_venta": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.código_punto_de_venta": {
+			          "Target": {
+			            "Entity": "factura.código_punto_de_venta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.código_punto_de_venta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_código_punto_de_ventas"
+			        }
+			      ]
+			    },
+			    "factura_has_nombre_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.nombre_cliente": {
+			          "Target": {
+			            "Entity": "factura.nombre_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.nombre_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_nombre_clientes"
+			        }
+			      ]
+			    },
+			    "factura_has_cod_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.cod_cliente": {
+			          "Target": {
+			            "Entity": "factura.cod_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.cod_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_cod_clientes"
+			        }
+			      ]
+			    },
+			    "factura_has_subgrupo_de_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.subgrupo_de_cliente": {
+			          "Target": {
+			            "Entity": "factura.subgrupo_de_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.subgrupo_de_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_subgrupo_de_clientes"
+			        }
+			      ]
+			    },
+			    "factura_has_grupo_de_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.grupo_de_cliente": {
+			          "Target": {
+			            "Entity": "factura.grupo_de_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.grupo_de_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_grupo_de_clientes"
+			        }
+			      ]
+			    },
+			    "factura_has_territorio": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.territorio": {
+			          "Target": {
+			            "Entity": "factura.territorio"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.territorio"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_territorios"
+			        }
+			      ]
+			    },
+			    "factura_has_zona": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.zona": {
+			          "Target": {
+			            "Entity": "factura.zona"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.zona"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_zonas"
+			        }
+			      ]
+			    },
+			    "factura_has_tipo_venta": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.tipo_venta": {
+			          "Target": {
+			            "Entity": "factura.tipo_venta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.tipo_venta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_tipo_ventas"
+			        }
+			      ]
+			    },
+			    "factura_has_vendedor_junior": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.vendedor_junior": {
+			          "Target": {
+			            "Entity": "factura.vendedor_junior"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.vendedor_junior"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_vendedor_juniors"
+			        }
+			      ]
+			    },
+			    "factura_has_vendedor_senior": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.vendedor_senior": {
+			          "Target": {
+			            "Entity": "factura.vendedor_senior"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.vendedor_senior"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_vendedor_seniors"
+			        }
+			      ]
+			    },
+			    "factura_has_num_documento": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.num_documento": {
+			          "Target": {
+			            "Entity": "factura.num_documento"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.num_documento"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_num_documentos"
+			        }
+			      ]
+			    },
+			    "factura_has_fecha_contabilización": {
+			      "Binding": {
+			        "ConceptualEntity": "Facturas"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "factura": {
+			          "Target": {
+			            "Entity": "factura"
+			          }
+			        },
+			        "factura.fecha_contabilización": {
+			          "Target": {
+			            "Entity": "factura.fecha_contabilización"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "factura"
+			            },
+			            "Object": {
+			              "Role": "factura.fecha_contabilización"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "facturas_have_fecha_contabilizacións"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_comentario": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.comentario": {
+			          "Target": {
+			            "Entity": "notas_credito.comentario"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.comentario"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_comentarios"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_conceptos_notas_crédito": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.conceptos_notas_crédito": {
+			          "Target": {
+			            "Entity": "notas_credito.conceptos_notas_crédito"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.conceptos_notas_crédito"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_conceptos_notas_créditos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_codigo_concepto_nc": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.codigo_concepto_nc": {
+			          "Target": {
+			            "Entity": "notas_credito.codigo_concepto_nc"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.codigo_concepto_nc"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_codigo_concepto_nc"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_tipos_NC": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.tipos_NC": {
+			          "Target": {
+			            "Entity": "notas_credito.tipos_NC"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.tipos_NC"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_tipos_NC"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_codigo_del_tipo_NC": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.codigo_del_tipo_NC": {
+			          "Target": {
+			            "Entity": "notas_credito.codigo_del_tipo_NC"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.codigo_del_tipo_NC"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_codigo_del_tipo_NC"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_segmento_del_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.segmento_del_cliente": {
+			          "Target": {
+			            "Entity": "notas_credito.segmento_del_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.segmento_del_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_segmento_del_clientes"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_teléfono": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.teléfono": {
+			          "Target": {
+			            "Entity": "notas_credito.teléfono"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.teléfono"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_teléfonos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_ciudad": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.ciudad": {
+			          "Target": {
+			            "Entity": "notas_credito.ciudad"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.ciudad"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_ciudad"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_obra": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.obra": {
+			          "Target": {
+			            "Entity": "notas_credito.obra"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.obra"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_obras"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_margen_bruta": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.margen_bruta": {
+			          "Target": {
+			            "Entity": "notas_credito.margen_bruta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.margen_bruta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_margen_brutas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_utilidad_bruta": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.utilidad_bruta": {
+			          "Target": {
+			            "Entity": "notas_credito.utilidad_bruta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.utilidad_bruta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_utilidad_brutas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_costo_total": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.costo_total": {
+			          "Target": {
+			            "Entity": "notas_credito.costo_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.costo_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_costo_totals"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_costo": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.costo": {
+			          "Target": {
+			            "Entity": "notas_credito.costo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.costo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_costos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_valor_total": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.valor_total": {
+			          "Target": {
+			            "Entity": "notas_credito.valor_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.valor_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_valor_totals"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_precio_tras_el_descuento": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.precio_tras_el_descuento": {
+			          "Target": {
+			            "Entity": "notas_credito.precio_tras_el_descuento"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.precio_tras_el_descuento"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_precio_tras_el_descuentos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_descuento": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.descuento": {
+			          "Target": {
+			            "Entity": "notas_credito.descuento"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.descuento"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have__descuentos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_precio_de_venta": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.precio_de_venta": {
+			          "Target": {
+			            "Entity": "notas_credito.precio_de_venta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.precio_de_venta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_precio_de_ventas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_cantidad": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.cantidad": {
+			          "Target": {
+			            "Entity": "notas_credito.cantidad"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.cantidad"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_cantidads"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_descripcion_de_articulo": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.descripcion_de_articulo": {
+			          "Target": {
+			            "Entity": "notas_credito.descripcion_de_articulo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.descripcion_de_articulo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_descripcion_de_articulos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_codigo_articulo": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.codigo_articulo": {
+			          "Target": {
+			            "Entity": "notas_credito.codigo_articulo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.codigo_articulo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_codigo_articulos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_familia": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.familia": {
+			          "Target": {
+			            "Entity": "notas_credito.familia"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.familia"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_familias"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_grupo_de_articulo": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.grupo_de_articulo": {
+			          "Target": {
+			            "Entity": "notas_credito.grupo_de_articulo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.grupo_de_articulo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_grupo_de_articulos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_centro_de_costo": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.centro_de_costo": {
+			          "Target": {
+			            "Entity": "notas_credito.centro_de_costo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.centro_de_costo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_centro_de_costos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_descripción_punto_de_venta": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.descripción_punto_de_venta": {
+			          "Target": {
+			            "Entity": "notas_credito.descripción_punto_de_venta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.descripción_punto_de_venta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_descripción_punto_de_ventas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_código_punto_de_venta": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.código_punto_de_venta": {
+			          "Target": {
+			            "Entity": "notas_credito.código_punto_de_venta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.código_punto_de_venta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_código_punto_de_ventas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_nombre_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.nombre_cliente": {
+			          "Target": {
+			            "Entity": "notas_credito.nombre_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.nombre_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_nombre_clientes"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_cod_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.cod_cliente": {
+			          "Target": {
+			            "Entity": "notas_credito.cod_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.cod_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_cod_clientes"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_subgrupo_de_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.subgrupo_de_cliente": {
+			          "Target": {
+			            "Entity": "notas_credito.subgrupo_de_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.subgrupo_de_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_subgrupo_de_clientes"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_grupo_de_cliente": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.grupo_de_cliente": {
+			          "Target": {
+			            "Entity": "notas_credito.grupo_de_cliente"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.grupo_de_cliente"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_grupo_de_clientes"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_territorio": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.territorio": {
+			          "Target": {
+			            "Entity": "notas_credito.territorio"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.territorio"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_territorios"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_zona": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.zona": {
+			          "Target": {
+			            "Entity": "notas_credito.zona"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.zona"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_zonas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_tipo_venta": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.tipo_venta": {
+			          "Target": {
+			            "Entity": "notas_credito.tipo_venta"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.tipo_venta"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_tipo_ventas"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_vendedor_junior": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.vendedor_junior": {
+			          "Target": {
+			            "Entity": "notas_credito.vendedor_junior"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.vendedor_junior"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_vendedor_juniors"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_vendedor_senior": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.vendedor_senior": {
+			          "Target": {
+			            "Entity": "notas_credito.vendedor_senior"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.vendedor_senior"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_vendedor_seniors"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_num_documento": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.num_documento": {
+			          "Target": {
+			            "Entity": "notas_credito.num_documento"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.num_documento"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_num_documentos"
+			        }
+			      ]
+			    },
+			    "notas_credito_has_fecha_contabilización": {
+			      "Binding": {
+			        "ConceptualEntity": "NotasCreditos"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "notas_credito": {
+			          "Target": {
+			            "Entity": "notas_credito"
+			          }
+			        },
+			        "notas_credito.fecha_contabilización": {
+			          "Target": {
+			            "Entity": "notas_credito.fecha_contabilización"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "notas_credito"
+			            },
+			            "Object": {
+			              "Role": "notas_credito.fecha_contabilización"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "notas_creditos_have_fecha_contabilizacións"
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

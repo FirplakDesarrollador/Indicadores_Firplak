@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-26
+updated: 2026-11-09
 sources:
   - ../README.md
   - ../package.json
@@ -45,7 +45,19 @@ SP o proceso de actualización periódica
 ### Operación
 
 - [Runbook](operations/runbook.md): desarrollo local, despliegue y diagnóstico.
-- [Seguridad](concepts/security-and-secrets.md): límites de secretos y autenticación.
+- [Seguridad](concepts/security-and-secrets.md): límites de secretos, autenticación y permisos por cargo con historial y soporte de cada cambio.
+
+### Diseño
+
+- [Manual de identidad web](../docs/manual-identidad-web.md) (borrador v0.3, basado en el Manual de marca v1-030726 y las decisiones de Mercadeo): tokens, tipografía, responsive, componentes y accesibilidad derivados del Brand Book. Aplicado al portal, al login y al dashboard (ver [Frontend](components/frontend.md#estilos-e-identidad-visual)).
+
+### Migración de BI
+
+- Proceso con IA en 8 fases (inventario, análisis, tabla y SP incremental, contrato, endpoint, dashboard, conciliación, despliegue) definido en las skills de [`.claude/skills/`](../.claude/skills/): [`migrar-bi`](../.claude/skills/migrar-bi/SKILL.md) coordina y [`analizar-bi`](../.claude/skills/analizar-bi/SKILL.md), [`crear-tabla-incremental`](../.claude/skills/crear-tabla-incremental/SKILL.md), [`crear-endpoint`](../.claude/skills/crear-endpoint/SKILL.md) y [`crear-dashboard`](../.claude/skills/crear-dashboard/SKILL.md) ejecutan cada fase.
+- Cada BI migrado tiene su ficha en `llm-wiki/bi/<slug>.md` ([plantilla](../.claude/skills/analizar-bi/plantilla-ficha-bi.md)). Fichas:
+  - [Notas crédito](bi/notas-credito.md): piloto, migrado (fase 7 cerrada el 2026-10-28; Power BI se retira el 2026-11-06).
+  - [Facturación diaria: metas, empresas y entregas](bi/facturacion-diaria.md): metas mensuales por empresa en Supabase, días laborales, filtro Empresa (Firplak/Viventta/CEFI), cards de cumplimiento y detalle de entregas (2026-11-09; devoluciones en entregas `pendiente`).
+  - [Costo actual de producto terminado](bi/costo-actual-pt.md): en migración (fases 1 a 5 cerradas; fase 6 conciliada, a la espera de la aprobación de Contabilidad; fase 7 prevista para el 2026-11-10). Usa el query optimizado del desarrollador, con reglas corregidas y la explosión de todos los niveles (D9).
 
 ### Decisiones
 
@@ -69,6 +81,6 @@ SP o proceso de actualización periódica
 | Tabla de reportes | Confirmado: `Planos_Symphony.dbo.Informe_ventas` | [Flujo de datos](architecture/data-flow.md) |
 | Notas crédito | Confirmado: `TipoDocumento = Nota Crédito` y columnas `CodigoTipoNC`/`TiposNC` | [Flujo de datos](architecture/data-flow.md) |
 | API pública | Configurada mediante `api.firplak.com:8443` | [Reporting API](components/reporting-api.md) |
-| Actualización periódica de las tablas | Dependencia operativa; confirmar proceso y horario | [Runbook](operations/runbook.md) |
+| Actualización periódica de las tablas | `Informe_ventas`: `SP_Generar_Informe_Ventas`, jobs `BI - Ventas carga incremental`/`completa`, bitácora `Cargas_Log`; incremental cada 15 min (6:00–20:00) y completa a las 2:00 | [Flujo de datos](architecture/data-flow.md#carga) |
 | Tabla de entregas | Confirmada: `Planos_Symphony.dbo.Informe_entregas` | [Reporting API](components/reporting-api.md) |
 | Índices SQL | Recomendados; validar en SQL Server | [ADR-001](decisions/ADR-001-reporting-table.md) |

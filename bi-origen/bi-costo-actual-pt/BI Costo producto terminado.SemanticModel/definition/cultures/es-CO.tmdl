@@ -1,0 +1,1671 @@
+cultureInfo es-CO
+
+	linguisticMetadata =
+			{
+			  "Version": "3.5.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "nivel_1": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nivel 1": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.linea": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "linea"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "linea": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.codigo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Codigo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "codigo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.descripcion": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Descripcion"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "descripcion": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.unidad_medida": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "UnidadMedida"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "unidad medida": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "UnidadMedida": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.nivel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Nivel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nivel": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.cantidad": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Cantidad"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cantidad": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.costo_unitario": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Costo_Unitario"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo unitario": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Unitario": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.costo_mp": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Costo_Mp"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo mp": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Mp": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.costo_mo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Costo_Mo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo mo": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Mo": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.costo_cif": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Costo_Cif"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo cif": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Cif": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.costo_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Costo_Total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo total": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Total": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "costo aggregate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "costo overall": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "nivel_1.padre": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Nivel 1",
+			          "ConceptualProperty": "Padre"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "padre": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "maestro": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "maestro": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "genius": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "talent": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.491
+			          }
+			        },
+			        {
+			          "expert": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "ace": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "whizz": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "whiz": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "virtuoso": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        },
+			        {
+			          "marvel": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.476
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.linea": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "linea"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "linea": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          ".": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.codigo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Codigo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "codigo": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.descripcion": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Descripcion"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "descripcion": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.unidad_medida": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "UnidadMedida"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "unidad medida": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "UnidadMedida": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "UM": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.nivel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Nivel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "nivel": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.cantidad": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Cantidad"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "cantidad": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.costo_unitario": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Costo_Unitario"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo unitario": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Unitario": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.costo_mp": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Costo_Mp"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo mp": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Mp": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.costo_mo": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Costo_Mo"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo mo": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Mo": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.costo_cif": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Costo_Cif"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo cif": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Cif": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.costo_total": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Costo_Total"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo total": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "Costo_Total": {
+			            "Type": "Noun",
+			            "State": "Generated",
+			            "Weight": 0.99
+			          }
+			        },
+			        {
+			          "costo aggregate": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        },
+			        {
+			          "costo overall": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.727
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.padre": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Padre"
+			        }
+			      },
+			      "State": "Generated",
+			      "Visibility": {
+			        "Value": "Hidden"
+			      },
+			      "Terms": [
+			        {
+			          "padre": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.costo_sin_CIF_prom": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Costo sin CIF Prom"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo sin CIF prom": {
+			            "State": "Generated"
+			          }
+			        },
+			        {
+			          "costo sin cif seafront": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.514
+			          }
+			        },
+			        {
+			          "costo sin cif walkway": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.514
+			          }
+			        },
+			        {
+			          "costo sin cif path": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.514
+			          }
+			        },
+			        {
+			          "costo sin cif esplanade": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.514
+			          }
+			        },
+			        {
+			          "costo sin cif boardwalk": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.514
+			          }
+			        },
+			        {
+			          "costo sin cif promenade": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.499
+			          }
+			        },
+			        {
+			          "costo sin cif dance": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.474
+			          }
+			        },
+			        {
+			          "costo sin cif ball": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
+			            "Weight": 0.474
+			          }
+			        }
+			      ]
+			    },
+			    "maestro.costo_sin_CIF": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Maestro",
+			          "ConceptualProperty": "Costo sin CIF"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "costo sin CIF": {
+			            "State": "Generated"
+			          }
+			        }
+			      ]
+			    }
+			  },
+			  "Relationships": {
+			    "maestro_has_costo_sin_CIF": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.costo_sin_CIF": {
+			          "Target": {
+			            "Entity": "maestro.costo_sin_CIF"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.costo_sin_CIF"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_costo_sin_CIF"
+			        }
+			      ]
+			    },
+			    "maestro_has_costo_sin_CIF_prom": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.costo_sin_CIF_prom": {
+			          "Target": {
+			            "Entity": "maestro.costo_sin_CIF_prom"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.costo_sin_CIF_prom"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_costo_sin_CIF_prom"
+			        }
+			      ]
+			    },
+			    "maestro_has_costo_total": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.costo_total": {
+			          "Target": {
+			            "Entity": "maestro.costo_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.costo_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_costo_totals"
+			        },
+			        {
+			          "Adjective": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Adjectives": [
+			              {
+			                "expensive": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Antonyms": [
+			              {
+			                "cheap": {
+			                  "State": "Generated"
+			                }
+			              }
+			            ],
+			            "Measurement": {
+			              "Role": "maestro.costo_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "costo_total_indicates_how_expensive_maestri_are"
+			        }
+			      ]
+			    },
+			    "maestro_has_costo_cif": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.costo_cif": {
+			          "Target": {
+			            "Entity": "maestro.costo_cif"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.costo_cif"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_costo_cif"
+			        }
+			      ]
+			    },
+			    "maestro_has_costo_mo": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.costo_mo": {
+			          "Target": {
+			            "Entity": "maestro.costo_mo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.costo_mo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_costo_mo"
+			        }
+			      ]
+			    },
+			    "maestro_has_costo_mp": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.costo_mp": {
+			          "Target": {
+			            "Entity": "maestro.costo_mp"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.costo_mp"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_costo_mp"
+			        }
+			      ]
+			    },
+			    "maestro_has_costo_unitario": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.costo_unitario": {
+			          "Target": {
+			            "Entity": "maestro.costo_unitario"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.costo_unitario"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_costo_unitarios"
+			        }
+			      ]
+			    },
+			    "maestro_has_cantidad": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.cantidad": {
+			          "Target": {
+			            "Entity": "maestro.cantidad"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.cantidad"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_cantidads"
+			        }
+			      ]
+			    },
+			    "maestro_has_nivel": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.nivel": {
+			          "Target": {
+			            "Entity": "maestro.nivel"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.nivel"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_nivels"
+			        }
+			      ]
+			    },
+			    "maestro_has_unidad_medida": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.unidad_medida": {
+			          "Target": {
+			            "Entity": "maestro.unidad_medida"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.unidad_medida"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_unidad_medidas"
+			        }
+			      ]
+			    },
+			    "maestro_has_descripcion": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.descripcion": {
+			          "Target": {
+			            "Entity": "maestro.descripcion"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.descripcion"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_descripcions"
+			        }
+			      ]
+			    },
+			    "maestro_has_codigo": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.codigo": {
+			          "Target": {
+			            "Entity": "maestro.codigo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.codigo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_codigos"
+			        }
+			      ]
+			    },
+			    "maestro_has_linea": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "maestro.linea": {
+			          "Target": {
+			            "Entity": "maestro.linea"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "maestro.linea"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_linea"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_padre": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.padre": {
+			          "Target": {
+			            "Entity": "nivel_1.padre"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.padre"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_padres"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_costo_total": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.costo_total": {
+			          "Target": {
+			            "Entity": "nivel_1.costo_total"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.costo_total"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_costo_totals"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_costo_cif": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.costo_cif": {
+			          "Target": {
+			            "Entity": "nivel_1.costo_cif"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.costo_cif"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_costo_cif"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_costo_mo": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.costo_mo": {
+			          "Target": {
+			            "Entity": "nivel_1.costo_mo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.costo_mo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_costo_mo"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_costo_mp": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.costo_mp": {
+			          "Target": {
+			            "Entity": "nivel_1.costo_mp"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.costo_mp"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_costo_mp"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_costo_unitario": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.costo_unitario": {
+			          "Target": {
+			            "Entity": "nivel_1.costo_unitario"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.costo_unitario"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_costo_unitarios"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_cantidad": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.cantidad": {
+			          "Target": {
+			            "Entity": "nivel_1.cantidad"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.cantidad"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_cantidads"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_nivel": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.nivel": {
+			          "Target": {
+			            "Entity": "nivel_1.nivel"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.nivel"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_nivels"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_unidad_medida": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.unidad_medida": {
+			          "Target": {
+			            "Entity": "nivel_1.unidad_medida"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.unidad_medida"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_unidad_medidas"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_descripcion": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.descripcion": {
+			          "Target": {
+			            "Entity": "nivel_1.descripcion"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.descripcion"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_descripcions"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_codigo": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.codigo": {
+			          "Target": {
+			            "Entity": "nivel_1.codigo"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.codigo"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_codigos"
+			        }
+			      ]
+			    },
+			    "nivel_1_has_linea": {
+			      "Binding": {
+			        "ConceptualEntity": "Nivel 1"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          }
+			        },
+			        "nivel_1.linea": {
+			          "Target": {
+			            "Entity": "nivel_1.linea"
+			          }
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "nivel_1.linea"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_linea"
+			        }
+			      ]
+			    },
+			    "maestro_has_nivel_1": {
+			      "Binding": {
+			        "ConceptualEntity": "Maestro"
+			      },
+			      "State": "Generated",
+			      "Roles": {
+			        "maestro": {
+			          "Target": {
+			            "Entity": "maestro"
+			          }
+			        },
+			        "nivel_1": {
+			          "Target": {
+			            "Entity": "nivel_1"
+			          },
+			          "Nouns": [
+			            {
+			              "padre": {
+			                "State": "Generated"
+			              }
+			            }
+			          ]
+			        }
+			      },
+			      "Phrasings": [
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "maestro"
+			            },
+			            "Object": {
+			              "Role": "nivel_1"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "maestri_have_nivel_1"
+			        },
+			        {
+			          "Attribute": {
+			            "Subject": {
+			              "Role": "nivel_1"
+			            },
+			            "Object": {
+			              "Role": "maestro"
+			            }
+			          },
+			          "State": "Generated",
+			          "Weight": 0.99,
+			          "ID": "nivel_1_have_maestri"
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

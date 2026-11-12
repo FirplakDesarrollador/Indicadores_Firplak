@@ -1,0 +1,22 @@
+table ÁREA
+	lineageTag: 3c559e20-87c3-4b66-8a37-e902d931f05b
+
+	column Columna1
+		dataType: string
+		lineageTag: 1e7072e2-cd49-457a-b2a9-fe0f8cebb056
+		summarizeBy: none
+		sourceColumn: Columna1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ÁREA = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("PcnBCYAwDEDRVULPgkOIN8UBpIfYRgm0FpM4llO4mELF4/t/nl2XmHYjcL55UTJJYEyVQ9nuS40DfhsTR4wQCVZc5O/jSWqCCi1Mi9JxcqmjFykCtIOyGmV03j8=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Columna1", type text}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_ResultType = Table
+

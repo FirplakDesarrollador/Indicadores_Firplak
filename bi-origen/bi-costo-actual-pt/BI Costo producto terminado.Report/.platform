@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "BI Costo producto terminado"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "df10a548-0aac-4eea-8bff-63b109a8b1df"
+  }
+}

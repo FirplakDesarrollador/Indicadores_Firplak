@@ -1,0 +1,23 @@
+table calendario
+	lineageTag: d499a945-8692-4751-8dbc-78ebfb860863
+
+	column Date
+		formatString: General Date
+		lineageTag: 8300d7b9-24c1-4b02-bd03-7b32c23ff607
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variación
+			isDefault
+			relationship: 8ba0883c-35c7-411c-a753-b62e29a4287a
+			defaultHierarchy: LocalDateTable_a0e18613-e41c-4cd1-9c56-c78370ce9fd6.'Jerarquía de fechas'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition calendario = calculated
+		mode: import
+		source = CALENDAR(min(Facturas[Fecha contabilización]), max(Facturas[Fecha contabilización]))
+
+	annotation PBI_Id = 0561869f89b042f897e46b045891e431
+
