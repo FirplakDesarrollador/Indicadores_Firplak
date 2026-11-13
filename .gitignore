@@ -14,3 +14,4 @@ pnpm-debug.log*
 tsconfig.tsbuildinfo
 _logs/
 _update-notifier-last-checked
+.vercel
