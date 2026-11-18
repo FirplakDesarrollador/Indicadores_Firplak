@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 2
+fase: 3
 updated: 2026-11-18
 sources:
   - ../../bi-origen/bi-ns-plantas/
@@ -436,9 +436,125 @@ Jobs creados y habilitados el 2026-11-18 (`BI - NS Plantas carga incremental` co
 
 ## 3. Contrato del endpoint
 
-`pendiente`.
+Aprobado por el desarrollador el 2026-11-18, con las decisiones A a D.
 
-**Aprobación del contrato:** nombre — fecha — `pendiente`
+`GET /api/v1/ns-plantas`. Usa el mismo token, el mismo manejo de errores (502 sin detalles internos) y la misma forma de respuesta que `/api/v1/facturacion-diaria`.
+
+**Fuente.** `Planos_Symphony.dbo.Informe_ns_plantas`, con las variables nuevas `REPORT_NS_PLANTAS_TABLE_SCHEMA=dbo` y `REPORT_NS_PLANTAS_TABLE=Informe_ns_plantas`.
+
+**"Hoy"** es `CAST(GETDATE() AS date)` del SQL Server, en hora de Colombia. El cumplimiento se calcula en SQL en cada consulta, con la regla del BI y la respuesta 3:
+
+| `compliance` | Regla (en orden) | Cuenta en el % |
+|---|---|---|
+| `incumplio` | `FechaCierreAjustada > FechaIdealEntrega`, o sin cierre y `FechaIdealEntrega < hoy` | Sí, si `FechaIdealEntrega < hoy` |
+| `enCurso` | Sin cierre y `FechaIdealEntrega >= hoy` | No |
+| `cumplio` | Cerrada en o antes de la fecha ideal | Sí, si `FechaIdealEntrega < hoy` |
+
+Una OP **medida** es la que tiene `FechaIdealEntrega < hoy`. Una OP cerrada antes de su fecha ideal es `cumplio`, pero no entra al % hasta que llega su plazo.
+
+### Parámetros
+
+| Parámetro | Tipo | Columna | Descripción |
+|---|---|---|---|
+| `page`, `pageSize` | entero | — | Paginación de `rows`, igual que en facturación |
+| `anio`, `mes` | entero | `FechaIdealEntrega` | Periodo. El dashboard abre en el mes en curso (respuesta 7) |
+| `fechaDesde`, `fechaHasta` | `AAAA-MM-DD` | `FechaIdealEntrega` | Rango opcional |
+| `semana` | entero 1–53 | `FechaIdealEntrega` | Semana del año de domingo a sábado, como `WEEKNUM` del BI. Se calcula sin depender de `SET DATEFIRST` |
+| `dia` | entero 1–31 | `FechaIdealEntrega` | Día del mes |
+| `planta` | texto | `Planta` | Uno de los 8 valores (respuesta 8) |
+| `cumplimiento` | `cumplio`, `incumplio` o `enCurso` | Calculada | **Solo filtra `rows`**, no el resumen ni las gráficas. El detalle abre en `incumplio`, como la página "NS Ordenes" |
+| `search` | texto | `DocNum`, `CodArticulo`, `Articulo` | Búsqueda libre. Solo filtra `rows` |
+
+Reglas de los filtros:
+
+- Todos se aplican en SQL, con parámetros (`request.input`).
+- `filterOptions` usa solo el periodo, para que la lista de plantas no se reduzca al elegir una.
+
+### Respuesta
+
+```json
+{
+  "rows": [
+    {
+      "id": 812345,
+      "docNum": 1234567,
+      "createdAt": "2026-11-03",
+      "itemCode": "CODIGO-ARTICULO",
+      "item": "Nombre del artículo",
+      "plannedQty": 12,
+      "orderType": "STANDARD",
+      "orderSource": "Tipo de pedido",
+      "warehouse": "PT-01",
+      "status": "Cerrado",
+      "releaseDate": "2026-11-04",
+      "closeDate": "2026-11-08",
+      "adjustedCloseDate": "2026-11-07",
+      "family": "FVH",
+      "plant": "FIBRA",
+      "buffer": 3,
+      "idealDate": "2026-11-06",
+      "compliance": "incumplio",
+      "delayReason": null,
+      "delayReason2": null
+    }
+  ],
+  "years": [2026, 2025],
+  "pagination": { "page": 1, "pageSize": 50, "total": 0, "totalPages": 0 },
+  "summary": {
+    "serviceLevel": 0.816,
+    "target": 0.9,
+    "total": 0,
+    "measured": 0,
+    "onTime": 0,
+    "late": 0,
+    "inProgress": 0,
+    "closedEarly": 0,
+    "daily": [{ "date": "2026-11-03", "measured": 0, "onTime": 0, "serviceLevel": 0.0 }],
+    "monthly": [{ "year": 2026, "month": 1, "measured": 0, "onTime": 0, "late": 0, "serviceLevel": 0.0 }],
+    "plants": [{ "name": "FIBRA", "measured": 0, "onTime": 0, "late": 0, "serviceLevel": 0.0 }],
+    "delayReasons": [{ "name": null, "late": 0 }]
+  },
+  "filterOptions": { "plants": [] },
+  "source": "sql-server",
+  "loadedAt": "2026-11-18T17:00:12.000Z",
+  "updatedAt": "2026-11-18T17:05:00.000Z"
+}
+```
+
+Los valores del ejemplo son ilustrativos; el endpoint solo devuelve datos reales.
+
+Reglas de cada campo:
+
+| Campo | Regla | Medida o visual del BI |
+|---|---|---|
+| `rows` | Una fila por OP con todos los filtros, incluidos `cumplimiento` y `search`. Orden: `idealDate` y `docNum` descendentes. Paginada. | Tabla de "NS Ordenes" |
+| `summary.serviceLevel` | `onTime / measured`; `null` si `measured = 0` | `% CUMPLIMIENTO` (tarjeta "NIVEL DE SERVICIO") |
+| `summary.target` | Constante `0.9` en la API | `Objetivo IFI MS` (respuesta 5) |
+| `summary.total` | OP del filtro, medidas o no | `TOTAL OP` |
+| `summary.measured` | OP con `FechaIdealEntrega < hoy` | Denominador del % |
+| `summary.onTime` | OP medidas `cumplio` | `TOTAL CUMPLIÓ` (solo medidas) |
+| `summary.late` | OP medidas `incumplio` (`measured - onTime`) | Reemplaza a `TOTAL INCUMPLIO` (ver decisión A) |
+| `summary.inProgress` | OP `enCurso` | — |
+| `summary.closedEarly` | OP cerradas a tiempo cuya fecha ideal aún no llega | — |
+| `summary.daily` | Por fecha ideal del filtro, solo fechas anteriores a hoy: `measured`, `onTime`, `serviceLevel`. **No aplica el filtro `dia`** | Líneas "% CUMPLIMIENTO por Day" |
+| `summary.monthly` | Por mes del año `anio` (o del año en curso): `measured`, `onTime`, `late`, `serviceLevel`. Aplica `planta`; **no aplica `mes`, `semana`, `dia` ni el rango de fechas** | Columnas "% CUMPLIMIENTO por Month" y matriz año → mes |
+| `summary.plants` | Por planta, con todos los filtros: `measured`, `onTime`, `late`, `serviceLevel` | Nuevo: meta del 90 % por planta (respuesta 5) |
+| `summary.delayReasons` | OP medidas `incumplio` por `RazonRetraso`, de mayor a menor. `name: null` es "Sin razón de atraso" | Barras "razón de retraso" (respuesta 11) |
+| `filterOptions.plants` | Plantas con OP en el periodo | Segmentador de familia |
+| `years` | Años con fecha ideal en la tabla | Segmentador Año |
+| `loadedAt` | `MAX(FechaCarga)` de la tabla: hora de la última carga | — |
+| `updatedAt` | Hora de la respuesta, igual que en facturación | — |
+
+Decisiones de este contrato (aprobadas el 2026-11-18):
+
+- **A. Incumplidas sin las OP en curso.** El BI calcula `TOTAL INCUMPLIO = TOTAL OP − TOTAL CUMPLIÓ`, así que cuenta como incumplidas las OP que todavía están en plazo (en la matriz de noviembre: 510 "NO", frente a unas 198 incumplidas medidas). Con la respuesta 3, `late` cuenta solo las OP medidas que incumplieron, y las que están en plazo van aparte en `inProgress` y `closedEarly`.
+- **B. Razones de retraso solo de OP medidas e incumplidas**, por el mismo motivo.
+- **C. La gráfica mensual muestra el año completo** y no responde al rango de fechas, para que siempre se vea la tendencia. En el BI respondía al rango de fechas de la página principal.
+- **D. Resumen por planta nuevo**, para mostrar la meta del 90 % por planta.
+
+No se incluyen: la columna `RazonRetraso2` en las gráficas (sí en el detalle), la página "Duplicado de NS PLantas" (respuesta 6) ni exportación a Excel (el BI no la tenía).
+
+**Aprobación del contrato:** Milton Rendón — 2026-11-18 — aprobado.
 
 ## 4. Endpoint
 

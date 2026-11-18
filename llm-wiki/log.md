@@ -416,3 +416,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Nivel de servicio de noviembre al 2026-11-18: 81,63 % (880 de 1 078). `pendiente`: compararlo con la tarjeta del BI y crear los jobs.
 - Nivel de servicio contra el BI: el BI actualizado muestra 81,60 %, igual que el SQL del BI con sus reglas DAX; la tabla da 81,63 % por 2 OP del día del límite de 12 meses. Validación de la fase 2 cerrada; `pendiente`: crear los jobs.
 - Jobs creados; corrida manual del job incremental a las 11:52 sin error (943 OP). Fase 2 aprobada por el desarrollador.
+
+## [2026-11-18] bi | NS Plantas: propuesta de contrato del endpoint (fase 3)
+
+- `GET /api/v1/ns-plantas` sobre `Informe_ns_plantas`: cumplimiento calculado en SQL con la fecha del servidor, resumen (`serviceLevel`, meta 0,9, medidas, cumplidas, incumplidas, en curso), series diaria y mensual, resumen por planta y razones de retraso con "Sin razón de atraso".
+- Decisiones para aprobar: incumplidas sin las OP en curso (el BI las sumaba), razones solo de OP medidas, gráfica mensual del año completo y resumen por planta nuevo.
+- Contrato aprobado por el desarrollador con las decisiones A a D.
