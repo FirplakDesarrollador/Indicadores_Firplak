@@ -422,3 +422,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `GET /api/v1/ns-plantas` sobre `Informe_ns_plantas`: cumplimiento calculado en SQL con la fecha del servidor, resumen (`serviceLevel`, meta 0,9, medidas, cumplidas, incumplidas, en curso), series diaria y mensual, resumen por planta y razones de retraso con "Sin razón de atraso".
 - Decisiones para aprobar: incumplidas sin las OP en curso (el BI las sumaba), razones solo de OP medidas, gráfica mensual del año completo y resumen por planta nuevo.
 - Contrato aprobado por el desarrollador con las decisiones A a D.
+
+## [2026-11-18] bi | NS Plantas: endpoint en la API (fase 4)
+
+- `reporting-api`, rama `bi/ns-plantas`, commit `18be860`: `GET /api/v1/ns-plantas` según el contrato. Compila sin errores.
+- `pendiente`: paquete `dist` para el servidor (debe incluir también el consolidado comercial si ya está desplegado) y prueba en el servidor.
+- Paquete `reporting-api-dist-7a016a9.zip` desde la rama local `deploy/2026-11-18` (NS Plantas + consolidado comercial, que ya está en el servidor).

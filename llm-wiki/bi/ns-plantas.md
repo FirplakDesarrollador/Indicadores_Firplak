@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 3
+fase: 4
 updated: 2026-11-18
 sources:
   - ../../bi-origen/bi-ns-plantas/
@@ -459,7 +459,7 @@ Una OP **medida** es la que tiene `FechaIdealEntrega < hoy`. Una OP cerrada ante
 | `page`, `pageSize` | entero | — | Paginación de `rows`, igual que en facturación |
 | `anio`, `mes` | entero | `FechaIdealEntrega` | Periodo. El dashboard abre en el mes en curso (respuesta 7) |
 | `fechaDesde`, `fechaHasta` | `AAAA-MM-DD` | `FechaIdealEntrega` | Rango opcional |
-| `semana` | entero 1–53 | `FechaIdealEntrega` | Semana del año de domingo a sábado, como `WEEKNUM` del BI. Se calcula sin depender de `SET DATEFIRST` |
+| `semana` | entero 1–54 | `FechaIdealEntrega` | Semana del año de domingo a sábado, como `WEEKNUM` del BI (llega a 54 en años bisiestos que empiezan en sábado, como 2028). Se calcula sin depender de `SET DATEFIRST` |
 | `dia` | entero 1–31 | `FechaIdealEntrega` | Día del mes |
 | `planta` | texto | `Planta` | Uno de los 8 valores (respuesta 8) |
 | `cumplimiento` | `cumplio`, `incumplio` o `enCurso` | Calculada | **Solo filtra `rows`**, no el resumen ni las gráficas. El detalle abre en `incumplio`, como la página "NS Ordenes" |
@@ -558,7 +558,13 @@ No se incluyen: la columna `RazonRetraso2` en las gráficas (sí en el detalle),
 
 ## 4. Endpoint
 
-`pendiente`.
+- Repositorio `reporting-api`, rama `bi/ns-plantas` (desde `main`), commit `18be860`.
+- Archivos tocados en `reporting-api`: `src/types.ts` (`NsPlants*`), `src/db.ts` (`nsPlantsSource`, `addNsPlantsPeriodFilters`, `getNsPlantsReport`), `src/server.ts` (`nsPlantsFiltersFrom` y la ruta `/api/v1/ns-plantas`), `.env.example` y `README.md`.
+- Variables nuevas en `.env.example`: `REPORT_NS_PLANTAS_TABLE_SCHEMA=dbo` y `REPORT_NS_PLANTAS_TABLE=Informe_ns_plantas`. Tienen esos valores por defecto en el código, así que el `.env` del servidor funciona sin agregarlas.
+- Una sola consulta por lotes: `#ops` (periodo y planta, sin el día) → `#rows` (detalle con cumplimiento y búsqueda) → 10 recordsets: 0 página, 1 total, 2 totales, 3 serie diaria, 4 serie mensual, 5 plantas, 6 razones, 7 años, 8 catálogo de plantas, 9 `loadedAt`.
+- `npm run build` sin errores (2026-11-18). SQL revisado a mano: recordsets e índices coinciden, filtros parametrizados, sin `TRY_CONVERT`.
+- `pendiente`: prueba contra la base. No hay `.env` local en `reporting-api`, así que se prueba en el servidor después de desplegar el paquete.
+- Paquete de despliegue: `reporting-api-dist-7a016a9.zip` (en el escritorio, fuera de los repositorios), construido desde la rama local `deploy/2026-11-18` = `bi/ns-plantas` + `proyecto/consolidado-comercial`, porque el servidor ya tiene desplegado el consolidado comercial y el `dist` reemplaza la API completa. Verificado: `dist/server.js` tiene las dos rutas.
 
 ## 5. Dashboard
 
