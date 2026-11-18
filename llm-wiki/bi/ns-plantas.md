@@ -1,7 +1,7 @@
 ---
 status: en-migracion
 fase: 1
-updated: 2026-11-05
+updated: 2026-11-18
 sources:
   - ../../bi-origen/bi-ns-plantas/
   - ../../bi-origen/bi-ns-plantas/BI NS plantas.SemanticModel/definition/tables/Ordenes de Fabricacion.tmdl
@@ -210,10 +210,10 @@ Interacciones que cambian lo que muestran las visuales:
 
 Riesgos técnicos:
 
-- **La historia se pierde.** El BI solo carga OP creadas en los últimos 12 meses y recalcula todo en cada actualización. Además, los meses del borde quedan incompletos: una OP creada hace 13 meses con fecha ideal hace 11 ya no cuenta.
+- **La historia se pierde.** El BI solo carga OP creadas en los últimos 12 meses y recalcula todo en cada actualización. Además, los meses del borde quedan incompletos: una OP creada hace 13 meses con fecha ideal hace 11 ya no cuenta. Resuelto en la migración: se carga toda la historia (respuesta 4).
 - **El pasado puede cambiar.** Si se modifican los amortiguadores, `@FIR_FAM_SYMPH` o los días no laborables, cambian las fechas ideales, y con ellas el % de meses cerrados.
 - **OP que quedan fuera sin aviso** por las uniones `INNER JOIN` (sin pedido, sin familia o sin amortiguador) o porque no tienen fecha ideal (hoy no hay ninguna sin fecha ideal, consulta 1).
-- **Días no laborables con fecha de vencimiento.** `@FIR_FECHAS_PROD` está cargada hasta el 2028-01-01. Después de esa fecha, la fórmula contaría los fines de semana y festivos como días hábiles. Hay que saber quién la mantiene (pregunta 1).
+- **Días no laborables con fecha de vencimiento.** `@FIR_FECHAS_PROD` está cargada hasta el 2028-01-01. Después de esa fecha, la fórmula contaría los fines de semana y festivos como días hábiles. Resuelto en la migración: se usa un calendario de Colombia generado por fórmula, que no vence (decisión del 2026-11-18).
 - **Meses del borde incompletos.** Noviembre de 2025 tiene 1 036 OP, frente a unas 2 100 a 2 900 en los demás meses, porque la ventana de 12 meses corta las OP creadas antes del 2025-11-06. Su 56 % no es comparable.
 - **Pocas razones de retraso.** Solo 456 OP tienen `Razón de Retrazo`, frente a 7 170 incumplidas en el año. La gráfica de razones explica una parte pequeña de los incumplimientos.
 - **Cálculo pesado.** La fecha ideal se obtiene con una subconsulta por fila. En la fase 2 conviene calcularla en el SP con una tabla de días hábiles.
@@ -232,7 +232,30 @@ Preguntas para Manufactura:
 10. **Frecuencia.** ¿Cada cuánto se consulta el informe y con qué frescura deben estar los datos (diaria, cada hora)?
 11. **Razones de retraso.** Solo el 6 % de las OP incumplidas tiene razón registrada (456 de 7 170). ¿Quién la registra y es obligatoria? ¿La gráfica de razones sigue siendo útil así?
 
-**Validación del dueño de negocio:** nombre — fecha — `pendiente`
+#### Respuestas de Manufactura (recibidas el 2026-11-17)
+
+| # | Tema | Respuesta | Qué cambia en la migración |
+|---|---|---|---|
+| 1 | Fecha ideal | El cálculo es correcto. Los amortiguadores son fijos y están en el semáforo de producción. | Se conserva la regla. Calendario decidido el 2026-11-18: los días no laborables salen del calendario de Colombia (sábados, domingos y festivos de ley), no de `@FIR_FECHAS_PROD`. Ver la fila "Calendario laboral" de la sección 2. |
+| 2 | Cierres del sábado | El sábado es una jornada reducida, sin liberación y sin toda la empresa trabajando, así que un cierre en sábado cuenta como del viernes. Domingos y festivos no se calculan porque no se trabaja. | Se conserva la regla sábado → viernes. |
+| 3 | OP en curso | "En curso es una orden que no se ha cerrado, por lo tanto se debe contar como abierta en el cálculo de nivel de servicio." | Aclarado el 2026-11-18: ver la nota debajo de esta tabla. Se conserva la regla del BI. |
+| 4 | Historia | Todo el historial de órdenes de fabricación de SAP. | La tabla carga toda la historia, sin la ventana de 12 meses. |
+| 5 | Meta | Sí: línea de meta del 90 %, por planta y para todo Firplak. | La meta se muestra en el dashboard, en la vista general y en cada planta. |
+| 6 | Páginas | Eliminar la página "Duplicado de NS PLantas"; no se usa. | No se migra. La gráfica de razones de retraso sí se conserva (respuesta 11). |
+| 7 | Filtro por defecto | El mes en curso, solo el mes. | El dashboard abre en el mes actual. |
+| 8 | Familias | Usar las familias completas: `ESPGAB`, `FIBRA`, `MARMOL`, `MBL CEFI`, `MBLP`, `MUEBLE`, `PFZ-CEMA`, `RTM`. | Se conserva la agrupación actual: 4 grupos y 4 familias con su propio código, 8 valores en total. Es la dimensión "planta" de la meta (respuesta 5). Manufactura escribió "ESPAGB"; el código en SAP es `ESPGAB`. |
+| 9 | Alcance | Toda orden debe tener pedido; si no lo tiene, no se incluye. | Se conservan el `INNER JOIN` con `ORDR` y los demás filtros (bodegas `PT-01`, `PT-02` y `PT-08`, con lote, estados `R` y `L`). |
+| 10 | Frecuencia | Se consulta 2 o 3 veces al día; actualizar a las 6:00 y a las 17:00. | Job a las 6:00 y a las 17:00. |
+| 11 | Razones de retraso | Es obligatoria, pero registrarla en SAP es tedioso y no se hace. Graficarla aunque falten datos; más adelante se buscará una forma más práctica. | Se conserva la gráfica. Aclarado el 2026-11-18: se agrega una barra **"Sin razón de atraso"** para las OP incumplidas que no tienen razón registrada. |
+
+**Nota sobre la pregunta 3 (aclarada el 2026-11-18).** Respuesta de Manufactura: "el nivel de servicio solo se mide el día de plazo; si se cumple antes no es necesario medir; si se cumple por fuera del plazo, no hay cumplimiento". Es la regla que usa el BI hoy:
+
+- Una OP entra al % solo cuando su fecha ideal ya pasó (`FechaIdealEntrega < hoy`). Las OP con plazo vigente no cuentan, aunque ya estén cerradas; se muestran aparte como "en curso".
+- Al llegar el plazo, cumple si se cerró en o antes de la fecha ideal (con la regla sábado → viernes). Si se cerró después o sigue abierta, incumple.
+
+Con noviembre de 2026 (consulta 6, al 2026-11-05) da **84,15 %**, igual que el BI. La lectura alternativa (contar todas las OP del mes, 38,9 %) queda descartada.
+
+**Validación del dueño de negocio:** Manufactura — 2026-11-17 — validado. Aclaraciones de las preguntas 3 y 11 recibidas el 2026-11-18. Calendario laboral decidido el 2026-11-18 por el desarrollador: sábados, domingos y festivos de Colombia.
 
 ### Consultas de validación para el desarrollador
 
@@ -342,20 +365,51 @@ La consulta 8 (fechas repetidas en `@FIR_FECHAS_PROD`) y la limpieza opcional de
 
 ## 2. Tabla de reporte y carga incremental
 
-Propuesta para revisar en la fase 2 (`pendiente` aprobación; el script todavía no existe):
+Propuesta del 2026-11-17, `pendiente` aprobación del desarrollador. El script todavía no existe.
 
 | Campo | Valor |
 |---|---|
-| Tabla | `Planos_Symphony.dbo.Informe_ns_plantas` (nombre `pendiente`) |
-| Grano (una fila por…) | OP (`DocNum`) |
-| Clave | `DocNum` (validar unicidad, consulta 2) |
-| Columnas | `DocNum`, `FechaCreacion`, `CodArticulo`, `Articulo`, `CantidadPlaneada`, `TipoOrden`, `TipoPedido`, `Estado`, `FechaLiberacion`, `FechaCierre`, `FechaCierreAjustada`, `Familia`, `GrupoFamilia`, `Amortiguador`, `FechaIdealEntrega`, `RazonRetraso`, `RazonRetraso2`, `FechaCarga` |
+| Tabla | `Planos_Symphony.dbo.Informe_ns_plantas` |
+| Grano (una fila por…) | OP de `OWOR` que cumple los filtros del BI, sin la ventana de 12 meses |
+| Clave | `DocEntry` (clave interna de SAP, única). `DocNum` se guarda para mostrar y filtrar. Que `DocNum` también sea única en toda la historia: `pendiente` (consulta previa 2). |
 | Fecha de referencia (filtros por periodo) | `FechaIdealEntrega` |
-| Estrategia incremental | `pendiente`: `MERGE` sobre las OP abiertas o modificadas recientemente (`UpdateDate` de `OWOR`), sin borrar la historia |
-| Cálculo de cumplimiento | En la consulta de la API, porque depende de la fecha de hoy |
-| SP | `dbo.sp_Actualizar_Informe_ns_plantas` (nombre `pendiente`) |
-| Job y horario | `pendiente` (pregunta 10) |
-| Índices | `pendiente` (por `FechaIdealEntrega` y `GrupoFamilia`) |
+| Estrategia incremental | Cada corrida recarga las OP que pueden cambiar: abiertas (`Status = 'R'`) o modificadas en los últimos 7 días (`OWOR.UpdateDate`). Se borran por `DocEntry` y se vuelven a insertar. Recarga completa semanal, el domingo en la madrugada, para recoger cambios de amortiguadores o del calendario. Que `UpdateDate` cambie al cerrar o al registrar la razón: `pendiente` (consulta previa 4). |
+| Cálculo de cumplimiento | En la consulta de la API, porque depende de la fecha de hoy: el % cuenta solo las OP con `FechaIdealEntrega < hoy` (pregunta 3) |
+| Calendario laboral | Tabla `Planos_Symphony.dbo.Calendario_Laboral` (`Fecha` PK, `EsLaborable`, `Motivo`), llenada una vez por el script con fórmula, sin mantenimiento manual. No laborables: **sábados, domingos y festivos de Colombia** (Ley 51 de 1983: 6 fijos, 7 que se corren al lunes y 5 que dependen de la Pascua). El sábado no cuenta como día hábil, igual que en `@FIR_FECHAS_PROD`, para que la fecha ideal coincida con el BI. Rango de años según la consulta previa 1. Si `@FIR_FECHAS_PROD` trae días propios de Firplak (p. ej. cierres de fin de año), se decide aparte si se agregan (consulta previa 5). |
+| Fecha ideal | Se calcula en el SP con `dbo.Calendario_Laboral` por conjuntos (sin la subconsulta por fila del BI), con la misma regla: amortiguador 1 → la fecha de liberación; N > 1 → el día hábil N − 1 después de la liberación, si cae dentro de `min(30, 3 × N)` días; si no, `NULL`. Se compara con la consulta original antes de aprobar. |
+| SP | `dbo.sp_Actualizar_Informe_ns_plantas` (`@CargaCompleta = 1` para la primera carga y la semanal) |
+| Bitácora | `dbo.Cargas_Log` (ya existe; ver [Flujo de datos](../architecture/data-flow.md)) |
+| Job y horario | Lunes a sábado a las 6:00 y a las 17:00 (respuesta 10). Completa: domingo a las 2:00. |
+| Índices | PK agrupada por `DocEntry`. `IX_..._FechaIdeal` por `FechaIdealEntrega` con `Planta`, `FechaCierreAjustada` y `Estado` incluidas, para el resumen por periodo. `IX_..._Planta` por (`Planta`, `FechaIdealEntrega`), para el filtro de planta. |
+
+Columnas propuestas:
+
+| Columna | Tipo | Origen | Nota |
+|---|---|---|---|
+| `DocEntry` | `int` | `OWOR.DocEntry` | Clave |
+| `DocNum` | `int` | `OWOR.DocNum` | `# Documento` |
+| `FechaCreacion` | `date` | `OWOR.CreateDate` | |
+| `CodArticulo` | `nvarchar(50)` | `OWOR.ItemCode` | |
+| `Articulo` | `nvarchar(200)` | `OWOR.ProdName` | |
+| `CantidadPlaneada` | `decimal(19,6)` | `OWOR.PlannedQty` | El BI la redondeaba a entero; aquí se guarda sin redondear. |
+| `TipoOrden` | `nvarchar(30)` | `OWOR.U_Tipo_Orden` | `STANDARD`, `STOCK` o `NULL` |
+| `TipoPedido` | `nvarchar(30)` | `ORDR.U_TipoPedidos` | |
+| `Bodega` | `nvarchar(8)` | `OWOR.Warehouse` | Nueva: no estaba en el BI |
+| `Estado` | `nvarchar(20)` | `OWOR.Status` | `Liberado` o `Cerrado` |
+| `FechaLiberacion` | `date` | `OWOR.RlsDate` | |
+| `FechaCierre` | `date` | `OWOR.CloseDate` | |
+| `FechaCierreAjustada` | `date` | Regla del sábado | Cierre en sábado → viernes |
+| `Familia` | `nvarchar(30)` | `@FIR_FAM_SYMPH.U_FIR_FAM` | |
+| `Planta` | `nvarchar(30)` | Agrupación de la familia | 8 valores (respuesta 8) |
+| `Amortiguador` | `tinyint` | `@FIR_AMORTIGUADORES.U_Amortiguador` | |
+| `FechaIdealEntrega` | `date` | Calculada | Fecha de referencia |
+| `RazonRetraso` | `nvarchar(100)` | `OWOR.U_U_Razonderetraso` | Texto normalizado |
+| `RazonRetraso2` | `nvarchar(100)` | `OWOR.U_U_Razonderetraso2` | Texto normalizado |
+| `FechaCarga` | `datetime2(0)` | — | Auditoría |
+
+**Diferencia con el BI por el calendario.** El BI usa `@FIR_FECHAS_PROD`. Donde esa tabla tenga días que no son festivos de ley, o le falten festivos, la fecha ideal de la migración puede salir distinta. La consulta previa 5 lista esas fechas; las OP afectadas se explican en la validación de totales de la fase 6.
+
+Consultas previas (solo lectura) en [`sql/validacion-fase2-previa.sql`](../../bi-origen/bi-ns-plantas/sql/validacion-fase2-previa.sql): volumen de la historia por año, unicidad de `DocNum`, cobertura de `@FIR_FECHAS_PROD` por año, comportamiento de `UpdateDate` y diferencias entre `@FIR_FECHAS_PROD` y el calendario de Colombia.
 
 Validación de totales (origen vs. tabla):
 

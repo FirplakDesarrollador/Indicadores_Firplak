@@ -383,3 +383,15 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `@FIR_FECHAS_PROD` no tiene fechas repetidas: 268 filas y 268 fechas distintas entre el 2025-11-08 y el 2028-01-01. Los sábados y domingos de más de la consulta 7 son fechas futuras ya cargadas. No tiene columna de planta.
 - Nuevo riesgo en [la ficha](bi/ns-plantas.md): el calendario vence el 2028-01-01. Se amplió la pregunta 1 (quién lo mantiene).
 - Las consultas de validación de la fase 1 quedan completas; falta la validación de Manufactura.
+
+## [2026-11-17] bi | NS Plantas: validación de Manufactura y propuesta de tabla (fases 1 y 2)
+
+- Respuestas de Manufactura registradas en [la ficha](bi/ns-plantas.md#respuestas-de-manufactura-recibidas-el-2026-11-17): se confirman la regla de la fecha ideal y la del sábado; historia completa; meta del 90 % por planta y general; se elimina la página duplicada; el filtro abre en el mes en curso; 8 plantas (4 grupos y 4 familias sin agrupar); solo OP con pedido; actualización a las 6:00 y a las 17:00; la gráfica de razones se conserva.
+- `pendiente`: aclarar la pregunta 3 (si las OP abiertas en plazo cuentan en el %) y la 11 (barra "Sin razón registrada"). No cambian la tabla.
+- Propuesta de la fase 2 en la ficha: `Planos_Symphony.dbo.Informe_ns_plantas`, una fila por OP (`DocEntry`), fecha ideal calculada por conjuntos, recarga de OP abiertas o modificadas en 7 días, completa semanal, bitácora `dbo.Cargas_Log`. Consultas previas en `bi-origen/bi-ns-plantas/sql/validacion-fase2-previa.sql`.
+
+## [2026-11-18] bi | NS Plantas: aclaraciones de Manufactura (preguntas 3 y 11)
+
+- Pregunta 3: el nivel de servicio se mide al llegar el plazo. El % cuenta solo las OP con fecha ideal vencida, como en el BI (84,15 % en noviembre al 2026-11-05).
+- Pregunta 11: la gráfica de razones de retraso agrega la barra "Sin razón de atraso" para las OP incumplidas sin razón registrada.
+- Calendario laboral: los días no laborables salen del calendario de Colombia (sábados, domingos y festivos de ley), generado por fórmula en `Planos_Symphony.dbo.Calendario_Laboral`, en lugar de `@FIR_FECHAS_PROD` (cargada solo hasta el 2028-01-01). El sábado sigue sin contar, como en el BI. Se agrega la consulta previa 5 para comparar los dos calendarios.
