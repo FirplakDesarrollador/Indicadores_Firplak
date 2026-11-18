@@ -1,0 +1,70 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 747.2,
+            "y": 0
+          },
+          "nodeIndex": "Medidas",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 1179.9,
+            "y": 0
+          },
+          "nodeIndex": "Ordenes de Fabricacion",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 336.5182555780932,
+            "y": 0
+          },
+          "nodeIndex": "Amortiguador",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 182.9249677525188,
+            "y": 556.84655544238228
+          },
+          "nodeIndex": "CalendarioOF",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 7
+        }
+      ],
+      "name": "Todas las tablas",
+      "zoomValue": 47.557922352677892,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas las tablas",
+  "defaultDiagram": "Todas las tablas"
+}

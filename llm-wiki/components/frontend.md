@@ -41,6 +41,9 @@ sources:
 - `/consolidado-comercial`: consolidado comercial SAP para Comercial ([`ConsolidadoComercialDashboard.tsx`](../../components/ConsolidadoComercialDashboard.tsx); reglas en la [ficha del proyecto](../proyectos/consolidado-comercial.md)). Tarjetas A–D y total, composición y desglose por asesor, segmento y centro de costos.
 - `/consolidado-comercial/detalle`: detalle paginado de las líneas abiertas de A–C, con pestañas por etapa, búsqueda y panel lateral.
 - `/api/consolidado-comercial`: proxy server-side hacia `GET /api/v1/consolidado-comercial`.
+- `/ns-plantas`: nivel de servicio de plantas para Manufactura ([`NsPlantasDashboard.tsx`](../../components/NsPlantasDashboard.tsx); reglas en la [ficha del BI](../bi/ns-plantas.md)). Abre en el mes en curso: nivel de servicio con meta del 90 %, órdenes medidas, incumplidas y en plazo, series diaria y mensual (año completo), tabla por planta frente a la meta e incumplidas por razón de retraso.
+- `/ns-plantas/detalle`: detalle paginado de órdenes de fabricación, abre en las incumplidas; filtro de cumplimiento, búsqueda y panel lateral.
+- `/api/ns-plantas`: proxy server-side hacia `GET /api/v1/ns-plantas`.
 - `/admin/permisos`: administración de permisos por cargo, con excepciones e historial con soporte; solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
 
 ## Comportamiento del dashboard

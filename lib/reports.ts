@@ -1,4 +1,4 @@
-import { Boxes, FileMinus, Handshake, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
+import { Boxes, Factory, FileMinus, Handshake, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
 // Un informe nuevo no lo ve nadie hasta que un administrador lo agrega a un cargo o lo asigna a una persona en /admin/permisos.
@@ -93,6 +93,17 @@ export const reports: ReportDefinition[] = [
     icon: Layers,
     pagePaths: ["/carga", "/planner", "/gestion"],
     apiPaths: ["/api/carga"],
+  },
+  {
+    // Migración del Power BI "BI NS plantas" (dueño: Manufactura): llm-wiki/bi/ns-plantas.md.
+    slug: "ns-plantas",
+    area: "operaciones",
+    title: "Nivel de servicio de plantas",
+    subtitle: "Cumplimiento de las órdenes de fabricación frente a su fecha ideal",
+    href: "/ns-plantas",
+    icon: Factory,
+    pagePaths: ["/ns-plantas"],
+    apiPaths: ["/api/ns-plantas"],
   },
 ];
 

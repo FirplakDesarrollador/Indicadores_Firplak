@@ -1,0 +1,44 @@
+table Medidas
+	lineageTag: bd2e21cb-1086-4771-9cba-bbb2b6fcecb9
+
+	measure 'Objetivo IFI MS' = 0.9
+		formatString: 0\ %;-0\ %;0\ %
+		lineageTag: 9675f6f3-2f9f-456d-8440-fbac16141db7
+
+		changedProperty = FormatString
+
+	measure 'TOTAL CUMPLIÓ' = IF(ISBLANK(CALCULATE(COUNT('Ordenes de Fabricacion'[Cumplio]),'Ordenes de Fabricacion'[Cumplio]="CUMPLIÓ")),0,CALCULATE(COUNT('Ordenes de Fabricacion'[Cumplio]),'Ordenes de Fabricacion'[Cumplio]="CUMPLIÓ"))
+		formatString: 0
+		lineageTag: 1db80c56-a931-4aa6-aa7e-9db67a30f664
+
+	measure 'TOTAL OP' = COUNT('Ordenes de Fabricacion'[# Documento])
+		formatString: 0
+		lineageTag: 8e983847-c351-400f-b6fa-7e77295ea173
+
+	measure 'TOTAL INCUMPLIO' = [TOTAL OP] - [TOTAL CUMPLIÓ]
+		formatString: 0
+		lineageTag: cfdf96ad-67a4-4e0b-9de4-c9d092d9f494
+
+	measure '% CUMPLIMIENTO' = CALCULATE(DIVIDE([TOTAL CUMPLIÓ],[TOTAL OP]), 'Ordenes de Fabricacion'[Fecha ideal Entrega] < TODAY())
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: db14f332-d4d3-43bd-84b1-d21962a437c7
+
+	measure 'Fecha Actual' = TODAY()
+		formatString: d/mm/yy
+		lineageTag: 4df8c189-8f9c-4bdc-af55-bfe778a0732e
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	partition Medidas-d27b7462-c958-49db-8fa3-e39cf945146a = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Columnas quitadas" = Table.RemoveColumns(Origen,{"Columna1"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

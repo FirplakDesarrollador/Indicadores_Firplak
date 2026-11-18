@@ -1,0 +1,174 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "492d591b5b36440c8649",
+  "position": {
+    "x": 143.0714115118223,
+    "y": 0,
+    "z": 6000,
+    "height": 89.266778122760925,
+    "width": 331.38762837353715
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CalendarioOF"
+                    }
+                  },
+                  "Property": "Fecha"
+                }
+              },
+              "queryRef": "CalendarioOF.Fecha",
+              "nativeQueryRef": "Fecha",
+              "active": true
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "CalendarioOF"
+                  }
+                },
+                "Property": "Fecha"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Relative'"
+                }
+              }
+            },
+            "relativeRange": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Last'"
+                }
+              }
+            },
+            "relativeDuration": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "relativePeriod": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Weeks'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "filter": {
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "c",
+                    "Entity": "CalendarioOF",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "Between": {
+                        "Expression": {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "c"
+                              }
+                            },
+                            "Property": "Fecha"
+                          }
+                        },
+                        "LowerBound": {
+                          "DateSpan": {
+                            "Expression": {
+                              "DateAdd": {
+                                "Expression": {
+                                  "DateAdd": {
+                                    "Expression": {
+                                      "Now": {}
+                                    },
+                                    "Amount": 1,
+                                    "TimeUnit": 0
+                                  }
+                                },
+                                "Amount": -1,
+                                "TimeUnit": 1
+                              }
+                            },
+                            "TimeUnit": 0
+                          }
+                        },
+                        "UpperBound": {
+                          "DateSpan": {
+                            "Expression": {
+                              "Now": {}
+                            },
+                            "TimeUnit": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "dateRange": [
+        {
+          "properties": {
+            "includeToday": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "syncGroup": {
+      "groupName": "Fecha",
+      "fieldChanges": true,
+      "filterChanges": true
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

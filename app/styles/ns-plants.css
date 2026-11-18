@@ -1,0 +1,51 @@
+/* Dashboard de nivel de servicio de plantas. Reutiliza las clases billing-* y solo agrega lo propio. Tokens: app/globals.css */
+
+/* El orden de billing.css es de facturación; aquí manda el orden del DOM. */
+.ns-plants-shell .billing-content > * { order: 0; }
+
+.ns-metrics-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
+.ns-two-column-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
+.ns-panel-note { color: var(--color-text-muted); font-size: .8125rem; margin-top: var(--space-1); }
+.ns-muted { color: var(--color-text-muted); }
+
+/* Leyendas: línea, barra y meta (la identidad no depende solo del color). */
+.billing-chart-legend .ns-legend-solid,
+.billing-chart-legend .ns-legend-target { border-radius: 0; height: 0; width: 20px; }
+.billing-chart-legend .ns-legend-solid { border-top: 2px solid var(--navy-700); }
+.billing-chart-legend .ns-legend-target { border-top: 2px dotted var(--gray-600); }
+.billing-chart-legend .ns-legend-bar { background: var(--navy-700); border-radius: 2px; height: 10px; width: 10px; }
+
+.ns-chart-tooltip { display: flex; flex-direction: column; gap: var(--space-1); min-width: 200px; padding: var(--space-3); }
+.ns-chart-tooltip strong { color: var(--color-text); font-weight: 600; margin-bottom: var(--space-1); }
+.ns-chart-tooltip div { display: flex; gap: var(--space-4); justify-content: space-between; }
+.ns-chart-tooltip span { color: var(--color-text-muted); }
+.ns-chart-tooltip b { color: var(--color-text); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+/* Estado de cumplimiento o frente a la meta: icono + texto + color de estado. */
+.ns-status { align-items: center; border-radius: var(--radius-pill); display: inline-flex; font-size: .75rem; font-weight: 600; gap: var(--space-1); padding: 2px 10px; white-space: nowrap; }
+.ns-status.success { background: rgb(61 110 85 / .08); color: var(--success); }
+.ns-status.danger { background: rgb(158 67 53 / .08); color: var(--danger); }
+.ns-status.neutral { background: var(--sage-50); color: var(--sage-800); }
+
+.ns-drawer-status { align-items: center; color: var(--color-text-muted); display: flex; font-size: .875rem; gap: var(--space-3); margin-bottom: var(--space-4); }
+
+/* "Sin razón de atraso": barra en tono de acento para distinguirla de las razones registradas. */
+.ns-reason-missing .billing-progress span { background: var(--sage-500); }
+.ns-reason-missing .billing-zone-label span { font-style: italic; }
+
+/* Tablas visibles en este dashboard (billing.css oculta .billing-table-panel fuera de la vista de detalle). */
+.ns-table-panel { overflow: hidden; padding: var(--space-5) 0 0; }
+.ns-table-panel .billing-table-scroll { margin-top: var(--space-4); }
+.ns-plant-table tbody tr { cursor: default; }
+
+@container (min-width: 560px) {
+  .ns-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@container (min-width: 1040px) {
+  .ns-metrics-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@container (min-width: 960px) {
+  .ns-two-column-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

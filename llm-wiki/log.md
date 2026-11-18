@@ -734,3 +734,74 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Pestaña 2: D default esperada = 340 líneas, 162 documentos, 168.910.964,90 (cuadra con la pestaña 1; sin Donaciones en el mes). Falta compararla con el dashboard y la pestaña 3 (A–C).
 - Pestaña 3 y tarjetas del dashboard (carga 10:30:01): A, B, C, D y total cuadran exacto con SQL (836,43 M). Endpoint y dashboard validados. Ajuste: en el mes en curso el dashboard pide la facturación hasta hoy (antes mostraba el mes completo en la tarjeta D).
 - Se pasó la rama `Ale` a `main` (avance rápido, 07643ee) y se trajo `main` a `proyecto/consolidado-comercial`. El informe `carga` de `Ale` usa el icono `Layers`; el consolidado pasa a `Handshake` para distinguirlos. `tsc`, ESLint y `next build` sin errores con todo junto.
+
+## [2026-11-05] bi | NS Plantas: inventario y análisis (fases 0 y 1)
+
+- Nueva ficha [NS Plantas](bi/ns-plantas.md), a partir del proyecto `bi-origen/bi-ns-plantas/BI NS plantas.pbip`. Dueño de negocio: Manufactura; desarrollador responsable: Milton Rendón; prioridad media; usuario inicial `hector.chinchilla@firplak.com`. Rama `bi/ns-plantas`.
+- Se agregó `bi-origen/bi-ns-plantas/.gitignore` para no subir `.pbi/cache.abf` ni `.pbi/localSettings.json`.
+- Hallazgos: una sola fuente SQL en `Firplak_SA` (SAP: `OWOR`, `ORDR`, `@FIR_FAM_SYMPH`, `@FIR_AMORTIGUADORES`, `@FIR_FECHAS_PROD`), con ventana móvil de 12 meses por fecha de creación. Indicador principal: `% CUMPLIMIENTO` (nivel de servicio), es decir, OP cerradas en o antes de la fecha ideal (liberación más amortiguador en días hábiles), contando solo las que ya vencieron. Sin RLS.
+- `pendiente`: consultas de validación del desarrollador y respuestas de Manufactura a las 10 preguntas de la ficha.
+
+## [2026-11-05] bi | NS Plantas: resultados de las consultas de validación
+
+- Script ejecutable en `bi-origen/bi-ns-plantas/sql/validacion-fase1.sql` (paso 0 con la tabla temporal `#ns`, consultas 1 a 8 y limpieza opcional).
+- Confirmado: 27 908 OP sin duplicados, ninguna sin fecha ideal; 18 familias con un amortiguador cada una, cuatro sin grupo (`ESPGAB`, `MBL CEFI`, `MBLP`, `PFZ-CEMA`); `@FIR_FECHAS_PROD` guarda días no laborables.
+- Nivel de servicio mensual entre 55 % y 84 % (tabla en [la ficha](bi/ns-plantas.md#resultados-ejecutadas-por-el-desarrollador-el-2026-11-05)); noviembre de 2025 incompleto por la ventana de 12 meses.
+- Hallazgos: solo 456 de 7 170 OP incumplidas tienen razón de retraso (pregunta 11). Hay demasiados sábados y domingos en `@FIR_FECHAS_PROD` para un año: `pendiente` la consulta 8 (fechas repetidas).
+
+## [2026-11-05] bi | NS Plantas: consulta 8 (calendario de días no laborables)
+
+- `@FIR_FECHAS_PROD` no tiene fechas repetidas: 268 filas y 268 fechas distintas entre el 2025-11-08 y el 2028-01-01. Los sábados y domingos de más de la consulta 7 son fechas futuras ya cargadas. No tiene columna de planta.
+- Nuevo riesgo en [la ficha](bi/ns-plantas.md): el calendario vence el 2028-01-01. Se amplió la pregunta 1 (quién lo mantiene).
+- Las consultas de validación de la fase 1 quedan completas; falta la validación de Manufactura.
+
+## [2026-11-17] bi | NS Plantas: validación de Manufactura y propuesta de tabla (fases 1 y 2)
+
+- Respuestas de Manufactura registradas en [la ficha](bi/ns-plantas.md#respuestas-de-manufactura-recibidas-el-2026-11-17): se confirman la regla de la fecha ideal y la del sábado; historia completa; meta del 90 % por planta y general; se elimina la página duplicada; el filtro abre en el mes en curso; 8 plantas (4 grupos y 4 familias sin agrupar); solo OP con pedido; actualización a las 6:00 y a las 17:00; la gráfica de razones se conserva.
+- `pendiente`: aclarar la pregunta 3 (si las OP abiertas en plazo cuentan en el %) y la 11 (barra "Sin razón registrada"). No cambian la tabla.
+- Propuesta de la fase 2 en la ficha: `Planos_Symphony.dbo.Informe_ns_plantas`, una fila por OP (`DocEntry`), fecha ideal calculada por conjuntos, recarga de OP abiertas o modificadas en 7 días, completa semanal, bitácora `dbo.Cargas_Log`. Consultas previas en `bi-origen/bi-ns-plantas/sql/validacion-fase2-previa.sql`.
+
+## [2026-11-18] bi | NS Plantas: aclaraciones de Manufactura (preguntas 3 y 11)
+
+- Pregunta 3: el nivel de servicio se mide al llegar el plazo. El % cuenta solo las OP con fecha ideal vencida, como en el BI (84,15 % en noviembre al 2026-11-05).
+- Pregunta 11: la gráfica de razones de retraso agrega la barra "Sin razón de atraso" para las OP incumplidas sin razón registrada.
+- Calendario laboral: los días no laborables salen del calendario de Colombia (sábados, domingos y festivos de ley), generado por fórmula en `Planos_Symphony.dbo.Calendario_Laboral`, en lugar de `@FIR_FECHAS_PROD` (cargada solo hasta el 2028-01-01). El sábado sigue sin contar, como en el BI. Se agrega la consulta previa 5 para comparar los dos calendarios.
+
+## [2026-11-18] bi | NS Plantas: resultados de las consultas previas a la fase 2
+
+- 268 658 OP desde 2013, `DocEntry` y `DocNum` únicos; 396 abiertas. `UpdateDate` se mueve al cerrar, lo que confirma la carga incremental. Solo el 1,7 % de las OP tiene razón de retraso.
+- `@FIR_FECHAS_PROD` solo tiene 2025 a 2028. La fórmula de festivos de Colombia coincide con SAP en todos los festivos de ley; SAP trae 9 días propios de Firplak (24 y 31 de diciembre, 2 y 3 de enero de 2025, un lunes de julio).
+- Decisión: calendario laboral = sábados, domingos y festivos de Colombia ∪ `@FIR_FECHAS_PROD`, de 2013 a 2040.
+
+## [2026-11-18] bi | NS Plantas: scripts de la fase 2
+
+- Diseño de la tabla aprobado por el desarrollador.
+- `sql/ns-plantas/01_informe_ns_plantas.sql`: `dbo.Calendario_Laboral` (2013 a 2040, festivos de Colombia por fórmula ∪ `@FIR_FECHAS_PROD`), `dbo.Informe_ns_plantas` (una fila por OP), `dbo.sp_Actualizar_Calendario_Laboral`, `dbo.sp_Actualizar_Informe_ns_plantas` (incremental y completa, bitácora `dbo.Cargas_Log`) y consultas de validación, entre ellas la comparación de la fecha ideal contra el SQL original del BI.
+- `sql/ns-plantas/02_job_ns_plantas.sql`: jobs `BI - NS Plantas carga incremental` (lunes a sábado, 6:00 y 17:00) y `BI - NS Plantas carga completa` (domingo, 2:00).
+- Sin CTE, `APPLY`, `TRY_CONVERT`, `CREATE OR ALTER` ni `THROW` (nivel de compatibilidad 100). `pendiente`: ejecución, primera carga y validación por el desarrollador.
+
+## [2026-11-18] bi | NS Plantas: primera carga y validación de la fase 2
+
+- El desarrollador ejecutó `01_informe_ns_plantas.sql`. La carga completa insertó 268 658 OP en 13 s; la incremental recargó 943 OP en menos de 1 s.
+- La fecha ideal coincide con el SQL original del BI en las 27 737 OP comunes (0 diferencias). Las 99 OP solo en la tabla son del día del límite de 12 meses (2025-11-18).
+- Nivel de servicio de noviembre al 2026-11-18: 81,63 % (880 de 1 078). `pendiente`: compararlo con la tarjeta del BI y crear los jobs.
+- Nivel de servicio contra el BI: el BI actualizado muestra 81,60 %, igual que el SQL del BI con sus reglas DAX; la tabla da 81,63 % por 2 OP del día del límite de 12 meses. Validación de la fase 2 cerrada; `pendiente`: crear los jobs.
+- Jobs creados; corrida manual del job incremental a las 11:52 sin error (943 OP). Fase 2 aprobada por el desarrollador.
+
+## [2026-11-18] bi | NS Plantas: propuesta de contrato del endpoint (fase 3)
+
+- `GET /api/v1/ns-plantas` sobre `Informe_ns_plantas`: cumplimiento calculado en SQL con la fecha del servidor, resumen (`serviceLevel`, meta 0,9, medidas, cumplidas, incumplidas, en curso), series diaria y mensual, resumen por planta y razones de retraso con "Sin razón de atraso".
+- Decisiones para aprobar: incumplidas sin las OP en curso (el BI las sumaba), razones solo de OP medidas, gráfica mensual del año completo y resumen por planta nuevo.
+- Contrato aprobado por el desarrollador con las decisiones A a D.
+
+## [2026-11-18] bi | NS Plantas: endpoint en la API (fase 4)
+
+- `reporting-api`, rama `bi/ns-plantas`, commit `18be860`: `GET /api/v1/ns-plantas` según el contrato. Compila sin errores.
+- `pendiente`: paquete `dist` para el servidor (debe incluir también el consolidado comercial si ya está desplegado) y prueba en el servidor.
+- Paquete `reporting-api-dist-7a016a9.zip` desde la rama local `deploy/2026-11-18` (NS Plantas + consolidado comercial, que ya está en el servidor).
+
+## [2026-11-18] bi | NS Plantas: dashboard (fase 5)
+
+- Se trajo `main` a `bi/ns-plantas` (catálogo de informes, permisos por cargo y componentes comunes).
+- Dashboard `/ns-plantas` y `/ns-plantas/detalle` con proxy, tipos, estilos propios y registro en `lib/reports.ts` (área Operaciones). Lint y build sin errores.
+- `pendiente`: revisión visual con datos reales y permisos del usuario de Manufactura.
