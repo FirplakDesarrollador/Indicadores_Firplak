@@ -1,4 +1,4 @@
-import { Boxes, FileMinus, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
+import { Boxes, FileMinus, Handshake, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
 // Un informe nuevo no lo ve nadie hasta que un administrador lo agrega a un cargo o lo asigna a una persona en /admin/permisos.
@@ -61,6 +61,17 @@ export const reports: ReportDefinition[] = [
     icon: FileMinus,
     pagePaths: ["/notas-credito"],
     apiPaths: ["/api/notas-credito"],
+  },
+  {
+    // Proyecto nuevo (no es migración de BI): llm-wiki/proyectos/consolidado-comercial.md.
+    slug: "consolidado-comercial",
+    area: "ventas",
+    title: "Consolidado comercial",
+    subtitle: "Ofertas, OV pendientes, tránsito y facturación neta",
+    href: "/consolidado-comercial",
+    icon: Handshake,
+    pagePaths: ["/consolidado-comercial"],
+    apiPaths: ["/api/consolidado-comercial"],
   },
   {
     slug: "costo-actual-pt",
