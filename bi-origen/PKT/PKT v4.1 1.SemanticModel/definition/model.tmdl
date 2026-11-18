@@ -1,0 +1,30 @@
+model Model
+	culture: es-ES
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-CO
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Facturas","NotasCredito","InformeVentas","CostosPTNivel1","Capital de Trabajo","CapitalTrabajo","Cap_Trab_2020","Cap_Trab_2021","Cap_Trab_2022","Ventas","Proveedores de bienes y servicios","KTNO","PKT","NombresMedidas","Cap_Trab_2023","Cap_Trab_2024","Cap_Trab_2025"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table InformeVentas
+ref table DateTableTemplate_f3877818-7ae7-4ce7-b13a-d363cf6d2fa0
+ref table LocalDateTable_2b5aafe1-39eb-453f-b794-bc2100459415
+ref table Calendario
+ref table 'Capital de Trabajo'
+ref table CapitalTrabajo
+ref table Ventas
+ref table 'Proveedores de bienes y servicios'
+ref table KTNO
+ref table PKT
+ref table NombresMedidas
+ref table LocalDateTable_19a2c403-d5c0-4148-8166-58549d2df34b
+
+ref cultureInfo es-ES
+

@@ -1,0 +1,421 @@
+table InformeVentas
+	lineageTag: 78803796-d513-47ea-94ed-a69562b12047
+
+	column 'Fecha contabilización'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c0350976-9829-44a2-a948-b06bff040615
+		summarizeBy: none
+		sourceColumn: Fecha contabilización
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Num Documento'
+		dataType: int64
+		formatString: 0
+		lineageTag: e12b3d15-2107-4d73-a21d-1dcf98aee1a0
+		summarizeBy: sum
+		sourceColumn: Num Documento
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Vendedor Senior'
+		dataType: string
+		lineageTag: 7312d78c-e516-48f3-924d-3b1a240876f7
+		summarizeBy: none
+		sourceColumn: Vendedor Senior
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Vendedor Junior'
+		dataType: string
+		lineageTag: 6b643e5d-1d7f-4dcf-a7ce-fbe1554ff6fd
+		summarizeBy: none
+		sourceColumn: Vendedor Junior
+
+		annotation SummarizationSetBy = Automatic
+
+	column TipoVentas
+		dataType: string
+		lineageTag: 9f60675a-a6d0-4d8d-bcf0-0b9be3d6aa9f
+		summarizeBy: none
+		sourceColumn: TipoVentas
+
+		annotation SummarizationSetBy = Automatic
+
+	column Zona
+		dataType: string
+		lineageTag: b9d283e6-2154-426f-b638-b02bc06e6748
+		summarizeBy: none
+		sourceColumn: Zona
+
+		annotation SummarizationSetBy = Automatic
+
+	column Territorio
+		dataType: string
+		lineageTag: 2b640b11-03a7-4f3e-bdb7-c1399d1161fe
+		summarizeBy: none
+		sourceColumn: Territorio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo de Cliente'
+		dataType: string
+		lineageTag: 277f56ff-7ef6-4379-892c-d3f12254ce91
+		summarizeBy: none
+		sourceColumn: Grupo de Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Subgrupo de Cliente'
+		dataType: string
+		lineageTag: b5eb5215-fa43-4857-8ef0-028e555a3a49
+		summarizeBy: none
+		sourceColumn: Subgrupo de Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cod Cliente'
+		dataType: string
+		lineageTag: ac4e122d-6c0f-485a-8f76-ba850b3186c9
+		summarizeBy: none
+		sourceColumn: Cod Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nombre Cliente'
+		dataType: string
+		lineageTag: 65c207c4-ea38-4eda-8a61-89e8685cc41a
+		summarizeBy: none
+		sourceColumn: Nombre Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Código Punto de Venta'
+		dataType: string
+		lineageTag: a4a5ce7f-a88a-42c4-9684-39443ec78db3
+		summarizeBy: none
+		sourceColumn: Código Punto de Venta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descripción Punto de Venta'
+		dataType: string
+		lineageTag: cff4a58d-9a4f-4b41-be51-0ee30dcfdef4
+		summarizeBy: none
+		sourceColumn: Descripción Punto de Venta
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Centro de Costos'
+		dataType: string
+		lineageTag: 3e9ad7b2-3f74-46bb-9a04-b26e094ea3cf
+		summarizeBy: none
+		sourceColumn: Centro de Costos
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo de Articulo'
+		dataType: string
+		lineageTag: c2e9491a-7fd6-42c9-a4de-3b7e33063d33
+		summarizeBy: none
+		sourceColumn: Grupo de Articulo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Familia
+		dataType: string
+		lineageTag: eda4941c-6501-4ea1-9e57-12691218ebd3
+		summarizeBy: none
+		sourceColumn: Familia
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Codigo Articulo'
+		dataType: string
+		lineageTag: bf39c22d-238c-427e-b553-09df4e430186
+		summarizeBy: none
+		sourceColumn: Codigo Articulo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descripción de artículo'
+		dataType: string
+		lineageTag: 04aadcde-6a4f-4136-8acf-33dd6a77a78e
+		summarizeBy: none
+		sourceColumn: Descripción de artículo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cantidad
+		dataType: double
+		lineageTag: b7400b53-253c-41aa-a73e-8f4808961dc8
+		summarizeBy: sum
+		sourceColumn: Cantidad
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Precio de venta'
+		dataType: double
+		lineageTag: a4b0a167-5407-48c0-a991-1a3e8bf239f0
+		summarizeBy: sum
+		sourceColumn: Precio de venta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column '% Descuento'
+		dataType: double
+		lineageTag: 56405b23-4040-4d96-a33e-8a6c829e5b06
+		summarizeBy: sum
+		sourceColumn: % Descuento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Precio tras el descuento'
+		dataType: double
+		lineageTag: 1231322d-fbe1-4b7c-9f57-7e238914bca4
+		summarizeBy: sum
+		sourceColumn: Precio tras el descuento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Valor Total'
+		dataType: double
+		lineageTag: bb00e175-a7f3-4405-a3cd-2ab77e923b6a
+		summarizeBy: sum
+		sourceColumn: Valor Total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Costo
+		dataType: double
+		lineageTag: 1782545e-4ad1-40ff-b91b-70cbcc55f587
+		summarizeBy: sum
+		sourceColumn: Costo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Costo total'
+		dataType: double
+		lineageTag: e5b3e668-f549-4102-858c-aaf6fe7a3f50
+		summarizeBy: sum
+		sourceColumn: Costo total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Utilidad Bruta'
+		dataType: double
+		lineageTag: 021fa167-9ecd-4420-b2ee-410dc700e553
+		summarizeBy: sum
+		sourceColumn: Utilidad Bruta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Margen Bruta'
+		dataType: double
+		lineageTag: 03c9d482-629a-4228-b67a-4d042beab89c
+		summarizeBy: sum
+		sourceColumn: Margen Bruta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Obra
+		dataType: string
+		lineageTag: 06806f82-3fd1-4325-b60c-287b52c1e222
+		summarizeBy: none
+		sourceColumn: Obra
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ciudad
+		dataType: string
+		lineageTag: 07b9a5fc-799b-4806-8bea-9c775ced8b88
+		summarizeBy: none
+		sourceColumn: Ciudad
+
+		annotation SummarizationSetBy = Automatic
+
+	column Teléfono
+		dataType: string
+		lineageTag: a34b2806-e8e2-42c5-9cdb-9492cabb1705
+		summarizeBy: none
+		sourceColumn: Teléfono
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fecha Fin Novedad'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0f2f9d09-5413-4086-b59f-65b03fc98730
+		summarizeBy: none
+		sourceColumn: Fecha Fin Novedad
+
+		variation Variación
+			isDefault
+			relationship: 14f4c13a-299b-4412-aa1c-7b6aeef0f4cc
+			defaultHierarchy: LocalDateTable_2b5aafe1-39eb-453f-b794-bc2100459415.'Jerarquía de fechas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Segmento del cliente'
+		dataType: string
+		lineageTag: c54e9f93-8e66-41f5-9e7c-fa89bc5cd31a
+		summarizeBy: none
+		sourceColumn: Segmento del cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Codigo del Tipo NC'
+		dataType: string
+		lineageTag: adfd468c-3f97-4f08-9270-ddd42484745c
+		summarizeBy: none
+		sourceColumn: Codigo del Tipo NC
+
+		annotation SummarizationSetBy = Automatic
+
+	column TiposNC
+		dataType: string
+		lineageTag: 671908ee-d5b4-46f2-9671-dd98c7d0ffa8
+		summarizeBy: none
+		sourceColumn: TiposNC
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Codigo Concepto Nc'
+		dataType: string
+		lineageTag: 39f71ec7-ec5c-4ac0-9aab-7f8c706526e9
+		summarizeBy: none
+		sourceColumn: Codigo Concepto Nc
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Conceptos Notas Crédito'
+		dataType: string
+		lineageTag: bf1b044b-9766-439a-b84f-c496213cf76c
+		summarizeBy: none
+		sourceColumn: Conceptos Notas Crédito
+
+		annotation SummarizationSetBy = Automatic
+
+	column Comentarios
+		dataType: string
+		lineageTag: a24be87f-0d83-4aca-8d91-237a3274a54a
+		summarizeBy: none
+		sourceColumn: Comentarios
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'C MP'
+		dataType: string
+		lineageTag: 62c8d717-0c38-413c-b2d2-32d0e55cbc85
+		summarizeBy: none
+		sourceColumn: C MP
+
+		annotation SummarizationSetBy = Automatic
+
+	column Costo_Mo
+		dataType: double
+		lineageTag: fac73c41-b668-4461-94ac-53d4d06da698
+		summarizeBy: sum
+		sourceColumn: Costo_Mo
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Costo_Cif
+		dataType: double
+		lineageTag: 2f7082e2-c674-4f7d-9b4c-b9dc5d6887a0
+		summarizeBy: sum
+		sourceColumn: Costo_Cif
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Costo MP'
+		dataType: string
+		lineageTag: af89c408-a3d3-4129-9fff-4602cd7eb2bc
+		summarizeBy: none
+		sourceColumn: Costo MP
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Costo Totalmente Variable'
+		dataType: string
+		lineageTag: 122132f2-79dc-4bee-aeb0-6b1aee882a45
+		summarizeBy: none
+		sourceColumn: Costo Totalmente Variable
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Contribución bruta'
+		dataType: string
+		lineageTag: ccf30a4a-ef54-4f90-9c3b-bbfc448713ed
+		summarizeBy: none
+		sourceColumn: Contribución bruta
+
+		annotation SummarizationSetBy = Automatic
+
+	partition InformeVentas-96214444-2cd7-4a2e-850d-96a74d188bb1 = m
+		mode: import
+		source =
+				let
+				    Origen = Table.Combine({NotasCredito, Facturas}),
+				    #"Merged Queries" = Table.NestedJoin(Origen, {"Codigo Articulo"}, CostosPTNivel1, {"Codigo Articulo"}, "CostosPTNivel1", JoinKind.LeftOuter),
+				    #"Merged Queries1" = Table.NestedJoin(#"Merged Queries", {"Codigo Articulo"}, CostosPTNivel1, {"Codigo Articulo"}, "CostosPTNivel1.1", JoinKind.LeftOuter),
+				    #"Expanded CostosPTNivel1.1" = Table.ExpandTableColumn(#"Merged Queries1", "CostosPTNivel1.1", {"Costo_Mp", "Costo_Mo", "Costo_Cif"}, {"Costo_Mp", "Costo_Mo", "Costo_Cif"}),
+				    #"Added Custom" = Table.AddColumn(#"Expanded CostosPTNivel1.1", "Costo Totalmente Variable", each [Cantidad]*[Costo_Mp]),
+				    #"Added Custom1" = Table.AddColumn(#"Added Custom", "Contrib bruta estandar", each [Valor Total]-[Costo Totalmente Variable]),
+				    #"Added Custom2" = Table.AddColumn(#"Added Custom1", "M.C estandar", each [Contrib bruta estandar]/[Valor Total]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Added Custom2",{{"Costo Totalmente Variable", type number}, {"Contrib bruta estandar", type number}, {"M.C estandar", type number}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"M.C estandar"}),
+				    #"Added Custom3" = Table.AddColumn(#"Removed Columns", "M.C estandar", each if [Cantidad] > 0 then [Contrib bruta estandar]/[Valor Total] else 0),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom3",{{"M.C estandar", Percentage.Type}}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Changed Type1",{"CostosPTNivel1"}),
+				    #"Added Custom4" = Table.AddColumn(#"Removed Columns1", "Costo MP conf", each [Costo]-[Costo_Mo]-[Costo_Cif]),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom4",{"Fecha contabilización", "Num Documento", "Vendedor Senior", "Vendedor Junior", "TipoVentas", "Zona", "Territorio", "Grupo de Cliente", "Subgrupo de Cliente", "Cod Cliente", "Nombre Cliente", "Código Punto de Venta", "Descripción Punto de Venta", "Centro de Costos", "Grupo de Articulo", "Familia", "Codigo Articulo", "Descripcion de Articulo", "Cantidad", "Precio de venta", "% Descuento", "Precio tras el descuento", "Valor Total", "Costo", "Costo total", "Utilidad Bruta", "Margen Bruta", "Obra", "Ciudad", "Teléfono", "Fecha Fin Novedad", "Codigo del Tipo NC", "TiposNC", "Codigo Concepto Nc", "Conceptos Notas Crédito", "Comentarios", "Costo_Mp", "Costo MP conf", "Costo_Mo", "Costo_Cif", "Costo Totalmente Variable", "Contrib bruta estandar", "M.C estandar"}),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Reordered Columns",{"Costo MP conf"}),
+				    #"Added Custom5" = Table.AddColumn(#"Removed Columns2", "C MP", each [Costo]-[Costo_Mo]-[Costo_Cif]),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Added Custom5",{"Fecha contabilización", "Num Documento", "Vendedor Senior", "Vendedor Junior", "TipoVentas", "Zona", "Territorio", "Grupo de Cliente", "Subgrupo de Cliente", "Cod Cliente", "Nombre Cliente", "Código Punto de Venta", "Descripción Punto de Venta", "Centro de Costos", "Grupo de Articulo", "Familia", "Codigo Articulo", "Descripcion de Articulo", "Cantidad", "Precio de venta", "% Descuento", "Precio tras el descuento", "Valor Total", "Costo", "Costo total", "Utilidad Bruta", "Margen Bruta", "Obra", "Ciudad", "Teléfono", "Fecha Fin Novedad", "Codigo del Tipo NC", "TiposNC", "Codigo Concepto Nc", "Conceptos Notas Crédito", "Comentarios", "Costo_Mp", "C MP", "Costo_Mo", "Costo_Cif", "Costo Totalmente Variable", "Contrib bruta estandar", "M.C estandar"}),
+				    #"Filtered Rows2" = Table.SelectRows(#"Reordered Columns1", each true),
+				    #"Removed Columns3" = Table.RemoveColumns(#"Filtered Rows2",{"Costo Totalmente Variable", "Contrib bruta estandar", "M.C estandar", "Costo_Mp"}),
+				    #"Added Custom6" = Table.AddColumn(#"Removed Columns3", "Costo Totalmente Variable", each [Cantidad]*[C MP]),
+				    #"Added Custom7" = Table.AddColumn(#"Added Custom6", "Contribucion Bruta", each [Valor Total]-[Costo Totalmente Variable]),
+				    #"Added Custom8" = Table.AddColumn(#"Added Custom7", "MC estandar", each [Contribucion Bruta]/[Valor Total]),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Added Custom8",{{"MC estandar", Percentage.Type}}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Changed Type2", "Costo MP", each if [C MP] = null then [Costo] else [C MP]),
+				    #"Reordered Columns2" = Table.ReorderColumns(#"Added Conditional Column",{"Fecha contabilización", "Num Documento", "Vendedor Senior", "Vendedor Junior", "TipoVentas", "Zona", "Territorio", "Grupo de Cliente", "Subgrupo de Cliente", "Cod Cliente", "Nombre Cliente", "Código Punto de Venta", "Descripción Punto de Venta", "Centro de Costos", "Grupo de Articulo", "Familia", "Codigo Articulo", "Descripcion de Articulo", "Cantidad", "Precio de venta", "% Descuento", "Precio tras el descuento", "Valor Total", "Costo", "Costo total", "Utilidad Bruta", "Margen Bruta", "Obra", "Ciudad", "Teléfono", "Fecha Fin Novedad", "Codigo del Tipo NC", "TiposNC", "Codigo Concepto Nc", "Conceptos Notas Crédito", "Comentarios", "C MP", "Costo_Mo", "Costo_Cif", "Costo MP", "Costo Totalmente Variable", "Contribucion Bruta", "MC estandar"}),
+				    #"Removed Columns4" = Table.RemoveColumns(#"Reordered Columns2",{"Costo Totalmente Variable", "Contribucion Bruta", "MC estandar"}),
+				    #"Added Custom9" = Table.AddColumn(#"Removed Columns4", "Costo Totalmente Variable", each [Cantidad]*[Costo MP]),
+				    #"Added Custom10" = Table.AddColumn(#"Added Custom9", "Contribución bruta", each [Valor Total]-[Costo Totalmente Variable]),
+				    #"Renamed Columns" = Table.RenameColumns(#"Added Custom10",{{"Descripcion de Articulo", "Descripción de artículo"}}),
+				    #"Filas filtradas" = Table.SelectRows(#"Renamed Columns", each true),
+				    #"Valor reemplazado" = Table.ReplaceValue(#"Filas filtradas","Autoservicio","Autoservicio Nacional",Replacer.ReplaceValue,{"Subgrupo de Cliente"}),
+				    #"Valor reemplazado1" = Table.ReplaceValue(#"Valor reemplazado","Mayoristas","Mayoristas Nacional",Replacer.ReplaceValue,{"Subgrupo de Cliente"}),
+				    #"Valor reemplazado2" = Table.ReplaceValue(#"Valor reemplazado1","otros","Ventas Especiales",Replacer.ReplaceValue,{"Subgrupo de Cliente"})
+				in
+				    #"Valor reemplazado2"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

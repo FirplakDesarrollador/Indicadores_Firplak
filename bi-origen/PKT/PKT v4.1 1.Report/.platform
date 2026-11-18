@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "PKT v4.1 1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "196df159-9257-469b-99b2-c3f19731f8f5"
+  }
+}

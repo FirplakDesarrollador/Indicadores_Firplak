@@ -594,3 +594,17 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Recuadro de la gráfica de acumulados con la diferencia entre la facturación neta y la meta.
 - Detalle en [Facturación diaria](bi/facturacion-diaria.md). Validación: `tsc` y ESLint sin errores; `pendiente` revisar en el navegador.
 - Resumen diario: cada meta queda junto a su facturación (Fac día neta, Meta día, Fac mes neta, Meta mes).
+
+## [2026-11-13] migracion | Inicio de la migración del BI PKT
+
+- Rama `bi/pkt` creada desde `main` en `Indicadores_Firplak`. La rama de `reporting-api` se crea en la fase 3.
+- Exportación del reporte en [`bi-origen/PKT/`](../bi-origen/PKT/).
+- Ficha [PKT](bi/pkt.md) en fase 0: dueño Dirección Financiera, desarrollador Daniel Jimenez, usuario direccionfinanciera@firplak.com, prioridad baja.
+- Alcance: páginas "General" y "Graficas"; "Duplicado de General" se descarta.
+
+## [2026-11-13] migracion | PKT, fase 1 (análisis)
+
+- Ficha [PKT](bi/pkt.md), sección 1: PKT = KTNO ÷ ventas proyectadas; KTNO = 5 conceptos de capital de trabajo + 7 de proveedores de bienes y servicios, con saldos de fin de mes de `Firplak_SA` (`JDT1`, `OJDT`, `OACT`); ventas netas de facturas y notas de Firplak.
+- Riesgos: consultas por año mantenidas a mano (`Cap_Trab_2020` a `2025`), `Cap_Trab_2024` en error en el archivo, posible duplicación de ventas por el cruce con `CostosGlobal`, proyección del mes en curso.
+- Sin RLS. Se agregó `.gitignore` a [`bi-origen/PKT/`](../bi-origen/PKT/) para excluir `localSettings.json` y `cache.abf`.
+- `pendiente`: validación de Dirección Financiera (8 preguntas) y resultados de las consultas V1 a V4.

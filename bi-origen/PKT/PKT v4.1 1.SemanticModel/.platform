@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "PKT v4.1 1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ad060257-8288-4cbe-b473-4a6fa8b7bdc4"
+  }
+}
