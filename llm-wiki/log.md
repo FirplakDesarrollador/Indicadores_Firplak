@@ -395,3 +395,24 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Pregunta 3: el nivel de servicio se mide al llegar el plazo. El % cuenta solo las OP con fecha ideal vencida, como en el BI (84,15 % en noviembre al 2026-11-05).
 - Pregunta 11: la gráfica de razones de retraso agrega la barra "Sin razón de atraso" para las OP incumplidas sin razón registrada.
 - Calendario laboral: los días no laborables salen del calendario de Colombia (sábados, domingos y festivos de ley), generado por fórmula en `Planos_Symphony.dbo.Calendario_Laboral`, en lugar de `@FIR_FECHAS_PROD` (cargada solo hasta el 2028-01-01). El sábado sigue sin contar, como en el BI. Se agrega la consulta previa 5 para comparar los dos calendarios.
+
+## [2026-11-18] bi | NS Plantas: resultados de las consultas previas a la fase 2
+
+- 268 658 OP desde 2013, `DocEntry` y `DocNum` únicos; 396 abiertas. `UpdateDate` se mueve al cerrar, lo que confirma la carga incremental. Solo el 1,7 % de las OP tiene razón de retraso.
+- `@FIR_FECHAS_PROD` solo tiene 2025 a 2028. La fórmula de festivos de Colombia coincide con SAP en todos los festivos de ley; SAP trae 9 días propios de Firplak (24 y 31 de diciembre, 2 y 3 de enero de 2025, un lunes de julio).
+- Decisión: calendario laboral = sábados, domingos y festivos de Colombia ∪ `@FIR_FECHAS_PROD`, de 2013 a 2040.
+
+## [2026-11-18] bi | NS Plantas: scripts de la fase 2
+
+- Diseño de la tabla aprobado por el desarrollador.
+- `sql/ns-plantas/01_informe_ns_plantas.sql`: `dbo.Calendario_Laboral` (2013 a 2040, festivos de Colombia por fórmula ∪ `@FIR_FECHAS_PROD`), `dbo.Informe_ns_plantas` (una fila por OP), `dbo.sp_Actualizar_Calendario_Laboral`, `dbo.sp_Actualizar_Informe_ns_plantas` (incremental y completa, bitácora `dbo.Cargas_Log`) y consultas de validación, entre ellas la comparación de la fecha ideal contra el SQL original del BI.
+- `sql/ns-plantas/02_job_ns_plantas.sql`: jobs `BI - NS Plantas carga incremental` (lunes a sábado, 6:00 y 17:00) y `BI - NS Plantas carga completa` (domingo, 2:00).
+- Sin CTE, `APPLY`, `TRY_CONVERT`, `CREATE OR ALTER` ni `THROW` (nivel de compatibilidad 100). `pendiente`: ejecución, primera carga y validación por el desarrollador.
+
+## [2026-11-18] bi | NS Plantas: primera carga y validación de la fase 2
+
+- El desarrollador ejecutó `01_informe_ns_plantas.sql`. La carga completa insertó 268 658 OP en 13 s; la incremental recargó 943 OP en menos de 1 s.
+- La fecha ideal coincide con el SQL original del BI en las 27 737 OP comunes (0 diferencias). Las 99 OP solo en la tabla son del día del límite de 12 meses (2025-11-18).
+- Nivel de servicio de noviembre al 2026-11-18: 81,63 % (880 de 1 078). `pendiente`: compararlo con la tarjeta del BI y crear los jobs.
+- Nivel de servicio contra el BI: el BI actualizado muestra 81,60 %, igual que el SQL del BI con sus reglas DAX; la tabla da 81,63 % por 2 OP del día del límite de 12 meses. Validación de la fase 2 cerrada; `pendiente`: crear los jobs.
+- Jobs creados; corrida manual del job incremental a las 11:52 sin error (943 OP). Fase 2 aprobada por el desarrollador.

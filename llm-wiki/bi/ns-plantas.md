@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 1
+fase: 2
 updated: 2026-11-18
 sources:
   - ../../bi-origen/bi-ns-plantas/
@@ -365,22 +365,22 @@ La consulta 8 (fechas repetidas en `@FIR_FECHAS_PROD`) y la limpieza opcional de
 
 ## 2. Tabla de reporte y carga incremental
 
-Propuesta del 2026-11-17, `pendiente` aprobación del desarrollador. El script todavía no existe.
+Diseño aprobado por el desarrollador el 2026-11-18. Scripts: [`sql/ns-plantas/01_informe_ns_plantas.sql`](../../sql/ns-plantas/01_informe_ns_plantas.sql) (calendario, tabla, SP y validación) y [`sql/ns-plantas/02_job_ns_plantas.sql`](../../sql/ns-plantas/02_job_ns_plantas.sql) (jobs). Ejecutados y validados el 2026-11-18.
 
 | Campo | Valor |
 |---|---|
 | Tabla | `Planos_Symphony.dbo.Informe_ns_plantas` |
 | Grano (una fila por…) | OP de `OWOR` que cumple los filtros del BI, sin la ventana de 12 meses |
-| Clave | `DocEntry` (clave interna de SAP, única). `DocNum` se guarda para mostrar y filtrar. Que `DocNum` también sea única en toda la historia: `pendiente` (consulta previa 2). |
+| Clave | `DocEntry` (clave interna de SAP, única). `DocNum` se guarda para mostrar y filtrar. Confirmado: `DocEntry` y `DocNum` son únicos en las 268 658 OP de la historia (consulta previa 2). |
 | Fecha de referencia (filtros por periodo) | `FechaIdealEntrega` |
-| Estrategia incremental | Cada corrida recarga las OP que pueden cambiar: abiertas (`Status = 'R'`) o modificadas en los últimos 7 días (`OWOR.UpdateDate`). Se borran por `DocEntry` y se vuelven a insertar. Recarga completa semanal, el domingo en la madrugada, para recoger cambios de amortiguadores o del calendario. Que `UpdateDate` cambie al cerrar o al registrar la razón: `pendiente` (consulta previa 4). |
+| Estrategia incremental | Cada corrida recarga las OP que pueden cambiar: abiertas (`Status = 'R'`) o modificadas en los últimos 7 días (`OWOR.UpdateDate`). Se borran por `DocEntry` y se vuelven a insertar. Recarga completa semanal, el domingo en la madrugada, para recoger cambios de amortiguadores o del calendario. Confirmado: en las 268 262 OP cerradas `UpdateDate` es igual o posterior al cierre, así que los cierres entran en la corrida siguiente (consulta previa 4). Una razón registrada semanas después la recoge la carga completa del domingo. |
 | Cálculo de cumplimiento | En la consulta de la API, porque depende de la fecha de hoy: el % cuenta solo las OP con `FechaIdealEntrega < hoy` (pregunta 3) |
-| Calendario laboral | Tabla `Planos_Symphony.dbo.Calendario_Laboral` (`Fecha` PK, `EsLaborable`, `Motivo`), llenada una vez por el script con fórmula, sin mantenimiento manual. No laborables: **sábados, domingos y festivos de Colombia** (Ley 51 de 1983: 6 fijos, 7 que se corren al lunes y 5 que dependen de la Pascua). El sábado no cuenta como día hábil, igual que en `@FIR_FECHAS_PROD`, para que la fecha ideal coincida con el BI. Rango de años según la consulta previa 1. Si `@FIR_FECHAS_PROD` trae días propios de Firplak (p. ej. cierres de fin de año), se decide aparte si se agregan (consulta previa 5). |
+| Calendario laboral | Tabla `Planos_Symphony.dbo.Calendario_Laboral` (`Fecha` PK, `EsLaborable`, `Motivo`), de 2013 a 2040. No laborables (decisión del desarrollador, 2026-11-18): **sábados, domingos y festivos de Colombia** generados por fórmula (Ley 51 de 1983: 6 fijos, 7 que se corren al lunes y 5 que dependen de la Pascua; sin fechas repetidas cuando dos festivos caen el mismo día, como el 2025-06-30), **más las fechas de `@FIR_FECHAS_PROD`** (días propios de Firplak, que se siguen cargando en SAP). El sábado no cuenta como día hábil, igual que en el BI. La fórmula se recalcula en cada carga completa, así que las fechas nuevas de SAP entran solas. |
 | Fecha ideal | Se calcula en el SP con `dbo.Calendario_Laboral` por conjuntos (sin la subconsulta por fila del BI), con la misma regla: amortiguador 1 → la fecha de liberación; N > 1 → el día hábil N − 1 después de la liberación, si cae dentro de `min(30, 3 × N)` días; si no, `NULL`. Se compara con la consulta original antes de aprobar. |
-| SP | `dbo.sp_Actualizar_Informe_ns_plantas` (`@CargaCompleta = 1` para la primera carga y la semanal) |
+| SP | `dbo.sp_Actualizar_Informe_ns_plantas` (`@CargaCompleta = 1` para la primera carga y la semanal; reconstruye el calendario con `dbo.sp_Actualizar_Calendario_Laboral`). Bloqueo con `sp_getapplock` para no correr dos cargas a la vez. Si las uniones con `ORDR`, `@FIR_FAM_SYMPH` o `@FIR_AMORTIGUADORES` llegan a repetir una OP, la carga falla con aviso en la bitácora y la tabla conserva los datos anteriores. |
 | Bitácora | `dbo.Cargas_Log` (ya existe; ver [Flujo de datos](../architecture/data-flow.md)) |
-| Job y horario | Lunes a sábado a las 6:00 y a las 17:00 (respuesta 10). Completa: domingo a las 2:00. |
-| Índices | PK agrupada por `DocEntry`. `IX_..._FechaIdeal` por `FechaIdealEntrega` con `Planta`, `FechaCierreAjustada` y `Estado` incluidas, para el resumen por periodo. `IX_..._Planta` por (`Planta`, `FechaIdealEntrega`), para el filtro de planta. |
+| Job y horario | `BI - NS Plantas carga incremental`: lunes a sábado a las 6:00 y a las 17:00 (respuesta 10). `BI - NS Plantas carga completa`: domingo a las 2:00. |
+| Índices | PK agrupada por `DocEntry`. `IX_..._FechaIdeal` por `FechaIdealEntrega` con `Planta`, `FechaCierreAjustada`, `Estado` y `RazonRetraso` incluidas, para el resumen y las gráficas por periodo. `IX_..._Planta` por (`Planta`, `FechaIdealEntrega`) con las mismas incluidas, para el filtro de planta. En el calendario, `IX_Calendario_Laboral_NumDiaHabil` para buscar la fecha ideal. |
 
 Columnas propuestas:
 
@@ -401,20 +401,38 @@ Columnas propuestas:
 | `FechaCierreAjustada` | `date` | Regla del sábado | Cierre en sábado → viernes |
 | `Familia` | `nvarchar(30)` | `@FIR_FAM_SYMPH.U_FIR_FAM` | |
 | `Planta` | `nvarchar(30)` | Agrupación de la familia | 8 valores (respuesta 8) |
-| `Amortiguador` | `tinyint` | `@FIR_AMORTIGUADORES.U_Amortiguador` | |
+| `Amortiguador` | `smallint` | `@FIR_AMORTIGUADORES.U_Amortiguador` | Redondeado como en el BI (`numeric(2,0)`); la fecha ideal usa el valor sin redondear, como el BI |
 | `FechaIdealEntrega` | `date` | Calculada | Fecha de referencia |
 | `RazonRetraso` | `nvarchar(100)` | `OWOR.U_U_Razonderetraso` | Texto normalizado |
 | `RazonRetraso2` | `nvarchar(100)` | `OWOR.U_U_Razonderetraso2` | Texto normalizado |
 | `FechaCarga` | `datetime2(0)` | — | Auditoría |
 
-**Diferencia con el BI por el calendario.** El BI usa `@FIR_FECHAS_PROD`. Donde esa tabla tenga días que no son festivos de ley, o le falten festivos, la fecha ideal de la migración puede salir distinta. La consulta previa 5 lista esas fechas; las OP afectadas se explican en la validación de totales de la fase 6.
+**Diferencia con el BI por el calendario.** De 2025 a 2027 el calendario de la migración es igual al del BI (Colombia ∪ `@FIR_FECHAS_PROD`). Antes de 2025 el BI no tiene días no laborables, pero tampoco tiene esas OP (ventana de 12 meses). En la historia de 2013 a 2024 solo se descuentan sábados, domingos y festivos de ley: los días propios de Firplak de esos años (p. ej. 24 y 31 de diciembre) no están en SAP y cuentan como hábiles.
+
+#### Resultados de las consultas previas (2026-11-18)
+
+1. **Volumen:** 268 658 OP desde 2013 (la primera liberación es del 2013-08-12), una fila por OP. Entre 13 000 y 15 000 OP por año hasta 2020; de 2021 en adelante, entre 24 000 y 34 500 (34 453 en 2025; 24 269 en 2026 al 2026-11-18).
+2. **Unicidad:** 268 658 filas, 268 658 `DocEntry` y 268 658 `DocNum` distintos.
+3. **`@FIR_FECHAS_PROD` por año:** solo 2025 (123 fechas), 2026 (125), 2027 (122) y 2028 (1). Cada año completo trae sus 104 sábados y domingos. No hay datos antes de 2025.
+4. **Estados y `UpdateDate`:** 396 OP abiertas (`R`) y 268 262 cerradas (`L`). Todas las cerradas tienen `UpdateDate` igual o posterior al cierre. Solo 4 576 OP (1,7 %), todas cerradas, tienen razón de retraso.
+5. **SAP vs. calendario de Colombia:** ningún festivo de ley falta en SAP, lo que valida la fórmula. SAP tiene 9 días propios de Firplak: 2025-01-02, 2025-01-03, 2025-12-31, 2026-07-13, 2026-12-24, 2026-12-31, 2027-07-12, 2027-12-24 y 2027-12-31.
 
 Consultas previas (solo lectura) en [`sql/validacion-fase2-previa.sql`](../../bi-origen/bi-ns-plantas/sql/validacion-fase2-previa.sql): volumen de la historia por año, unicidad de `DocNum`, cobertura de `@FIR_FECHAS_PROD` por año, comportamiento de `UpdateDate` y diferencias entre `@FIR_FECHAS_PROD` y el calendario de Colombia.
 
-Validación de totales (origen vs. tabla):
+Validación (2026-11-18, ejecutada por el desarrollador; sección 5 de `01_informe_ns_plantas.sql`):
 
-| Periodo | Filas origen | Filas tabla | Total origen | Total tabla |
-|---|---|---|---|---|
+| # | Prueba | Resultado |
+|---|---|---|
+| 5.1 | Primera carga completa | OK: 268 658 OP insertadas en 13 s (11:34:08 a 11:34:21), incluido el calendario. Sin error. |
+| 5.2 | Calendario por año | OK: fin de semana + festivos + hábiles = días del año en 2013 a 2040. 18 festivos por año (17 cuando dos caen el mismo lunes: 2014, 2019, 2030, 2038). Con los días de SAP: 2025 = 20, 2026 = 21, 2027 = 21. |
+| 5.3 | OP por año | OK: igual a la consulta previa 1 en los 14 años. 0 OP sin fecha ideal. |
+| 5.4 | Fecha ideal vs. SQL original del BI | OK: 27 737 OP en ambos, **0 con fecha ideal distinta**, 0 solo en el BI. 99 solo en la tabla, todas creadas el 2025-11-18: el BI corta los 12 meses por fecha y hora y deja fuera el día del límite. |
+| 5.5 | Nivel de servicio de noviembre (OP vencidas al 2026-11-18) | Total 81,63 % (880 de 1 078). ESPGAB 86,67 %, FIBRA 62,89 %, MARMOL 88,58 %, MBL CEFI 58,33 %, MBLP 100 %, MUEBLE 76,73 %, PFZ-CEMA 100 %, RTM 57,14 %. Las 8 plantas de la respuesta 8, sin "(En blanco)". OK contra el BI: con el SQL del BI (`#ns`) y sus reglas DAX da 81,60 % (878 de 1 076), sin diferencias de cierre en ninguna OP vencida. El BI actualizado el 2026-11-18 muestra 81,60 %. La tabla tiene 2 OP más, cumplidas, del día del límite de 12 meses. Antes de actualizarlo, el BI mostraba 81,37 % (878 de 1 079) porque tenía datos de una actualización anterior. |
+| 5.6 | Carga incremental | OK: 943 OP borradas y reinsertadas en menos de 1 s; el total sigue en 268 658. |
+
+Jobs creados y habilitados el 2026-11-18 (`BI - NS Plantas carga incremental` con sus dos horarios y `BI - NS Plantas carga completa`). Corrida del job lanzada a mano el 2026-11-18 a las 11:52:42: 943 OP, sin error. El job tiene permisos para leer `Firplak_SA` y escribir en `Planos_Symphony`.
+
+**Aprobación de la fase 2:** Milton Rendón — 2026-11-18 — script ejecutado, job corriendo y totales cuadrados con el BI.
 
 ## 3. Contrato del endpoint
 
