@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 4
+fase: 5
 updated: 2026-11-18
 sources:
   - ../../bi-origen/bi-ns-plantas/
@@ -568,7 +568,13 @@ No se incluyen: la columna `RazonRetraso2` en las gráficas (sí en el detalle),
 
 ## 5. Dashboard
 
-`pendiente`.
+- Rutas: `/ns-plantas` (resumen) y `/ns-plantas/detalle` (órdenes), en [`components/NsPlantasDashboard.tsx`](../../components/NsPlantasDashboard.tsx), con los componentes comunes de `components/dashboard/`. Proxy `app/api/ns-plantas/route.ts`, tipos `lib/ns-plantas/types.ts`, estilos `app/styles/ns-plants.css`.
+- Catálogo: informe `ns-plantas` en `lib/reports.ts`, área Operaciones; navegación `nsPlantsNavigation`.
+- Filtros en borrador (Aplicar, lupa o Enter; Limpiar vuelve al mes en curso): año, mes y planta en la barra; semana, día, desde y hasta en "Filtros"; en el detalle, además, cumplimiento (abre en `incumplio`) y búsqueda. Todos viajan a la API.
+- Resumen: tarjetas de nivel de servicio (meta 90 %), medidas, incumplidas y "aún en plazo" (abiertas + cerradas antes de su plazo); líneas por fecha ideal y columnas por mes con la línea de meta; tabla por planta con "Cumple la meta" o "Bajo la meta" (icono, texto y color); barras de incumplidas por razón con "Sin razón de atraso" diferenciada.
+- Pie: hora de la última carga (`loadedAt`) y horario de actualización.
+- `npm run lint` y `npm run build` sin errores (2026-11-18).
+- `pendiente`: revisión visual a 375, 820 y 1440 px con datos reales, y asignar el informe a `hector.chinchilla@firplak.com` en `/admin/permisos`.
 
 ## 6. Conciliación con Power BI
 

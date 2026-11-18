@@ -799,3 +799,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `reporting-api`, rama `bi/ns-plantas`, commit `18be860`: `GET /api/v1/ns-plantas` según el contrato. Compila sin errores.
 - `pendiente`: paquete `dist` para el servidor (debe incluir también el consolidado comercial si ya está desplegado) y prueba en el servidor.
 - Paquete `reporting-api-dist-7a016a9.zip` desde la rama local `deploy/2026-11-18` (NS Plantas + consolidado comercial, que ya está en el servidor).
+
+## [2026-11-18] bi | NS Plantas: dashboard (fase 5)
+
+- Se trajo `main` a `bi/ns-plantas` (catálogo de informes, permisos por cargo y componentes comunes).
+- Dashboard `/ns-plantas` y `/ns-plantas/detalle` con proxy, tipos, estilos propios y registro en `lib/reports.ts` (área Operaciones). Lint y build sin errores.
+- `pendiente`: revisión visual con datos reales y permisos del usuario de Manufactura.

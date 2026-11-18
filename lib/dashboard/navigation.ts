@@ -1,4 +1,4 @@
-import { Boxes, FileMinus, Handshake, ShieldCheck, Table2, Target, TrendingUp, Truck, type LucideIcon } from "lucide-react";
+import { Boxes, Factory, FileMinus, Handshake, ShieldCheck, Table2, Target, TrendingUp, Truck, type LucideIcon } from "lucide-react";
 
 export type DashboardNavItem = { href: string; label: string; icon: LucideIcon };
 export type DashboardNavGroup = { label: string; items: DashboardNavItem[] };
@@ -34,6 +34,11 @@ export const commercialNavigation: DashboardNavGroup[] = [
 // Costo de PT tiene una sola vista: el detalle es la lista de materiales del producto elegido.
 export const productCostNavigation: DashboardNavGroup[] = [
   { label: "MENÚ PRINCIPAL", items: [{ href: "/costo-actual-pt", label: "Costo de producto", icon: Boxes }] },
+];
+
+export const nsPlantsNavigation: DashboardNavGroup[] = [
+  { label: "MENÚ PRINCIPAL", items: [{ href: "/ns-plantas", label: "Nivel de servicio", icon: Factory }] },
+  { label: "ANÁLISIS", items: [{ href: "/ns-plantas/detalle", label: "Detalle de órdenes", icon: Table2 }] },
 ];
 
 export const adminNavigation: DashboardNavGroup[] = [
