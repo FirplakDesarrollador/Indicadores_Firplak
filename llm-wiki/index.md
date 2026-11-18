@@ -59,6 +59,10 @@ SP o proceso de actualización periódica
   - [Facturación diaria: metas, empresas y entregas](bi/facturacion-diaria.md): metas mensuales por empresa en Supabase, días laborales, filtro Empresa (Firplak/Viventta/CEFI), cards de cumplimiento y detalle de entregas (2026-11-09; devoluciones en entregas `pendiente`).
   - [Costo actual de producto terminado](bi/costo-actual-pt.md): en migración (fases 1 a 5 cerradas; fase 6 conciliada, a la espera de la aprobación de Contabilidad; fase 7 prevista para el 2026-11-10). Usa el query optimizado del desarrollador, con reglas corregidas y la explosión de todos los niveles (D9).
 
+### Proyectos
+
+- [Consolidado comercial SAP](proyectos/consolidado-comercial.md): ofertas + OV + tránsito + facturación neta desde SAP B1 (proyecto nuevo, en descubrimiento).
+
 ### Decisiones
 
 - [ADR-001: tabla de reportes](decisions/ADR-001-reporting-table.md): por qué la API consulta una tabla preparada en lugar de una vista pesada.

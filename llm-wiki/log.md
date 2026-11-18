@@ -624,3 +624,113 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Recuadro de la gráfica de acumulados con la diferencia entre la facturación neta y la meta.
 - Detalle en [Facturación diaria](bi/facturacion-diaria.md). Validación: `tsc` y ESLint sin errores; `pendiente` revisar en el navegador.
 - Resumen diario: cada meta queda junto a su facturación (Fac día neta, Meta día, Fac mes neta, Meta mes).
+
+## [2026-11-10] proyecto | Consolidado comercial SAP: arranque
+
+- Proyecto nuevo (no es migración de BI), rama `proyecto/consolidado-comercial`. Ficha: [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md).
+- Decisiones: entregable en el portal; D desde `Informe_ventas`; queries de A, B y C se construyen desde cero; ubicación de objetos SQL pendiente de TI.
+- Se agregó el script de descubrimiento de solo lectura `proyectos/consolidado-comercial/sql/01-descubrimiento.sql` y el cuestionario para la solicitante.
+
+## [2026-11-10] proyecto | Consolidado comercial SAP: resultados del descubrimiento
+
+- El desarrollador ejecutó las 14 consultas de `01-descubrimiento.sql`; resultados y lectura en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#resultados-del-descubrimiento).
+- Hallazgos: sin facturas de reserva ni descuentos de encabezado; NC ya negativas en `Informe_ventas`; canal = grupo de cliente (`OCRG`); Firplak Home = tres centros de costos; 96 % del saldo de ofertas abiertas está vencido.
+- Se agregaron `02-tablas-usuario.sql` (códigos de tablas de usuario, uso de campos, canal e IVA en `Informe_ventas`) y `03-diagnostico-saldo.sql` (diferencia `OpenSum` vs proporcional y posibles dobles conteos A–B y B–D).
+
+## [2026-11-10] proyecto | Consolidado comercial SAP: tablas de usuario y uso de campos
+
+- El desarrollador ejecutó `02-tablas-usuario.sql` completo; resultados en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#resumen-de-02-tablas-usuariosql).
+- Confirmado: Tipo OV = `U_TipoPedidos`; Status entrega solo se llena en entregas (filtro aplica a C); B2C = subgrupos 106-xx; centro de costos con respaldo del cliente cubre el 100 %; `Informe_ventas.ValorTotal` = `LineTotal` sin IVA y el `SlpCode` se recupera al 100 % desde `OINV`.
+- `Firplak_SA` y `Planos_Symphony` están en nivel de compatibilidad 100: el SQL del proyecto no usa `TRY_CONVERT`.
+
+## [2026-11-10] proyecto | Consolidado comercial SAP: diagnóstico de saldos y dobles conteos
+
+- El desarrollador ejecutó `03-diagnostico-saldo.sql` (6 consultas); las versiones con CTE y `OUTER APPLY` fallaron con error de sintaxis y se reescribieron con subconsultas y `GO` por consulta.
+- Decisión técnica: el saldo abierto se calcula como `LineTotal * OpenQty / Quantity`; `OpenSum` no se reduce en líneas parciales (ofertas: 802 M de diferencia).
+- Doble conteo A–B: no hay por conversiones parciales y es despreciable por OV directas. Doble conteo B–D: hasta 25,7 M en 3 OV de un cliente de Constructores, pendiente de confirmar con la solicitante.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: respuestas de la solicitante
+
+- Daniela Castro respondió el cuestionario de 15 preguntas; resumen en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#respuestas-de-la-solicitante-2026-11-11) y decisiones 5 a 16 en la ficha.
+- Cambios de alcance: solo Firplak; sin IVA; corte = estado actual (sin fotos diarias); A = todas las ofertas abiertas del Canal B2C, sin filtro de vigencia; MAC fuera; asesor = vendedor del documento, sin seguridad por cartera; nada se cierra en SAP.
+- Se revisa la decisión 3: sí existen los queries “Visor OV” y “Tránsito” (Logística), “Ofertas de venta” y “Facturación detallada”; se piden como referencia.
+- Se agregó `proyectos/consolidado-comercial/sql/04-ofertas-b2c.sql` para medir las ofertas B2C. Quedan 7 preguntas de seguimiento.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: ofertas B2C
+
+- El desarrollador ejecutó `04-ofertas-b2c.sql`; resultados en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#04-ofertas-b2csql-ejecutado-por-el-desarrollador-el-2026-11-11).
+- Ofertas abiertas B2C: 45 ofertas, 163,1 M, todas en COP y desde 2025; A por defecto (sin MAC) ≈ 162,8 M. Las ofertas antiguas están en Distribución.
+- El Tipo OV está vacío en el 26 % del saldo de ofertas B2C: A no filtra por Tipo OV salvo como filtro opcional. Nueva pregunta de seguimiento 8 (tipo 15 en ofertas).
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: query Visor OV
+
+- Se guardó el query “Visor OV” de Logística en `proyectos/consolidado-comercial/fuentes/visor-ov.sql` y se analizó en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#query-visor-ov-de-logística-recibido-el-2026-11-11).
+- Confirma `RDR1.ShipDate` como fecha de despacho. Diferencias con B: el Visor no filtra por estado de línea, usa el vendedor de la línea y pierde líneas por `INNER JOIN`.
+- Se agregó `proyectos/consolidado-comercial/sql/05-contraste-visor-ov.sql` para medir esas diferencias y saber de qué vendedor sale `VendedorSenior` en `Informe_ventas`.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: contraste con el Visor OV
+
+- `05-contraste-visor-ov.sql` ejecutado completo (la 5 sin filas: la tabla de familias no duplica): el saldo de OV del Visor y el nuestro coinciden exacto; el Visor no pierde líneas relevantes por sus `INNER JOIN`; en B2C el vendedor del encabezado y el de la línea son iguales.
+- `VendedorSenior` de `Informe_ventas` no es ni el vendedor del encabezado ni el de la línea en todos los casos. Hipótesis tomada del query de facturas del repositorio: depende de `U_TIENDAS` de la línea. Se agregó `proyectos/consolidado-comercial/sql/06-vendedor-tienda.sql` para comprobarla.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: regla del asesor confirmada
+
+- Consulta 1 de `06-vendedor-tienda.sql`: la regla “sin tienda → vendedor del encabezado; con tienda → vendedor del cliente-tienda” reproduce `VendedorSenior` de `Informe_ventas` en las 5.070 líneas de factura revisadas. Se adopta para A, B y C.
+- Consultas 2 a 4 de `06`: `U_Tiendas` existe en ofertas, OV, entregas, facturas y NC. En OV y entregas B2C abiertas no se usa (la tienda se llena al facturar); la regla solo cambia 1 línea de 0,1 M en otros canales.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: query Tránsito
+
+- Se guardó el query “Tránsito” en `proyectos/consolidado-comercial/fuentes/transito.sql` y se analizó en la ficha. Fecha ProyFAC = `ODLN.U_FechaRadFAC`; centro de costos = `DLN1.CogsOcrCod`; asesor del encabezado.
+- El query suma `LineTotal` completo y repite filas por factura parcial. Se agregó `proyectos/consolidado-comercial/sql/07-contraste-transito.sql` para medir el valor, los filtros de Status entrega y Fecha ProyFAC, el Tipo OV, el centro de costos y el uso de campos.
+- `07-contraste-transito.sql` ejecutado completo. En B2C el método de Logística y el proporcional coinciden (73,14 M) y los filtros de Status entrega y Fecha ProyFAC hoy no quitan nada; la exclusión de Tipo OV quita el 55 % (40,2 M, sobre todo el tipo 15 de reabastecimiento a tiendas), dejando C B2C ≈ 32,9 M. `CogsOcrCod` = `OcrCode` cuando están llenos. Se agregaron las preguntas de seguimiento 10 a 12.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: destino de los objetos y query de B y C
+
+- Decisión 4 cerrada: patrón estándar del portal (tabla + SP en `Planos_Symphony`, script en este repositorio, endpoint en `reporting-api`). A–C se recargan completas en cada corrida.
+- Se agregó `proyectos/consolidado-comercial/sql/08-query-b-c.sql`: versión de validación (solo lectura, tabla temporal) del query de B y C con todas las reglas verificadas, columna `EnDefault` y 5 pestañas (embudo de filtros, asesor, centro de costos, controles y detalle).
+- `08-query-b-c.sql` validado (5 pestañas): default B2C B = 461,1 M (213 líneas) y C = 30,5 M (49 líneas); controles en cero; centro de costos y subgrupo coinciden. Hallazgos para la solicitante: 72 % de B bloqueado, una OV de 191,0 M (41 % de B) y 17,1 M con tipo de ventas “Excluido”.
+- Se agregó `proyectos/consolidado-comercial/sql/09-query-a.sql`: query de validación de A (ofertas) con las mismas columnas que B y C; default = B2C sin MAC y sin Donaciones, sin filtro de vigencia ni de Tipo OV.
+- El agente no tiene acceso a `Planos_Symphony` (inicio de sesión rechazado para `FIRPLAK\milton.rendon`, 2026-11-11). Se agregó `proyectos/consolidado-comercial/sql/10-inventario-planos.sql` para que el desarrollador revise si ya existen objetos de ofertas, OV o tránsito antes de crear la tabla del proyecto.
+- Inventario de `Planos_Symphony` (`10`, pestañas 1 a 4): nada lee ofertas; existen versiones del Visor OV de 2023–2024 y `Informe_entregas`, que es el query de Tránsito materializado. Se agregó `proyectos/consolidado-comercial/sql/11-contraste-informe-entregas.sql` para decidir si C se lee de esa tabla.
+- Pestaña 5 de `10`: los jobs del Agente SQL ejecutan `SP_Generar_Informe_Entregas` y `SP_Generar_Informe_Ventas` en modo completo e incremental; ningún job ejecuta los SP del Visor OV.
+
+## [2026-11-13] proyecto | Consolidado comercial SAP: validación del query de A
+
+- `09-query-a.sql`, pestañas 1 a 3: default A = 154,2 M (43 ofertas B2C). No hay ofertas sin cliente en el maestro; la diferencia `03`–`04` fue un cambio de datos entre días.
+- `GV-BH*` son centros de costos inhabilitados de Firplak Home (37,5 M de ofertas); se propone una columna “centro de costos vigente” que los traduzca a `GV-FH*`, pendiente de Contabilidad.
+- `09-query-a.sql` validado (controles en cero). Se corrigió el mapeo de `U_Estado_Oferta_Venta` (valores `01`–`03`). La oferta tipo 15 más grande es a la propia tienda Firplak Home Bogotá.
+- Segunda corrida de `09`: con el estado corregido, el default A se reparte en pendientes ≈ 126,9 M, confirmadas 27,0 M y canceladas 0,3 M.
+- `11`, consulta 1: `Informe_entregas` se carga al minuto (completa 02:15 + incrementales) y mezcla entregas, devoluciones y notas crédito de devolución; las consultas 2 a 5 se corrigieron para filtrar `TipoMovimiento = 'Entrega'`.
+- `11`, consultas 2 a 4: `Informe_entregas` agrega entregas nuevas pero no cierra en el día las facturadas (31 líneas). Se recomienda leer C de SAP en la misma carga que B; la tabla queda para conciliar.
+
+## [2026-11-13] proyecto | Consolidado comercial SAP: tabla de reporte y SP
+
+- Decisión 17: C se lee de SAP en la misma carga que A y B (aprobada por el desarrollador).
+- Se agregó `sql/consolidado-comercial/01_informe_consolidado_comercial.sql`: tabla `Informe_consolidado_comercial` (A, B y C por línea), SP de recarga completa con bitácora, índices, validación y job propuesto. Pendiente de revisión y ejecución por el desarrollador o TI.
+
+## [2026-11-17] proyecto | Consolidado comercial SAP: ejecución del paso 4
+
+- El desarrollador es también TI: las preguntas a TI pasan a ser tareas propias (crear tabla, SP, job y permiso de la API). Se entrega la lista de ejecución de `01_informe_consolidado_comercial.sql`.
+- Objetos creados en `Planos_Symphony` y primera carga: 4.217 filas, bitácora `OK`. Default: A 148,5 M, B 466,8 M, C 59,7 M; controles de nombres en cero. Falta cuadrar contra `08` y `09` del mismo momento.
+- Validación contra `08` y `09`: B y C exactos; A exacto en B2C y default, con 2 líneas (153.030) más en `09` fuera de B2C, probablemente ofertas nuevas entre corridas.
+- Las 2 líneas de A eran la oferta 7473, creada a las 11:17 (después de la carga de las 11:16). Tabla validada; faltan el job y el permiso de la API.
+- Job “BI - Consolidado comercial carga completa” creado y probado (corrida 11:31, 4.219 filas, OK). Decisión 8 cerrada: cada 30 min de 6:00 a 20:00. Script en `sql/consolidado-comercial/02_job_consolidado_comercial.sql`.
+- Permiso de la API: no aplica (la API corre en el servidor de la base). Paso 4 cerrado; sigue el endpoint en reporting-api.
+
+## [2026-11-17] proyecto | Consolidado comercial SAP: endpoint en reporting-api
+
+- `GET /api/v1/consolidado-comercial` en la rama `proyecto/consolidado-comercial` de `reporting-api` (sin commit): A–C de `Informe_consolidado_comercial`, D de `Informe_ventas` con el mismo default y filtros. Compila (`tsc`); falta probarlo contra SQL Server.
+- `12-validacion-endpoint.sql`: formato de `SubgrupoCliente` en D y cifras esperadas de A–D para comparar con el endpoint.
+
+## [2026-11-18] proyecto | Consolidado comercial SAP: dashboard en el portal
+
+- Se trajeron a la rama `proyecto/consolidado-comercial` los cambios de `origin/main` (avance rápido; conflicto solo en este log, se conservaron las dos partes).
+- Endpoint desplegado en el servidor por el desarrollador (paquete con `dist/` y dependencias de producción).
+- Dashboard nuevo: `/consolidado-comercial` (tarjetas A–D y total, composición, desglose por asesor, segmento y centro de costos) y `/consolidado-comercial/detalle` (líneas de A–C por etapa). Proxy `/api/consolidado-comercial`, informe `consolidado-comercial` en `lib/reports.ts`, estilos en `app/styles/commercial.css`.
+- Validación: `tsc`, ESLint y `next build` sin errores. `pendiente`: revisión en el navegador con datos reales y asignar el informe a la solicitante en `/admin/permisos`.
+
+- Dashboard probado por el desarrollador con `npm run dev` y datos reales: carga bien. Paso 6 funcional; sigue el paso 7 (conciliación y despliegue).
+- `12-validacion-endpoint.sql`, pestaña 1: `SubgrupoCliente` trae el nombre del subgrupo (Firplak Home, e-commerce, MAC); el endpoint ya lo homologa. D default esperada: unos 168,9 M (340 líneas) menos Donaciones.
+- Pestaña 2: D default esperada = 340 líneas, 162 documentos, 168.910.964,90 (cuadra con la pestaña 1; sin Donaciones en el mes). Falta compararla con el dashboard y la pestaña 3 (A–C).
+- Pestaña 3 y tarjetas del dashboard (carga 10:30:01): A, B, C, D y total cuadran exacto con SQL (836,43 M). Endpoint y dashboard validados. Ajuste: en el mes en curso el dashboard pide la facturación hasta hoy (antes mostraba el mes completo en la tarjeta D).
+- Se pasó la rama `Ale` a `main` (avance rápido, 07643ee) y se trajo `main` a `proyecto/consolidado-comercial`. El informe `carga` de `Ale` usa el icono `Layers`; el consolidado pasa a `Handshake` para distinguirlos. `tsc`, ESLint y `next build` sin errores con todo junto.
