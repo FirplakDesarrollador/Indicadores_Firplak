@@ -2,6 +2,8 @@
 export const chartColors = {
   primary: "#324354",
   secondary: "#7B8E90",
+  // Entregas en la gráfica de acumulados: ocre (--warning) para diferenciarlas del navy de ventas.
+  delivery: "#8A6420",
   grid: "#E3E7EB",
   axis: "#5F6B73",
   surface: "#FFFFFF",

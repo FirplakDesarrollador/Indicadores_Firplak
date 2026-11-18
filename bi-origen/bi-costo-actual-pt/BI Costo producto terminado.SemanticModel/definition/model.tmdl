@@ -1,0 +1,20 @@
+model Model
+	culture: es-CO
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-CO
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Nivel 1","Maestro"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DateTableTemplate_a5243e7d-fcf5-4ee6-a5db-fe913818808d
+ref table 'Nivel 1'
+ref table Maestro
+
+ref cultureInfo es-CO
+
