@@ -1,5 +1,28 @@
 # Registro de mantenimiento
 
+## [2026-11-18] refactor | Remodelación BI Moldes con referencia App_Moldes
+
+- Se alineó `lib/moldes/` (`types.ts`, `service.ts`), `app/api/moldes/route.ts` y `components/MoldesDashboard.tsx` con la lógica vigente de `FirplakDesarrollador/App_Moldes` (`indicators.service.ts`).
+- Se implementó deduplicación `codigo_molde|fecha_entrada`, filtro por rango de fechas (`desde`/`hasta`) y 5 categorías canónicas, modo dedicado de Reparación Rápida (pesos MS/FV/Desmanchado MS/Desmanchado FV/Brillado y metas 24/día y 3.4 HH), Pareto Top 10 e Índice de Indisponibilidad por referencia.
+
+## [2026-11-18] feat | Implementación BI Moldes (Fases 2 a 5)
+
+- Se conectó Supabase Moldes (`vuiuorjzonpyobpelyld.supabase.co`) en solo lectura mediante `SUPABASE_MOLDES_URL` y `SUPABASE_MOLDES_SERVICE_ROLE_KEY`.
+- Se creó `lib/moldes/` (`types.ts`, `supabase.ts`, `service.ts`) y `app/api/moldes/route.ts` unificando `BD_moldes` + `base_datos_historico_moldes` (deduplicado por `repair_event_id` y claves M), junto con `moldes`, `planta_moldes`, `Defectos_moldes` y `ordenes_fabricacion`.
+- Se implementó `components/MoldesDashboard.tsx`, `app/styles/moldes.css`, `/moldes` (4 pestañas temáticas D1 y conteos D2, con reglas de cálculo visibles bajo cada indicador de nivel de servicio) y `/moldes/detalle` (historial y auditoría con drawer).
+- Se registró `moldes` en `lib/reports.ts` y `lib/dashboard/navigation.ts`.
+
+## [2026-11-17] bi | Inicio de migración BI Moldes (Fase 0)
+
+- Se creó la rama `bi/moldes` desde `main` (`07643ee`).
+- Se copió el proyecto `.pbip` (`BI Moldes 2025 publicar`) a `bi-origen/moldes/` con `.gitignore` excluyendo `.pbi/localSettings.json` y `.pbi/cache.abf`.
+- Se creó la ficha inicial `llm-wiki/bi/moldes.md` (fase 0; dueño y desarrollador responsable: Alejandro Isaza; prioridad Media; origen reportado: Supabase) y se enlazó en `llm-wiki/index.md`.
+
+## [2026-11-17] bi | Análisis BI Moldes (Fase 1)
+
+- Se analizaron las 7 tablas de origen, relaciones, columnas calculadas, 17 medidas DAX (15 en uso y 2 sin uso), 14 páginas de visuales y ausencia de RLS en `BI Moldes 2025 publicar`.
+- Hallazgo clave: en el `.pbip`, solo `query_ordenes_fabricacion` consulta Supabase; las otras 6 tablas consultan listas de SharePoint (`FPKMoldesModelosyPrototipos` y `FPKPRODUCCIN`). Pendiente confirmar tablas equivalentes en `vuiuorjzonpyobpelyld.supabase.co` y validación de reglas por Alejandro Isaza.
+
 ## [2026-11-12] merge | Integración de main en Ale
 
 - Se sincronizó la rama local `main` con `origin/main` (PRs #1 a #11) y se fusionó en `Ale`.

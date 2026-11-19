@@ -1,4 +1,4 @@
-import { Boxes, FileMinus, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
+import { Boxes, FileMinus, Layers, ReceiptText, Target, Wrench, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
 // Un informe nuevo no lo ve nadie hasta que un administrador lo agrega a un cargo o lo asigna a una persona en /admin/permisos.
@@ -82,6 +82,16 @@ export const reports: ReportDefinition[] = [
     icon: Layers,
     pagePaths: ["/carga", "/planner", "/gestion"],
     apiPaths: ["/api/carga"],
+  },
+  {
+    slug: "moldes",
+    area: "operaciones",
+    title: "Indicadores de moldes",
+    subtitle: "Nivel de servicio, disponibilidad, defectos, vueltas y programación",
+    href: "/moldes",
+    icon: Wrench,
+    pagePaths: ["/moldes"],
+    apiPaths: ["/api/moldes"],
   },
 ];
 

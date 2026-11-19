@@ -58,6 +58,7 @@ SP o proceso de actualización periódica
   - [Notas crédito](bi/notas-credito.md): piloto, migrado (fase 7 cerrada el 2026-10-28; Power BI se retira el 2026-11-06).
   - [Facturación diaria: metas, empresas y entregas](bi/facturacion-diaria.md): metas mensuales por empresa en Supabase, días laborales, filtro Empresa (Firplak/Viventta/CEFI), cards de cumplimiento y detalle de entregas (2026-11-09; devoluciones en entregas `pendiente`).
   - [Costo actual de producto terminado](bi/costo-actual-pt.md): en migración (fases 1 a 5 cerradas; fase 6 conciliada, a la espera de la aprobación de Contabilidad; fase 7 prevista para el 2026-11-10). Usa el query optimizado del desarrollador, con reglas corregidas y la explosión de todos los niveles (D9).
+  - [Moldes](bi/moldes.md): en migración (fase 1 completada el 2026-11-17; a la espera de validación de reglas y confirmación de tablas en Supabase).
 
 ### Decisiones
 
