@@ -1,5 +1,35 @@
 # Registro de mantenimiento
 
+## [2026-11-12] merge | Integración de main en Ale
+
+- Se sincronizó la rama local `main` con `origin/main` (PRs #1 a #11) y se fusionó en `Ale`.
+- Se resolvieron conflictos en `app/page.tsx` adoptando la arquitectura de componentes y diseño vigente de `main` (`BrandPeak`, `UserMenu`, permisos por informe).
+- Se registró el módulo de Capacidad & WIPL (`/carga`, `/planner`, `/api/carga`) en el catálogo central de `lib/reports.ts` bajo el área `operaciones`.
+- Se verificó compilación exitosa mediante `npx tsc --noEmit` y `npm run build`.
+
+## [2026-11-05] feat | Histórico de Due Date vs Atrasadas en Historial & Flujo
+
+- Se agregó un nuevo gráfico de área situado directamente arriba del gráfico de tareas creadas en `HistorialSubView.tsx`.
+- Muestra la comparativa de tareas con fecha de vencimiento (due date) en azul (`#2563eb`) vs tareas atrasadas en rojo (`theme.red`).
+- Cuenta con el mismo diseño, selector de granularidad (`Diario` por defecto, `Semanal` y `Mensual`) y sincronización con la fecha de corte activa (`fechaCorte`).
+- Se validó con `npx tsc --noEmit`.
+
+## [2026-11-05] feat | Selector de granularidad temporal en Historial & Flujo
+
+- Se agregó un control segmentado para alternar la visualización del gráfico de flujo acumulado en `HistorialSubView.tsx`: `Diario` (por defecto, últimos 30 días), `Semanal` (últimas 12 semanas) y `Mensual` (últimos 10 meses).
+- La granularidad diaria es ahora la opción por defecto según requerimiento de usuario.
+- Se optimizaron las etiquetas del eje X con formato adaptativo (`d.toLocaleDateString` sin conectores largos) y control de espaciado `minTickGap` para evitar colisiones visuales.
+- Se validó la compilación sin errores con `npx tsc --noEmit`.
+
+
+## [2026-10-29] merge | Integración de main en Ale
+
+- Se sincronizó la rama local `main` con `origin/main` y se fusionó en `Ale`.
+- Se adoptó la arquitectura de `main`: portal de accesos (`/`), autenticación Supabase SSR, middleware protector y módulos independientes.
+- El módulo de Planner/Capacidad WIPL se integró como ruta `/carga` (con redirección desde `/planner`) y tarjeta de acceso en el portal de inicio.
+- Se resolvió conflicto de dependencias instalando `@supabase/ssr` y verificando `npm run build` exitoso.
+
+
 ## [2026-10-26] ux | Resumen diario compacto
 
 - El resumen diario muestra inicialmente solo los 7 registros más recientes.
@@ -594,6 +624,187 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Recuadro de la gráfica de acumulados con la diferencia entre la facturación neta y la meta.
 - Detalle en [Facturación diaria](bi/facturacion-diaria.md). Validación: `tsc` y ESLint sin errores; `pendiente` revisar en el navegador.
 - Resumen diario: cada meta queda junto a su facturación (Fac día neta, Meta día, Fac mes neta, Meta mes).
+
+## [2026-11-10] proyecto | Consolidado comercial SAP: arranque
+
+- Proyecto nuevo (no es migración de BI), rama `proyecto/consolidado-comercial`. Ficha: [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md).
+- Decisiones: entregable en el portal; D desde `Informe_ventas`; queries de A, B y C se construyen desde cero; ubicación de objetos SQL pendiente de TI.
+- Se agregó el script de descubrimiento de solo lectura `proyectos/consolidado-comercial/sql/01-descubrimiento.sql` y el cuestionario para la solicitante.
+
+## [2026-11-10] proyecto | Consolidado comercial SAP: resultados del descubrimiento
+
+- El desarrollador ejecutó las 14 consultas de `01-descubrimiento.sql`; resultados y lectura en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#resultados-del-descubrimiento).
+- Hallazgos: sin facturas de reserva ni descuentos de encabezado; NC ya negativas en `Informe_ventas`; canal = grupo de cliente (`OCRG`); Firplak Home = tres centros de costos; 96 % del saldo de ofertas abiertas está vencido.
+- Se agregaron `02-tablas-usuario.sql` (códigos de tablas de usuario, uso de campos, canal e IVA en `Informe_ventas`) y `03-diagnostico-saldo.sql` (diferencia `OpenSum` vs proporcional y posibles dobles conteos A–B y B–D).
+
+## [2026-11-10] proyecto | Consolidado comercial SAP: tablas de usuario y uso de campos
+
+- El desarrollador ejecutó `02-tablas-usuario.sql` completo; resultados en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#resumen-de-02-tablas-usuariosql).
+- Confirmado: Tipo OV = `U_TipoPedidos`; Status entrega solo se llena en entregas (filtro aplica a C); B2C = subgrupos 106-xx; centro de costos con respaldo del cliente cubre el 100 %; `Informe_ventas.ValorTotal` = `LineTotal` sin IVA y el `SlpCode` se recupera al 100 % desde `OINV`.
+- `Firplak_SA` y `Planos_Symphony` están en nivel de compatibilidad 100: el SQL del proyecto no usa `TRY_CONVERT`.
+
+## [2026-11-10] proyecto | Consolidado comercial SAP: diagnóstico de saldos y dobles conteos
+
+- El desarrollador ejecutó `03-diagnostico-saldo.sql` (6 consultas); las versiones con CTE y `OUTER APPLY` fallaron con error de sintaxis y se reescribieron con subconsultas y `GO` por consulta.
+- Decisión técnica: el saldo abierto se calcula como `LineTotal * OpenQty / Quantity`; `OpenSum` no se reduce en líneas parciales (ofertas: 802 M de diferencia).
+- Doble conteo A–B: no hay por conversiones parciales y es despreciable por OV directas. Doble conteo B–D: hasta 25,7 M en 3 OV de un cliente de Constructores, pendiente de confirmar con la solicitante.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: respuestas de la solicitante
+
+- Daniela Castro respondió el cuestionario de 15 preguntas; resumen en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#respuestas-de-la-solicitante-2026-11-11) y decisiones 5 a 16 en la ficha.
+- Cambios de alcance: solo Firplak; sin IVA; corte = estado actual (sin fotos diarias); A = todas las ofertas abiertas del Canal B2C, sin filtro de vigencia; MAC fuera; asesor = vendedor del documento, sin seguridad por cartera; nada se cierra en SAP.
+- Se revisa la decisión 3: sí existen los queries “Visor OV” y “Tránsito” (Logística), “Ofertas de venta” y “Facturación detallada”; se piden como referencia.
+- Se agregó `proyectos/consolidado-comercial/sql/04-ofertas-b2c.sql` para medir las ofertas B2C. Quedan 7 preguntas de seguimiento.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: ofertas B2C
+
+- El desarrollador ejecutó `04-ofertas-b2c.sql`; resultados en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#04-ofertas-b2csql-ejecutado-por-el-desarrollador-el-2026-11-11).
+- Ofertas abiertas B2C: 45 ofertas, 163,1 M, todas en COP y desde 2025; A por defecto (sin MAC) ≈ 162,8 M. Las ofertas antiguas están en Distribución.
+- El Tipo OV está vacío en el 26 % del saldo de ofertas B2C: A no filtra por Tipo OV salvo como filtro opcional. Nueva pregunta de seguimiento 8 (tipo 15 en ofertas).
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: query Visor OV
+
+- Se guardó el query “Visor OV” de Logística en `proyectos/consolidado-comercial/fuentes/visor-ov.sql` y se analizó en [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md#query-visor-ov-de-logística-recibido-el-2026-11-11).
+- Confirma `RDR1.ShipDate` como fecha de despacho. Diferencias con B: el Visor no filtra por estado de línea, usa el vendedor de la línea y pierde líneas por `INNER JOIN`.
+- Se agregó `proyectos/consolidado-comercial/sql/05-contraste-visor-ov.sql` para medir esas diferencias y saber de qué vendedor sale `VendedorSenior` en `Informe_ventas`.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: contraste con el Visor OV
+
+- `05-contraste-visor-ov.sql` ejecutado completo (la 5 sin filas: la tabla de familias no duplica): el saldo de OV del Visor y el nuestro coinciden exacto; el Visor no pierde líneas relevantes por sus `INNER JOIN`; en B2C el vendedor del encabezado y el de la línea son iguales.
+- `VendedorSenior` de `Informe_ventas` no es ni el vendedor del encabezado ni el de la línea en todos los casos. Hipótesis tomada del query de facturas del repositorio: depende de `U_TIENDAS` de la línea. Se agregó `proyectos/consolidado-comercial/sql/06-vendedor-tienda.sql` para comprobarla.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: regla del asesor confirmada
+
+- Consulta 1 de `06-vendedor-tienda.sql`: la regla “sin tienda → vendedor del encabezado; con tienda → vendedor del cliente-tienda” reproduce `VendedorSenior` de `Informe_ventas` en las 5.070 líneas de factura revisadas. Se adopta para A, B y C.
+- Consultas 2 a 4 de `06`: `U_Tiendas` existe en ofertas, OV, entregas, facturas y NC. En OV y entregas B2C abiertas no se usa (la tienda se llena al facturar); la regla solo cambia 1 línea de 0,1 M en otros canales.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: query Tránsito
+
+- Se guardó el query “Tránsito” en `proyectos/consolidado-comercial/fuentes/transito.sql` y se analizó en la ficha. Fecha ProyFAC = `ODLN.U_FechaRadFAC`; centro de costos = `DLN1.CogsOcrCod`; asesor del encabezado.
+- El query suma `LineTotal` completo y repite filas por factura parcial. Se agregó `proyectos/consolidado-comercial/sql/07-contraste-transito.sql` para medir el valor, los filtros de Status entrega y Fecha ProyFAC, el Tipo OV, el centro de costos y el uso de campos.
+- `07-contraste-transito.sql` ejecutado completo. En B2C el método de Logística y el proporcional coinciden (73,14 M) y los filtros de Status entrega y Fecha ProyFAC hoy no quitan nada; la exclusión de Tipo OV quita el 55 % (40,2 M, sobre todo el tipo 15 de reabastecimiento a tiendas), dejando C B2C ≈ 32,9 M. `CogsOcrCod` = `OcrCode` cuando están llenos. Se agregaron las preguntas de seguimiento 10 a 12.
+
+## [2026-11-11] proyecto | Consolidado comercial SAP: destino de los objetos y query de B y C
+
+- Decisión 4 cerrada: patrón estándar del portal (tabla + SP en `Planos_Symphony`, script en este repositorio, endpoint en `reporting-api`). A–C se recargan completas en cada corrida.
+- Se agregó `proyectos/consolidado-comercial/sql/08-query-b-c.sql`: versión de validación (solo lectura, tabla temporal) del query de B y C con todas las reglas verificadas, columna `EnDefault` y 5 pestañas (embudo de filtros, asesor, centro de costos, controles y detalle).
+- `08-query-b-c.sql` validado (5 pestañas): default B2C B = 461,1 M (213 líneas) y C = 30,5 M (49 líneas); controles en cero; centro de costos y subgrupo coinciden. Hallazgos para la solicitante: 72 % de B bloqueado, una OV de 191,0 M (41 % de B) y 17,1 M con tipo de ventas “Excluido”.
+- Se agregó `proyectos/consolidado-comercial/sql/09-query-a.sql`: query de validación de A (ofertas) con las mismas columnas que B y C; default = B2C sin MAC y sin Donaciones, sin filtro de vigencia ni de Tipo OV.
+- El agente no tiene acceso a `Planos_Symphony` (inicio de sesión rechazado para `FIRPLAK\milton.rendon`, 2026-11-11). Se agregó `proyectos/consolidado-comercial/sql/10-inventario-planos.sql` para que el desarrollador revise si ya existen objetos de ofertas, OV o tránsito antes de crear la tabla del proyecto.
+- Inventario de `Planos_Symphony` (`10`, pestañas 1 a 4): nada lee ofertas; existen versiones del Visor OV de 2023–2024 y `Informe_entregas`, que es el query de Tránsito materializado. Se agregó `proyectos/consolidado-comercial/sql/11-contraste-informe-entregas.sql` para decidir si C se lee de esa tabla.
+- Pestaña 5 de `10`: los jobs del Agente SQL ejecutan `SP_Generar_Informe_Entregas` y `SP_Generar_Informe_Ventas` en modo completo e incremental; ningún job ejecuta los SP del Visor OV.
+
+## [2026-11-13] proyecto | Consolidado comercial SAP: validación del query de A
+
+- `09-query-a.sql`, pestañas 1 a 3: default A = 154,2 M (43 ofertas B2C). No hay ofertas sin cliente en el maestro; la diferencia `03`–`04` fue un cambio de datos entre días.
+- `GV-BH*` son centros de costos inhabilitados de Firplak Home (37,5 M de ofertas); se propone una columna “centro de costos vigente” que los traduzca a `GV-FH*`, pendiente de Contabilidad.
+- `09-query-a.sql` validado (controles en cero). Se corrigió el mapeo de `U_Estado_Oferta_Venta` (valores `01`–`03`). La oferta tipo 15 más grande es a la propia tienda Firplak Home Bogotá.
+- Segunda corrida de `09`: con el estado corregido, el default A se reparte en pendientes ≈ 126,9 M, confirmadas 27,0 M y canceladas 0,3 M.
+- `11`, consulta 1: `Informe_entregas` se carga al minuto (completa 02:15 + incrementales) y mezcla entregas, devoluciones y notas crédito de devolución; las consultas 2 a 5 se corrigieron para filtrar `TipoMovimiento = 'Entrega'`.
+- `11`, consultas 2 a 4: `Informe_entregas` agrega entregas nuevas pero no cierra en el día las facturadas (31 líneas). Se recomienda leer C de SAP en la misma carga que B; la tabla queda para conciliar.
+
+## [2026-11-13] proyecto | Consolidado comercial SAP: tabla de reporte y SP
+
+- Decisión 17: C se lee de SAP en la misma carga que A y B (aprobada por el desarrollador).
+- Se agregó `sql/consolidado-comercial/01_informe_consolidado_comercial.sql`: tabla `Informe_consolidado_comercial` (A, B y C por línea), SP de recarga completa con bitácora, índices, validación y job propuesto. Pendiente de revisión y ejecución por el desarrollador o TI.
+
+## [2026-11-17] proyecto | Consolidado comercial SAP: ejecución del paso 4
+
+- El desarrollador es también TI: las preguntas a TI pasan a ser tareas propias (crear tabla, SP, job y permiso de la API). Se entrega la lista de ejecución de `01_informe_consolidado_comercial.sql`.
+- Objetos creados en `Planos_Symphony` y primera carga: 4.217 filas, bitácora `OK`. Default: A 148,5 M, B 466,8 M, C 59,7 M; controles de nombres en cero. Falta cuadrar contra `08` y `09` del mismo momento.
+- Validación contra `08` y `09`: B y C exactos; A exacto en B2C y default, con 2 líneas (153.030) más en `09` fuera de B2C, probablemente ofertas nuevas entre corridas.
+- Las 2 líneas de A eran la oferta 7473, creada a las 11:17 (después de la carga de las 11:16). Tabla validada; faltan el job y el permiso de la API.
+- Job “BI - Consolidado comercial carga completa” creado y probado (corrida 11:31, 4.219 filas, OK). Decisión 8 cerrada: cada 30 min de 6:00 a 20:00. Script en `sql/consolidado-comercial/02_job_consolidado_comercial.sql`.
+- Permiso de la API: no aplica (la API corre en el servidor de la base). Paso 4 cerrado; sigue el endpoint en reporting-api.
+
+## [2026-11-17] proyecto | Consolidado comercial SAP: endpoint en reporting-api
+
+- `GET /api/v1/consolidado-comercial` en la rama `proyecto/consolidado-comercial` de `reporting-api` (sin commit): A–C de `Informe_consolidado_comercial`, D de `Informe_ventas` con el mismo default y filtros. Compila (`tsc`); falta probarlo contra SQL Server.
+- `12-validacion-endpoint.sql`: formato de `SubgrupoCliente` en D y cifras esperadas de A–D para comparar con el endpoint.
+
+## [2026-11-18] proyecto | Consolidado comercial SAP: dashboard en el portal
+
+- Se trajeron a la rama `proyecto/consolidado-comercial` los cambios de `origin/main` (avance rápido; conflicto solo en este log, se conservaron las dos partes).
+- Endpoint desplegado en el servidor por el desarrollador (paquete con `dist/` y dependencias de producción).
+- Dashboard nuevo: `/consolidado-comercial` (tarjetas A–D y total, composición, desglose por asesor, segmento y centro de costos) y `/consolidado-comercial/detalle` (líneas de A–C por etapa). Proxy `/api/consolidado-comercial`, informe `consolidado-comercial` en `lib/reports.ts`, estilos en `app/styles/commercial.css`.
+- Validación: `tsc`, ESLint y `next build` sin errores. `pendiente`: revisión en el navegador con datos reales y asignar el informe a la solicitante en `/admin/permisos`.
+
+- Dashboard probado por el desarrollador con `npm run dev` y datos reales: carga bien. Paso 6 funcional; sigue el paso 7 (conciliación y despliegue).
+- `12-validacion-endpoint.sql`, pestaña 1: `SubgrupoCliente` trae el nombre del subgrupo (Firplak Home, e-commerce, MAC); el endpoint ya lo homologa. D default esperada: unos 168,9 M (340 líneas) menos Donaciones.
+- Pestaña 2: D default esperada = 340 líneas, 162 documentos, 168.910.964,90 (cuadra con la pestaña 1; sin Donaciones en el mes). Falta compararla con el dashboard y la pestaña 3 (A–C).
+- Pestaña 3 y tarjetas del dashboard (carga 10:30:01): A, B, C, D y total cuadran exacto con SQL (836,43 M). Endpoint y dashboard validados. Ajuste: en el mes en curso el dashboard pide la facturación hasta hoy (antes mostraba el mes completo en la tarjeta D).
+- Se pasó la rama `Ale` a `main` (avance rápido, 07643ee) y se trajo `main` a `proyecto/consolidado-comercial`. El informe `carga` de `Ale` usa el icono `Layers`; el consolidado pasa a `Handshake` para distinguirlos. `tsc`, ESLint y `next build` sin errores con todo junto.
+
+## [2026-11-05] bi | NS Plantas: inventario y análisis (fases 0 y 1)
+
+- Nueva ficha [NS Plantas](bi/ns-plantas.md), a partir del proyecto `bi-origen/bi-ns-plantas/BI NS plantas.pbip`. Dueño de negocio: Manufactura; desarrollador responsable: Milton Rendón; prioridad media; usuario inicial `hector.chinchilla@firplak.com`. Rama `bi/ns-plantas`.
+- Se agregó `bi-origen/bi-ns-plantas/.gitignore` para no subir `.pbi/cache.abf` ni `.pbi/localSettings.json`.
+- Hallazgos: una sola fuente SQL en `Firplak_SA` (SAP: `OWOR`, `ORDR`, `@FIR_FAM_SYMPH`, `@FIR_AMORTIGUADORES`, `@FIR_FECHAS_PROD`), con ventana móvil de 12 meses por fecha de creación. Indicador principal: `% CUMPLIMIENTO` (nivel de servicio), es decir, OP cerradas en o antes de la fecha ideal (liberación más amortiguador en días hábiles), contando solo las que ya vencieron. Sin RLS.
+- `pendiente`: consultas de validación del desarrollador y respuestas de Manufactura a las 10 preguntas de la ficha.
+
+## [2026-11-05] bi | NS Plantas: resultados de las consultas de validación
+
+- Script ejecutable en `bi-origen/bi-ns-plantas/sql/validacion-fase1.sql` (paso 0 con la tabla temporal `#ns`, consultas 1 a 8 y limpieza opcional).
+- Confirmado: 27 908 OP sin duplicados, ninguna sin fecha ideal; 18 familias con un amortiguador cada una, cuatro sin grupo (`ESPGAB`, `MBL CEFI`, `MBLP`, `PFZ-CEMA`); `@FIR_FECHAS_PROD` guarda días no laborables.
+- Nivel de servicio mensual entre 55 % y 84 % (tabla en [la ficha](bi/ns-plantas.md#resultados-ejecutadas-por-el-desarrollador-el-2026-11-05)); noviembre de 2025 incompleto por la ventana de 12 meses.
+- Hallazgos: solo 456 de 7 170 OP incumplidas tienen razón de retraso (pregunta 11). Hay demasiados sábados y domingos en `@FIR_FECHAS_PROD` para un año: `pendiente` la consulta 8 (fechas repetidas).
+
+## [2026-11-05] bi | NS Plantas: consulta 8 (calendario de días no laborables)
+
+- `@FIR_FECHAS_PROD` no tiene fechas repetidas: 268 filas y 268 fechas distintas entre el 2025-11-08 y el 2028-01-01. Los sábados y domingos de más de la consulta 7 son fechas futuras ya cargadas. No tiene columna de planta.
+- Nuevo riesgo en [la ficha](bi/ns-plantas.md): el calendario vence el 2028-01-01. Se amplió la pregunta 1 (quién lo mantiene).
+- Las consultas de validación de la fase 1 quedan completas; falta la validación de Manufactura.
+
+## [2026-11-17] bi | NS Plantas: validación de Manufactura y propuesta de tabla (fases 1 y 2)
+
+- Respuestas de Manufactura registradas en [la ficha](bi/ns-plantas.md#respuestas-de-manufactura-recibidas-el-2026-11-17): se confirman la regla de la fecha ideal y la del sábado; historia completa; meta del 90 % por planta y general; se elimina la página duplicada; el filtro abre en el mes en curso; 8 plantas (4 grupos y 4 familias sin agrupar); solo OP con pedido; actualización a las 6:00 y a las 17:00; la gráfica de razones se conserva.
+- `pendiente`: aclarar la pregunta 3 (si las OP abiertas en plazo cuentan en el %) y la 11 (barra "Sin razón registrada"). No cambian la tabla.
+- Propuesta de la fase 2 en la ficha: `Planos_Symphony.dbo.Informe_ns_plantas`, una fila por OP (`DocEntry`), fecha ideal calculada por conjuntos, recarga de OP abiertas o modificadas en 7 días, completa semanal, bitácora `dbo.Cargas_Log`. Consultas previas en `bi-origen/bi-ns-plantas/sql/validacion-fase2-previa.sql`.
+
+## [2026-11-18] bi | NS Plantas: aclaraciones de Manufactura (preguntas 3 y 11)
+
+- Pregunta 3: el nivel de servicio se mide al llegar el plazo. El % cuenta solo las OP con fecha ideal vencida, como en el BI (84,15 % en noviembre al 2026-11-05).
+- Pregunta 11: la gráfica de razones de retraso agrega la barra "Sin razón de atraso" para las OP incumplidas sin razón registrada.
+- Calendario laboral: los días no laborables salen del calendario de Colombia (sábados, domingos y festivos de ley), generado por fórmula en `Planos_Symphony.dbo.Calendario_Laboral`, en lugar de `@FIR_FECHAS_PROD` (cargada solo hasta el 2028-01-01). El sábado sigue sin contar, como en el BI. Se agrega la consulta previa 5 para comparar los dos calendarios.
+
+## [2026-11-18] bi | NS Plantas: resultados de las consultas previas a la fase 2
+
+- 268 658 OP desde 2013, `DocEntry` y `DocNum` únicos; 396 abiertas. `UpdateDate` se mueve al cerrar, lo que confirma la carga incremental. Solo el 1,7 % de las OP tiene razón de retraso.
+- `@FIR_FECHAS_PROD` solo tiene 2025 a 2028. La fórmula de festivos de Colombia coincide con SAP en todos los festivos de ley; SAP trae 9 días propios de Firplak (24 y 31 de diciembre, 2 y 3 de enero de 2025, un lunes de julio).
+- Decisión: calendario laboral = sábados, domingos y festivos de Colombia ∪ `@FIR_FECHAS_PROD`, de 2013 a 2040.
+
+## [2026-11-18] bi | NS Plantas: scripts de la fase 2
+
+- Diseño de la tabla aprobado por el desarrollador.
+- `sql/ns-plantas/01_informe_ns_plantas.sql`: `dbo.Calendario_Laboral` (2013 a 2040, festivos de Colombia por fórmula ∪ `@FIR_FECHAS_PROD`), `dbo.Informe_ns_plantas` (una fila por OP), `dbo.sp_Actualizar_Calendario_Laboral`, `dbo.sp_Actualizar_Informe_ns_plantas` (incremental y completa, bitácora `dbo.Cargas_Log`) y consultas de validación, entre ellas la comparación de la fecha ideal contra el SQL original del BI.
+- `sql/ns-plantas/02_job_ns_plantas.sql`: jobs `BI - NS Plantas carga incremental` (lunes a sábado, 6:00 y 17:00) y `BI - NS Plantas carga completa` (domingo, 2:00).
+- Sin CTE, `APPLY`, `TRY_CONVERT`, `CREATE OR ALTER` ni `THROW` (nivel de compatibilidad 100). `pendiente`: ejecución, primera carga y validación por el desarrollador.
+
+## [2026-11-18] bi | NS Plantas: primera carga y validación de la fase 2
+
+- El desarrollador ejecutó `01_informe_ns_plantas.sql`. La carga completa insertó 268 658 OP en 13 s; la incremental recargó 943 OP en menos de 1 s.
+- La fecha ideal coincide con el SQL original del BI en las 27 737 OP comunes (0 diferencias). Las 99 OP solo en la tabla son del día del límite de 12 meses (2025-11-18).
+- Nivel de servicio de noviembre al 2026-11-18: 81,63 % (880 de 1 078). `pendiente`: compararlo con la tarjeta del BI y crear los jobs.
+- Nivel de servicio contra el BI: el BI actualizado muestra 81,60 %, igual que el SQL del BI con sus reglas DAX; la tabla da 81,63 % por 2 OP del día del límite de 12 meses. Validación de la fase 2 cerrada; `pendiente`: crear los jobs.
+- Jobs creados; corrida manual del job incremental a las 11:52 sin error (943 OP). Fase 2 aprobada por el desarrollador.
+
+## [2026-11-18] bi | NS Plantas: propuesta de contrato del endpoint (fase 3)
+
+- `GET /api/v1/ns-plantas` sobre `Informe_ns_plantas`: cumplimiento calculado en SQL con la fecha del servidor, resumen (`serviceLevel`, meta 0,9, medidas, cumplidas, incumplidas, en curso), series diaria y mensual, resumen por planta y razones de retraso con "Sin razón de atraso".
+- Decisiones para aprobar: incumplidas sin las OP en curso (el BI las sumaba), razones solo de OP medidas, gráfica mensual del año completo y resumen por planta nuevo.
+- Contrato aprobado por el desarrollador con las decisiones A a D.
+
+## [2026-11-18] bi | NS Plantas: endpoint en la API (fase 4)
+
+- `reporting-api`, rama `bi/ns-plantas`, commit `18be860`: `GET /api/v1/ns-plantas` según el contrato. Compila sin errores.
+- `pendiente`: paquete `dist` para el servidor (debe incluir también el consolidado comercial si ya está desplegado) y prueba en el servidor.
+- Paquete `reporting-api-dist-7a016a9.zip` desde la rama local `deploy/2026-11-18` (NS Plantas + consolidado comercial, que ya está en el servidor).
+
+## [2026-11-18] bi | NS Plantas: dashboard (fase 5)
+
+- Se trajo `main` a `bi/ns-plantas` (catálogo de informes, permisos por cargo y componentes comunes).
+- Dashboard `/ns-plantas` y `/ns-plantas/detalle` con proxy, tipos, estilos propios y registro en `lib/reports.ts` (área Operaciones). Lint y build sin errores.
+- `pendiente`: revisión visual con datos reales y permisos del usuario de Manufactura.
 
 ## [2026-11-13] migracion | Inicio de la migración del BI PKT
 

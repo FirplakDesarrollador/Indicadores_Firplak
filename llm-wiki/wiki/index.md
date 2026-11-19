@@ -15,6 +15,7 @@ last_updated: 2026-10-07
 | Página | Título | Tipo de Fuente | Fecha Ingesta | Resumen |
 | :--- | :--- | :--- | :--- | :--- |
 | [[karpathy-llm-wiki-gist]] | LLM Wiki (Andrej Karpathy) | Artículo / Gist | 2026-10-07 | Tesis fundacional sobre acumulación de conocimiento persistente con LLM y Obsidian. |
+| [[bi-kanban-powerbi]] | BI Kanban (Power BI a Indicadores) | Reporte PBIX | 2026-10-23 | Ingeniería inversa de BI Kanban, corte diario Planner en Supabase y dashboard de Carga. |
 
 ---
 

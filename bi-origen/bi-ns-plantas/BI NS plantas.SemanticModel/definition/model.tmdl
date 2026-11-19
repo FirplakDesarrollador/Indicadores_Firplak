@@ -1,0 +1,28 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-CO
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Medidas","Ordenes de Fabricacion","Amortiguador"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DateTableTemplate_dcef7c13-c390-4c54-a44c-e2143e15e8f2
+ref table Medidas
+ref table 'Ordenes de Fabricacion'
+ref table LocalDateTable_f348ccca-c946-42bd-bd5c-47a6c84dfe84
+ref table LocalDateTable_4569556c-71c4-45ce-bcff-e3eb70001b5c
+ref table Amortiguador
+ref table CalendarioOF
+ref table LocalDateTable_147f7ce9-e614-4d27-a28f-844fb3108b27
+ref table LocalDateTable_b5b1567c-9c58-4b76-8264-acfe8c5b0c80
+ref table LocalDateTable_1a355e83-ccfb-4801-a897-93aaee8efd72
+
+ref cultureInfo es-CO
+ref cultureInfo en-US
+

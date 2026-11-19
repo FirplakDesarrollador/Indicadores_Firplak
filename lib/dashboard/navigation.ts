@@ -1,4 +1,4 @@
-import { Boxes, FileMinus, ShieldCheck, Table2, Target, TrendingUp, Truck, type LucideIcon } from "lucide-react";
+import { Boxes, Factory, FileMinus, Handshake, ShieldCheck, Table2, Target, TrendingUp, Truck, type LucideIcon } from "lucide-react";
 
 export type DashboardNavItem = { href: string; label: string; icon: LucideIcon };
 export type DashboardNavGroup = { label: string; items: DashboardNavItem[] };
@@ -26,9 +26,19 @@ export const creditNoteNavigation: DashboardNavGroup[] = [
   { label: "ANÁLISIS", items: [{ href: "/notas-credito/detalle", label: "Detalle de notas crédito", icon: Table2 }] },
 ];
 
+export const commercialNavigation: DashboardNavGroup[] = [
+  { label: "MENÚ PRINCIPAL", items: [{ href: "/consolidado-comercial", label: "Consolidado comercial", icon: Handshake }] },
+  { label: "ANÁLISIS", items: [{ href: "/consolidado-comercial/detalle", label: "Detalle de ofertas, OV y tránsito", icon: Table2 }] },
+];
+
 // Costo de PT tiene una sola vista: el detalle es la lista de materiales del producto elegido.
 export const productCostNavigation: DashboardNavGroup[] = [
   { label: "MENÚ PRINCIPAL", items: [{ href: "/costo-actual-pt", label: "Costo de producto", icon: Boxes }] },
+];
+
+export const nsPlantsNavigation: DashboardNavGroup[] = [
+  { label: "MENÚ PRINCIPAL", items: [{ href: "/ns-plantas", label: "Nivel de servicio", icon: Factory }] },
+  { label: "ANÁLISIS", items: [{ href: "/ns-plantas/detalle", label: "Detalle de órdenes", icon: Table2 }] },
 ];
 
 export const adminNavigation: DashboardNavGroup[] = [

@@ -1,4 +1,4 @@
-import { Boxes, FileMinus, ReceiptText, Target, type LucideIcon } from "lucide-react";
+import { Boxes, Factory, FileMinus, Handshake, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
 // Un informe nuevo no lo ve nadie hasta que un administrador lo agrega a un cargo o lo asigna a una persona en /admin/permisos.
@@ -7,6 +7,7 @@ import { Boxes, FileMinus, ReceiptText, Target, type LucideIcon } from "lucide-r
 export const reportAreas = [
   { id: "ventas", label: "Informes de ventas", short: "Ventas" },
   { id: "contabilidad", label: "Informes de contabilidad", short: "Contabilidad" },
+  { id: "operaciones", label: "Informes de operaciones", short: "Operaciones" },
   { id: "financiera", label: "Informes financieros", short: "Financiera" },
   { id: "logistica", label: "Informes de logística", short: "Logística" },
 ] as const;
@@ -62,6 +63,17 @@ export const reports: ReportDefinition[] = [
     apiPaths: ["/api/notas-credito"],
   },
   {
+    // Proyecto nuevo (no es migración de BI): llm-wiki/proyectos/consolidado-comercial.md.
+    slug: "consolidado-comercial",
+    area: "ventas",
+    title: "Consolidado comercial",
+    subtitle: "Ofertas, OV pendientes, tránsito y facturación neta",
+    href: "/consolidado-comercial",
+    icon: Handshake,
+    pagePaths: ["/consolidado-comercial"],
+    apiPaths: ["/api/consolidado-comercial"],
+  },
+  {
     slug: "costo-actual-pt",
     area: "contabilidad",
     title: "Costo de producto terminado",
@@ -71,6 +83,27 @@ export const reports: ReportDefinition[] = [
     pagePaths: ["/costo-actual-pt"],
     // Incluye /api/costo-actual-pt/export (la descarga en CSV).
     apiPaths: ["/api/costo-actual-pt"],
+  },
+  {
+    slug: "carga",
+    area: "operaciones",
+    title: "Dashboard de gestión",
+    subtitle: "Desempeño del personal, control de capacidad operativa y límites WIPL",
+    href: "/carga",
+    icon: Layers,
+    pagePaths: ["/carga", "/planner", "/gestion"],
+    apiPaths: ["/api/carga"],
+  },
+  {
+    // Migración del Power BI "BI NS plantas" (dueño: Manufactura): llm-wiki/bi/ns-plantas.md.
+    slug: "ns-plantas",
+    area: "operaciones",
+    title: "Nivel de servicio de plantas",
+    subtitle: "Cumplimiento de las órdenes de fabricación frente a su fecha ideal",
+    href: "/ns-plantas",
+    icon: Factory,
+    pagePaths: ["/ns-plantas"],
+    apiPaths: ["/api/ns-plantas"],
   },
 ];
 

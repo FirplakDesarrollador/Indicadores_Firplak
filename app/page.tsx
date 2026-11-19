@@ -131,7 +131,6 @@ export default function HomePage() {
           </div>
         </section>
 
-
         <footer className="portal-footer">
           <span>&copy; 2026 Firplak &middot; Portal interno</span>
         </footer>

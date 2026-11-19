@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-11-11
+updated: 2026-11-18
 sources:
   - ../../app/page.tsx
   - ../../app/login/page.tsx
@@ -38,6 +38,12 @@ sources:
 - `/costo-actual-pt`: costo actual de producto terminado para Contabilidad ([`CostoActualPtDashboard.tsx`](../../components/CostoActualPtDashboard.tsx); reglas en la [ficha del BI](../bi/costo-actual-pt.md)). Sin vista de detalle: la lista de materiales del producto elegido está en la misma página.
 - `/api/costo-actual-pt`: proxy server-side hacia `GET /api/v1/costo-actual-pt`.
 - `/api/costo-actual-pt/export`: proxy de la descarga en CSV. Reenvía el flujo de la API sin acumularlo (`maxDuration = 300`) y cancela la petición si el usuario aborta la descarga.
+- `/consolidado-comercial`: consolidado comercial SAP para Comercial ([`ConsolidadoComercialDashboard.tsx`](../../components/ConsolidadoComercialDashboard.tsx); reglas en la [ficha del proyecto](../proyectos/consolidado-comercial.md)). Tarjetas A–D y total, composición y desglose por asesor, segmento y centro de costos.
+- `/consolidado-comercial/detalle`: detalle paginado de las líneas abiertas de A–C, con pestañas por etapa, búsqueda y panel lateral.
+- `/api/consolidado-comercial`: proxy server-side hacia `GET /api/v1/consolidado-comercial`.
+- `/ns-plantas`: nivel de servicio de plantas para Manufactura ([`NsPlantasDashboard.tsx`](../../components/NsPlantasDashboard.tsx); reglas en la [ficha del BI](../bi/ns-plantas.md)). Abre en el mes en curso: nivel de servicio con meta del 90 %, órdenes medidas, incumplidas y en plazo, series diaria y mensual (año completo), tabla por planta frente a la meta e incumplidas por razón de retraso.
+- `/ns-plantas/detalle`: detalle paginado de órdenes de fabricación, abre en las incumplidas; filtro de cumplimiento, búsqueda y panel lateral.
+- `/api/ns-plantas`: proxy server-side hacia `GET /api/v1/ns-plantas`.
 - `/admin/permisos`: administración de permisos por cargo, con excepciones e historial con soporte; solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
 
 ## Comportamiento del dashboard
