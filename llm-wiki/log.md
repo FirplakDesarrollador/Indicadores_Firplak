@@ -805,3 +805,13 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Se trajo `main` a `bi/ns-plantas` (catálogo de informes, permisos por cargo y componentes comunes).
 - Dashboard `/ns-plantas` y `/ns-plantas/detalle` con proxy, tipos, estilos propios y registro en `lib/reports.ts` (área Operaciones). Lint y build sin errores.
 - `pendiente`: revisión visual con datos reales y permisos del usuario de Manufactura.
+
+## [2026-11-19] proyecto | Estados Financieros: tablas, SP y jobs en Planos_Symphony
+
+- Proyecto nuevo ([ficha](proyectos/estados-financieros.md)), rama `bi/estados-financieros`: reemplaza las tablas de Supabase que la app de Estados Financieros llenaba a mano o con la sincronización por Service Layer.
+- Scripts en `sql/estados-financieros/`: `Informe_cuentas_14_74` (query de Contabilidad sin cambios de reglas), `Informe_mov_contable_diario` + `Informe_balance` (balance en 5 niveles, calculado mes por mes desde los movimientos diarios) y jobs diario 5:00 y completo domingo 3:00.
+- `pendiente`: ejecución por el desarrollador, primera carga, validación contra las cifras de Supabase del 2026-11-13 y contrato de los endpoints `balance` y `cuentas-14-74`.
+- Contratos de `GET /api/v1/balance` y `GET /api/v1/cuentas-14-74` aprobados por el desarrollador. Implementados en `reporting-api`, rama `bi/estados-financieros` (módulo `src/estados-financieros.ts`); compilan y responden 400/401/404/502 en la prueba sin base de datos. `pendiente`: prueba contra SQL Server y despliegue.
+- El desarrollador ejecutó `01` y `02` y las primeras cargas completas (2026-11-19). Cuentas 14 y 74: 27.251 filas en 3 s; 2021-2025 iguales a Supabase en filas, débitos y créditos; octubre 2026 igual (429 filas). Balance: 1.970 filas por mes, 0 cuentas sin encadenar, débitos de nivel 5 de nov-2025 a sep-2026 iguales a Supabase; octubre 2026 cuenta por cuenta: 1.935 de 1.970 filas iguales y saldo inicial igual en todas, las otras 35 por 181,3 M de reclasificaciones de cierre de octubre (CEFI y cuentas de orden 92) registradas después del 2026-11-13.
+- Jobs creados con `03`: incremental diario 5:00 y completa domingo 3:00.
+- `reporting-api`: commit `8924512` en `bi/estados-financieros` y rama local `deploy/2026-11-19` (= `deploy/2026-11-18` + Estados Financieros, merge `c184b6e`; conflictos en `server.ts` y `.env.example` resueltos conservando todas las rutas). Paquete `reporting-api-dist-c184b6e.zip`. Sin push. `pendiente`: despliegue y prueba en el servidor.

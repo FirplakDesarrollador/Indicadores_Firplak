@@ -63,6 +63,7 @@ SP o proceso de actualización periódica
 ### Proyectos
 
 - [Consolidado comercial SAP](proyectos/consolidado-comercial.md): ofertas + OV + tránsito + facturación neta desde SAP B1 (proyecto nuevo, en descubrimiento).
+- [Estados Financieros](proyectos/estados-financieros.md): balance mensual en 5 niveles y detalle de cuentas 14 y 74 en `Planos_Symphony` para la app de Estados Financieros (scripts escritos el 2026-11-19; ejecución y endpoints `pendientes`).
 
 ### Decisiones
 
