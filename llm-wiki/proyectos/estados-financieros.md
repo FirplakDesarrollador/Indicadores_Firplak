@@ -69,3 +69,27 @@ Implementados en `reporting-api`, rama `bi/estados-financieros` (desde `main`), 
 1. El desarrollador ejecuta `01` y `02`, la primera carga completa de cada SP y la validación.
 2. Aprobar el contrato e implementar los endpoints.
 3. Cambiar la capa de datos de la app de Estados Financieros a la API y retirar la sincronización por Service Layer y las tablas `sap_*` de Supabase.
+
+## Viventta (2026-11-19)
+
+El desarrollador pidió agregar Viventta por la misma vía que Firplak (API, no Supabase). Base `DBViventta`, en la misma instancia.
+
+Verificación (consultas del 2026-11-19):
+
+| Tema | Resultado |
+|---|---|
+| Compatibilidad y collation | Nivel 130 (los SP corren en `Planos_Symphony`, nivel 100); `SQL_Latin1_General_CP850_CI_AS`, igual que Firplak |
+| Columnas | Las mismas; `AcctName` y `CardName` son `nvarchar(200)` (se ampliaron las columnas de nombres). No existe `OACT.U_IFRS_Tipo` (no se usa) |
+| Índice `OJDT_REFDATE` | Existe |
+| Plan de cuentas | 296 cuentas imputables de nivel 5 y 8 dígitos; 9 imputables fuera de la regla (nivel 2 o 4, o con letras), todas sin movimientos: la regla del balance no cambia |
+| `U_HBT_AreVal` | `Comun` (4.263 asientos) y vacío (623), desde el 2025-08-11 |
+| Volumen | 4.886 asientos; octubre 2026: 1.388 líneas, débito = crédito = 111.367.753,56 |
+| Cuentas 14 y 74 | Solo existen 14350505 y 14350510, sin movimientos. Viventta es de servicios: mueve 14100515, 14300510, 61359505 y 7305xx. La tabla queda vacía para Viventta hasta que Contabilidad defina sus cuentas (`pendiente`) |
+
+Cambios:
+
+- `04_multiempresa.sql`: columna `Empresa` en las cuatro tablas (las filas existentes quedan como `Firplak`), al inicio de claves e índices; nombres ampliados a 200.
+- `01` y `02`: SP con `@Empresa` (`Firplak` lee `Firplak_SA`, `Viventta` lee `DBViventta`, con `sp_executesql`). Sin `@Empresa` corren las dos, así que los jobs no cambian. Bitácora: `Informe_balance_Viventta`, `Informe_mov_contable_diario_Viventta`, `Informe_cuentas_14_74_Viventta`. El balance de cada empresa empieza en su primer mes con movimientos.
+- API: parámetro `empresa=firplak|viventta` (por defecto `firplak`) en los dos endpoints.
+- App: `fuente.ts` pide a la API la empresa del selector (`empresa2` → `viventta`); el consolidado suma las dos.
+- `pendiente`: las fórmulas del estado de costos están hechas con cuentas de Firplak; para Viventta (servicios) hay que revisarlas con Contabilidad.

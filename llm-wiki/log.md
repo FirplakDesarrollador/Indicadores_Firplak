@@ -815,3 +815,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - El desarrollador ejecutó `01` y `02` y las primeras cargas completas (2026-11-19). Cuentas 14 y 74: 27.251 filas en 3 s; 2021-2025 iguales a Supabase en filas, débitos y créditos; octubre 2026 igual (429 filas). Balance: 1.970 filas por mes, 0 cuentas sin encadenar, débitos de nivel 5 de nov-2025 a sep-2026 iguales a Supabase; octubre 2026 cuenta por cuenta: 1.935 de 1.970 filas iguales y saldo inicial igual en todas, las otras 35 por 181,3 M de reclasificaciones de cierre de octubre (CEFI y cuentas de orden 92) registradas después del 2026-11-13.
 - Jobs creados con `03`: incremental diario 5:00 y completa domingo 3:00.
 - `reporting-api`: commit `8924512` en `bi/estados-financieros` y rama local `deploy/2026-11-19` (= `deploy/2026-11-18` + Estados Financieros, merge `c184b6e`; conflictos en `server.ts` y `.env.example` resueltos conservando todas las rutas). Paquete `reporting-api-dist-c184b6e.zip`. Sin push. `pendiente`: despliegue y prueba en el servidor.
+
+## [2026-11-19] proyecto | Estados Financieros: Viventta
+
+- Verificación de `DBViventta` (10 consultas más 4b, 7b y 9b) y diseño multiempresa en las mismas tablas, SP y endpoints ([ficha](proyectos/estados-financieros.md#viventta-2026-11-19)).
+- Scripts: `04_multiempresa.sql` (migración) y `01`/`02` con `@Empresa`; API con `empresa`; app con la empresa del selector. `pendiente`: ejecución, primera carga de Viventta, despliegue y cuentas de Viventta para el estado de costos.
