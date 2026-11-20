@@ -383,3 +383,11 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `FPK_INDICADOR_LIBERACION_OPTIMIZADO` es una copia que escribe en `Indicador_Liberacion_Prueba`; no interviene en el BI.
 - Propuesta para la fase 2 (`pendiente` aprobación): no tocar el SP actual y agregar uno nuevo que copie a una tabla tipada con `MERGE`, para conservar historia. Detalle en [la ficha](bi/liberacion.md#cómo-se-carga-indicador_liberacion-código-compartido-por-el-desarrollador-2026-11-04).
 - Pregunta 11 resuelta en parte (O = `STANDARD`, S = `STOCK`); se agregó la pregunta 14 (regla de la fecha recomendada) para Logística.
+
+## [2026-11-20] bi | Liberación: razones desde la app de Logística
+
+- El Excel `Razones incumplimiento lib.xlsx` se migró a la app de Logística (proyecto aparte, Supabase Manufactura, schema `logistica`): una razón por OP, 40 492 OP de histórico más lo que se registre en el formulario.
+- Decisión del desarrollador: opción A. Las razones vigentes se sincronizan a una tabla en `Planos_Symphony` y la API las cruza en SQL. Se descartó consultar Supabase en cada petición. Diseño y pendientes en [la ficha](bi/liberacion.md#razones-de-planeación-decisión-del-desarrollador-2026-11-20).
+- Pregunta 1 respondida en parte (falta la fecha de corte del Excel con Logística); la 8 ya no aplica. Nuevas preguntas 15 (cumple con cambio de fecha) y 16 (fecha programada de la app).
+- El script del SP quedó enlazado en la ficha: `bi-origen/bi-liberacion/sql/FPK_INDICADOR_LIBERACION.sql`.
+- Decisión del desarrollador: se construye con Supabase sin esperar la fecha de corte del Excel.

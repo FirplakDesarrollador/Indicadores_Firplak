@@ -1,9 +1,11 @@
 ---
 status: en-migracion
 fase: 1
-updated: 2026-11-04
+updated: 2026-11-20
 sources:
   - ../../bi-origen/bi-liberacion/
+  - ../../bi-origen/bi-liberacion/sql/FPK_INDICADOR_LIBERACION.sql
+  - Proyecto Logística (Desktop/Logistica), supabase/migrations/20261120_logistica_razones_lib*.sql
 ---
 
 # BI: Liberación
@@ -30,7 +32,7 @@ El BI mide si las órdenes de producción (OP) se **liberan a tiempo**: compara 
 | Tabla del modelo | Tipo de fuente | Origen (base.esquema.objeto o archivo) | Observaciones |
 |---|---|---|---|
 | `BD` | `Sql.Database` (import) | Servidor `ITPLAKINFO`, base `Planos_Symphony`: `dbo.Indicador_Liberacion` | Tabla (`USER_TABLE`) creada el 2025-10-07. La escriben los SP `dbo.FPK_INDICADOR_LIBERACION` y `dbo.FPK_INDICADOR_LIBERACION_OPTIMIZADO`, y la menciona el job `Actualizacion Indicador Liberacion.Subplán_1` (plan de mantenimiento). Confirmado: **una fila por `Código OP`** (30 323 filas y 30 323 OP). **Las 23 columnas son `nvarchar`**, incluidas fechas y cantidades. `pendiente`: qué SP ejecuta el job y con qué horario. |
-| `RazonesIncumplimiento` | `SharePoint.Files` + `Excel.Workbook` (import) | Sitio `https://firplaksa.sharepoint.com/sites/LOGSTICASEGUIMIENTO`, carpeta `Shared Documents/07. PLANEACIÓN DE PXN Y ABASTECIMIENTO PTC/1. PLANEACIÓN DE PRODUCCIÓN/`, archivo `Razones incumplimiento lib.xlsx`, tabla de Excel `Obs_Plan` | **Riesgo: no es SQL Server.** Lo diligencia Planeación a mano. Columnas: `No Orden`, `OBSERVACIONES PLANEACIÓN`, `COMENTARIOS`, `FECHA` (texto). |
+| `RazonesIncumplimiento` | `SharePoint.Files` + `Excel.Workbook` (import) | Sitio `https://firplaksa.sharepoint.com/sites/LOGSTICASEGUIMIENTO`, carpeta `Shared Documents/07. PLANEACIÓN DE PXN Y ABASTECIMIENTO PTC/1. PLANEACIÓN DE PRODUCCIÓN/`, archivo `Razones incumplimiento lib.xlsx`, tabla de Excel `Obs_Plan` | **Riesgo: no es SQL Server.** Lo diligencia Planeación a mano. Columnas: `No Orden`, `OBSERVACIONES PLANEACIÓN`, `COMENTARIOS`, `FECHA` (texto). En el portal se reemplaza por la app de Logística ([decisión del 2026-11-20](#razones-de-planeación-decisión-del-desarrollador-2026-11-20)). |
 | `Calendario` | Tabla calculada DAX | `CALENDAR(MIN(BD[Fecha Recomendada de Liberación]), DATE(2026,12,31))` | **Termina el 2026-12-31, fijo en el código.** Desde 2027 los segmentadores no tendrán fechas nuevas. Columnas `Mes_Num`, `Año`, `Mes_Text`. No se migra: la API arma años y meses. |
 | `Medidas` | Tabla escrita a mano vacía | — | Solo contiene las medidas. |
 | `LocalDateTable_*`, `DateTableTemplate_*` | Automáticas de Power BI | — | Jerarquía Año/Trimestre/Mes/Día de las fechas. No se migran. |
@@ -145,7 +147,7 @@ Filtros y segmentadores:
 
 Riesgos técnicos:
 
-- **El Excel de razones en SharePoint.** Es la fuente de las correcciones (`CUMPLE`), las exclusiones (`NO MEDIR`) y las razones de incumplimiento. La API no puede leer SharePoint, y el archivo ha cambiado de columnas varias veces (ver las consultas de error). Hay que decidir de dónde saldrán estas razones en el portal (pregunta 1). Sin esa decisión no se puede empezar la fase 2.
+- **El Excel de razones en SharePoint.** Es la fuente de las correcciones (`CUMPLE`), las exclusiones (`NO MEDIR`) y las razones de incumplimiento. La API no puede leer SharePoint, y el archivo ha cambiado de columnas varias veces (ver las consultas de error). **Decidido el 2026-11-20:** las razones salen de la app de Logística (Supabase) y se sincronizan a SQL Server; ver [Razones de Planeación](#razones-de-planeación-decisión-del-desarrollador-2026-11-20).
 - **`Indicador_Liberacion` es una tabla con carga propia, pero todo en texto.** Ya existe y la carga un SP desde un job (consultas 1 y 2), pero sus 23 columnas son `nvarchar`: fechas y cantidades incluidas. Filtrar y agrupar por fecha sobre texto obliga a convertir cada fila y no aprovecha índices. Para la fase 2 hay que leer los dos SP (`FPK_INDICADOR_LIBERACION` y `..._OPTIMIZADO`) y decidir si se corrigen los tipos en esa tabla o se crea `Informe_liberacion` con tipos reales.
 - **Tipos distintos en el cruce OP–razón.** `No Orden` es número y `Código OP` es texto. Si en algún caso el cruce falla, Power BI no aplica `CUMPLE`/`NO MEDIR` a esa OP y las cifras del portal saldrán distintas en la conciliación. Mitigado: todos los `Código OP` son numéricos.
 - **La tabla solo tiene OP desde el 2025-07-10.** `pendiente`: confirmar si el SP borra lo anterior (ventana móvil) o si los datos empiezan ahí. Define cuánta historia tendrá el portal.
@@ -156,7 +158,7 @@ Riesgos técnicos:
 Preguntas para el dueño de negocio (Logística):
 
 1. **Excel de razones.** ¿Quién lo diligencia y cada cuánto? Para el portal hay tres opciones: (a) registrar las razones en el portal, en una pantalla para Planeación que guarda en SQL Server; (b) seguir con el Excel y copiarlo a SQL Server con un proceso automático (por ejemplo, Power Automate); (c) seguir con el Excel y que el desarrollador lo cargue a mano. ¿Cuál prefieren?
-Respuesta: `pendiente`
+Respuesta: el desarrollador construyó la app de Logística, que reemplaza el Excel con un formulario y guarda en Supabase (2026-11-20); ver [Razones de Planeación](#razones-de-planeación-decisión-del-desarrollador-2026-11-20). Decisión del desarrollador (2026-11-20): el indicador se construye con Supabase como fuente de las razones, sin esperar a que Logística deje el Excel. Mientras convivan, Supabase se actualiza desde el Excel con el proceso manual de la app de Logística.
 2. **Regla de cumplimiento.** ¿Es correcto que una OP cumple si se libera **el mismo día o antes** de la fecha recomendada, y que una OP sin liberar cuente como incumplida desde el día siguiente a la fecha recomendada?
 Respuesta: `pendiente`
 3. **`CUMPLE` en el Excel.** Planeación puede marcar como cumplida una OP que las fechas dan por incumplida. ¿Se mantiene esa corrección manual? ¿Quién la autoriza?
@@ -170,7 +172,7 @@ Respuesta: `pendiente`
 7. **Cada OP cuenta 1.** El % cuenta órdenes, no unidades: una OP de 1 unidad pesa lo mismo que una de 500. ¿Es lo esperado?
 Respuesta: `pendiente`
 8. **Varias razones por OP.** Si una OP tiene varias filas en el Excel, cada fila cuenta en el % de razones. ¿Es correcto, o cada OP debe tener una sola razón?
-Respuesta: `pendiente`
+Respuesta: ya no aplica. El Excel no tiene OP repetidas (40 492 órdenes, 0 duplicados, versión del 2026-11-20) y la app de Logística guarda una sola razón por OP (`no_orden` es la clave; guardar una OP existente la edita).
 9. **Tabla de Razones Día.** Muestra las OP con razón distinta de `CUMPLE`, incluidas las `NO MEDIR`, sin importar su estado. ¿Se mantiene así?
 Respuesta: `pendiente`
 10. **Columnas sin uso.** ¿Logística necesita filtrar o ver en el detalle alguna columna que hoy no usa ningún visual, como familia de producción, estado, destino, lote o cantidades? (Planta no sirve como filtro: todas las OP son de Firplak.)
@@ -182,6 +184,10 @@ Respuesta: `pendiente`
 13. **Frecuencia de actualización.** Hoy los datos se actualizan de lunes a viernes a las 5 p. m. Como lo usan a diario, ¿les sirve así o necesitan datos más frescos durante el día (por ejemplo, cada hora)?
 Respuesta: `pendiente`
 14. **Fecha recomendada de liberación.** El SP la calcula así: para órdenes `STOCK` (tipo S), la fecha de creación de la OP más 1 día hábil; para órdenes `STANDARD` (tipo O), la fecha prometida de entrega menos el amortiguador de la familia (menos 1) en días hábiles. ¿Es la meta correcta? ¿Quién mantiene los amortiguadores en SAP?
+Respuesta: `pendiente`
+15. **Cumple con cambio de fecha.** La app de Logística distingue las OP que cumplen después de reprogramarse (casilla en el formulario; en el histórico se deduce del comentario: 6 718 de los `CUMPLE`). ¿El indicador las cuenta como cumplidas igual que las demás, o se muestran aparte?
+Respuesta: `pendiente`
+16. **Fecha programada de la app.** En la app de Logística cada razón lleva una "fecha programada" obligatoria. El BI no la usa: compara contra la fecha recomendada que calcula el SP. ¿Esa fecha debe intervenir en el indicador, o es solo informativa?
 Respuesta: `pendiente`
 
 **Validación del dueño de negocio:** Logística — fecha — `pendiente`
@@ -341,11 +347,38 @@ Propuesta inicial; se define en la fase 2 con los resultados de las consultas 1 
 
 Columnas que usa el BI: `Código OP`, `Descripción de SKU`, `Tipo`, `Linea`, `Fecha de Contabilización`, `Fecha Recomendada de Liberación`, `Fecha Real de Liberación`, `Fecha Prometida de Entrega Ítem`, más las que Logística pida en la pregunta 10.
 
-Razones de Planeación: tabla aparte en `Planos_Symphony` (por ejemplo, una fila por OP y razón con observación, comentario y fecha), alimentada según la respuesta a la pregunta 1. El estado `Cumplimiento` se calcula cruzando las dos tablas con la fecha de hoy, en la consulta de la API, para que no dependa de la hora de la última carga.
+Razones de Planeación: tabla aparte en `Planos_Symphony`, alimentada desde la app de Logística (ver la subsección siguiente). El estado `Cumplimiento` se calcula cruzando las dos tablas con la fecha de hoy, en la consulta de la API, para que no dependa de la hora de la última carga.
+
+#### Razones de Planeación: decisión del desarrollador (2026-11-20)
+
+El Excel `Razones incumplimiento lib.xlsx` se migró a la app de Logística (proyecto aparte, `Desktop/Logistica`, ficha `llm-wiki/excels/razones-incumplimiento-lib.md` de ese proyecto). Las razones viven en Supabase, proyecto Manufactura, schema `logistica`:
+
+| Tabla | Contenido |
+|---|---|
+| `logistica.razones_lib_historico` | El Excel tal cual (40 492 OP al 2026-11-20). Solo lectura para la app. |
+| `logistica.razones_lib_registros` | OP registradas o editadas en el formulario; prevalecen sobre el histórico con el mismo `no_orden`. |
+| `logistica.razones_lib_eliminadas` | Borrado lógico: la OP deja de contar. |
+| `logistica.razones_lib_catalogo` | Catálogo de razones; un trigger impide guardar una razón fuera de él. |
+
+La razón vigente de cada OP es la del registro, si existe, o la del histórico, sin las eliminadas. Hoy la calcula el servidor de la app (`cargarOrdenes`); no hay una vista en la base.
+
+**Decisión: opción A, sincronizar a SQL Server.** Se descartó que la Reporting API consulte Supabase en cada petición (opción B). B no sería lenta si se cachea, pero el filtro por razón no se podría aplicar en SQL, el indicador dependería de dos bases y la conciliación con Power BI sería más difícil de explicar con consultas.
+
+Diseño propuesto (se define en la fase 2):
+
+1. Vista en Supabase `logistica.razones_lib_vigentes`: una fila por OP con razón, comentario, fecha programada, cambio de fecha y fecha de actualización. Requiere una migración en el proyecto Logística.
+2. Tabla en `Planos_Symphony` (nombre `pendiente`) con clave `No Orden` (`bigint`), cargada desde esa vista.
+3. Proceso programado que copie la vista a la tabla. `pendiente`: dónde corre (script en el servidor de la Reporting API o paso del job de SQL Server), cada cuánto (pregunta 13) y con qué credencial. Debe ser un rol de Supabase de solo lectura sobre la vista, no la clave de servicio.
+4. La API cruza `Código OP` con `No Orden` en SQL, como hoy lo hace Power BI.
+
+Pendientes que no dependen de este repositorio:
+
+- Logística sigue diligenciando el Excel en paralelo, y Supabase se actualiza a mano (`excel:traer` → `excel:perfil` → `cargar-supabase`). No bloquea la migración (decisión del 2026-11-20): el portal lee Supabase desde ya y, cuando Logística deje el Excel, no cambia nada en este lado.
+- La app de Logística está en fase 4: falta su conciliación y publicarla con URL de producción para que Logística la use.
 
 #### Cómo se carga `Indicador_Liberacion` (código compartido por el desarrollador, 2026-11-04)
 
-`dbo.FPK_INDICADOR_LIBERACION` (`pendiente`: guardar el script en [`bi-origen/bi-liberacion/sql/`](../../bi-origen/bi-liberacion/) para enlazarlo aquí). Lo ejecuta el job de lunes a viernes a las 17:00.
+`dbo.FPK_INDICADOR_LIBERACION` ([script](../../bi-origen/bi-liberacion/sql/FPK_INDICADOR_LIBERACION.sql)). Lo ejecuta el job de lunes a viernes a las 17:00.
 
 **Carga completa con ventana móvil.** Arma todo en tablas temporales y al final hace `TRUNCATE` + `INSERT` de `Indicador_Liberacion`. No es incremental y no guarda historia: cada día recalcula todo.
 
