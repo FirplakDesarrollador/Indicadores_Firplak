@@ -866,3 +866,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `reporting-api`, rama `bi/liberacion`: `src/liberacion.ts` con `buildReleaseQuery` y `getReleaseReport`; ruta en `src/server.ts`. Compila; prueba local de autenticación correcta.
 - `sql/liberacion/04_validacion_endpoint.sql`: la consulta del endpoint para octubre de 2026, para correrla en SSMS antes de desplegar.
 - Paquete `reporting-api-dist-d5a34f6.zip` desde `deploy/2026-11-20`. `pendiente`: validación en SSMS y despliegue.
+- Consulta del endpoint validada en SSMS por el desarrollador (octubre de 2026): totales, series diaria, mensual y anual y cascada de razones cuadran entre sí y con la comparación contra el Power BI.
