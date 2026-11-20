@@ -843,3 +843,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `pendiente` (desarrollador): ejecutar los scripts y pegar los resultados de las consultas 0 y 4 en la ficha; desplegar la API con `LIBERACION_RAZONES_TOKEN`; aplicar la migración de Supabase y crear los secretos en Vault.
 - Rollback: al inicio de cada script y de la migración.
 - Consultas previas 0.1 a 0.3 de `01_informe_liberacion.sql` ejecutadas por el desarrollador: los nombres y el orden de las columnas coinciden, el formato de las 29 942 filas es válido y los textos caben. El SP no necesita cambios.
+- Primera carga de `Informe_liberacion` (29 942 OP en 3 s) y validaciones 4.1 a 4.4 correctas. Octubre de 2026 perdió 16 OP en el origen entre el 4 y el 20 de noviembre: los meses cerrados cambian en `Indicador_Liberacion` (pregunta 12). Detalle en la ficha.

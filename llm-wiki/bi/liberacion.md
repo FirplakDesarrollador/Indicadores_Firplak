@@ -355,6 +355,40 @@ La fase 2 avanzó sin la validación de Logística de la fase 1, por decisión d
 
 Conclusión: el SP no necesita cambios.
 
+#### Primera carga y validación de `Informe_liberacion` (desarrollador, 2026-11-20)
+
+- **4.1 Bitácora:** `Cargas_Log` Id 3440, de 12:12:30 a 12:12:33, 29 942 insertadas, `Error` NULL.
+- **4.2 OP frente al origen:** `SoloEnOrigen` 0, `SoloEnTabla` 0, `Distintas` 0.
+- **4.4 Totales:** diferencia de `Cantidad Total` 0,000 y de filas 0.
+- **4.3 Estado por mes**, con la regla del BI y sin las razones:
+
+| Año | Mes | OK | NO | Sin liberar |
+|---|---|---|---|---|
+| 2025 | 7 | 0 | 1 | 0 |
+| 2025 | 10 | 1 | 7 | 0 |
+| 2025 | 11 | 871 | 888 | 0 |
+| 2025 | 12 | 1 579 | 1 348 | 0 |
+| 2026 | 1 | 1 180 | 921 | 0 |
+| 2026 | 2 | 1 908 | 662 | 0 |
+| 2026 | 3 | 1 957 | 509 | 0 |
+| 2026 | 4 | 1 647 | 699 | 0 |
+| 2026 | 5 | 1 664 | 648 | 0 |
+| 2026 | 6 | 1 518 | 801 | 0 |
+| 2026 | 7 | 1 734 | 927 | 0 |
+| 2026 | 8 | 1 679 | 469 | 0 |
+| 2026 | 9 | 1 637 | 704 | 0 |
+| 2026 | 10 | 1 733 | 522 | 0 |
+| 2026 | 11 | 1 255 | 232 | 182 |
+| 2026 | 12 | 34 | 0 | 25 |
+
+Frente a la consulta 4 de la fase 1 (2026-11-04):
+
+- Septiembre es idéntico.
+- Agosto sube porque esa consulta solo traía los últimos 3 meses y agosto empezaba el día 4.
+- **Octubre perdió 16 OP** (5 OK y 11 NO) entre el 4 y el 20 de noviembre. Se cancelaron en SAP o el SP de origen recalculó su fecha recomendada. Confirma que, en el origen, los meses cerrados cambian (pregunta 12).
+- Julio y octubre de 2025 (1 y 8 OP), y noviembre de 2025 parcial, son el borde de la ventana de 365 días sobre la fecha prometida.
+- Diciembre de 2026: 34 OP ya liberadas antes de su fecha recomendada.
+
 Columnas que usa el BI: `Código OP`, `Descripción de SKU`, `Tipo`, `Linea`, `Fecha de Contabilización`, `Fecha Recomendada de Liberación`, `Fecha Real de Liberación`, `Fecha Prometida de Entrega Ítem`, más las que Logística pida en la pregunta 10.
 
 Razones de Planeación: tabla aparte en `Planos_Symphony`, alimentada desde la app de Logística (ver la subsección siguiente). El estado `Cumplimiento` se calcula cruzando las dos tablas con la fecha de hoy, en la consulta de la API, para que no dependa de la hora de la última carga.
