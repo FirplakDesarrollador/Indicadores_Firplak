@@ -844,3 +844,5 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Rollback: al inicio de cada script y de la migración.
 - Consultas previas 0.1 a 0.3 de `01_informe_liberacion.sql` ejecutadas por el desarrollador: los nombres y el orden de las columnas coinciden, el formato de las 29 942 filas es válido y los textos caben. El SP no necesita cambios.
 - Primera carga de `Informe_liberacion` (29 942 OP en 3 s) y validaciones 4.1 a 4.4 correctas. Octubre de 2026 perdió 16 OP en el origen entre el 4 y el 20 de noviembre: los meses cerrados cambian en `Indicador_Liberacion` (pregunta 12). Detalle en la ficha.
+- El desarrollador ejecutó `02_razones_liberacion.sql`, los `GRANT EXECUTE` al usuario de la API (`informes`, que solo tenía `db_datareader`) y el job `BI - Liberacion carga`.
+- Rama local `deploy/2026-11-20` en `reporting-api`: `deploy/2026-11-19` (Estados Financieros, NS Plantas) más `bi/liberacion`. Conflictos de "ambos agregaron" en `src/server.ts` y `README.md`; compila y la ruta nueva responde. Sin push.

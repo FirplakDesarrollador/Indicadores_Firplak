@@ -439,6 +439,7 @@ Planos_Symphony.dbo.Informe_liberacion_razones (reemplazo completo en una transa
    - El SP rechaza un envío que traiga más de un 10 % menos de filas que la tabla actual.
    - El usuario de la API solo recibe `EXECUTE` sobre el SP y el tipo.
    - Verificado el 2026-11-20: el usuario de la API (`informes`) tiene solo `db_datareader` y `CONNECT`. Necesita los dos `GRANT EXECUTE` de la sección 4 del script; los `SELECT` no, porque `db_datareader` ya los cubre.
+   - 2026-11-20: el desarrollador ejecutó `02_razones_liberacion.sql`, los dos `GRANT EXECUTE` a `informes` y `03_job_liberacion.sql` (job `BI - Liberacion carga`).
 5. La API cruza `CodigoOP` con `NoOrden` en SQL, como hoy lo hace Power BI.
 
 Pendientes que no dependen de este repositorio:
