@@ -461,7 +461,28 @@ Planos_Symphony.dbo.Informe_liberacion_razones (reemplazo completo en una transa
 | 2026 | 11 | 1 669 | 231 | 125 | 1 |
 | 2026 | 12 | 59 | 0 | 0 | 0 |
 
-     En los meses cerrados, las OP con razón se acercan al número de incumplidas por fechas (4.3; por ejemplo, octubre de 2026: 534 con razón y 522 NO). Noviembre de 2026 está incompleto porque Logística todavía lo diligencia. `pendiente`: % de cumplimiento por mes con la regla completa del BI, comparado con el Power BI (adelanto de la fase 6), y la primera ejecución programada del job (2026-11-20 17:15), que cierra la fase 2.
+     En los meses cerrados, las OP con razón se acercan al número de incumplidas por fechas (4.3; por ejemplo, octubre de 2026: 534 con razón y 522 NO). Noviembre de 2026 está incompleto porque Logística todavía lo diligencia. % de cumplimiento por mes con la regla completa del BI (`CUMPLE` y `NO MEDIR` de las razones primero; si no hay, las fechas), calculado en SQL el 2026-11-20:
+
+| Año | Mes | OK | NO | `NO MEDIR` | Sin liberar | % |
+|---|---|---|---|---|---|---|
+| 2025 | 7 | 0 | 1 | 0 | 0 | 0,0 |
+| 2025 | 10 | 2 | 6 | 0 | 0 | 25,0 |
+| 2025 | 11 | 1 028 | 731 | 0 | 0 | 58,4 |
+| 2025 | 12 | 1 925 | 994 | 8 | 0 | 65,9 |
+| 2026 | 1 | 1 479 | 620 | 2 | 0 | 70,5 |
+| 2026 | 2 | 2 080 | 487 | 3 | 0 | 81,0 |
+| 2026 | 3 | 2 310 | 140 | 16 | 0 | 94,3 |
+| 2026 | 4 | 2 128 | 208 | 10 | 0 | 91,1 |
+| 2026 | 5 | 1 934 | 305 | 73 | 0 | 86,4 |
+| 2026 | 6 | 1 918 | 392 | 9 | 0 | 83,0 |
+| 2026 | 7 | 2 089 | 551 | 21 | 0 | 79,1 |
+| 2026 | 8 | 1 835 | 313 | 0 | 0 | 85,4 |
+| 2026 | 9 | 1 863 | 475 | 3 | 0 | 79,7 |
+| 2026 | 10 | 1 989 | 258 | 8 | 0 | 88,5 |
+| 2026 | 11 | 1 379 | 107 | 1 | 182 | 92,8 |
+| 2026 | 12 | 34 | 0 | 0 | 25 | 100,0 |
+
+     Ninguna OP se pierde en el cruce: OK + NO + `NO MEDIR` + sin liberar = OP de la 4.3. Las razones suben el % de los meses cerrados: agosto de 78,2 a 85,4; septiembre de 69,9 a 79,7; octubre de 76,9 a 88,5. `pendiente`: confirmar agosto, septiembre y octubre de 2026 contra el Power BI actualizado el mismo día (adelanto de la fase 6), y la primera ejecución programada del job (2026-11-20 17:15), que cierra la fase 2.
 5. La API cruza `CodigoOP` con `NoOrden` en SQL, como hoy lo hace Power BI.
 
 Pendientes que no dependen de este repositorio:

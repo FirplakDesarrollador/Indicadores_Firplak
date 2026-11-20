@@ -851,3 +851,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Supabase: secretos en Vault, migración `20261120_logistica_razones_lib_envio_liberacion.sql` aplicada por el desarrollador y primer envío forzado: la API respondió 200 con `received` 40 492 y `replaced` 0 (tabla vacía). Desde ahora `pg_cron` envía cada 15 minutos si hubo cambios. `pendiente`: validaciones 5.1 a 5.3 de `02_razones_liberacion.sql`.
 - Validaciones 5.1 y 5.2 de las razones correctas: SQL Server y Supabase coinciden en las 44 razones (40 492 OP, 6 798 con cambio de fecha).
 - Validación 5.3: las OP del indicador cruzan con sus razones; en los meses cerrados la cobertura se acerca a las incumplidas por fechas. La fase 2 cierra con la primera ejecución programada del job (2026-11-20 17:15).
+- % de cumplimiento por mes con la regla completa del BI, calculado en SQL: agosto 85,4 %, septiembre 79,7 %, octubre 88,5 % de 2026. `pendiente`: compararlo con el Power BI.
