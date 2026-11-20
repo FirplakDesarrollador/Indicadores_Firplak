@@ -440,7 +440,28 @@ Planos_Symphony.dbo.Informe_liberacion_razones (reemplazo completo en una transa
    - El usuario de la API solo recibe `EXECUTE` sobre el SP y el tipo.
    - Verificado el 2026-11-20: el usuario de la API (`informes`) tiene solo `db_datareader` y `CONNECT`. Necesita los dos `GRANT EXECUTE` de la sección 4 del script; los `SELECT` no, porque `db_datareader` ya los cubre.
    - 2026-11-20: el desarrollador ejecutó `02_razones_liberacion.sql`, los dos `GRANT EXECUTE` a `informes` y `03_job_liberacion.sql` (job `BI - Liberacion carga`).
-   - 2026-11-20, primer envío desde Supabase: la API respondió 200 (`received` 40 492). Validación 5.1: `Cargas_Log` Id 3447, 40 492 insertadas en menos de 1 s, sin error. Validación 5.2: el conteo por `RazonNormalizada` en SQL Server es idéntico al de la vista en Supabase: 44 razones, 40 492 OP, 6 798 con cambio de fecha (`CUMPLE` 12 880, de ellas 6 755 con cambio de fecha; `NO MEDIR` 1 339). Las variantes del Excel quedaron agrupadas en su razón del catálogo. `pendiente`: 5.3, el cruce con las OP del indicador.
+   - 2026-11-20, primer envío desde Supabase: la API respondió 200 (`received` 40 492). Validación 5.1: `Cargas_Log` Id 3447, 40 492 insertadas en menos de 1 s, sin error. Validación 5.2: el conteo por `RazonNormalizada` en SQL Server es idéntico al de la vista en Supabase: 44 razones, 40 492 OP, 6 798 con cambio de fecha (`CUMPLE` 12 880, de ellas 6 755 con cambio de fecha; `NO MEDIR` 1 339). Las variantes del Excel quedaron agrupadas en su razón del catálogo. Validación 5.3, cruce con las OP del indicador:
+
+| Año | Mes | OP | Con razón | `CUMPLE` | `NO MEDIR` |
+|---|---|---|---|---|---|
+| 2025 | 7 | 1 | 1 | 0 | 0 |
+| 2025 | 10 | 8 | 7 | 1 | 0 |
+| 2025 | 11 | 1 759 | 978 | 222 | 0 |
+| 2025 | 12 | 2 927 | 1 425 | 389 | 8 |
+| 2026 | 1 | 2 101 | 933 | 307 | 2 |
+| 2026 | 2 | 2 570 | 665 | 174 | 3 |
+| 2026 | 3 | 2 466 | 536 | 361 | 16 |
+| 2026 | 4 | 2 346 | 714 | 492 | 10 |
+| 2026 | 5 | 2 312 | 664 | 283 | 73 |
+| 2026 | 6 | 2 319 | 808 | 404 | 9 |
+| 2026 | 7 | 2 661 | 931 | 358 | 21 |
+| 2026 | 8 | 2 148 | 486 | 165 | 0 |
+| 2026 | 9 | 2 341 | 707 | 228 | 3 |
+| 2026 | 10 | 2 255 | 534 | 262 | 8 |
+| 2026 | 11 | 1 669 | 231 | 125 | 1 |
+| 2026 | 12 | 59 | 0 | 0 | 0 |
+
+     En los meses cerrados, las OP con razón se acercan al número de incumplidas por fechas (4.3; por ejemplo, octubre de 2026: 534 con razón y 522 NO). Noviembre de 2026 está incompleto porque Logística todavía lo diligencia. `pendiente`: % de cumplimiento por mes con la regla completa del BI, comparado con el Power BI (adelanto de la fase 6), y la primera ejecución programada del job (2026-11-20 17:15), que cierra la fase 2.
 5. La API cruza `CodigoOP` con `NoOrden` en SQL, como hoy lo hace Power BI.
 
 Pendientes que no dependen de este repositorio:
