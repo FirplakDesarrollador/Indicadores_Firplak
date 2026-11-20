@@ -540,7 +540,128 @@ Validación de totales (origen vs. tabla):
 
 ## 3. Contrato del endpoint
 
-`pendiente`
+Borrador del 2026-11-20, `pendiente` de aprobación del desarrollador. Replica el Power BI tal cual, con la regla validada en la fase 2 (agosto a octubre de 2026 iguales con dos decimales). Si las respuestas de Logística cambian alguna regla (preguntas 11, 15 y 16, entre otras), se ajusta aquí.
+
+`GET /api/v1/liberacion`. Usa el mismo token (`REPORTING_API_TOKEN`), el mismo manejo de errores (502 sin detalles internos) y la misma forma de respuesta que `/api/v1/facturacion-diaria`.
+
+**Fuentes.** `Planos_Symphony.dbo.Informe_liberacion` (OP) cruzada con `dbo.Informe_liberacion_razones` (`CodigoOP = NoOrden`). Variables nuevas: `REPORT_LIBERACION_TABLE_SCHEMA=dbo`, `REPORT_LIBERACION_TABLE=Informe_liberacion` y `REPORT_LIBERACION_RAZONES_TABLE=Informe_liberacion_razones`.
+
+**"Hoy"** es `CAST(GETDATE() AS date)` del SQL Server, en hora de Colombia. El estado se calcula en SQL en cada consulta. En el Power BI, `TODAY()` se evaluaba al actualizar el modelo; en el portal, una OP pasa de "sin liberar" a "no cumple" el mismo día en que vence.
+
+| `compliance` | Regla (en orden de prioridad) | Cuenta en el % |
+|---|---|---|
+| `ok` | La razón es `CUMPLE`; o tiene fecha real de liberación igual o anterior a la recomendada | Sí, en el numerador |
+| `noMedir` | La razón es `NO MEDIR` (si no es `CUMPLE`) | No |
+| `no` | Sin fecha real y fecha recomendada anterior a hoy; o fecha real posterior a la recomendada | Sí, en el denominador |
+| `sinLiberar` | Sin fecha real y fecha recomendada hoy o futura | No |
+
+Las razones se comparan por `RazonNormalizada`.
+
+### Parámetros
+
+Todos los filtros de periodo van por `FechaRecomendadaLiberacion`, como el segmentador del Power BI (Año › Mes › Día sobre `Calendario`).
+
+| Parámetro | Tipo | Columna | Descripción |
+|---|---|---|---|
+| `page`, `pageSize` | entero | — | Paginación de `rows`, igual que en facturación |
+| `anio`, `mes`, `dia` | entero | `FechaRecomendadaLiberacion` | Periodo. El dashboard abre en el mes en curso |
+| `fechaDesde`, `fechaHasta` | `AAAA-MM-DD` | `FechaRecomendadaLiberacion` | Rango opcional |
+| `vista` | `detalle`, `razones` o `control` | Calculada | Qué OP trae `rows` (tabla siguiente). Por omisión, `detalle`. **Solo afecta `rows`** |
+| `cumplimiento` | `ok`, `no`, `sinLiberar` o `noMedir` | Calculada | Solo filtra `rows` |
+| `razon` | texto | `RazonNormalizada` | Solo filtra `rows`. Sirve para ver las OP de una barra de la cascada |
+| `search` | texto | `CodigoOP`, `SKU`, `DescripcionSKU` | Búsqueda libre. Solo filtra `rows` |
+
+| `vista` | OP | Orden | Página del Power BI |
+|---|---|---|---|
+| `detalle` | Todas las del periodo | Fecha recomendada y OP descendentes | — (nueva: detalle completo) |
+| `razones` | Con razón distinta de `CUMPLE` (incluye `NO MEDIR`), sin importar el estado | Descripción de SKU | Tabla de "Razones Día" |
+| `control` | Estado `no` y sin razón registrada | Fecha recomendada ascendente | "Control" |
+
+Reglas de los filtros:
+
+- Todos se aplican en SQL, con parámetros (`request.input`).
+- `summary` aplica solo el periodo; `vista`, `cumplimiento`, `razon` y `search` no lo cambian, igual que en el Power BI, donde la tabla y las gráficas responden solo al segmentador de fecha.
+- `filterOptions` usa solo el periodo.
+
+### Respuesta
+
+```json
+{
+  "rows": [
+    {
+      "orderNumber": 22145678,
+      "type": "O",
+      "sku": "CODIGO-SKU",
+      "skuDescription": "Descripción del SKU",
+      "line": "MBL",
+      "family": "MBL",
+      "status": "Cerrado",
+      "postingDate": "2026-10-01",
+      "recommendedReleaseDate": "2026-10-03",
+      "actualReleaseDate": "2026-10-06",
+      "promisedItemDate": "2026-10-20",
+      "compliance": "no",
+      "reason": "CAPACIDAD DEL DIA FULL",
+      "reasonOriginal": "CAPACIDAD DEL DIA FULL",
+      "reasonComment": null,
+      "dateChanged": false
+    }
+  ],
+  "years": [2026, 2025],
+  "pagination": { "page": 1, "pageSize": 50, "total": 0, "totalPages": 0 },
+  "summary": {
+    "compliance": 0.885,
+    "target": 0.98,
+    "total": 0,
+    "ok": 0,
+    "no": 0,
+    "notReleased": 0,
+    "notMeasured": 0,
+    "withoutReason": 0,
+    "daily": [{ "date": "2026-10-01", "ok": 0, "no": 0, "compliance": 0.0 }],
+    "monthly": [{ "year": 2026, "month": 10, "ok": 0, "no": 0, "compliance": 0.0 }],
+    "yearly": [{ "year": 2026, "ok": 0, "no": 0, "compliance": 0.0 }],
+    "reasons": [{ "name": "CAPACIDAD DEL DIA FULL", "orders": 0, "share": 0.0 }]
+  },
+  "filterOptions": { "reasons": [] },
+  "source": "sql-server",
+  "loadedAt": "2026-11-20T17:15:04.000-05:00",
+  "reasonsSyncedAt": "2026-11-20T12:54:38.000-05:00",
+  "updatedAt": "2026-11-20T17:20:00.000Z"
+}
+```
+
+Los valores del ejemplo son ilustrativos; el endpoint solo devuelve datos reales.
+
+Reglas de cada campo:
+
+| Campo | Regla | Medida o visual del BI |
+|---|---|---|
+| `rows` | Una fila por OP según `vista` y los filtros de `rows`. Paginada. `reason` es la razón normalizada y `reasonOriginal` el texto tal como se registró; `null` si la OP no tiene razón | Tablas de "Razones Día" y "Control" |
+| `summary.compliance` | `ok / (ok + no)`; `null` si `ok + no = 0` | `%Cumplimiento` |
+| `summary.target` | Constante `0.98` en la API | Línea "META: 98%" de los dos visuales de cumplimiento |
+| `summary.total` | OP del periodo, en cualquier estado | — |
+| `summary.ok`, `no`, `notReleased`, `notMeasured` | OP del periodo en cada estado | `Cumplimiento` (conteo) |
+| `summary.withoutReason` | OP `no` sin razón registrada (lo que muestra la vista `control`) | Lista de "Control" |
+| `summary.daily` | Por fecha recomendada del periodo: `ok`, `no` y `compliance` | Columnas 100 % de "Cumplimiento Liberación" (eje: día) |
+| `summary.monthly` | Por mes del año `anio` (o del año en curso), los 12 meses: `ok`, `no`, `compliance`. **No aplica `mes`, `dia` ni el rango** | "Acum Cumplimiento Liberación", nivel mes. El trimestre se suma en el frontend con estos conteos |
+| `summary.yearly` | Por año, toda la tabla. **No aplica ningún filtro de periodo** | "Acum Cumplimiento Liberación", nivel año |
+| `summary.reasons` | Entre las OP `no` del periodo que tienen razón: OP por `RazonNormalizada`, de mayor a menor; `share = orders / suma de orders` | Cascada "% RAZONES INCUMPLIMIENTO" (filtro `Cumplimiento = NO`) |
+| `filterOptions.reasons` | Razones normalizadas de las OP del periodo | Para el filtro `razon` |
+| `years` | Años con fecha recomendada en la tabla | Segmentador Año |
+| `loadedAt` | `MAX(UltimaCarga)` de `Informe_liberacion`: última carga de OP | — |
+| `reasonsSyncedAt` | `MAX(Sincronizado)` de `Informe_liberacion_razones`: última llegada de razones desde Supabase | — |
+| `updatedAt` | Hora de la respuesta, igual que en facturación | — |
+
+Decisiones de este borrador (`pendiente` de aprobación):
+
+- **A. Razones normalizadas.** El Power BI agrupaba por el texto tal cual, así que las variantes del Excel (`ERROR DE LIBERACIÓN` con tilde, `CAPACIAD DEL DIA FULL`, `CAMBIO SKU`) salían como barras separadas. El portal las suma en su razón del catálogo. El % de cumplimiento no cambia, porque `CUMPLE` y `NO MEDIR` no tienen variantes.
+- **B. Una razón por OP.** La cascada cuenta OP, no filas del Excel. Coincide con el Power BI porque el Excel ya no tiene OP repetidas (pregunta 8).
+- **C. Estado con la fecha del día.** Se calcula en cada consulta y no al actualizar, como hacía el Power BI. Puede dar diferencias de un día en la conciliación del mes en curso, nunca en meses cerrados.
+- **D. Detalle completo nuevo** (`vista = detalle`), con familia, estado y fechas, para la pregunta 10. El Power BI solo tenía las tablas de razones y de control.
+- **E. `withoutReason` y `reasonsSyncedAt` nuevos**, para que Planeación vea cuántas OP le falta justificar y desde cuándo no llegan razones.
+
+No se incluyen: los botones "Atrás" del Power BI, `Tipo` o familia como filtros (pendiente de la pregunta 11), "cumple con cambio de fecha" como estado aparte (pregunta 15; por ahora solo viaja en `rows.dateChanged`) ni exportación a Excel (el Power BI no la tenía).
 
 ## 4. Endpoint
 

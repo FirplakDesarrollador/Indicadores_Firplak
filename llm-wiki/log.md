@@ -854,3 +854,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - % de cumplimiento por mes con la regla completa del BI, calculado en SQL: agosto 85,4 %, septiembre 79,7 %, octubre 88,5 % de 2026. `pendiente`: compararlo con el Power BI.
 - Comparación con el Power BI: agosto (85,43 %) y septiembre (79,68 %) de 2026 iguales con dos decimales. Octubre: portal 88,52 %, Power BI 88,45 % (1 o 2 OP de diferencia); hipótesis de fotos distintas, `pendiente` de confirmar con la hora de actualización y los conteos del Power BI.
 - Power BI actualizado por el desarrollador antes de las 17:00: octubre de 2026 da 88,52 %, igual al portal (antes 88,45 %, por una actualización anterior). Agosto, septiembre y octubre coinciden con dos decimales.
+
+## [2026-11-20] bi | Liberación: borrador del contrato del endpoint (fase 3)
+
+- `GET /api/v1/liberacion` en la [ficha](bi/liberacion.md#3-contrato-del-endpoint): estado `ok`, `no`, `sinLiberar` o `noMedir` calculado en SQL con la regla validada; vistas `detalle`, `razones` (tabla de "Razones Día") y `control`; resumen con %, meta del 98 % (línea fija `0.98` en los visuales del Power BI), series diaria, mensual y anual, y cascada de razones de las OP `no`.
+- Decisiones A a E `pendiente` de aprobación del desarrollador; las respuestas de Logística pueden cambiar reglas después.
