@@ -440,6 +440,7 @@ Planos_Symphony.dbo.Informe_liberacion_razones (reemplazo completo en una transa
    - El usuario de la API solo recibe `EXECUTE` sobre el SP y el tipo.
    - Verificado el 2026-11-20: el usuario de la API (`informes`) tiene solo `db_datareader` y `CONNECT`. Necesita los dos `GRANT EXECUTE` de la sección 4 del script; los `SELECT` no, porque `db_datareader` ya los cubre.
    - 2026-11-20: el desarrollador ejecutó `02_razones_liberacion.sql`, los dos `GRANT EXECUTE` a `informes` y `03_job_liberacion.sql` (job `BI - Liberacion carga`).
+   - 2026-11-20, primer envío desde Supabase: la API respondió 200 (`received` 40 492). Validación 5.1: `Cargas_Log` Id 3447, 40 492 insertadas en menos de 1 s, sin error. Validación 5.2: el conteo por `RazonNormalizada` en SQL Server es idéntico al de la vista en Supabase: 44 razones, 40 492 OP, 6 798 con cambio de fecha (`CUMPLE` 12 880, de ellas 6 755 con cambio de fecha; `NO MEDIR` 1 339). Las variantes del Excel quedaron agrupadas en su razón del catálogo. `pendiente`: 5.3, el cruce con las OP del indicador.
 5. La API cruza `CodigoOP` con `NoOrden` en SQL, como hoy lo hace Power BI.
 
 Pendientes que no dependen de este repositorio:
