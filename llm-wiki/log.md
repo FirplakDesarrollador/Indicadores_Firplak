@@ -874,3 +874,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Pedido del desarrollador: lo más parecido posible al Power BI. Estructura tomada del `.pbip` y de sus capturas: columnas 100 % con "META: 98 %", acumulado por año, trimestre o mes, Pareto con línea del 80 % (la cascada del Power BI la tiene fija) y las tablas de Razones Día y Control.
 - Rutas `/liberacion`, `/acumulado`, `/razones`, `/razones-dia` y `/control`; proxy `/api/liberacion`; informe `liberacion` en el área Logística. Colores del manual de identidad, no los del Power BI.
 - Lint y build sin errores. `pendiente`: revisión con datos reales en 375, 820 y 1440 px y permiso en `/admin/permisos`.
+
+## [2026-11-20] bi | Liberación: conciliación con el Power BI (fase 6)
+
+- `sql/liberacion/05_conciliacion.sql`: % por mes y por día, Pareto por mes y OP sin razón, de septiembre a noviembre de 2026. Regla: comparar el mismo día antes de las 17:00.
+- Agosto, septiembre y octubre iguales al decimal. Hallazgo `pendiente`: la captura diaria de octubre difiere en 6 de 20 días por 1 a 3 OP; probablemente el Power BI se actualizó después de la recarga de las 17:00 y el portal seguía con la de las 12:12 (octubre habría cambiado en el origen en un día, pregunta 12).
+- Revisión responsive del dashboard aplazada por el desarrollador.

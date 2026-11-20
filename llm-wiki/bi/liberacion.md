@@ -693,11 +693,26 @@ Pedido del desarrollador (2026-11-20): las 5 páginas del Power BI, lo más pare
 - Clic o Enter en una OP abre su detalle: tipo, línea, familia, estado, las cuatro fechas, la observación (con el texto original si se normalizó), el comentario y el cambio de fecha. Así se cubre la decisión D del contrato sin una página que el Power BI no tiene.
 - Diferencia visual inevitable: los colores. El Power BI usa fondo `#CCC3C3` y azules de Power BI; el portal usa la paleta del manual de identidad (OK en navy, NO en sage, líneas de meta y Pareto en `--danger`, agregado a `lib/brand.ts` como réplica del token).
 - Gráficos con muchas columnas se desplazan en horizontal en lugar de comprimirse; las etiquetas se ocultan si la columna es muy angosta y el valor sigue en el tooltip.
-- Verificación (2026-11-20): `npm run lint` y `npm run build` sin errores; `/liberacion` sin sesión redirige al login y `/api/liberacion` responde 401. `pendiente`: revisión con datos reales y sesión en 375, 820 y 1440 px, y asignar el permiso.
+- Verificación (2026-11-20): `npm run lint` y `npm run build` sin errores; `/liberacion` sin sesión redirige al login y `/api/liberacion` responde 401. Revisión con datos reales (desarrollador, 2026-11-20, noviembre de 2026, escritorio): las 5 páginas cargan y cuadran con la validación de la fase 2 (92,8 %, 1 379 OK, 107 NO, 7 sin razón). Se corrigieron la posición de las etiquetas de meta y Pareto, el título del eje cortado y el Pareto compacto de Razones por día. `pendiente`, aplazado por el desarrollador: revisión en 375 y 820 px y asignar el permiso en `/admin/permisos`.
 
 ## 6. Conciliación con Power BI
 
-`pendiente`
+Script de solo lectura: [`sql/liberacion/05_conciliacion.sql`](../../sql/liberacion/05_conciliacion.sql) (septiembre a noviembre de 2026: % por mes y por día, Pareto por mes y OP sin razón). Regla para comparar: **actualizar el Power BI y correr el script el mismo día, antes de las 17:00**, porque a esa hora el SP de origen recalcula `Indicador_Liberacion` (y con él meses ya cerrados) y a las 17:15 se copia al portal.
+
+| Indicador | Mes 2026 | Portal | Power BI | Diferencia |
+|---|---|---|---|---|
+| % cumplimiento | Agosto | 85,43 % | 85,43 % | 0 |
+| % cumplimiento | Septiembre | 79,68 % | 79,68 % | 0 |
+| % cumplimiento | Octubre | 88,52 % | 88,52 % | 0 |
+| % cumplimiento | Noviembre (en curso) | 92,8 % | `pendiente` | |
+| % por día | Octubre | 14 de 20 días iguales | Captura del desarrollador | Ver hallazgo |
+| Pareto: primera razón | Octubre | `FALTA O PROBLEMAS DE MP`, 82 de 258 (31,8 %) | `FALTA O…` 33 % (captura) | Ver hallazgo |
+| OP sin razón (Control) | Octubre | 0 | 0 (tabla vacía en la captura) | 0 |
+| OP sin razón (Control) | Noviembre | 7 | `pendiente` | |
+
+**Hallazgo (2026-11-20), `pendiente` de confirmar.** La captura diaria de octubre del Power BI coincide en 14 de 20 días y difiere por 1 a 3 OP en los días 7, 21, 23, 26, 27, 28 y 29 (por ejemplo, el 27: portal 44 OK / 15 NO = 74,58 %; Power BI 73,33 %, que equivale a 44 / 16). El Acum de octubre de esa captura dio 88,31 %, cuando una hora antes había dado 88,52 %, y el Pareto difiere en el mismo sentido. Hipótesis: la captura se tomó con el Power BI actualizado después de la recarga de las 17:00, mientras el portal seguía con la carga de las 12:12. Si es así, octubre cambió en el origen en un solo día, lo que confirma el riesgo de la pregunta 12. Se confirma comparando de nuevo después de la carga del portal de las 17:15.
+
+**Firma del dueño de negocio:** Logística — fecha — `pendiente`.
 
 ## 7. Despliegue y retiro
 
