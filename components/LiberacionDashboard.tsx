@@ -94,14 +94,15 @@ function ShareChart({ points, target, ariaLabel, axisLabel }: { points: SharePoi
   });
   // Con muchas columnas, el gráfico se desplaza en horizontal en lugar de comprimirlas.
   const minWidth = Math.max(data.length * 44, 320);
-  return <div className="release-chart-scroll"><div className="release-chart release-chart-share" style={{ minWidth }} role="img" aria-label={ariaLabel}><ResponsiveContainer width="100%" height="100%"><BarChart data={data} margin={{ top: 28, right: 12, left: 12, bottom: 0 }} barCategoryGap="12%">
+  // La etiqueta de la meta va a la derecha del gráfico, fuera de las columnas.
+  return <div className="release-chart-scroll"><div className="release-chart release-chart-share" style={{ minWidth }} role="img" aria-label={ariaLabel}><ResponsiveContainer width="100%" height="100%"><BarChart data={data} margin={{ top: 16, right: 84, left: 12, bottom: 8 }} barCategoryGap="12%">
     <CartesianGrid vertical={false} stroke={chartColors.grid} />
-    <XAxis dataKey="label" axisLine={false} tickLine={false} interval={0} tick={{ fill: chartColors.axis, fontSize: 12 }} label={{ value: axisLabel, position: "insideBottom", offset: -2, fill: chartColors.axis, fontSize: 12 }} height={44} />
+    <XAxis dataKey="label" axisLine={false} tickLine={false} interval={0} tick={{ fill: chartColors.axis, fontSize: 12 }} label={{ value: axisLabel, position: "insideBottom", offset: 0, fill: chartColors.axis, fontSize: 12 }} height={52} />
     <YAxis hide domain={[0, 1]} />
     <Tooltip cursor={{ fill: chartColors.grid }} content={<ShareTooltip />} />
-    <Bar dataKey="okShare" name="Cumple" stackId="share" fill={chartColors.primary} isAnimationActive={false}><LabelList dataKey="okShare" content={ShareLabel} /></Bar>
-    <Bar dataKey="noShare" name="No cumple" stackId="share" fill={chartColors.secondary} isAnimationActive={false}><LabelList dataKey="noShare" content={ShareLabel} /></Bar>
-    {target !== null && <ReferenceLine y={target} stroke={chartColors.danger} strokeDasharray="4 4" strokeWidth={2} ifOverflow="extendDomain" label={{ value: `META: ${percentWhole.format(target)}`, position: "insideTopLeft", fill: chartColors.danger, fontSize: 12, fontWeight: 600 }} />}
+    <Bar dataKey="okShare" name="Cumple" stackId="share" fill={chartColors.primary} maxBarSize={240} isAnimationActive={false}><LabelList dataKey="okShare" content={ShareLabel} /></Bar>
+    <Bar dataKey="noShare" name="No cumple" stackId="share" fill={chartColors.secondary} maxBarSize={240} isAnimationActive={false}><LabelList dataKey="noShare" content={ShareLabel} /></Bar>
+    {target !== null && <ReferenceLine y={target} stroke={chartColors.danger} strokeDasharray="4 4" strokeWidth={2} ifOverflow="extendDomain" label={{ value: `META: ${percentWhole.format(target)}`, position: "right", fill: chartColors.danger, fontSize: 12, fontWeight: 600 }} />}
   </BarChart></ResponsiveContainer></div></div>;
 }
 
@@ -129,10 +130,11 @@ function ParetoLabel(props: { x?: number | string; y?: number | string; width?: 
   return <text x={x + width / 2} y={y + height / 2} fill={chartColors.surface} textAnchor="middle" dominantBaseline="central" fontSize={12} fontWeight={600}>{percentWhole.format(value)}</text>;
 }
 
-function ReasonTick({ x, y, payload }: { x?: number | string; y?: number | string; payload?: { value: string } }) {
+function ReasonTick({ x, y, payload, compact = false }: { x?: number | string; y?: number | string; payload?: { value: string }; compact?: boolean }) {
   const text = payload?.value ?? "";
-  const short = text.length > 22 ? `${text.slice(0, 21)}…` : text;
-  return <g transform={`translate(${Number(x)},${Number(y)})`}><title>{text}</title><text x={0} y={0} dy={10} textAnchor="end" transform="rotate(-35)" fill={chartColors.axis} fontSize={11}>{short}</text></g>;
+  const limit = compact ? 16 : 22;
+  const short = text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
+  return <g transform={`translate(${Number(x)},${Number(y)})`}><title>{text}</title><text x={0} y={0} dy={10} textAnchor="end" transform={`rotate(${compact ? -55 : -35})`} fill={chartColors.axis} fontSize={compact ? 10 : 11}>{short}</text></g>;
 }
 
 function ParetoChart({ reasons, compact = false }: { reasons: ReleaseSummary["reasons"]; compact?: boolean }) {
@@ -145,10 +147,11 @@ function ParetoChart({ reasons, compact = false }: { reasons: ReleaseSummary["re
     return point;
   });
   data.push({ name: "Total", base: 0, share: totalOrders ? 1 : 0, orders: totalOrders, total: true });
-  const minWidth = Math.max(data.length * (compact ? 56 : 64), 320);
+  // Compacto (Razones por día): cabe en medio ancho sin desplazarse; a todo el ancho, columnas más holgadas.
+  const minWidth = Math.max(data.length * (compact ? 30 : 64), 320);
   return <div className="release-chart-scroll"><div className={`release-chart release-chart-pareto ${compact ? "compact" : ""}`} style={{ minWidth }} role="img" aria-label="Pareto de razones de incumplimiento"><ResponsiveContainer width="100%" height="100%"><BarChart data={data} margin={{ top: 16, right: 12, left: 0, bottom: 0 }} barCategoryGap="14%">
     <CartesianGrid vertical={false} stroke={chartColors.grid} />
-    <XAxis dataKey="name" axisLine={false} tickLine={false} interval={0} height={118} tick={<ReasonTick />} />
+    <XAxis dataKey="name" axisLine={false} tickLine={false} interval={0} height={118} tick={<ReasonTick compact={compact} />} />
     <YAxis axisLine={false} tickLine={false} domain={[0, 1]} ticks={[0, 0.2, 0.4, 0.6, 0.8, 1]} tickFormatter={(value: number) => percentWhole.format(value)} tick={{ fill: chartColors.axis, fontSize: 12 }} width={48} />
     <Tooltip cursor={{ fill: chartColors.grid }} content={<ParetoTooltip />} />
     <Bar dataKey="base" stackId="pareto" fill="transparent" isAnimationActive={false} />
@@ -156,7 +159,7 @@ function ParetoChart({ reasons, compact = false }: { reasons: ReleaseSummary["re
       {data.map((point) => <Cell key={point.name} fill={point.total ? chartColors.primary : chartColors.secondary} />)}
       <LabelList dataKey="share" content={ParetoLabel} />
     </Bar>
-    <ReferenceLine y={0.8} stroke={chartColors.danger} strokeDasharray="4 4" strokeWidth={2} label={{ value: "PARETO: 80 %", position: "insideTopRight", fill: chartColors.danger, fontSize: 12, fontWeight: 600 }} />
+    <ReferenceLine y={0.8} stroke={chartColors.danger} strokeDasharray="4 4" strokeWidth={2} label={{ value: "PARETO: 80 %", position: "insideTopLeft", fill: chartColors.danger, fontSize: 12, fontWeight: 600 }} />
   </BarChart></ResponsiveContainer></div></div>;
 }
 
