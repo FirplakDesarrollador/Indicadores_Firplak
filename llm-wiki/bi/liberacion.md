@@ -488,9 +488,9 @@ Planos_Symphony.dbo.Informe_liberacion_razones (reemplazo completo en una transa
 |---|---|---|---|
 | Agosto | 1 835 / 2 148 = 85,43 % | 85,43 % | 0 |
 | Septiembre | 1 863 / 2 338 = 79,68 % | 79,68 % | 0 |
-| Octubre | 1 989 / 2 247 = 88,52 % | 88,45 % | 0,07 puntos (1 o 2 OP) |
+| Octubre | 1 989 / 2 247 = 88,52 % | 88,45 % antes de actualizar; 88,52 % actualizado | 0 |
 
-     Agosto y septiembre iguales con dos decimales: la regla está bien replicada. **Hallazgo, octubre:** diferencia mayor a una unidad de redondeo. Hipótesis `pendiente`: el Power BI y el portal tienen fotos distintas (octubre perdió 16 OP en el origen entre el 4 y el 20 de noviembre; Supabase tiene el Excel del 2026-11-20 09:55). Para confirmarlo se necesitan la hora de la última actualización del Power BI y sus conteos de OK y NO de octubre. `pendiente`: primera ejecución programada del job (2026-11-20 17:15), que cierra la fase 2.
+     Agosto y septiembre iguales con dos decimales: la regla está bien replicada. **Octubre, resuelto el mismo día:** el desarrollador actualizó el Power BI antes de las 17:00 (mismo `Indicador_Liberacion` que el portal) y dio **88,52 %**, igual al portal; agosto y septiembre siguieron iguales. La diferencia de 0,07 puntos era porque el Power BI tenía una actualización anterior. Los tres meses coinciden con dos decimales. `pendiente`: primera ejecución programada del job (2026-11-20 17:15), que cierra la fase 2.
 5. La API cruza `CodigoOP` con `NoOrden` en SQL, como hoy lo hace Power BI.
 
 Pendientes que no dependen de este repositorio:
