@@ -833,3 +833,12 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Pregunta 1 respondida en parte (falta la fecha de corte del Excel con Logística); la 8 ya no aplica. Nuevas preguntas 15 (cumple con cambio de fecha) y 16 (fecha programada de la app).
 - El script del SP quedó enlazado en la ficha: `bi-origen/bi-liberacion/sql/FPK_INDICADOR_LIBERACION.sql`.
 - Decisión del desarrollador: se construye con Supabase sin esperar la fecha de corte del Excel.
+
+## [2026-11-20] bi | Liberación: fase 2, scripts de tablas, envío de razones y endpoint
+
+- Plan aprobado por el desarrollador. Se avanza sin la validación de Logística de la fase 1: las tablas no guardan reglas de cumplimiento.
+- `sql/liberacion/01_informe_liberacion.sql`: `dbo.Informe_liberacion` con tipos reales y `dbo.sp_Actualizar_Informe_liberacion` (`MERGE` desde `Indicador_Liberacion`; conserva las OP que salen de la ventana de 365 días). `03_job_liberacion.sql`: job `BI - Liberacion carga`, lunes a viernes 17:15.
+- Razones: el desarrollador descartó un servidor vinculado o un driver en ITPLAKINFO. Supabase (`pg_cron` + `pg_net`) envía la vista `logistica.razones_lib_vigentes` a `POST /api/v1/liberacion/razones` cada 15 minutos si cambió. La API reemplaza `dbo.Informe_liberacion_razones` con `dbo.sp_Cargar_Informe_liberacion_razones` (`02_razones_liberacion.sql`). Token propio `LIBERACION_RAZONES_TOKEN`; el usuario de la API solo recibe `EXECUTE` sobre el SP y el tipo.
+- Validación hecha: la API compila; pruebas locales de la ruta (401 sin token o con otro token, 400 por JSON o versión inválidos, 413 por tamaño, 404 en GET); la vista probada en PGlite con un caso por regla; el JSON que arma Supabase pasa la validación de la API. Nada se ejecutó en SQL Server ni en Supabase.
+- `pendiente` (desarrollador): ejecutar los scripts y pegar los resultados de las consultas 0 y 4 en la ficha; desplegar la API con `LIBERACION_RAZONES_TOKEN`; aplicar la migración de Supabase y crear los secretos en Vault.
+- Rollback: al inicio de cada script y de la migración.

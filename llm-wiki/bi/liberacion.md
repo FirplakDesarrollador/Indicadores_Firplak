@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 1
+fase: 2
 updated: 2026-11-20
 sources:
   - ../../bi-origen/bi-liberacion/
@@ -332,18 +332,20 @@ Del Excel `Razones incumplimiento lib.xlsx` (tabla `Obs_Plan`), sin copiar el ar
 
 ## 2. Tabla de reporte y carga incremental
 
-Propuesta inicial; se define en la fase 2 con los resultados de las consultas 1 a 3 y la respuesta a la pregunta 1.
+Plan aprobado por el desarrollador el 2026-11-20. Scripts en [`sql/liberacion/`](../../sql/liberacion/), que ejecuta el desarrollador: [`01_informe_liberacion.sql`](../../sql/liberacion/01_informe_liberacion.sql) (tabla de OP y SP), [`02_razones_liberacion.sql`](../../sql/liberacion/02_razones_liberacion.sql) (tabla de razones y SP de carga que usa la API) y [`03_job_liberacion.sql`](../../sql/liberacion/03_job_liberacion.sql).
+
+La fase 2 avanzó sin la validación de Logística de la fase 1, por decisión del desarrollador: las tablas no guardan reglas de cumplimiento. El cumplimiento se calcula en la API (fase 4), y esa fase sí depende de las respuestas.
 
 | Campo | Valor |
 |---|---|
-| Tabla | `pendiente` (consultas 6 y 7). `Indicador_Liberacion` ya es una tabla con carga propia, pero toda en texto. Opciones: corregir los tipos en esa tabla y su SP, o crear `Planos_Symphony.dbo.Informe_liberacion` con tipos reales a partir de ella ([ADR-001](../decisions/ADR-001-reporting-table.md)) |
+| Tabla | `Planos_Symphony.dbo.Informe_liberacion`: las 23 columnas de `Indicador_Liberacion` con tipos reales (fechas `date`, cantidades `decimal`) y nombres sin espacios ni tildes (`Código OP` → `CodigoOP`, `Fecha Recomendada de Liberación` → `FechaRecomendadaLiberacion`, etc.), más `EnOrigen`, `PrimeraCarga` y `UltimaCarga` ([ADR-001](../decisions/ADR-001-reporting-table.md)) |
 | Grano (una fila por…) | Orden de producción (`Código OP`). Confirmado: 30 323 filas, 30 323 OP |
 | Clave | `Código OP` como entero (todos son numéricos), compatible con `No Orden` de las razones |
 | Fecha de referencia (filtros por periodo) | `Fecha Recomendada de Liberación` |
-| Estrategia incremental | Propuesta: no tocar `FPK_INDICADOR_LIBERACION` (es la regla de Planeación y la usa el Power BI mientras corre en paralelo). Un SP nuevo, después de él, copia `Indicador_Liberacion` a una tabla con tipos reales mediante `MERGE` por `Código OP`: actualiza las OP de la ventana y **conserva** las que salen de ella. Así el portal acumula historia. `pendiente`: aprobación del desarrollador en la fase 2 y respuesta a la pregunta 12 |
-| SP | Hoy: `dbo.FPK_INDICADOR_LIBERACION`, el que ejecuta el job. `dbo.FPK_INDICADOR_LIBERACION_OPTIMIZADO` existe pero el job no lo usa |
-| Job y horario | Hoy: `Actualizacion Indicador Liberacion.Subplán_1`, plan de mantenimiento, lunes a viernes a las 17:00; dura unos 15 s |
-| Índices | `pendiente`; mínimo sobre `Fecha Recomendada de Liberación` y `Código OP` |
+| Estrategia incremental | `FPK_INDICADOR_LIBERACION` no se toca. `dbo.sp_Actualizar_Informe_liberacion` hace `MERGE` por `CodigoOP` desde `Indicador_Liberacion`. Inserta y actualiza las OP del origen. Las que salen de la ventana de 365 días sobre la fecha prometida se **conservan** con `EnOrigen = 0` (historia, pregunta 12). Las que salen del origen y siguen dentro de la ventana (canceladas o fuera de los filtros del SP de origen) se borran. No carga si una fecha o un número no tiene el formato esperado, si el origen está vacío o si trae menos del 50 % de las OP vigentes (origen a mitad de su `TRUNCATE` + `INSERT`). Bitácora: `dbo.Cargas_Log`, `Proceso = Informe_liberacion` |
+| SP | Nuevo: `dbo.sp_Actualizar_Informe_liberacion`. Origen, sin cambios: `dbo.FPK_INDICADOR_LIBERACION`. `dbo.FPK_INDICADOR_LIBERACION_OPTIMIZADO` existe, pero ningún job lo usa |
+| Job y horario | Nuevo: `BI - Liberacion carga`, lunes a viernes a las 17:15, con un reintento a los 10 minutos. Origen: `Actualizacion Indicador Liberacion.Subplán_1`, lunes a viernes a las 17:00 (unos 15 s) |
+| Índices | Clave primaria agrupada por `CodigoOP`, para el cruce con las razones. `IX_Informe_liberacion_FechaRecomendada` sobre `FechaRecomendadaLiberacion`, con `Tipo`, `Linea`, `FamiliaProduccion`, `Estado` y `FechaRealLiberacion` incluidas: todos los filtros de periodo van por esa fecha |
 
 Columnas que usa el BI: `Código OP`, `Descripción de SKU`, `Tipo`, `Linea`, `Fecha de Contabilización`, `Fecha Recomendada de Liberación`, `Fecha Real de Liberación`, `Fecha Prometida de Entrega Ítem`, más las que Logística pida en la pregunta 10.
 
@@ -364,12 +366,37 @@ La razón vigente de cada OP es la del registro, si existe, o la del histórico,
 
 **Decisión: opción A, sincronizar a SQL Server.** Se descartó que la Reporting API consulte Supabase en cada petición (opción B). B no sería lenta si se cachea, pero el filtro por razón no se podría aplicar en SQL, el indicador dependería de dos bases y la conciliación con Power BI sería más difícil de explicar con consultas.
 
-Diseño propuesto (se define en la fase 2):
+Diseño (2026-11-20). El desarrollador descartó instalar un driver de PostgreSQL o un servidor vinculado en ITPLAKINFO. Por eso Supabase **empuja** las razones a la Reporting API, y el job de envío se programa en Supabase:
 
-1. Vista en Supabase `logistica.razones_lib_vigentes`: una fila por OP con razón, comentario, fecha programada, cambio de fecha y fecha de actualización. Requiere una migración en el proyecto Logística.
-2. Tabla en `Planos_Symphony` (nombre `pendiente`) con clave `No Orden` (`bigint`), cargada desde esa vista.
-3. Proceso programado que copie la vista a la tabla. `pendiente`: dónde corre (script en el servidor de la Reporting API o paso del job de SQL Server), cada cuánto (pregunta 13) y con qué credencial. Debe ser un rol de Supabase de solo lectura sobre la vista, no la clave de servicio.
-4. La API cruza `Código OP` con `No Orden` en SQL, como hoy lo hace Power BI.
+```text
+logistica.razones_lib_vigentes (vista)
+  │ pg_cron cada 15 min → logistica.liberacion_enviar_razones(): solo envía si cambió la huella (md5)
+  ▼ pg_net POST https://api.firplak.com:8443/api/v1/liberacion/razones (token LIBERACION_RAZONES_TOKEN, en Vault)
+Reporting API → EXEC dbo.sp_Cargar_Informe_liberacion_razones @Razones (parámetro de tabla dbo.TipoRazonLiberacion)
+  ▼
+Planos_Symphony.dbo.Informe_liberacion_razones (reemplazo completo en una transacción)
+```
+
+1. **Vista** `logistica.razones_lib_vigentes`, creada por la migración `supabase/migrations/20261120_logistica_razones_lib_envio_liberacion.sql` del proyecto Logística. Replica las reglas de la app:
+   - El registro prevalece sobre el histórico, y las OP eliminadas no aparecen.
+   - `razon_normalizada` se calcula como `normalizarRazon`: agrupa ERROR DE LIBERACIÓN, CAPACIAD DEL DIA FULL y CAMBIO SKU.
+   - `cambio_fecha` del histórico se deduce del comentario, como `detectarCambioFecha`.
+   - `fecha_programada` solo se llena si `fecha_excel` es una fecha válida; si no, el texto va en `fecha_texto`.
+
+   Se probó con PGlite el 2026-11-20, con un caso por regla. Si las reglas cambian en la app, hay que cambiar la vista.
+2. **Envío:** `logistica.liberacion_enviar_razones()`, `security definer`, sin permisos para `anon` ni `authenticated`.
+   - Lee la URL y el token de Vault (`liberacion_api_url`, `liberacion_api_token`).
+   - Guarda cada envío y su respuesta HTTP en `logistica.liberacion_envios`, durante 30 días.
+   - Si el último envío falló, reintenta en la siguiente corrida.
+   - Requiere las extensiones `pg_cron` y `pg_net` en Manufactura.
+3. **API:** `POST /api/v1/liberacion/razones`, en la rama `bi/liberacion` de `reporting-api` (`src/liberacion.ts`).
+   - Usa un token propio, distinto de `REPORTING_API_TOKEN`, para que Supabase no pueda consultar los demás informes.
+   - Valida todas las filas. Si una falla, responde 400 con hasta cinco errores y no guarda nada.
+   - Acepta cuerpos de hasta 25 MB.
+4. **SQL Server:** `dbo.Informe_liberacion_razones`, con clave `NoOrden` (`bigint`) y las columnas `Razon`, `RazonNormalizada`, `CambioFecha`, `FechaProgramada`, `FechaTexto`, `Comentario`, `Origen`, `Actualizado` y `Sincronizado`.
+   - El SP rechaza un envío que traiga más de un 10 % menos de filas que la tabla actual.
+   - El usuario de la API solo recibe `EXECUTE` sobre el SP y el tipo.
+5. La API cruza `CodigoOP` con `NoOrden` en SQL, como hoy lo hace Power BI.
 
 Pendientes que no dependen de este repositorio:
 
