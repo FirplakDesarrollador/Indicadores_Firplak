@@ -868,3 +868,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Paquete `reporting-api-dist-d5a34f6.zip` desde `deploy/2026-11-20`. `pendiente`: validación en SSMS y despliegue.
 - Consulta del endpoint validada en SSMS por el desarrollador (octubre de 2026): totales, series diaria, mensual y anual y cascada de razones cuadran entre sí y con la comparación contra el Power BI.
 - API desplegada con `reporting-api-dist-d5a34f6.zip`. Verificado desde fuera: `GET /api/v1/liberacion` 401 sin token (la ruta existe); `POST /api/v1/liberacion/razones`, NS Plantas, balance y facturación 401; `/health` 200.
+
+## [2026-11-20] bi | Liberación: dashboard con las 5 páginas del Power BI (fase 5)
+
+- Pedido del desarrollador: lo más parecido posible al Power BI. Estructura tomada del `.pbip` y de sus capturas: columnas 100 % con "META: 98 %", acumulado por año, trimestre o mes, Pareto con línea del 80 % (la cascada del Power BI la tiene fija) y las tablas de Razones Día y Control.
+- Rutas `/liberacion`, `/acumulado`, `/razones`, `/razones-dia` y `/control`; proxy `/api/liberacion`; informe `liberacion` en el área Logística. Colores del manual de identidad, no los del Power BI.
+- Lint y build sin errores. `pendiente`: revisión con datos reales en 375, 820 y 1440 px y permiso en `/admin/permisos`.

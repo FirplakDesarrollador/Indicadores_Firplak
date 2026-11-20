@@ -42,6 +42,7 @@ sources:
 - `/consolidado-comercial/detalle`: detalle paginado de las líneas abiertas de A–C, con pestañas por etapa, búsqueda y panel lateral.
 - `/api/consolidado-comercial`: proxy server-side hacia `GET /api/v1/consolidado-comercial`.
 - `/ns-plantas`: nivel de servicio de plantas para Manufactura ([`NsPlantasDashboard.tsx`](../../components/NsPlantasDashboard.tsx); reglas en la [ficha del BI](../bi/ns-plantas.md)). Abre en el mes en curso: nivel de servicio con meta del 90 %, órdenes medidas, incumplidas y en plazo, series diaria y mensual (año completo), tabla por planta frente a la meta e incumplidas por razón de retraso.
+- `/liberacion`: liberación de órdenes de producción para Logística ([`LiberacionDashboard.tsx`](../../components/LiberacionDashboard.tsx); reglas en la [ficha del BI](../bi/liberacion.md)). Las 5 páginas del Power BI: cumplimiento por día (`/liberacion`), acumulado por año, trimestre o mes (`/acumulado`), Pareto de razones (`/razones`), razones por día con tabla y Pareto (`/razones-dia`) y control de OP sin razón (`/control`). Abre en el mes en curso; meta del 98 %.
 - `/ns-plantas/detalle`: detalle paginado de órdenes de fabricación, abre en las incumplidas; filtro de cumplimiento, búsqueda y panel lateral.
 - `/api/ns-plantas`: proxy server-side hacia `GET /api/v1/ns-plantas`.
 - `/admin/permisos`: administración de permisos por cargo, con excepciones e historial con soporte; solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).

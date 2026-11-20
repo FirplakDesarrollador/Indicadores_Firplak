@@ -677,7 +677,23 @@ No se incluyen: los botones "Atrás" del Power BI, `Tipo` o familia como filtros
 
 ## 5. Dashboard
 
-`pendiente`
+Pedido del desarrollador (2026-11-20): las 5 páginas del Power BI, lo más parecidas posible. Estructura tomada del `.pbip` (posición, tipo y configuración de cada visual) y de las capturas de octubre de 2026.
+
+| Ruta | Página del Power BI | Contenido |
+|---|---|---|
+| `/liberacion` | Cumplimiento Liberación | Resumen del periodo (% frente a la meta, cumplen, no cumplen con las que no tienen razón, fuera del indicador) y columnas 100 % por fecha recomendada: OK y NO con su % de dos decimales dentro de cada tramo y la línea "META: 98 %" |
+| `/liberacion/acumulado` | Acum Cumplimiento Liberación | Las mismas columnas por Año, Trimestre o Mes (botones en lugar de profundizar con clic). Se agrupa la serie diaria del periodo, ya filtrada en SQL, así que con un mes elegido cada nivel muestra solo ese mes, como el Power BI |
+| `/liberacion/razones` | Razones | Pareto "% razones de incumplimiento" de las OP `no`: cada razón flota sobre el acumulado, etiquetas sin decimales, barra "Total" y línea "PARETO: 80 %" (la cascada del Power BI tiene esa línea fija en 0,8) |
+| `/liberacion/razones-dia` | Razones Día | Tabla (OP, descripción, observación, fecha recomendada, tipo; vista `razones`, ordenada por descripción) y el Pareto lado a lado desde 1 120 px. Filtro de observación en "Filtros" |
+| `/liberacion/control` | Control | Las 8 columnas del Power BI (vista `control`), de la fecha recomendada más antigua a la más reciente |
+
+- Archivos: [`components/LiberacionDashboard.tsx`](../../components/LiberacionDashboard.tsx) (las 5 vistas con `mode`), páginas en [`app/liberacion/`](../../app/liberacion/), proxy [`app/api/liberacion/route.ts`](../../app/api/liberacion/route.ts), tipos [`lib/liberacion/types.ts`](../../lib/liberacion/types.ts), estilos [`app/styles/liberacion.css`](../../app/styles/liberacion.css).
+- Catálogo: informe `liberacion` en [`lib/reports.ts`](../../lib/reports.ts), área Logística; navegación `releaseNavigation` con las 5 páginas en el orden del Power BI. Nadie lo ve hasta asignarlo en `/admin/permisos` (usuario de la ficha: `practiplaneacion@firplak.com`).
+- Filtros en borrador (Aplicar, lupa o Enter; Limpiar vuelve al mes en curso): año, mes y día en la barra, como el segmentador Año › Mes › Día; desde y hasta en "Filtros"; búsqueda en las tablas. Todos viajan a la API.
+- Clic o Enter en una OP abre su detalle: tipo, línea, familia, estado, las cuatro fechas, la observación (con el texto original si se normalizó), el comentario y el cambio de fecha. Así se cubre la decisión D del contrato sin una página que el Power BI no tiene.
+- Diferencia visual inevitable: los colores. El Power BI usa fondo `#CCC3C3` y azules de Power BI; el portal usa la paleta del manual de identidad (OK en navy, NO en sage, líneas de meta y Pareto en `--danger`, agregado a `lib/brand.ts` como réplica del token).
+- Gráficos con muchas columnas se desplazan en horizontal en lugar de comprimirse; las etiquetas se ocultan si la columna es muy angosta y el valor sigue en el tooltip.
+- Verificación (2026-11-20): `npm run lint` y `npm run build` sin errores; `/liberacion` sin sesión redirige al login y `/api/liberacion` responde 401. `pendiente`: revisión con datos reales y sesión en 375, 820 y 1440 px, y asignar el permiso.
 
 ## 6. Conciliación con Power BI
 

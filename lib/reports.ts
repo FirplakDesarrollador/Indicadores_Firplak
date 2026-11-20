@@ -1,4 +1,4 @@
-import { Boxes, Factory, FileMinus, Handshake, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
+import { Boxes, ClipboardCheck, Factory, FileMinus, Handshake, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
 // Un informe nuevo no lo ve nadie hasta que un administrador lo agrega a un cargo o lo asigna a una persona en /admin/permisos.
@@ -104,6 +104,17 @@ export const reports: ReportDefinition[] = [
     icon: Factory,
     pagePaths: ["/ns-plantas"],
     apiPaths: ["/api/ns-plantas"],
+  },
+  {
+    // Migración del Power BI "PBI liberacion act" (dueño: Logística): llm-wiki/bi/liberacion.md.
+    slug: "liberacion",
+    area: "logistica",
+    title: "Liberación de órdenes",
+    subtitle: "Órdenes de producción liberadas a tiempo y razones de incumplimiento",
+    href: "/liberacion",
+    icon: ClipboardCheck,
+    pagePaths: ["/liberacion"],
+    apiPaths: ["/api/liberacion"],
   },
 ];
 

@@ -4,6 +4,8 @@ export const chartColors = {
   secondary: "#7B8E90",
   // Entregas en la gráfica de acumulados: ocre (--warning) para diferenciarlas del navy de ventas.
   delivery: "#8A6420",
+  // Líneas de referencia que piden atención (meta del 98 % y Pareto del 80 % en liberación): --danger.
+  danger: "#9E4335",
   grid: "#E3E7EB",
   axis: "#5F6B73",
   surface: "#FFFFFF",

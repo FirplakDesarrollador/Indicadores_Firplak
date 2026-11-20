@@ -8,6 +8,7 @@ import "./styles/credit-notes.css";
 import "./styles/product-cost.css";
 import "./styles/commercial.css";
 import "./styles/ns-plants.css";
+import "./styles/liberacion.css";
 import "./styles/targets.css";
 import "./styles/admin.css";
 import "./styles/user-menu.css";
