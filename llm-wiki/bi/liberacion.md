@@ -347,6 +347,14 @@ La fase 2 avanzó sin la validación de Logística de la fase 1, por decisión d
 | Job y horario | Nuevo: `BI - Liberacion carga`, lunes a viernes a las 17:15, con un reintento a los 10 minutos. Origen: `Actualizacion Indicador Liberacion.Subplán_1`, lunes a viernes a las 17:00 (unos 15 s) |
 | Índices | Clave primaria agrupada por `CodigoOP`, para el cruce con las razones. `IX_Informe_liberacion_FechaRecomendada` sobre `FechaRecomendadaLiberacion`, con `Tipo`, `Linea`, `FamiliaProduccion`, `Estado` y `FechaRealLiberacion` incluidas: todos los filtros de periodo van por esa fecha |
 
+#### Consultas previas de `01_informe_liberacion.sql` (ejecutadas por el desarrollador el 2026-11-20)
+
+- **0.1 Columnas:** las 23 columnas de `Indicador_Liberacion` tienen los nombres exactos y el orden que usa el SP. Todas son `nvarchar(100)`, salvo `Descripción de SKU`, que es `nvarchar(150)` (SSMS muestra `max_length` en bytes: 200 y 300).
+- **0.2 Formato:** 29 942 filas, ninguna con un código, una fecha o un número en formato inesperado. Ejemplos: fecha `2025-08-28`, cantidad `1.000`, costo `0.0`.
+- **0.3 Longitud máxima de los textos:** SKU 20, Destino 5, Familia 8, Lote 16, Descripción de SKU 100, Estado 11, Línea 6, Color 6, Planta 7, Tipo 1. Todos caben en las columnas de `Informe_liberacion`. Línea llega justo al límite de 6, igual que la tabla temporal del SP de origen.
+
+Conclusión: el SP no necesita cambios.
+
 Columnas que usa el BI: `Código OP`, `Descripción de SKU`, `Tipo`, `Linea`, `Fecha de Contabilización`, `Fecha Recomendada de Liberación`, `Fecha Real de Liberación`, `Fecha Prometida de Entrega Ítem`, más las que Logística pida en la pregunta 10.
 
 Razones de Planeación: tabla aparte en `Planos_Symphony`, alimentada desde la app de Logística (ver la subsección siguiente). El estado `Cumplimiento` se calcula cruzando las dos tablas con la fecha de hoy, en la consulta de la API, para que no dependa de la hora de la última carga.

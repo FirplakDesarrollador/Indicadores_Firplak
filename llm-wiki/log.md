@@ -842,3 +842,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Validación hecha: la API compila; pruebas locales de la ruta (401 sin token o con otro token, 400 por JSON o versión inválidos, 413 por tamaño, 404 en GET); la vista probada en PGlite con un caso por regla; el JSON que arma Supabase pasa la validación de la API. Nada se ejecutó en SQL Server ni en Supabase.
 - `pendiente` (desarrollador): ejecutar los scripts y pegar los resultados de las consultas 0 y 4 en la ficha; desplegar la API con `LIBERACION_RAZONES_TOKEN`; aplicar la migración de Supabase y crear los secretos en Vault.
 - Rollback: al inicio de cada script y de la migración.
+- Consultas previas 0.1 a 0.3 de `01_informe_liberacion.sql` ejecutadas por el desarrollador: los nombres y el orden de las columnas coinciden, el formato de las 29 942 filas es válido y los textos caben. El SP no necesita cambios.
