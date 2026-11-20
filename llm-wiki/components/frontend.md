@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-10-27
+updated: 2026-11-18
 sources:
   - ../../app/page.tsx
   - ../../app/login/page.tsx
@@ -24,22 +24,35 @@ sources:
 
 ## Rutas
 
-- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver (catálogo en `lib/reports.ts`). El perfil del encabezado (nombre y correo) abre, solo para administradores, el menú con "Permisos de informes"; la barra lateral de los dashboards tiene el mismo menú en el perfil.
+- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver, agrupados por área (catálogo en `lib/reports.ts`). El perfil del encabezado (nombre y correo) abre, solo para administradores, el menú con "Permisos de informes"; la barra lateral de los dashboards tiene el mismo menú en el perfil.
 - `/login`: inicio de sesión Microsoft 365.
 - `/facturacion-diaria`: dashboard comercial.
 - `/facturacion-diaria/detalle`: página independiente para el detalle paginado de documentos de facturación.
+- `/facturacion-diaria/entregas`: detalle paginado de líneas de entrega ([`EntregasDetalleDashboard.tsx`](../../components/EntregasDetalleDashboard.tsx)).
+- `/metas-comerciales` (se abre desde el menú del perfil; sin card en el portal): metas mensuales de facturación y entregas por empresa y días laborales ([`MetasComercialesDashboard.tsx`](../../components/MetasComercialesDashboard.tsx); reglas en [Facturación diaria](../bi/facturacion-diaria.md)).
 - `/api/facturacion-diaria`: proxy server-side hacia la Reporting API.
 - `/api/entregas`: proxy server-side hacia `GET /api/v1/entregas`.
 - `/notas-credito`: dashboard de notas crédito para Cartera ([`NotasCreditoDashboard.tsx`](../../components/NotasCreditoDashboard.tsx); reglas en la [ficha del BI](../bi/notas-credito.md)).
 - `/notas-credito/detalle`: detalle paginado de documentos de notas crédito, con filtros y panel lateral.
 - `/api/notas-credito`: proxy server-side hacia `GET /api/v1/notas-credito`.
-- `/admin/permisos`: administración de permisos por informe, solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
+- `/costo-actual-pt`: costo actual de producto terminado para Contabilidad ([`CostoActualPtDashboard.tsx`](../../components/CostoActualPtDashboard.tsx); reglas en la [ficha del BI](../bi/costo-actual-pt.md)). Sin vista de detalle: la lista de materiales del producto elegido está en la misma página.
+- `/api/costo-actual-pt`: proxy server-side hacia `GET /api/v1/costo-actual-pt`.
+- `/api/costo-actual-pt/export`: proxy de la descarga en CSV. Reenvía el flujo de la API sin acumularlo (`maxDuration = 300`) y cancela la petición si el usuario aborta la descarga.
+- `/consolidado-comercial`: consolidado comercial SAP para Comercial ([`ConsolidadoComercialDashboard.tsx`](../../components/ConsolidadoComercialDashboard.tsx); reglas en la [ficha del proyecto](../proyectos/consolidado-comercial.md)). Tarjetas A–D y total, composición y desglose por asesor, segmento y centro de costos.
+- `/consolidado-comercial/detalle`: detalle paginado de las líneas abiertas de A–C, con pestañas por etapa, búsqueda y panel lateral.
+- `/api/consolidado-comercial`: proxy server-side hacia `GET /api/v1/consolidado-comercial`.
+- `/ns-plantas`: nivel de servicio de plantas para Manufactura ([`NsPlantasDashboard.tsx`](../../components/NsPlantasDashboard.tsx); reglas en la [ficha del BI](../bi/ns-plantas.md)). Abre en el mes en curso: nivel de servicio con meta del 90 %, órdenes medidas, incumplidas y en plazo, series diaria y mensual (año completo), tabla por planta frente a la meta e incumplidas por razón de retraso.
+- `/ns-plantas/detalle`: detalle paginado de órdenes de fabricación, abre en las incumplidas; filtro de cumplimiento, búsqueda y panel lateral.
+- `/api/ns-plantas`: proxy server-side hacia `GET /api/v1/ns-plantas`.
+- `/admin/permisos`: administración de permisos por cargo, con excepciones e historial con soporte; solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
 
 ## Comportamiento del dashboard
 
+> Desde el 2026-11-09: cards de ventas y entregas frente a la meta, gráfica de ventas acumuladas, filtro Empresa, Subgrupo de cliente en lugar de Cliente y todas las zonas con un botón. Reglas en [Facturación diaria](../bi/facturacion-diaria.md); lo que sigue describe la base anterior y prevalece ese documento donde difieran.
+
 El catálogo de años del filtro proviene de `years` en la respuesta de la Reporting API; no se calcula solamente con la página visible de 50 filas. Esto permite mostrar años antiguos sin descargar todos los documentos.
 
-El dashboard incluye una tabla de resumen diario con `Ent día` y `Ent mes total`, calculados desde los agregados diarios de `GET /api/v1/entregas` usando `ValorSinIVA`. Las columnas de facturación y metas se mantienen en la misma tabla.
+El dashboard incluye una tabla de resumen diario con `Entr día` y `Entr mes` (orden de columnas vigente en [Facturación diaria](../bi/facturacion-diaria.md)), calculados desde los agregados diarios de `GET /api/v1/entregas` usando `ValorSinIVA`. Las columnas de facturación y metas se mantienen en la misma tabla.
 
 La distribución de facturación neta por zona muestra las cinco primeras zonas. La tabla diaria muestra todas las fechas del periodo. Al iniciar o restablecer filtros, se seleccionan el año y mes actuales del navegador.
 La tabla diaria se presenta en orden descendente por fecha, comenzando por el día más reciente y continuando hacia atrás. Los acumulados mensuales se calculan antes de invertir la presentación para conservar sus valores correctos.
@@ -59,9 +72,9 @@ El dashboard no usa datos demo en el flujo actual. Solicita `pageSize=50` a fact
 
 El consumo de las APIs valida el tipo de contenido antes de parsear JSON y muestra un mensaje específico si la sesión expiró o si un proxy devuelve una respuesta no válida.
 
-En la composición visual del dashboard, la tabla de acumulados aparece inmediatamente después de las cards de KPIs. La tabla operativa no se muestra en la vista principal: la opción lateral `Detalle de documentos` enlaza a `/facturacion-diaria/detalle`, una página independiente con filtros, paginación y detalle de documentos.
+En la composición visual del dashboard, la tabla de acumulados aparece inmediatamente después de las cards de KPIs. La tabla operativa no se muestra en la vista principal: la opción lateral `Detalle de facturas` (antes `Detalle de documentos`) enlaza a `/facturacion-diaria/detalle`, una página independiente con filtros, paginación y detalle de documentos.
 
-La navegación lateral sale de [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Desde el 2026-10-27, por decisión del desarrollador, cada reporte solo muestra su vista principal y su detalle: facturación (`billingNavigation`) muestra Facturación y Detalle de documentos; notas crédito (`creditNoteNavigation`) muestra Notas crédito y Detalle de notas crédito. Para volver al portal se usa el enlace "Indicadores" de las migas de pan. No muestra `Comparativos`; el encabezado no muestra el estado de conexión SQL Server ni un botón de exportación.
+La navegación lateral sale de [`lib/dashboard/navigation.ts`](../../lib/dashboard/navigation.ts). Desde el 2026-10-27, por decisión del desarrollador, cada reporte solo muestra su vista principal y su detalle: facturación (`billingNavigation`) muestra Facturación y entregas, Detalle de facturas y Detalle de entregas; notas crédito (`creditNoteNavigation`) muestra Notas crédito y Detalle de notas crédito. Para volver al portal se usa el enlace "Indicadores" de las migas de pan. No muestra `Comparativos`; el encabezado no muestra el estado de conexión SQL Server ni un botón de exportación.
 
 ## Componentes comunes de dashboard
 
@@ -69,8 +82,9 @@ Extraídos de `FacturacionDashboard.tsx` el 2026-10-27, antes del segundo dashbo
 
 - [`components/dashboard/DashboardShell.tsx`](../../components/dashboard/DashboardShell.tsx): barra lateral, menú, perfil de Microsoft 365, cierre de sesión, menú móvil y migas de pan. Recibe `navigation` (grupos del menú del reporte), `activeHref`, `title`, `className` y `overlay` (panel de detalle).
 - [`MetricCard.tsx`](../../components/dashboard/MetricCard.tsx) (`MetricCard`, `MetricSkeleton`), [`FilterSelect.tsx`](../../components/dashboard/FilterSelect.tsx) y [`TablePager.tsx`](../../components/dashboard/TablePager.tsx).
+- [`ShareList.tsx`](../../components/dashboard/ShareList.tsx): barras horizontales con el peso de cada categoría. Reemplaza a las tortas del Power BI. Extraída de notas crédito el 2026-11-05 para usarla también en costo de PT (`shareLabel` cambia el texto "de las notas").
 - [`lib/dashboard/`](../../lib/dashboard/): `format.ts` (formatos es-CO), `fetch.ts` (`readJsonPayload`, que detecta la sesión expirada), `options.ts` y `navigation.ts`.
-- Las clases CSS conservan el prefijo `billing-*`. Un dashboard nuevo agrega solo sus estilos propios en `app/styles/<tema>.css`. Atención: `billing.css` oculta `.billing-table-panel` fuera de la vista de detalle y reordena las secciones con `order`; [`credit-notes.css`](../../app/styles/credit-notes.css) lo compensa con `.credit-table-panel` y `order: 0`.
+- Las clases CSS conservan el prefijo `billing-*`. Un dashboard nuevo agrega solo sus estilos propios en `app/styles/<tema>.css`. Atención: `billing.css` oculta `.billing-table-panel` fuera de la vista de detalle y reordena las secciones con `order`; [`credit-notes.css`](../../app/styles/credit-notes.css) y [`product-cost.css`](../../app/styles/product-cost.css) lo compensan con su propio panel de tabla y `order: 0`.
 
 ## Estilos e identidad visual
 
@@ -94,3 +108,7 @@ La interfaz aplica el [manual de identidad web](../../docs/manual-identidad-web.
 - `REPORTING_API_TOKEN`
 
 Las dos últimas son server-side y no deben tener prefijo `NEXT_PUBLIC_`.
+
+## Descargas de los detalles (2026-11-11)
+
+`Detalle de facturas` y `Detalle de entregas` tienen un botón **Descargar** que baja un `.xlsx` con los filtros aplicados (no los que están sin aplicar). Los proxies [`app/api/facturacion-diaria/export/route.ts`](../../app/api/facturacion-diaria/export/route.ts) y [`app/api/entregas/export/route.ts`](../../app/api/entregas/export/route.ts) usan [`lib/dashboard/xlsxExportProxy.ts`](../../lib/dashboard/xlsxExportProxy.ts) y reenvían la respuesta de la Reporting API en streaming. Las pestañas Todos / Facturación / Notas crédito del detalle de facturas filtran solo en pantalla; la descarga incluye ambos tipos de documento.

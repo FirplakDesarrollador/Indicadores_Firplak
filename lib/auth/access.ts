@@ -1,19 +1,17 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export type UserAccess = { isAdmin: boolean; reportSlugs: string[] };
+export type UserAccess = { isAdmin: boolean; roleName: string | null; reportSlugs: string[] };
 
-// Permisos del usuario de la sesión. RLS solo devuelve sus propias filas, así que sirve en el navegador y en el servidor.
-export async function getUserAccess(supabase: SupabaseClient, email: string): Promise<UserAccess> {
-  const normalizedEmail = email.trim().toLowerCase();
-  const [admins, permissions] = await Promise.all([
-    supabase.from("app_admins").select("email").eq("email", normalizedEmail).maybeSingle(),
-    supabase.from("report_permissions").select("report_slug").eq("email", normalizedEmail),
-  ]);
-  if (admins.error) throw admins.error;
-  if (permissions.error) throw permissions.error;
+// Permisos efectivos del usuario de la sesión: administrador, informes de su cargo y excepciones individuales.
+// public.current_user_access() lee el correo del JWT, así que sirve en el navegador y en el servidor.
+export async function getUserAccess(supabase: SupabaseClient): Promise<UserAccess> {
+  const { data, error } = await supabase.rpc("current_user_access");
+  if (error) throw error;
+  const access = (data ?? {}) as { is_admin?: boolean; role_name?: string | null; report_slugs?: string[] };
   return {
-    isAdmin: Boolean(admins.data),
-    reportSlugs: (permissions.data ?? []).map((row) => row.report_slug as string),
+    isAdmin: Boolean(access.is_admin),
+    roleName: access.role_name ?? null,
+    reportSlugs: access.report_slugs ?? [],
   };
 }
 

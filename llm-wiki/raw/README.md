@@ -6,4 +6,5 @@
 - `articles/`: Artículos web, clips de Obsidian Web Clipper, publicaciones.
 - `papers/`: Ensayos, whitepapers técnicos y artículos académicos en Markdown o texto plano.
 - `notes/`: Transcripciones de audio, notas de reuniones, actas, entradas de diario.
+- `Power-bi/`: Reportes, plantillas y metadatos de Power BI para ingeniería inversa.
 - `assets/`: Imágenes locales descargadas, gráficos o adjuntos.

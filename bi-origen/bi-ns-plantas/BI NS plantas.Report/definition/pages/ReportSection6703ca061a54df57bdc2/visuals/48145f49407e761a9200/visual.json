@@ -1,0 +1,74 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "48145f49407e761a9200",
+  "position": {
+    "x": 9.78266061619298,
+    "y": 0,
+    "z": 1000,
+    "height": 69.70145689037497,
+    "width": 133.28875089562933
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "GroupRef": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Familia Producción (grupos)",
+                  "GroupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Ordenes de Fabricacion"
+                          }
+                        },
+                        "Property": "Familia Producción"
+                      }
+                    }
+                  ]
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Familia Producción (grupos)",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "syncGroup": {
+      "groupName": "Familia Producción",
+      "fieldChanges": true,
+      "filterChanges": true
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

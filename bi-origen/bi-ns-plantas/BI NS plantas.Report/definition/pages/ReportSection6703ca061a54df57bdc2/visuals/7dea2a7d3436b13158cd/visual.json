@@ -1,0 +1,290 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "7dea2a7d3436b13158cd",
+  "position": {
+    "x": 0,
+    "y": 66.064516129032256,
+    "z": 0,
+    "height": 653.763440860215,
+    "width": 1280
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Ordenes de Fabricacion"
+                        }
+                      },
+                      "Property": "# Documento"
+                    }
+                  },
+                  "Function": 5
+                }
+              },
+              "queryRef": "Sum(Ordenes de Fabricacion.# Documento)",
+              "displayName": "#"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "# Documento"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.# Documento"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Cod Artículo"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Cod Artículo"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Artículo"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Artículo"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Familia Producción"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Familia Producción"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Fecha de Cierre Real"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Fecha de Cierre Real"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Fecha de Creación"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Fecha de Creación"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Fecha Real de Liberación"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Fecha Real de Liberación"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Razón de Retrazo"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Razón de Retrazo"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Razón de Retrazo 2"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Razón de Retrazo 2"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Tipo Orden"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Tipo Orden"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Ordenes de Fabricacion"
+                        }
+                      },
+                      "Property": "Amortiguador"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Ordenes de Fabricacion.Amortiguador)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Fecha ideal Entrega"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Fecha ideal Entrega"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Ordenes de Fabricacion"
+                    }
+                  },
+                  "Property": "Cumplio"
+                }
+              },
+              "queryRef": "Ordenes de Fabricacion.Cumplio"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Ordenes de Fabricacion"
+                  }
+                },
+                "Property": "Fecha de Cierre Real"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "Filterf5583a5325b854b9c103",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Ordenes de Fabricacion"
+              }
+            },
+            "Property": "Cumplio"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "o",
+              "Entity": "Ordenes de Fabricacion",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "o"
+                          }
+                        },
+                        "Property": "Cumplio"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'INCUMPLIÓ'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
