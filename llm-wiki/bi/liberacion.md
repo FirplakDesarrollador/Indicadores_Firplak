@@ -482,7 +482,15 @@ Planos_Symphony.dbo.Informe_liberacion_razones (reemplazo completo en una transa
 | 2026 | 11 | 1 379 | 107 | 1 | 182 | 92,8 |
 | 2026 | 12 | 34 | 0 | 0 | 25 | 100,0 |
 
-     Ninguna OP se pierde en el cruce: OK + NO + `NO MEDIR` + sin liberar = OP de la 4.3. Las razones suben el % de los meses cerrados: agosto de 78,2 a 85,4; septiembre de 69,9 a 79,7; octubre de 76,9 a 88,5. `pendiente`: confirmar agosto, septiembre y octubre de 2026 contra el Power BI actualizado el mismo día (adelanto de la fase 6), y la primera ejecución programada del job (2026-11-20 17:15), que cierra la fase 2.
+     Ninguna OP se pierde en el cruce: OK + NO + `NO MEDIR` + sin liberar = OP de la 4.3. Las razones suben el % de los meses cerrados: agosto de 78,2 a 85,4; septiembre de 69,9 a 79,7; octubre de 76,9 a 88,5. Comparación con el Power BI (capturas del desarrollador, 2026-11-20), adelanto de la fase 6:
+
+| Mes 2026 | Portal (SQL) | Power BI | Diferencia |
+|---|---|---|---|
+| Agosto | 1 835 / 2 148 = 85,43 % | 85,43 % | 0 |
+| Septiembre | 1 863 / 2 338 = 79,68 % | 79,68 % | 0 |
+| Octubre | 1 989 / 2 247 = 88,52 % | 88,45 % | 0,07 puntos (1 o 2 OP) |
+
+     Agosto y septiembre iguales con dos decimales: la regla está bien replicada. **Hallazgo, octubre:** diferencia mayor a una unidad de redondeo. Hipótesis `pendiente`: el Power BI y el portal tienen fotos distintas (octubre perdió 16 OP en el origen entre el 4 y el 20 de noviembre; Supabase tiene el Excel del 2026-11-20 09:55). Para confirmarlo se necesitan la hora de la última actualización del Power BI y sus conteos de OK y NO de octubre. `pendiente`: primera ejecución programada del job (2026-11-20 17:15), que cierra la fase 2.
 5. La API cruza `CodigoOP` con `NoOrden` en SQL, como hoy lo hace Power BI.
 
 Pendientes que no dependen de este repositorio:

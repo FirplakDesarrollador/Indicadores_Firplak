@@ -852,3 +852,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Validaciones 5.1 y 5.2 de las razones correctas: SQL Server y Supabase coinciden en las 44 razones (40 492 OP, 6 798 con cambio de fecha).
 - Validación 5.3: las OP del indicador cruzan con sus razones; en los meses cerrados la cobertura se acerca a las incumplidas por fechas. La fase 2 cierra con la primera ejecución programada del job (2026-11-20 17:15).
 - % de cumplimiento por mes con la regla completa del BI, calculado en SQL: agosto 85,4 %, septiembre 79,7 %, octubre 88,5 % de 2026. `pendiente`: compararlo con el Power BI.
+- Comparación con el Power BI: agosto (85,43 %) y septiembre (79,68 %) de 2026 iguales con dos decimales. Octubre: portal 88,52 %, Power BI 88,45 % (1 o 2 OP de diferencia); hipótesis de fotos distintas, `pendiente` de confirmar con la hora de actualización y los conteos del Power BI.
