@@ -859,3 +859,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - `GET /api/v1/liberacion` en la [ficha](bi/liberacion.md#3-contrato-del-endpoint): estado `ok`, `no`, `sinLiberar` o `noMedir` calculado en SQL con la regla validada; vistas `detalle`, `razones` (tabla de "Razones Día") y `control`; resumen con %, meta del 98 % (línea fija `0.98` en los visuales del Power BI), series diaria, mensual y anual, y cascada de razones de las OP `no`.
 - Decisiones A a E `pendiente` de aprobación del desarrollador; las respuestas de Logística pueden cambiar reglas después.
+- Contrato aprobado por el desarrollador (decisiones A a E).
+
+## [2026-11-20] bi | Liberación: endpoint GET /api/v1/liberacion (fase 4)
+
+- `reporting-api`, rama `bi/liberacion`: `src/liberacion.ts` con `buildReleaseQuery` y `getReleaseReport`; ruta en `src/server.ts`. Compila; prueba local de autenticación correcta.
+- `sql/liberacion/04_validacion_endpoint.sql`: la consulta del endpoint para octubre de 2026, para correrla en SSMS antes de desplegar.
+- Paquete `reporting-api-dist-d5a34f6.zip` desde `deploy/2026-11-20`. `pendiente`: validación en SSMS y despliegue.

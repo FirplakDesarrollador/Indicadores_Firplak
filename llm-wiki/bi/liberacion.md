@@ -1,6 +1,6 @@
 ---
 status: en-migracion
-fase: 2
+fase: 4
 updated: 2026-11-20
 sources:
   - ../../bi-origen/bi-liberacion/
@@ -540,7 +540,7 @@ Validación de totales (origen vs. tabla):
 
 ## 3. Contrato del endpoint
 
-Borrador del 2026-11-20, `pendiente` de aprobación del desarrollador. Replica el Power BI tal cual, con la regla validada en la fase 2 (agosto a octubre de 2026 iguales con dos decimales). Si las respuestas de Logística cambian alguna regla (preguntas 11, 15 y 16, entre otras), se ajusta aquí.
+Aprobado por el desarrollador el 2026-11-20, con las decisiones A a E. Replica el Power BI tal cual, con la regla validada en la fase 2 (agosto a octubre de 2026 iguales con dos decimales). Si las respuestas de Logística cambian alguna regla (preguntas 11, 15 y 16, entre otras), se ajusta aquí.
 
 `GET /api/v1/liberacion`. Usa el mismo token (`REPORTING_API_TOKEN`), el mismo manejo de errores (502 sin detalles internos) y la misma forma de respuesta que `/api/v1/facturacion-diaria`.
 
@@ -653,7 +653,7 @@ Reglas de cada campo:
 | `reasonsSyncedAt` | `MAX(Sincronizado)` de `Informe_liberacion_razones`: última llegada de razones desde Supabase | — |
 | `updatedAt` | Hora de la respuesta, igual que en facturación | — |
 
-Decisiones de este borrador (`pendiente` de aprobación):
+Decisiones de este contrato (aprobadas el 2026-11-20):
 
 - **A. Razones normalizadas.** El Power BI agrupaba por el texto tal cual, así que las variantes del Excel (`ERROR DE LIBERACIÓN` con tilde, `CAPACIAD DEL DIA FULL`, `CAMBIO SKU`) salían como barras separadas. El portal las suma en su razón del catálogo. El % de cumplimiento no cambia, porque `CUMPLE` y `NO MEDIR` no tienen variantes.
 - **B. Una razón por OP.** La cascada cuenta OP, no filas del Excel. Coincide con el Power BI porque el Excel ya no tiene OP repetidas (pregunta 8).
@@ -665,7 +665,14 @@ No se incluyen: los botones "Atrás" del Power BI, `Tipo` o familia como filtros
 
 ## 4. Endpoint
 
-`pendiente`
+- Repositorio `reporting-api`, rama `bi/liberacion`, commits `44d7a1f` (endpoint) y `c623a19` (README y `.env.example`).
+- Archivos: `src/liberacion.ts` (tipos, `buildReleaseQuery`, `getReleaseReport` y la recepción de razones), `src/server.ts` (`releaseFiltersFrom` y la ruta `/api/v1/liberacion`) y `src/db.ts` (exporta `required`, `numberValue`, `textValue`, `dateValue` y `safeIdentifier`, igual que la rama de Estados Financieros). Va en un módulo aparte, como Estados Financieros, para no chocar con `db.ts` y `types.ts` de las demás ramas.
+- Variables nuevas en `.env.example`: `REPORT_LIBERACION_TABLE_SCHEMA`, `REPORT_LIBERACION_TABLE` y `REPORT_LIBERACION_RAZONES_TABLE`. Tienen valores por defecto en el código (`dbo`, `Informe_liberacion`, `Informe_liberacion_razones`), así que el `.env` del servidor funciona sin agregarlas.
+- Una sola consulta por lotes: `#ops` (OP del periodo con razón y estado) → `#rows` (vista y filtros del detalle) → 10 recordsets: 0 página, 1 total, 2 totales, 3 serie diaria, 4 serie mensual (12 meses), 5 serie anual, 6 razones, 7 años, 8 catálogo de razones, 9 `loadedAt` y `reasonsSyncedAt`.
+- `npm run build` sin errores (2026-11-20). SQL revisado: 10 recordsets comentados, paréntesis balanceados, filtros parametrizados, sin `TRY_CONVERT` ni `SELECT *`.
+- Prueba local sin base: `/api/v1/liberacion` responde 401 sin token y con el token de razones; `POST /api/v1/liberacion/razones` responde 401 con el token de consultas. Cada token solo abre su ruta.
+- `pendiente`: prueba contra la base. [`sql/liberacion/04_validacion_endpoint.sql`](../../sql/liberacion/04_validacion_endpoint.sql) es la misma consulta del endpoint con `anio=2026`, `mes=10`, `vista=detalle`, generada desde `buildReleaseQuery`, para correrla en SSMS antes de desplegar. Esperado: octubre de 2026 con 1 989 `ok` y 258 `no`.
+- Paquete de despliegue: `reporting-api-dist-d5a34f6.zip` (en el escritorio, fuera de los repositorios), desde la rama local `deploy/2026-11-20` = `deploy/2026-11-19` + `bi/liberacion`. Conflictos de "ambos agregaron" en `src/server.ts`, resueltos conservando las dos partes; frente a `deploy/2026-11-19` solo cambian las líneas de la ruta nueva. Reemplaza a `reporting-api-dist-2b6f75b.zip`.
 
 ## 5. Dashboard
 
