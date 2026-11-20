@@ -867,3 +867,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `sql/liberacion/04_validacion_endpoint.sql`: la consulta del endpoint para octubre de 2026, para correrla en SSMS antes de desplegar.
 - Paquete `reporting-api-dist-d5a34f6.zip` desde `deploy/2026-11-20`. `pendiente`: validación en SSMS y despliegue.
 - Consulta del endpoint validada en SSMS por el desarrollador (octubre de 2026): totales, series diaria, mensual y anual y cascada de razones cuadran entre sí y con la comparación contra el Power BI.
+- API desplegada con `reporting-api-dist-d5a34f6.zip`. Verificado desde fuera: `GET /api/v1/liberacion` 401 sin token (la ruta existe); `POST /api/v1/liberacion/razones`, NS Plantas, balance y facturación 401; `/health` 200.
