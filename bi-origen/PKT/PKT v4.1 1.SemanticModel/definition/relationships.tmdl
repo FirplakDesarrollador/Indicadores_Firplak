@@ -1,0 +1,18 @@
+relationship 14f4c13a-299b-4412-aa1c-7b6aeef0f4cc
+	joinOnDateBehavior: datePartOnly
+	fromColumn: InformeVentas.'Fecha Fin Novedad'
+	toColumn: LocalDateTable_2b5aafe1-39eb-453f-b794-bc2100459415.Date
+
+relationship ee37e4ad-12e7-4d67-ba12-d77a3b720c77
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calendario.Fecha
+	toColumn: LocalDateTable_19a2c403-d5c0-4148-8166-58549d2df34b.Date
+
+relationship 650b3cc8-8d54-4091-ba94-f60e6a6acec8
+	fromColumn: InformeVentas.'Fecha contabilización'
+	toColumn: Calendario.Fecha
+
+relationship a4cb3ee1-8c14-43fe-808a-ca5a53b407f5
+	fromColumn: CapitalTrabajo.Fecha
+	toColumn: Calendario.Fecha
+

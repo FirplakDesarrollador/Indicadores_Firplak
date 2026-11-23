@@ -1,0 +1,30 @@
+table NombresMedidas
+	lineageTag: b205a69a-c2e0-4ff9-bcad-c29545f8a0cf
+
+	column 'Nivel 1'
+		dataType: string
+		lineageTag: 8733abaa-29fd-4333-9978-53f138fc9b98
+		summarizeBy: none
+		sourceColumn: Nivel 1
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Nivel 2'
+		dataType: string
+		lineageTag: b4e4b834-b8ca-4992-8af7-6743373db74b
+		summarizeBy: none
+		sourceColumn: Nivel 2
+
+		annotation SummarizationSetBy = Automatic
+
+	partition NombresMedidas = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("lZFBasNADEWvIrxKIPUdgktLKNRZhG6CFxpbMVPs0aCZmKbX6hF6sWqmhdCWBGcneb6+9J/3+6JCbyMO0BHsBA2+crEqqsGSixSKZnVBsXbRttZzSJ83oz9SiNowBBw6LRAOOLFcNti4SVegWL6ypY6CAdpjUgbwLNCyERRgT4LRTnhleCs82WA/Pxws7imSrhJeQvVWweJFSnDUJwteZoukJupYKEcyCkCrEwSSSZPqlYqFc8gTPGIu0kEee5TZDmdSt8/WZrA9apOeBjQsOPz8olnj/1jm9X9RzrHaYlBuATSJHbHLSPw37XTcfJ+zJs+8w9PuudYH/N2aGxiV8KA5S0jqEu6gYnewMlrXF03zBQ==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Nivel 1" = _t, #"Nivel 2" = _t]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Nivel 1", type text}, {"Nivel 2", type text}})
+				in
+				    #"Tipo cambiado"
+
+	annotation PBI_ResultType = Table
+

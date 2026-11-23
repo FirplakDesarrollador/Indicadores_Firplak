@@ -1,0 +1,192 @@
+table CapitalTrabajo
+	lineageTag: fa10dddf-6d4d-4a77-a2ab-adce52301e5f
+
+	column Lvl1
+		dataType: int64
+		formatString: 0
+		lineageTag: 7fb1f48b-9412-4c7e-8fbe-2192a58f3bf7
+		summarizeBy: sum
+		sourceColumn: Lvl1
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column Lvl2
+		dataType: int64
+		formatString: 0
+		lineageTag: d7c0773f-a0ac-4d5b-bf78-b7e714d2b01d
+		summarizeBy: sum
+		sourceColumn: Lvl2
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Lvl3
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a46d959-9014-4b40-83f5-4cd1554844c2
+		summarizeBy: sum
+		sourceColumn: Lvl3
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Lvl4
+		dataType: int64
+		formatString: 0
+		lineageTag: 88d9c6d1-fa76-47a2-bf06-2d18e87989fb
+		summarizeBy: sum
+		sourceColumn: Lvl4
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Account
+		dataType: int64
+		formatString: 0
+		lineageTag: 0f12e20b-8934-498c-912c-1b980420ada6
+		summarizeBy: sum
+		sourceColumn: Account
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcctName
+		dataType: string
+		lineageTag: 2e94954e-ede4-4079-8ce8-b522623f5642
+		summarizeBy: none
+		sourceColumn: AcctName
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Saldo Inicial'
+		dataType: double
+		lineageTag: ce8e425c-a5a6-4551-8d4d-88ec53c225cc
+		summarizeBy: sum
+		sourceColumn: Saldo Inicial
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Débito
+		dataType: double
+		lineageTag: 6f7dea0e-b199-4f22-93ef-916c52c9aa2b
+		summarizeBy: sum
+		sourceColumn: Débito
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Crédito
+		dataType: double
+		lineageTag: 60edaec3-e8e7-4a3d-8039-df68994eafbb
+		summarizeBy: sum
+		sourceColumn: Crédito
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Saldo del Mes'
+		dataType: double
+		lineageTag: 34149ba2-33b0-481c-8741-18efbaece4be
+		summarizeBy: sum
+		sourceColumn: Saldo del Mes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Saldo Final'
+		dataType: double
+		lineageTag: 434cd7d9-caef-4257-8b1e-9a58e154f8a5
+		summarizeBy: sum
+		sourceColumn: Saldo Final
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Fecha
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 5d532828-4e2e-4218-8a23-7261e3f24280
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Mes
+		dataType: string
+		lineageTag: edcc75e5-8c1e-42de-8214-315264748e59
+		summarizeBy: none
+		sourceColumn: Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Agrupacion =
+			SWITCH(TRUE(),
+			CapitalTrabajo[Account] = 13050505 || CapitalTrabajo[Account] = 13051005,"Clientes",
+			CapitalTrabajo[Account] = 13050590 || CapitalTrabajo[Account] = 13051090 || CapitalTrabajo[Lvl3]= 1399 && ISBLANK(CapitalTrabajo[Lvl4]),"Provisión (Deterioro) CxC (Vr. negativo)",
+			CapitalTrabajo[Lvl3] = 1355 && ISBLANK(CapitalTrabajo[Lvl4]) ,"Anticipo de impuestos o saldos a favor",
+			CapitalTrabajo[Account] = 13300505 || CapitalTrabajo[Account] = 13300510 || CapitalTrabajo[Lvl4] = 133015 && ISBLANK(CapitalTrabajo[Account]) || CapitalTrabajo[Lvl3] = 1365 && ISBLANK(CapitalTrabajo[Lvl4]),"Otras cuentas por cobrar operativas",
+			CapitalTrabajo[Lvl2] = 14 && ISBLANK(CapitalTrabajo[Lvl3]), "Inventarios",
+			CapitalTrabajo[Lvl2] = 22 && ISBLANK(CapitalTrabajo[Lvl3]), "Proveedores",
+			//CapitalTrabajo[Lvl1] = 0, "Obligaciones Financieras Proveedores - Factoring",
+			CapitalTrabajo[Lvl1] = 4 && ISBLANK(CapitalTrabajo[Lvl2]) || CapitalTrabajo[Lvl1] = 5 && ISBLANK(CapitalTrabajo[Lvl2]) || CapitalTrabajo[Lvl1] = 6 && ISBLANK(CapitalTrabajo[Lvl2]) || CapitalTrabajo[Lvl3] = 9251 && ISBLANK(CapitalTrabajo[Lvl4]) || CapitalTrabajo[Lvl3] = 9253 && ISBLANK(CapitalTrabajo[Lvl4]), "Impuestos por Pagar",
+			CapitalTrabajo[Lvl2] = 25 && ISBLANK(CapitalTrabajo[Lvl3]), "Obligaciones Laborales",
+			CapitalTrabajo[Lvl3] = 2335 && ISBLANK(CapitalTrabajo[Lvl4]) || CapitalTrabajo[Account] = 23359515, "Costos y gastos por pagar",
+			CapitalTrabajo[Lvl2] = 26 && ISBLANK(CapitalTrabajo[Lvl3]), "Pasivos Estimados y Provisiones",
+			CapitalTrabajo[Lvl3] = 2365 && ISBLANK(CapitalTrabajo[Lvl4]) || CapitalTrabajo[Lvl3] = 2367 && ISBLANK(CapitalTrabajo[Lvl4])|| CapitalTrabajo[Lvl3] = 2368 && ISBLANK(CapitalTrabajo[Lvl4]) || CapitalTrabajo[Lvl3] = 2370 && ISBLANK(CapitalTrabajo[Lvl4]) || CapitalTrabajo[Lvl3] = 2380 && ISBLANK(CapitalTrabajo[Lvl4]) || CapitalTrabajo[Lvl3] = 2408 && ISBLANK(CapitalTrabajo[Lvl4]) || CapitalTrabajo[Lvl2] = 28 && ISBLANK(CapitalTrabajo[Lvl3]), "Otras cuentas por pagar operativas"
+			)
+		lineageTag: a153eef3-bb08-4158-919a-64a29d5413b5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Agrupacion 2' =
+			SWITCH(TRUE(),
+			CapitalTrabajo[Agrupacion] = "Clientes" || CapitalTrabajo[Agrupacion] = "Provisión (Deterioro) CxC (Vr. negativo)" || CapitalTrabajo[Agrupacion]= "Anticipo de impuestos o saldos a favor" || CapitalTrabajo[Agrupacion] = "Otras cuentas por cobrar operativas" || CapitalTrabajo[Agrupacion]= "Inventarios", "CAPITAL TRABAJO OPERATIVO",
+			CapitalTrabajo[Agrupacion] = "Proveedores" || CapitalTrabajo[Agrupacion] = "Obligaciones Financieras Proveedores - Factoring" || CapitalTrabajo[Agrupacion] = "Impuestos por pagar" || CapitalTrabajo[Agrupacion] = "Obligaciones Laborales" || CapitalTrabajo[Agrupacion] = "Costos y gastos por pagar" || CapitalTrabajo[Agrupacion] = "Pasivos Estimados y Provisiones" || CapitalTrabajo[Agrupacion] = "Otras cuentas por pagar operativas", "PROVEEDORES DE BIENES Y SERVICIOS (PBS)"
+			)
+		lineageTag: bde59361-1948-44da-b34a-b788fdfdb097
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition CapitalTrabajo-b3807b30-9eaf-4c91-a1e2-a19ecde7b7dc = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database("ITPLAKINFO", "Firplak_SA", [Query="IF OBJECT_ID('tempdb..#T') IS NOT NULL#(lf)BEGIN#(lf)DROP TABLE #T#(lf)END#(lf)#(lf)Declare#(lf)@FecIni as date,#(lf)@FecFin as date,#(lf)@Year as nvarchar(4),#(lf)@Mes as nvarchar(2)#(lf)#(lf)Set @Mes = 1#(lf)Set @Year = YEAR(GETDATE())#(lf)#(lf)Set @FecIni = '01/01/' + @Year#(lf)Set @FecFin = Getdate()#(lf)Create Table #T#(lf)(#(lf)Lvl1 nvarchar(16) Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl2 nvarchar(2) Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl3 nvarchar(4) Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl4 nvarchar(6) Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Account nvarchar(8) Collate SQL_Latin1_General_CP850_CI_AS,#(lf)AcctName nvarchar(100) Collate SQL_Latin1_General_CP850_CI_AS,#(lf)[Saldo Inicial] numeric(18,2),#(lf)Débito numeric(18,2),#(lf)Crédito numeric(18,2),#(lf)[Saldo del Mes] numeric(18,2),#(lf)Mes nvarchar(22) Collate SQL_Latin1_General_CP850_CI_AS#(lf))#(lf)Carga_CuentasxMes:#(lf)Insert Into #T (Lvl1,Lvl2,Lvl3,Lvl4,Account,AcctName,[Saldo Inicial],Débito,Crédito,[Saldo del Mes],Mes)#(lf)Select#(lf)SUBSTRING(TA.AcctCode,1,1)+REPLICATE(0,14) Lvl1,#(lf)SUBSTRING(TA.AcctCode,1,2) Lvl2,#(lf)SUBSTRING(TA.AcctCode,1,4) Lvl3,#(lf)SUBSTRING(TA.AcctCode,1,6) Lvl4,#(lf)TA.AcctCode,#(lf)TA.AcctName,#(lf)0,#(lf)0,#(lf)0,#(lf)0,#(lf)@Mes#(lf)from#(lf)OACT TA#(lf)Where#(lf)TA.Levels = 5#(lf)AND TA.Postable = 'Y'#(lf)AND LEN(TA.AcctCode)=8#(lf)Order By TA.AcctCode ASC#(lf)IF @Mes <> (Select MONTH(getdate()))#(lf)BEGIN set @Mes = @Mes+1 GOTO Carga_CuentasxMes#(lf)END#(lf)Declare#(lf)@Acct as nvarchar(14),#(lf)@Vlr as numeric(18,2),#(lf)@Dbt as numeric(18,2),#(lf)@Crt as numeric(18,2),#(lf)@SldM as numeric(18,2),#(lf)@MesR as nvarchar(2)#(lf)#(lf)Declare CMov CURSOR FOR#(lf)select#(lf)TB.Account,#(lf)isnull(sum(TB.Debit),0),#(lf)isnull(sum(TB.Credit),0),#(lf)isnull((SUM(TB.Debit-Credit)),0),#(lf)MONTH(TB.RefDate) Mes#(lf)from#(lf)JDT1 TB Inner Join#(lf)OJDT TA on TB.TransId = TA.TransId Inner Join#(lf)OACT TC on TB.Account = TC.AcctCode#(lf)Where#(lf)TB.RefDate >=@FecIni#(lf)and TB.RefDate <=@FecFin#(lf)AND (TA.U_HBT_AreVal = 'Comun' or TA.U_HBT_AreVal = '' or TA.U_HBT_AreVal = 'IFRS' or TA.U_HBT_AreVal is null)#(lf)Group By#(lf)TB.Account,#(lf)TC.AcctName,#(lf)MONTH(TB.RefDate)#(lf)Order By TB.Account ASC#(lf)OPEN CMov#(lf)FETCH CMov INTO @Acct,@Dbt,@Crt,@SldM,@MesR#(lf)WHILE (@@FETCH_STATUS=0)#(lf)BEGIN#(lf)UPDATE #T SET Débito=@Dbt, Crédito=@Crt, [Saldo del Mes]=@SldM WHERE Account=@Acct and Mes=@MesR#(lf)FETCH CMov INTO @Acct,@Dbt,@Crt,@SldM,@MesR#(lf)END#(lf)CLOSE CMov#(lf)DEALLOCATE CMov#(lf)#(lf)Set @Mes=1#(lf)Carga_SI:#(lf)DECLARE cSI CURSOR FOR#(lf)Select#(lf)TA.Account,#(lf)Isnull(SUM(TA.Debit-TA.Credit),0),#(lf)@Mes#(lf)from#(lf)JDT1 TA #(lf)Inner Join OJDT TB on TA.TransId = TB.TransId#(lf)Where#(lf)TA.RefDate < '01/' + @Mes +'/' + @Year#(lf)AND (TB.U_HBT_AreVal = 'Comun' or TB.U_HBT_AreVal = '' or TB.U_HBT_AreVal = 'IFRS' or TB.U_HBT_AreVal is null)#(lf)Group By#(lf)TA.Account#(lf)OPEN cSI#(lf)FETCH cSI INTO @Acct,@Vlr,@Mes#(lf)WHILE (@@FETCH_STATUS=0)#(lf)BEGIN#(lf)UPDATE #T SET [Saldo Inicial] = @Vlr WHERE Account=@Acct and Mes=@Mes#(lf)FETCH cSI INTO @Acct,@Vlr,@Mes#(lf)END#(lf)CLOSE cSI#(lf)DEALLOCATE cSI#(lf)IF @Mes <> (Select MONTH(getdate()))#(lf)BEGIN set @Mes = @Mes+1 GOTO Carga_SI#(lf)END#(lf)#(lf)Select --Nivel 5#(lf)Lvl1,#(lf)Lvl2,#(lf)Lvl3,#(lf)Lvl4,#(lf)Account,#(lf)AcctName,#(lf)[Saldo Inicial],#(lf)Débito,#(lf)Crédito,#(lf)[Saldo del Mes],#(lf)[Saldo Inicial]+[Saldo del Mes] 'Saldo Final',#(lf)Case#(lf) When#(lf) Mes <> 12 Then Dateadd(Day,-1,'01/' + convert(nvarchar(2),(Mes+1)) + '/' + @Year)#(lf)           Else '31/12/' + @Year#(lf)End Fecha,#(lf)Mes#(lf)from #T#(lf)Union --Nivel 4#(lf)Select#(lf)Lvl1 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl2 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl3 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl4 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Null,#(lf)TA.AcctName Collate SQL_Latin1_General_CP850_CI_AS,#(lf)SUM([Saldo Inicial]),#(lf)SUM(Débito),#(lf)SUM(Crédito),#(lf)SUM([Saldo del Mes]),#(lf)SUM([Saldo Inicial]+[Saldo del Mes]) 'Saldo Final',#(lf)Case#(lf) When#(lf) Mes <> 12 Then Dateadd(Day,-1,'01/' + convert(nvarchar(2),(Mes+1)) + '/' + @Year)#(lf)           Else '31/12/' + @Year#(lf)End Fecha,#(lf)Mes Collate SQL_Latin1_General_CP850_CI_AS#(lf)From#(lf)#T Inner Join#(lf)OACT TA on #T.Lvl4 = TA.AcctCode Collate SQL_Latin1_General_CP850_CI_AS#(lf)Group By#(lf)Lvl1,#(lf)Lvl2,#(lf)Lvl3,#(lf)Lvl4,#(lf)TA.AcctName,#(lf)Mes#(lf)--Order By Lvl4,Fecha,Account Asc#(lf)Union --Nivel 3#(lf)Select#(lf)Lvl1 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl2 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl3 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Null,#(lf)Null,#(lf)TA.AcctName Collate SQL_Latin1_General_CP850_CI_AS,#(lf)SUM([Saldo Inicial]),#(lf)SUM(Débito),#(lf)SUM(Crédito),#(lf)SUM([Saldo del Mes]),#(lf)SUM([Saldo Inicial]+[Saldo del Mes]) 'Saldo Final',#(lf)Case#(lf) When#(lf) Mes <> 12 Then Dateadd(Day,-1,'01/' + convert(nvarchar(2),(Mes+1)) + '/' + @Year)#(lf)           Else '31/12/' + @Year#(lf)End Fecha,#(lf)Mes Collate SQL_Latin1_General_CP850_CI_AS#(lf)From#(lf)#T Inner Join#(lf)OACT TA on #T.Lvl3 = TA.AcctCode Collate SQL_Latin1_General_CP850_CI_AS#(lf)Group By#(lf)Lvl1,#(lf)Lvl2,#(lf)Lvl3,#(lf)TA.AcctName,#(lf)Mes#(lf)--Order By fecha,Lvl3,Lvl4,Account Asc#(lf)Union --Nivel 2#(lf)Select#(lf)Lvl1 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Lvl2 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Null,#(lf)Null,#(lf)Null,#(lf)TA.AcctName Collate SQL_Latin1_General_CP850_CI_AS,#(lf)SUM([Saldo Inicial]),#(lf)SUM(Débito),#(lf)SUM(Crédito),#(lf)SUM([Saldo del Mes]),#(lf)SUM([Saldo Inicial]+[Saldo del Mes]) 'Saldo Final',#(lf)Case#(lf) When#(lf) Mes <> 12 Then Dateadd(Day,-1,'01/' + convert(nvarchar(2),(Mes+1)) + '/' + @Year)#(lf)           Else '31/12/' + @Year#(lf)End Fecha,#(lf)Mes Collate SQL_Latin1_General_CP850_CI_AS#(lf)From#(lf)#T Inner Join#(lf)OACT TA on #T.Lvl2 = TA.AcctCode Collate SQL_Latin1_General_CP850_CI_AS#(lf)Group By#(lf)Lvl1,#(lf)Lvl2,#(lf)TA.AcctName,#(lf)Mes#(lf)--Order By Fecha,Lvl2,Lvl3,Lvl4,Account Asc#(lf)Union --Nivel 1#(lf)Select#(lf)Lvl1 Collate SQL_Latin1_General_CP850_CI_AS,#(lf)Null,#(lf)Null,#(lf)Null,#(lf)Null,#(lf)TA.AcctName Collate SQL_Latin1_General_CP850_CI_AS,#(lf)SUM([Saldo Inicial]),#(lf)SUM(Débito),#(lf)SUM(Crédito),#(lf)SUM([Saldo del Mes]),#(lf)SUM([Saldo Inicial]+[Saldo del Mes]) 'Saldo Final',#(lf)Case#(lf) When#(lf) Mes <> 12 Then Dateadd(Day,-1,'01/' + convert(nvarchar(2),(Mes+1)) + '/' + @Year)#(lf)           Else '31/12/' + @Year#(lf)End Fecha,#(lf)Mes Collate SQL_Latin1_General_CP850_CI_AS#(lf)From#(lf)#T Inner Join#(lf)OACT TA on #T.Lvl1 = TA.AcctCode Collate SQL_Latin1_General_CP850_CI_AS#(lf)Group By#(lf)Lvl1,#(lf)TA.AcctName,#(lf)Mes#(lf)Order By Fecha,Lvl1,Lvl2,Lvl3,Lvl4,Account Asc#(lf)Drop Table #T"]),
+				    #"Consulta anexada" = Table.Combine({Origen, Cap_Trab_2020, Cap_Trab_2021, Cap_Trab_2022, Cap_Trab_2023, Cap_Trab_2024, Cap_Trab_2025}),
+				    #"Valor reemplazado" = Table.ReplaceValue(#"Consulta anexada","100000000000000","1",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Valor reemplazado1" = Table.ReplaceValue(#"Valor reemplazado","200000000000000","2",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Valor reemplazado2" = Table.ReplaceValue(#"Valor reemplazado1","300000000000000","3",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Valor reemplazado3" = Table.ReplaceValue(#"Valor reemplazado2","400000000000000","4",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Valor reemplazado4" = Table.ReplaceValue(#"Valor reemplazado3","500000000000000","5",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Valor reemplazado5" = Table.ReplaceValue(#"Valor reemplazado4","600000000000000","6",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Valor reemplazado6" = Table.ReplaceValue(#"Valor reemplazado5","700000000000000","7",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Valor reemplazado7" = Table.ReplaceValue(#"Valor reemplazado6","800000000000000","8",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Valor reemplazado8" = Table.ReplaceValue(#"Valor reemplazado7","900000000000000","9",Replacer.ReplaceText,{"Lvl1"}),
+				    #"Filas filtradas" = Table.SelectRows(#"Valor reemplazado8", each true)
+				in
+				    #"Filas filtradas"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

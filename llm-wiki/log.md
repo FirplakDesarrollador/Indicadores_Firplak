@@ -805,3 +805,80 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Se trajo `main` a `bi/ns-plantas` (catálogo de informes, permisos por cargo y componentes comunes).
 - Dashboard `/ns-plantas` y `/ns-plantas/detalle` con proxy, tipos, estilos propios y registro en `lib/reports.ts` (área Operaciones). Lint y build sin errores.
 - `pendiente`: revisión visual con datos reales y permisos del usuario de Manufactura.
+
+## [2026-11-13] migracion | Inicio de la migración del BI PKT
+
+- Rama `bi/pkt` creada desde `main` en `Indicadores_Firplak`. La rama de `reporting-api` se crea en la fase 3.
+- Exportación del reporte en [`bi-origen/PKT/`](../bi-origen/PKT/).
+- Ficha [PKT](bi/pkt.md) en fase 0: dueño Dirección Financiera, desarrollador Daniel Jimenez, usuario direccionfinanciera@firplak.com, prioridad baja.
+- Alcance: páginas "General" y "Graficas"; "Duplicado de General" se descarta.
+
+## [2026-11-13] migracion | PKT, fase 1 (análisis)
+
+- Ficha [PKT](bi/pkt.md), sección 1: PKT = KTNO ÷ ventas proyectadas; KTNO = 5 conceptos de capital de trabajo + 7 de proveedores de bienes y servicios, con saldos de fin de mes de `Firplak_SA` (`JDT1`, `OJDT`, `OACT`); ventas netas de facturas y notas de Firplak.
+- Riesgos: consultas por año mantenidas a mano (`Cap_Trab_2020` a `2025`), `Cap_Trab_2024` en error en el archivo, posible duplicación de ventas por el cruce con `CostosGlobal`, proyección del mes en curso.
+- Sin RLS. Se agregó `.gitignore` a [`bi-origen/PKT/`](../bi-origen/PKT/) para excluir `localSettings.json` y `cache.abf`.
+- `pendiente`: validación de Dirección Financiera (8 preguntas) y resultados de las consultas V1 a V4.
+
+## [2026-11-19] decisión | PKT, respuestas de la fase 1
+
+- Decisiones D1 a D8 en la [ficha PKT](bi/pkt.md#respuestas-y-decisiones-2026-11-19): solo meses cerrados; comparativo fijo contra diciembre del año anterior; cuentas vigentes; se excluye el área de valoración "Local"; ventas desde `Informe_ventas` con las reglas del endpoint de facturación; eliminación de saldos entre Firplak y Viventta; desde 2020; dos gráficas.
+- Resultados: V1 sin duplicados en `CostosGlobal`; V2 con cinco áreas de valoración, todas con neto 0; V3 da un KTNO de 3.707.635.179,62 a octubre de 2026 (antes de la eliminación con Viventta); PKT calculado 6,05 % y PKT del año anterior 5,89 %.
+- `pendiente`: P1 (alcance de la eliminación entre compañías, consulta V5), P2 (Impuestos por pagar da 0) y P3 (diseño de las dos gráficas), y comparar V3 y V4 con Power BI.
+- V5b (corte 2026-10-31): el saldo recíproco cuadra (Firplak CXP Viventta 486.272.023,68 frente a Viventta 13050505 + 13809510 = 486.272.023,70). En Firplak ninguna cuenta del PKT tiene saldo con Viventta (23359530 ya se excluye); en Viventta sí (Clientes 475.284.445,19). Diferencia de 156.664,00 entre 13809515 de Firplak y 23359505 + 28050505 de Viventta (`pendiente`).
+- Comparación con Power BI: V3 cuadra exacto con la matriz (diciembre de 2025 y octubre de 2026), validado por el desarrollador. `Cap_Trab_2024` sí tiene datos en el BI publicado. Las ventas de `Informe_ventas` quedan 27.658 mil por debajo del BI en 2025 (0,047 %) y 5.420 mil de enero a octubre de 2026; el PKT redondeado no cambia. Consulta V6 para ubicar la diferencia (`pendiente`).
+- D9 a D13: PKT consolidado Firplak + Viventta restando solo los saldos recíprocos que coincidan, sin vista por compañía; ventas de Firplak a Viventta ya restadas en el BI (`pendiente` ubicar la regla, V7); Impuestos por pagar se mantiene (0 hasta el cierre fiscal); dos gráficas aprobadas; la tabla conserva la organización de la página General. El PKT consolidado no será igual al del BI: la conciliación se hará por compañía.
+
+## [2026-11-19] migracion | PKT, fase 1 cerrada
+
+- Claudia Duque (Dirección Financiera) valida las reglas D1 a D14, por medio del desarrollador.
+- D14: las ventas proyectadas incluyen Viventta. V7: no hay ventas entre compañías en `Informe_ventas` ni facturas de Firplak a Viventta desde 2025, así que no se resta nada en ventas.
+- Hallazgo abierto para la fase 6: las ventas del BI superan a las de `Informe_ventas` en 27.658 mil en 2025 (V6 sin ejecutar).
+
+## [2026-11-23] migracion | PKT, fase 2 (script de tabla y SP)
+
+- Scripts [`sql/pkt/01_informe_pkt.sql`](../sql/pkt/01_informe_pkt.sql) y [`02_job_pkt.sql`](../sql/pkt/02_job_pkt.sql): tablas `Informe_pkt_saldos` (fin de mes × compañía × concepto) e `Informe_pkt_intercompania`, SP `sp_Actualizar_Informe_pkt` con carga completa diaria y job `BI - PKT carga diaria` a la 1:00 p. m. Bitácora en `Cargas_Log`.
+- Viventta: tiene `U_HBT_AreVal` (se aplica el filtro D4) y usa los mismos prefijos de cuenta (sin `2105`).
+- Validación: consultas 4.1 a 4.6 contra V3 y V5b. Rollback: borrar el SP, las dos tablas y el job; no se tocan objetos existentes.
+- `pendiente`: ejecución por el desarrollador y resultados de la validación.
+- Primera carga ejecutada por el desarrollador (8 s, 2.047 filas, sin error). Validaciones 4.1 a 4.6 correctas: Firplak igual a V3 en los dos cortes, intercompañía igual a V5b (el filtro de área no cambia Viventta), 82 cortes con 24 filas. KTNO consolidado de octubre de 2026 = 3.685.648.698,30; PKT consolidado 6,00 %. `pendiente`: job creado y saldos 0 de inventario y proveedores en Viventta.
+
+## [2026-11-23] migracion | PKT, fase 3 (contrato propuesto)
+
+- Contrato de `GET /api/v1/pkt` en la [ficha](bi/pkt.md#3-contrato-del-endpoint): parámetros `anio` y `mes` (por defecto, el último corte), `period`, `periods`, `summary` (tarjetas de ventas y PKT), `statement` (matriz de la página General en su orden), `series.annualClose` y `series.monthly`. Sin `rows` ni paginación.
+- `pendiente`: aprobación del desarrollador.- Contrato aprobado por el desarrollador (2026-11-23). `Informe_ventas` empieza en 2020: para 2020 no hay año anterior. Rama `bi/pkt` creada en `reporting-api` desde `main` (`e422f7b`).
+
+## [2026-11-23] migracion | PKT, fase 4 (endpoint)
+
+- `GET /api/v1/pkt` en `reporting-api`, rama `bi/pkt`: tipos, `getPktReport()` (un lote de 5 consultas), ruta con validación de `anio`/`mes`, README y `.env.example` (`REPORT_PKT_TABLE_SCHEMA`, `REPORT_PKT_TABLE`). Documentado en [Reporting API](components/reporting-api.md) y en la [ficha](bi/pkt.md#4-endpoint).
+- Validación: `npm run build` sin errores; cálculo probado con datos simulados de octubre de 2026. `pendiente`: prueba del desarrollador contra la base.
+- Rollback: el endpoint es nuevo; no cambia los demás. Basta con no desplegarlo o revertir el commit.- Prueba en el servidor (copia en el puerto 8090): `200`, cifras de octubre de 2026 iguales a la consulta 4.5; PKT consolidado 6,0043 % y año anterior 5,82 %. Fase 4 cerrada. `pendiente`: ventas de Viventta de 2025 (7,2 millones) frente a 2026.
+
+## [2026-11-23] migracion | PKT, fase 5 (dashboard)
+
+- Página `/pkt` con proxy `/api/pkt`, tipos, estilos `pkt.css`, informe `pkt` en el área Financiera del catálogo y navegación propia. Detalle en la [ficha](bi/pkt.md#5-dashboard) y en [Frontend](components/frontend.md).
+- Validación: lint y build sin errores; revisión visual a 375, 820 y 1440 px con datos de prueba en una copia temporal (borrada).
+- `pendiente`: asignar el informe a direccionfinanciera@firplak.com en `/admin/permisos` y probar con sesión y datos reales.
+
+## [2026-11-23] ux | Contabilidad y finanzas en una categoría; gráficas del PKT aparte
+
+- Portal: las áreas "Informes de contabilidad" e "Informes financieros" pasan a ser una sola, "Informes de contabilidad y finanzas" (`contabilidad-finanzas` en [`lib/reports.ts`](../lib/reports.ts)), con Costo de producto terminado y PKT. Los permisos no cambian: se guardan por informe, no por área.
+- PKT: las gráficas pasan a `/pkt/graficas`; `/pkt` queda con las tarjetas, la matriz y el PKT. Menú lateral con las dos páginas. Detalle en la [ficha](bi/pkt.md#5-dashboard).
+- Validación: lint y build sin errores.
+- PKT: la barra de filtros usa la barra fija de Facturación (`billing-filterbar-sticky`) en `/pkt` y `/pkt/graficas`: queda bajo la barra superior al desplazarse desde 768 px. Lint y build sin errores.
+
+## [2026-11-23] migracion | PKT, fase 6 (conciliación preparada)
+
+- Script de solo lectura [`sql/pkt/03_conciliacion.sql`](../sql/pkt/03_conciliacion.sql) con seis resultados: saldos y tarjetas de Firplak frente al BI (parte A), Viventta, eliminación entre compañías y PKT consolidado (parte B), y ventas por mes con las reglas del BI frente a `Informe_ventas`.
+- [Ficha](bi/pkt.md#6-conciliación-con-power-bi), sección 6: octubre de 2026, septiembre de 2026 y diciembre de 2025. Octubre y diciembre ya tienen los valores del BI (capturas del 2026-11-19); los saldos cuadran y el PKT cuadra al redondear.
+- Hallazgos: H1 ventas de `Informe_ventas` frente al BI (−27.658 mil en 2025), H2 ventas de Viventta de 2025 (7,2 millones), H3 diferencia entre compañías de 156.664.
+- `pendiente`: el desarrollador ejecuta el script, llena septiembre y presenta a Dirección Financiera para la firma. Fase 5 con pendientes de permisos y prueba con sesión.
+- Capturas del 2026-11-23: el BI estaba en agosto de 2026 y el portal en septiembre, así que no se comparan entre sí. Se agrega agosto de 2026 como periodo de la conciliación (script y ficha) con los valores del BI. El portal carga con sesión y datos reales (PKT consolidado de septiembre 6,43 %).
+- Octubre de 2026 conciliado con capturas del portal y del BI: cada diferencia es el saldo de Viventta después de la eliminación (KTNO −21.986.481,32) o H1 en las ventas. PKT del portal 6,00 % frente a 6,1 % (6,05 %) del BI, explicado por la consolidación. Faltan agosto o septiembre de 2026 y diciembre de 2025 completos.
+- Diciembre de 2025 conciliado: 31 dic 2024 idéntico al BI (Viventta no existía) y ventas de 2024 iguales; diferencias de 2025 = Viventta y H1. Agosto de 2026: Clientes +475,8 M y PKT 7,17 % frente a 6,4 % (H4: la eliminación entre compañías no se aplicó porque el sentido no coincidía; `pendiente` confirmar con R4 y decisión de Dirección Financiera sobre la regla D9).
+- Dirección Financiera (Claudia Duque): H1 aceptada, H2 correcto (Viventta se creó a finales de 2025), H3 pendiente de revisión.
+- H4 confirmado con `Informe_pkt_intercompania` del 2026-08-31: diferencia de 239.900,02 en "Firplak debe a Viventta", por eso no se eliminan los 475.284.445,19 de Clientes de Viventta. Decisión: mantener la regla D9. Conciliación completa en octubre de 2026, agosto de 2026 y diciembre de 2025; `pendiente` la firma de Dirección Financiera.
+
+## [2026-11-23] migracion | PKT, fase 6 cerrada
+
+- Claudia Lorena Duque Alzate (Dirección Financiera) aprueba la conciliación por chat de Teams (2026-11-23, 2:46 p. m.). Periodos: octubre de 2026, agosto de 2026 y diciembre de 2025; hallazgos H1 a H4 en la [ficha](bi/pkt.md#hallazgos). H3 sigue pendiente de revisión por Contabilidad, sin efecto en el PKT.

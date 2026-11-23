@@ -1,0 +1,44 @@
+table Ventas
+	lineageTag: 3991afae-68e4-40cd-9874-087e92458123
+
+	measure 'Variacion %' = DIVIDE([Variacion $], Ventas[ventasProyectadasAA])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 123d4530-e2c2-4acd-9b45-06dee87ca293
+
+	measure 'Variacion $' = [ventasProyectadas] - [ventasProyectadasAA]
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 4eb7d3f2-fb54-4291-a5c6-15b7c594d36d
+
+	measure totalVentas = SUM(InformeVentas[Valor Total])
+		lineageTag: 2b83efe0-2034-4d85-bd74-c15c5f81c1f3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure ventasAcumuladas = TOTALYTD([totalVentas],Calendario[Fecha].[Date])
+		formatString: #,0.00
+		lineageTag: 689300d8-8338-4703-99a5-de56cde916ac
+
+	measure ventasProyectadas = DIVIDE([ventasAcumuladas],[NroMes])*12
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 2f3f066b-a732-4425-a822-48d1daf79514
+
+	measure ventasProyectadasAA = CALCULATE([totalVentas], PREVIOUSYEAR(Calendario[Fecha]))
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 35ffa42a-3884-46cf-b881-3871247b8ac9
+
+	measure NroMes = Max(Calendario[NroMes])
+		formatString: 0
+		lineageTag: fb888d5e-3458-47ed-9d42-80c50600b5a1
+
+	partition Ventas = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Columna1", type text}}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Tipo cambiado",{"Columna1"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+
