@@ -1,0 +1,56 @@
+/* Dashboard del PKT. Reutiliza las clases billing-* y solo agrega lo propio. Tokens: app/globals.css */
+
+/* El orden de billing.css es de facturación; aquí manda el orden del DOM (el de la página General del BI). */
+.pkt-shell .billing-content > * { order: 0; }
+
+.pkt-metrics-grid,
+.pkt-indicator-grid,
+.pkt-two-column-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
+.pkt-panel-note { color: var(--color-text-muted); font-size: .8125rem; margin-top: var(--space-1); }
+
+/* Matriz: misma tabla de datos, sin filas clicables y con menos columnas que el detalle de facturación. */
+.pkt-table-panel { overflow: hidden; padding: var(--space-5) 0 0; }
+.pkt-statement-table { min-width: 600px; }
+/* La columna de concepto se parte en dos líneas para que en móvil se vean los montos al lado (sigue fija al desplazar). */
+.pkt-statement-table th:first-child, .pkt-statement-table td:first-child { max-width: 150px; min-width: 150px; white-space: normal; }
+.pkt-statement-table tbody tr { cursor: default; }
+.pkt-statement-table th small { color: var(--color-text-muted); display: block; font-size: .6875rem; font-weight: 500; letter-spacing: 0; margin-top: 2px; text-transform: none; }
+.pkt-statement-table .pkt-row-group td { background: var(--color-surface-muted); font-weight: 600; }
+.pkt-statement-table .pkt-row-total td { border-bottom: 0; border-top: 2px solid var(--navy-700); color: var(--color-text-strong); font-weight: 700; }
+.pkt-statement-table .pkt-concept-name { display: inline-block; padding-left: calc(16px + var(--space-2)); }
+.pkt-statement-table .pkt-total-name { display: inline-block; padding-left: calc(16px + var(--space-2)); }
+
+.pkt-group-toggle { align-items: center; background: transparent; border: 0; border-radius: var(--radius-sm); color: var(--color-text); cursor: pointer; display: inline-flex; font: inherit; font-weight: 600; gap: var(--space-2); min-height: 44px; padding: 0; text-align: left; }
+.pkt-group-toggle svg { flex: none; }
+.pkt-group-toggle:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+/* Tarjetas del PKT: el dato principal del informe, más grande; la del mes elegido, destacada. */
+.pkt-indicator-card .billing-metric-copy strong { font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem); }
+.pkt-indicator-current { border-color: var(--navy-700); box-shadow: inset 3px 0 0 var(--sage-500), var(--shadow-sm); }
+
+/* Leyendas: barra sólida y barra clara (la identidad no depende solo del color: el texto dice cuál es cuál). */
+.billing-chart-legend .pkt-legend-solid { background: var(--navy-700); border-radius: 2px; height: 10px; width: 10px; }
+.billing-chart-legend .pkt-legend-light { background: var(--navy-700); border-radius: 2px; height: 10px; opacity: .45; width: 10px; }
+
+.pkt-chart-tooltip { display: flex; flex-direction: column; gap: var(--space-1); min-width: 220px; padding: var(--space-3); }
+.pkt-chart-tooltip strong { color: var(--color-text); font-weight: 600; margin-bottom: var(--space-1); }
+.pkt-chart-tooltip div { display: flex; gap: var(--space-4); justify-content: space-between; }
+.pkt-chart-tooltip span { color: var(--color-text-muted); }
+.pkt-chart-tooltip b { color: var(--color-text); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+@container (min-width: 720px) {
+  .pkt-statement-table th:first-child, .pkt-statement-table td:first-child { max-width: none; min-width: 260px; }
+}
+
+@container (min-width: 560px) {
+  .pkt-metrics-grid,
+  .pkt-indicator-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@container (min-width: 1040px) {
+  .pkt-metrics-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@container (min-width: 960px) {
+  .pkt-two-column-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
