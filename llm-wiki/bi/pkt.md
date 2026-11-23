@@ -1292,6 +1292,6 @@ Decisiones de Dirección Financiera (Claudia Duque), transmitidas por el desarro
 
 - API desplegada (versión / fecha):
 - Frontend desplegado (commit / fecha):
-- Documentación en VibeWorkFlow (flujo, área, id y fecha de aprobación):
+- Documentación en VibeWorkFlow: flujo estándar "Consulta del indicador PKT", entorno FIRPLAK, área Contabilidad y finanzas, id `9d4c2e39-567d-4db2-a594-53deea9db3db`, creado el 2026-11-23. Cuatro acciones con su documento (registro en SAP, carga de `Informe_pkt_saldos`, endpoint de la Reporting API y consulta en el portal), responsables por rol (Dirección Financiera y Desarrollador del portal de Indicadores) y el KPI "PKT mensual". `pendiente`: revisión del desarrollador en VibeWorkFlow.
 - Power BI retirado (fecha):
 - Rollback:

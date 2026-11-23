@@ -882,3 +882,9 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 ## [2026-11-23] migracion | PKT, fase 6 cerrada
 
 - Claudia Lorena Duque Alzate (Dirección Financiera) aprueba la conciliación por chat de Teams (2026-11-23, 2:46 p. m.). Periodos: octubre de 2026, agosto de 2026 y diciembre de 2025; hallazgos H1 a H4 en la [ficha](bi/pkt.md#hallazgos). H3 sigue pendiente de revisión por Contabilidad, sin efecto en el PKT.
+
+## [2026-11-23] migracion | PKT, fase 7: documentación en VibeWorkFlow
+
+- Flujo estándar "Consulta del indicador PKT" (entorno FIRPLAK, área Contabilidad y finanzas, id `9d4c2e39-567d-4db2-a594-53deea9db3db`): 4 acciones encadenadas con su documento, 4 tarjetas de responsable por rol (2 enlazadas) y 1 KPI. Detalle en la [ficha](bi/pkt.md#7-despliegue-y-retiro).
+- PR abiertos: Firplak/firplak-reporting-api#5 y FirplakDesarrollador/Indicadores_Firplak#14.
+- `pendiente`: revisión del flujo por el desarrollador, unión de los PR, despliegue de la API y del frontend, job confirmado, permisos y retiro del Power BI.
