@@ -64,11 +64,21 @@ export type CommercialRow = {
   lineValue: number;
   balance: number;
   inDefault: boolean;
+  // Líneas de SAP que reúne la fila: las ofertas van una fila por documento. Opcional: API anterior (1).
+  lines?: number;
 };
 
 export type CodeName = { code: string; name: string };
 
+// Campos de cada combinación, en el orden en que llegan (reporting-api, commercialCombinationFields).
+export const commercialCombinationFields = [
+  "stage", "channel", "segment", "advisor", "costCenter", "orderType", "deliveryStatus", "offerState", "validity", "blocked",
+] as const;
+export type CommercialCombinationField = (typeof commercialCombinationFields)[number];
+
 export type CommercialFilterOptions = {
+  // Combinaciones que existen en la vista y el periodo consultados; "" = el filtro no aplica a esa etapa.
+  combinations?: { fields: CommercialCombinationField[]; rows: string[][] };
   channels: string[];
   segments: string[];
   advisors: string[];
@@ -81,7 +91,10 @@ export type CommercialFilterOptions = {
 export type CommercialPayload = {
   rows: CommercialRow[];
   pagination: { page: number; pageSize: number; total: number; totalPages: number };
-  period: { from: string; to: string };
+  // openTo: fin del periodo para A, B y C; dateFilter: si se les aplicó (filtrarFecha). Opcionales: API anterior.
+  period: { from: string; to: string; openTo?: string; dateFilter?: boolean };
+  // Líneas y saldo de todo el detalle filtrado (todas las páginas), con etapa y búsqueda. Opcional: API anterior.
+  detailTotal?: { rows?: number; lines: number; balance: number };
   summary: CommercialSummary;
   filterOptions: CommercialFilterOptions;
   source: "sql-server";

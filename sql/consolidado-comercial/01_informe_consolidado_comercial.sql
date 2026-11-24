@@ -74,8 +74,9 @@ BEGIN
         StatusEntregaNombre   nvarchar(100)  NULL,
         EstadoOferta          nvarchar(10)   NULL,       -- solo A
         EstadoOfertaNombre    nvarchar(100)  NULL,
-        FechaDespacho         date           NULL,       -- A y B: ShipDate de la línea; C: U_FechaDespacho o DocDate
+        FechaDespacho         date           NULL,       -- A y B: ShipDate de la línea (en ofertas viene vacía); C: U_FechaDespacho o DocDate
         FechaProyFAC          date           NULL,       -- solo C: ODLN.U_FechaRadFAC
+        FechaCierre           date           NULL,       -- solo A: OQUT.U_FechaCierre (fecha estimada de cierre; filtro de periodo)
         TipoVentas            nvarchar(30)   NULL,
         Autorizada            char(1)        NULL,       -- Confirmed
         BloqueoOV             nvarchar(50)   NULL,       -- solo B: ORDR.U_Bloqueado
@@ -109,6 +110,13 @@ BEGIN
         ON dbo.Informe_consolidado_comercial (SlpCode, Etapa)
         INCLUDE (Saldo, EnDefault);
 END
+GO
+
+/* ───────────── 2b. Columnas agregadas después de la primera versión ─────────────
+   Para la tabla ya creada: se agregan solo si no existen. */
+-- 2026-11-24: fecha de cierre de las ofertas, para el filtro de periodo del portal (QUT1.ShipDate viene vacía).
+IF COL_LENGTH(N'dbo.Informe_consolidado_comercial', N'FechaCierre') IS NULL
+    ALTER TABLE dbo.Informe_consolidado_comercial ADD FechaCierre date NULL;
 GO
 
 /* ───────────── 3. SP de recarga ───────────── */
@@ -147,7 +155,7 @@ BEGIN
             CodCliente, Cliente, GrupoCodigo, Canal, SubgrupoCodigo, Subgrupo, SegmentoB2C,
             SlpCode, Asesor, CentroCostos, CentroCostosNombre, CentroCostosVigente, OrigenCentroCostos,
             TipoOV, TipoOVNombre, StatusEntrega, StatusEntregaNombre, EstadoOferta, EstadoOfertaNombre,
-            FechaDespacho, FechaProyFAC, TipoVentas, Autorizada, BloqueoOV, BloqueoLinea,
+            FechaDespacho, FechaProyFAC, FechaCierre, TipoVentas, Autorizada, BloqueoOV, BloqueoLinea,
             ItemCode, Descripcion, Cantidad, CantidadAbierta, ValorLinea, Saldo,
             TipoOVExcluido, StatusExcluido, ProyFACFueraDeMes, Donacion, EnDefault
         )
@@ -159,7 +167,7 @@ BEGIN
             CASE Y.CentroCostos WHEN N'GV-BHMED' THEN N'GV-FHMED' WHEN N'GV-BHCAL' THEN N'GV-FHCAL' ELSE Y.CentroCostos END,
             Y.OrigenCentroCostos,
             Y.TipoOV, TP.Name, Y.StatusEntrega, VS.Descr, Y.EstadoOferta, VE.Descr,
-            Y.FechaDespacho, Y.FechaProyFAC, Y.TipoVentas, Y.Autorizada, Y.BloqueoOV, Y.BloqueoLinea,
+            Y.FechaDespacho, Y.FechaProyFAC, Y.FechaCierre, Y.TipoVentas, Y.Autorizada, Y.BloqueoOV, Y.BloqueoLinea,
             Y.ItemCode, Y.Descripcion, Y.Cantidad, Y.CantidadAbierta, Y.ValorLinea, Y.Saldo,
             Y.TipoOVExcluido, Y.StatusExcluido, Y.ProyFACFueraDeMes, Y.Donacion,
             CASE WHEN Y.GrupoCodigo = 113
@@ -193,6 +201,7 @@ BEGIN
                        NULLIF(LTRIM(RTRIM(CAST(H.U_Estado_Oferta_Venta AS nvarchar(10)))), N'') AS EstadoOferta,
                        CAST(L.ShipDate AS date) AS FechaDespacho,
                        CAST(NULL AS date) AS FechaProyFAC,
+                       CAST(H.U_FechaCierre AS date) AS FechaCierre,
                        CAST(H.U_TipoVentas AS nvarchar(30)) AS TipoVentas,
                        H.Confirmed AS Autorizada,
                        CAST(NULL AS nvarchar(50)) AS BloqueoOV,
@@ -222,6 +231,7 @@ BEGIN
                        NULL,
                        NULL,
                        CAST(L.ShipDate AS date),
+                       NULL,
                        NULL,
                        CAST(H.U_TipoVentas AS nvarchar(30)),
                        H.Confirmed,
@@ -255,6 +265,7 @@ BEGIN
                        NULL,
                        CAST(ISNULL(H.U_FechaDespacho, H.DocDate) AS date),
                        CAST(H.U_FechaRadFAC AS date),
+                       NULL,
                        CAST(H.U_TipoVentas AS nvarchar(30)),
                        H.Confirmed,
                        NULL,
@@ -314,6 +325,7 @@ SELECT Etapa,
        SUM(CASE WHEN StatusEntrega IS NOT NULL AND StatusEntregaNombre IS NULL THEN 1 ELSE 0 END) AS StatusSinNombre_0,
        SUM(CASE WHEN EstadoOferta IS NOT NULL AND EstadoOfertaNombre IS NULL THEN 1 ELSE 0 END) AS EstadoSinNombre_0,
        SUM(CASE WHEN TipoOV IS NOT NULL AND TipoOVNombre IS NULL THEN 1 ELSE 0 END) AS TipoOVSinNombre_0,
+       SUM(CASE WHEN FechaCierre IS NOT NULL THEN 1 ELSE 0 END) AS ConFechaCierre,
        MAX(FechaCarga) AS FechaCarga
 FROM dbo.Informe_consolidado_comercial
 GROUP BY Etapa

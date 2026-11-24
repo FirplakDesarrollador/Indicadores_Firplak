@@ -993,3 +993,28 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Paquete `reporting-api-dist-d4a4d32.zip` desde la rama local `deploy/2026-11-24` (deploy/2026-11-19 + `bi/pkt` + semáforo). Hallazgo: el zip de PKT del 2026-11-23 no incluía NS Plantas, consolidado ni estados financieros. Detalle en la [ficha](proyectos/semaforo-produccion.md#paquete-de-despliegue-2026-11-24).
 - Corrección: el `fetch` de la API había fallado por credenciales; con la sesión de `gh` aparecieron `deploy/2026-11-20`, `deploy/2026-11-23` y el endpoint de Liberación en `main`. El paquete `d4a4d32` (sin Liberación) se borró y se reemplazó por `reporting-api-dist-c8b0a42.zip` = `deploy/2026-11-23` + semáforo. La alerta sobre el zip de PKT no aplica: `deploy/2026-11-23` trae todos los endpoints. Rama del semáforo rebasada sobre el `main` nuevo de la API y `main` del portal unido en `proyecto/semaforo-produccion`.
 - Ramas subidas: `reporting-api` `proyecto/semaforo-produccion` y `deploy/2026-11-24`; portal `proyecto/semaforo-produccion`. PR abiertos: Firplak/firplak-reporting-api#7 y FirplakDesarrollador/Indicadores_Firplak#16.
+
+## [2026-11-18] proyecto | Consolidado comercial SAP: dashboard en main
+
+- PR #12 unido a `main` (merge `7e6762b`). Falta asignar el informe en `/admin/permisos`, revisarlo en producción y la conciliación de la solicitante. reporting-api queda sin commit por decisión del desarrollador.
+
+## [2026-11-24] proyecto | Consolidado comercial SAP: cierre
+
+- El desarrollador confirmó los cuatro pasos de cierre: despliegue en producción, permiso del informe `consolidado-comercial`, revisión en producción y conciliación con la solicitante. Paso 7 y proyecto cerrados; la ficha pasa a `status: active`.
+- Las preguntas de seguimiento quedan como estaban el 2026-11-11. Siguen ediciones de visualización del dashboard.
+
+## [2026-11-24] proyecto | Consolidado comercial SAP: filtros de selección múltiple y dependientes
+
+- Filtros avanzados con selección múltiple; cada lista muestra solo los valores que existen con los demás filtros y con la vista. API: parámetros repetidos y `filterOptions.combinations` (rama `proyecto/consolidado-comercial` de `reporting-api`, sin commit). Portal: `MultiSelectFilter`, `lib/consolidado-comercial/filters.ts`, proxy con `append`.
+- Paquete `reporting-api-dist-c8b0a42-consolidado-filtros.zip` (escritorio) = `deploy/2026-11-24` + este cambio; trae todas las rutas actuales del servidor. `pendiente`: despliegue y prueba con datos reales. Detalle en la [ficha](proyectos/consolidado-comercial.md#filtros-de-selección-múltiple-y-dependientes-2026-11-24).
+- Detalle: fila de total con líneas y saldo de todas las páginas (`detailTotal` en la API). Filtros del consolidado compartidos con el detalle en `sessionStorage`. Paquete de la API rehecho con el total.
+- Detalle: vencimiento de las ofertas (columna “Vence” en la pestaña Ofertas; debajo del estado en Todas). Solo portal.
+- Detalle: ofertas una fila por documento (saldo sumado de sus líneas); OV y tránsito siguen por línea. Agrupación en la API (`#commercialRows`); paquete rehecho.
+- API desplegada por el desarrollador y verificada: ofertas por documento = tarjeta A (42 docs, 137 líneas, 131,61 M), total del detalle = A + B + C, selección múltiple de asesores suma bien, combinaciones según la vista (71 / 398).
+- Tarjeta A: interruptor “Suma en el total” (por defecto encendido); apagado, el total comercial, la composición y el Total del desglose excluyen las ofertas. Solo portal.
+- Filtro de periodo opcional para A, B y C (interruptor, apagado por defecto): ofertas por fecha de entrega de la línea, OV por fecha de despacho de la línea, tránsito por Fecha ProyFAC; mes completo. Periodo también en el detalle. API `filtrarFecha=1`; paquete rehecho, `pendiente` despliegue.
+- Detalle: botón “Exportar a Excel” con los filtros aplicados (API `/api/v1/consolidado-comercial/export`; proxy con `append`). Paquete rehecho a las 16:19 con todo lo de hoy.
+- Verificación tras el despliegue: `filtrarFecha=1` respondía 502 (faltaban las comillas de `C_TRANSITO` en el SQL) y la exportación 404 (paquete anterior). Corregido; paquete rehecho a las 16:22, `pendiente` desplegar y verificar.
+- Verificación del despliegue de las 16:22: filtro de fecha y exportación correctos (Excel = pantalla en tres pruebas); demás rutas bien. Hallazgo: `QUT1.ShipDate` vacía en todas las ofertas abiertas, así que A sale en cero con el filtro de fecha. Script `13-fechas-ofertas.sql` para elegir la fecha.
+- Ofertas filtradas por fecha de cierre (`U_FechaCierre`, única fecha de oferta con datos: 566 de 1.432 líneas). Columna `FechaCierre` en la tabla y el SP (script 01, sección 2b) y en el filtro de la API; paquete rehecho a las 16:38. `pendiente`: correr 01, desplegar y verificar.
+- Verificado: con el filtro de fecha las ofertas salen por fecha de cierre (noviembre: 49 ofertas, 103,81 M en todos los canales; 6 / 9,64 M en la vista acordada). Detalle = A + B + C; exportación y demás rutas bien.
