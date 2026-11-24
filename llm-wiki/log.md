@@ -394,6 +394,13 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - **Rollback:** está en la sección 7 de [la ficha](bi/notas-credito.md), separado para la API, el frontend y el SP.
 - La ficha pasa a `status: migrado` y `fase: 7`.
 
+## [2026-11-03] bi | Liberación: inventario y análisis (fases 0 y 1)
+
+- Nueva ficha [Liberación](bi/liberacion.md), a partir del proyecto `bi-origen/bi-liberacion/PBI liberacion act.pbip`. Dueño de negocio: Logística; desarrollador responsable: Milton Rendón; prioridad media; uso diario. Rama `bi/liberacion` en este repositorio y en `reporting-api`.
+- Se agregó `bi-origen/bi-liberacion/.gitignore` para no subir `.pbi/cache.abf` ni `.pbi/localSettings.json`.
+- Hallazgos: la tabla principal sale de `Planos_Symphony.dbo.Indicador_Liberacion` (sin documentar aún) y las razones de incumplimiento de un Excel en SharePoint, que la API no puede leer. El calendario del BI termina el 2026-12-31.
+- `pendiente`: consultas de validación del desarrollador y respuestas de Logística a las 10 preguntas de la ficha.
+
 ## [2026-11-04] bi | Costo actual de producto terminado: inventario y análisis (fases 0 y 1)
 
 - Ficha nueva: [`bi/costo-actual-pt.md`](bi/costo-actual-pt.md). El dueño de negocio es Contabilidad, la prioridad es alta y el uso es diario. Rama `bi/costo-actual-pt`.
@@ -473,6 +480,19 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - El job `BI - Costo PT carga completa` quedó creado y funcionando (desarrollador). Fase 2 cerrada.
 - Contrato propuesto para `GET /api/v1/costo-actual-pt` en la [ficha](bi/costo-actual-pt.md#3-contrato-del-endpoint): selección de un producto por `codigo`, búsqueda de productos con `search`, lista completa sin paginar, resumen de costos y alertas, y composición sin CIF. Sin periodo; `loadedAt` muestra la última carga. Pendiente la aprobación.
 
+## [2026-11-04] bi | Liberación: resultados de las consultas de validación
+
+- `Planos_Symphony.dbo.Indicador_Liberacion` es una tabla con una fila por OP (30 323), desde el 2025-07-10. La escriben los SP `FPK_INDICADOR_LIBERACION` y `FPK_INDICADOR_LIBERACION_OPTIMIZADO` y la actualiza el job `Actualizacion Indicador Liberacion.Subplán_1`.
+- Sus 23 columnas son `nvarchar`, incluidas las fechas: es el punto a resolver en la fase 2.
+- Resultados y consultas siguientes (6 y 7: definición de los SP y horario del job) en [la ficha](bi/liberacion.md#resultados-ejecutadas-por-el-desarrollador-el-2026-11-04). Se agregaron las preguntas 11 (tipo O/S) y 12 (historia) para Logística.
+
+## [2026-11-04] bi | Liberación: análisis del SP de carga
+
+- El job ejecuta `Planos_Symphony.dbo.FPK_INDICADOR_LIBERACION` (lunes a viernes, 17:00, unos 15 s). Recalcula todo desde SAP (`OWOR`, `ORDR`/`RDR1`, amortiguadores, días de distribución y días no laborables) y hace `TRUNCATE` + `INSERT`, con una ventana de 365 días sobre la fecha prometida: la historia se pierde y los meses cerrados pueden cambiar.
+- `FPK_INDICADOR_LIBERACION_OPTIMIZADO` es una copia que escribe en `Indicador_Liberacion_Prueba`; no interviene en el BI.
+- Propuesta para la fase 2 (`pendiente` aprobación): no tocar el SP actual y agregar uno nuevo que copie a una tabla tipada con `MERGE`, para conservar historia. Detalle en [la ficha](bi/liberacion.md#cómo-se-carga-indicador_liberacion-código-compartido-por-el-desarrollador-2026-11-04).
+- Pregunta 11 resuelta en parte (O = `STANDARD`, S = `STOCK`); se agregó la pregunta 14 (regla de la fecha recomendada) para Logística.
+
 ## [2026-11-05] bi | Costo actual de PT: ajustes al contrato
 
 - Se mantienen las tarjetas de promedio del Power BI (`averageCost`, `averageCostWithoutOverhead`), visibles solo con un producto elegido.
@@ -505,6 +525,26 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - A pedido del desarrollador se quitan las tarjetas "Costo promedio" y "Costo promedio sin CIF" del dashboard, porque con un producto elegido repetían el total. Quedan "Costo total" y "Costo sin CIF" en una cuadrícula de dos columnas.
 - La API no cambia: `summary.averageCost` y `averageCostWithoutOverhead` quedan sin uso en el portal.
+
+## [2026-11-05] bi | NS Plantas: inventario y análisis (fases 0 y 1)
+
+- Nueva ficha [NS Plantas](bi/ns-plantas.md), a partir del proyecto `bi-origen/bi-ns-plantas/BI NS plantas.pbip`. Dueño de negocio: Manufactura; desarrollador responsable: Milton Rendón; prioridad media; usuario inicial `hector.chinchilla@firplak.com`. Rama `bi/ns-plantas`.
+- Se agregó `bi-origen/bi-ns-plantas/.gitignore` para no subir `.pbi/cache.abf` ni `.pbi/localSettings.json`.
+- Hallazgos: una sola fuente SQL en `Firplak_SA` (SAP: `OWOR`, `ORDR`, `@FIR_FAM_SYMPH`, `@FIR_AMORTIGUADORES`, `@FIR_FECHAS_PROD`), con ventana móvil de 12 meses por fecha de creación. Indicador principal: `% CUMPLIMIENTO` (nivel de servicio), es decir, OP cerradas en o antes de la fecha ideal (liberación más amortiguador en días hábiles), contando solo las que ya vencieron. Sin RLS.
+- `pendiente`: consultas de validación del desarrollador y respuestas de Manufactura a las 10 preguntas de la ficha.
+
+## [2026-11-05] bi | NS Plantas: resultados de las consultas de validación
+
+- Script ejecutable en `bi-origen/bi-ns-plantas/sql/validacion-fase1.sql` (paso 0 con la tabla temporal `#ns`, consultas 1 a 8 y limpieza opcional).
+- Confirmado: 27 908 OP sin duplicados, ninguna sin fecha ideal; 18 familias con un amortiguador cada una, cuatro sin grupo (`ESPGAB`, `MBL CEFI`, `MBLP`, `PFZ-CEMA`); `@FIR_FECHAS_PROD` guarda días no laborables.
+- Nivel de servicio mensual entre 55 % y 84 % (tabla en [la ficha](bi/ns-plantas.md#resultados-ejecutadas-por-el-desarrollador-el-2026-11-05)); noviembre de 2025 incompleto por la ventana de 12 meses.
+- Hallazgos: solo 456 de 7 170 OP incumplidas tienen razón de retraso (pregunta 11). Hay demasiados sábados y domingos en `@FIR_FECHAS_PROD` para un año: `pendiente` la consulta 8 (fechas repetidas).
+
+## [2026-11-05] bi | NS Plantas: consulta 8 (calendario de días no laborables)
+
+- `@FIR_FECHAS_PROD` no tiene fechas repetidas: 268 filas y 268 fechas distintas entre el 2025-11-08 y el 2028-01-01. Los sábados y domingos de más de la consulta 7 son fechas futuras ya cargadas. No tiene columna de planta.
+- Nuevo riesgo en [la ficha](bi/ns-plantas.md): el calendario vence el 2028-01-01. Se amplió la pregunta 1 (quién lo mantiene).
+- Las consultas de validación de la fase 1 quedan completas; falta la validación de Manufactura.
 
 ## [2026-11-06] bi | Costo actual de PT: fase 5 cerrada y plan de conciliación (fase 6)
 
@@ -601,30 +641,6 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Ajuste del desarrollador (2026-11-10): CEFI vende en Nacional y en Exterior, así que Empresa CEFI + Mercado filtra por `TipoVentas` (`addFilters` y `addDeliveryFilters` en `reporting-api/src/db.ts`). Sin empresa, el mercado sigue excluyendo CEFI.
 - Decisión del desarrollador (2026-11-10): la meta de CEFI se divide en CEFI Nacional y CEFI Exterior ([`20261110_metas_cefi_mercado.sql`](../supabase/migrations/20261110_metas_cefi_mercado.sql), probada en PGlite). La pantalla de metas tiene cinco columnas y `segmentsFor` usa los segmentos de CEFI según el mercado.
 
-## [2026-11-11] ux | Una gráfica de acumulados y nuevo orden del resumen diario
-
-- Ventas y entregas acumuladas quedan en una sola gráfica ([`CumulativeChart.tsx`](../components/dashboard/CumulativeChart.tsx)): ventas en navy, entregas en ocre (`chartColors.delivery`); una sola meta acumulada punteada, porque es la misma para ventas y entregas.
-- Tabla "Facturación y entregas por día": Año, Mes, Día, Entr día, Entr mes, Fac día neta, Fac mes neta, Meta día, Meta acumulada, Total NC, Fac día bruta. El acumulado mensual ahora es neto (antes bruto).
-- Validación: `tsc --noEmit` y ESLint sin errores.
-
-## [2026-11-11] cambio | Nombre del informe y descargas de los detalles
-
-- El informe se llama "Facturación y entregas diaria" (portal, encabezado y menú). "Detalle de documentos" pasa a "Detalle de facturas".
-- Botón **Descargar** en Detalle de facturas y Detalle de entregas: `.xlsx` con los filtros aplicados, números y fechas como celdas numéricas para Excel ([reporting-api](components/reporting-api.md), [frontend](components/frontend.md)).
-- Validación: `tsc` y ESLint del portal sin errores; `tsc` de la API sin errores; el escritor `.xlsx` se probó con datos de ejemplo (openpyxl lee fechas y números con formato).
-- La descarga de facturas trae todas las columnas de `Informe_ventas` menos los campos internos de SAP como `DocEntry` y `LineNum` (leídas de la tabla en cada descarga) más Empresa (portal), Facturado, NC y Neto.
-- `pendiente`: desplegar la Reporting API (`reporting-api-dist-descargas.zip`) y probar las descargas contra SQL Server.
-- Cards: "Ventas acumuladas (meta)" y "Entregas acumuladas (meta)" pasan a "Meta"; "Cumplimiento de ventas" pasa a "Cumplimiento de facturación".
-
-## [2026-11-11] ux | Tabla diaria, Hasta ayer y filtros compactos
-
-- Resumen diario: Día como primera columna fija, "Meta acumulada" pasa a "Meta mes", nueva columna Diferencia (Fac mes neta − Meta mes) y Fac día bruta antes de Total NC.
-- Botón **Hasta ayer**: corta toda la página en el día anterior (`fechaHasta` en las consultas) y la meta acumulada.
-- Barra de filtros compacta y fija; los filtros se aplican al elegirlos. Tarjetas compactas (6 en una fila en pantallas anchas).
-- Recuadro de la gráfica de acumulados con la diferencia entre la facturación neta y la meta.
-- Detalle en [Facturación diaria](bi/facturacion-diaria.md). Validación: `tsc` y ESLint sin errores; `pendiente` revisar en el navegador.
-- Resumen diario: cada meta queda junto a su facturación (Fac día neta, Meta día, Fac mes neta, Meta mes).
-
 ## [2026-11-10] proyecto | Consolidado comercial SAP: arranque
 
 - Proyecto nuevo (no es migración de BI), rama `proyecto/consolidado-comercial`. Ficha: [proyectos/consolidado-comercial.md](proyectos/consolidado-comercial.md).
@@ -648,6 +664,30 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - El desarrollador ejecutó `03-diagnostico-saldo.sql` (6 consultas); las versiones con CTE y `OUTER APPLY` fallaron con error de sintaxis y se reescribieron con subconsultas y `GO` por consulta.
 - Decisión técnica: el saldo abierto se calcula como `LineTotal * OpenQty / Quantity`; `OpenSum` no se reduce en líneas parciales (ofertas: 802 M de diferencia).
 - Doble conteo A–B: no hay por conversiones parciales y es despreciable por OV directas. Doble conteo B–D: hasta 25,7 M en 3 OV de un cliente de Constructores, pendiente de confirmar con la solicitante.
+
+## [2026-11-11] ux | Una gráfica de acumulados y nuevo orden del resumen diario
+
+- Ventas y entregas acumuladas quedan en una sola gráfica ([`CumulativeChart.tsx`](../components/dashboard/CumulativeChart.tsx)): ventas en navy, entregas en ocre (`chartColors.delivery`); una sola meta acumulada punteada, porque es la misma para ventas y entregas.
+- Tabla "Facturación y entregas por día": Año, Mes, Día, Entr día, Entr mes, Fac día neta, Fac mes neta, Meta día, Meta acumulada, Total NC, Fac día bruta. El acumulado mensual ahora es neto (antes bruto).
+- Validación: `tsc --noEmit` y ESLint sin errores.
+
+## [2026-11-11] cambio | Nombre del informe y descargas de los detalles
+
+- El informe se llama "Facturación y entregas diaria" (portal, encabezado y menú). "Detalle de documentos" pasa a "Detalle de facturas".
+- Botón **Descargar** en Detalle de facturas y Detalle de entregas: `.xlsx` con los filtros aplicados, números y fechas como celdas numéricas para Excel ([reporting-api](components/reporting-api.md), [frontend](components/frontend.md)).
+- Validación: `tsc` y ESLint del portal sin errores; `tsc` de la API sin errores; el escritor `.xlsx` se probó con datos de ejemplo (openpyxl lee fechas y números con formato).
+- La descarga de facturas trae todas las columnas de `Informe_ventas` menos los campos internos de SAP como `DocEntry` y `LineNum` (leídas de la tabla en cada descarga) más Empresa (portal), Facturado, NC y Neto.
+- `pendiente`: desplegar la Reporting API (`reporting-api-dist-descargas.zip`) y probar las descargas contra SQL Server.
+- Cards: "Ventas acumuladas (meta)" y "Entregas acumuladas (meta)" pasan a "Meta"; "Cumplimiento de ventas" pasa a "Cumplimiento de facturación".
+
+## [2026-11-11] ux | Tabla diaria, Hasta ayer y filtros compactos
+
+- Resumen diario: Día como primera columna fija, "Meta acumulada" pasa a "Meta mes", nueva columna Diferencia (Fac mes neta − Meta mes) y Fac día bruta antes de Total NC.
+- Botón **Hasta ayer**: corta toda la página en el día anterior (`fechaHasta` en las consultas) y la meta acumulada.
+- Barra de filtros compacta y fija; los filtros se aplican al elegirlos. Tarjetas compactas (6 en una fila en pantallas anchas).
+- Recuadro de la gráfica de acumulados con la diferencia entre la facturación neta y la meta.
+- Detalle en [Facturación diaria](bi/facturacion-diaria.md). Validación: `tsc` y ESLint sin errores; `pendiente` revisar en el navegador.
+- Resumen diario: cada meta queda junto a su facturación (Fac día neta, Meta día, Fac mes neta, Meta mes).
 
 ## [2026-11-11] proyecto | Consolidado comercial SAP: respuestas de la solicitante
 
@@ -722,6 +762,12 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `GET /api/v1/consolidado-comercial` en la rama `proyecto/consolidado-comercial` de `reporting-api` (sin commit): A–C de `Informe_consolidado_comercial`, D de `Informe_ventas` con el mismo default y filtros. Compila (`tsc`); falta probarlo contra SQL Server.
 - `12-validacion-endpoint.sql`: formato de `SubgrupoCliente` en D y cifras esperadas de A–D para comparar con el endpoint.
 
+## [2026-11-17] bi | NS Plantas: validación de Manufactura y propuesta de tabla (fases 1 y 2)
+
+- Respuestas de Manufactura registradas en [la ficha](bi/ns-plantas.md#respuestas-de-manufactura-recibidas-el-2026-11-17): se confirman la regla de la fecha ideal y la del sábado; historia completa; meta del 90 % por planta y general; se elimina la página duplicada; el filtro abre en el mes en curso; 8 plantas (4 grupos y 4 familias sin agrupar); solo OP con pedido; actualización a las 6:00 y a las 17:00; la gráfica de razones se conserva.
+- `pendiente`: aclarar la pregunta 3 (si las OP abiertas en plazo cuentan en el %) y la 11 (barra "Sin razón registrada"). No cambian la tabla.
+- Propuesta de la fase 2 en la ficha: `Planos_Symphony.dbo.Informe_ns_plantas`, una fila por OP (`DocEntry`), fecha ideal calculada por conjuntos, recarga de OP abiertas o modificadas en 7 días, completa semanal, bitácora `dbo.Cargas_Log`. Consultas previas en `bi-origen/bi-ns-plantas/sql/validacion-fase2-previa.sql`.
+
 ## [2026-11-18] proyecto | Consolidado comercial SAP: dashboard en el portal
 
 - Se trajeron a la rama `proyecto/consolidado-comercial` los cambios de `origin/main` (avance rápido; conflicto solo en este log, se conservaron las dos partes).
@@ -734,32 +780,6 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Pestaña 2: D default esperada = 340 líneas, 162 documentos, 168.910.964,90 (cuadra con la pestaña 1; sin Donaciones en el mes). Falta compararla con el dashboard y la pestaña 3 (A–C).
 - Pestaña 3 y tarjetas del dashboard (carga 10:30:01): A, B, C, D y total cuadran exacto con SQL (836,43 M). Endpoint y dashboard validados. Ajuste: en el mes en curso el dashboard pide la facturación hasta hoy (antes mostraba el mes completo en la tarjeta D).
 - Se pasó la rama `Ale` a `main` (avance rápido, 07643ee) y se trajo `main` a `proyecto/consolidado-comercial`. El informe `carga` de `Ale` usa el icono `Layers`; el consolidado pasa a `Handshake` para distinguirlos. `tsc`, ESLint y `next build` sin errores con todo junto.
-
-## [2026-11-05] bi | NS Plantas: inventario y análisis (fases 0 y 1)
-
-- Nueva ficha [NS Plantas](bi/ns-plantas.md), a partir del proyecto `bi-origen/bi-ns-plantas/BI NS plantas.pbip`. Dueño de negocio: Manufactura; desarrollador responsable: Milton Rendón; prioridad media; usuario inicial `hector.chinchilla@firplak.com`. Rama `bi/ns-plantas`.
-- Se agregó `bi-origen/bi-ns-plantas/.gitignore` para no subir `.pbi/cache.abf` ni `.pbi/localSettings.json`.
-- Hallazgos: una sola fuente SQL en `Firplak_SA` (SAP: `OWOR`, `ORDR`, `@FIR_FAM_SYMPH`, `@FIR_AMORTIGUADORES`, `@FIR_FECHAS_PROD`), con ventana móvil de 12 meses por fecha de creación. Indicador principal: `% CUMPLIMIENTO` (nivel de servicio), es decir, OP cerradas en o antes de la fecha ideal (liberación más amortiguador en días hábiles), contando solo las que ya vencieron. Sin RLS.
-- `pendiente`: consultas de validación del desarrollador y respuestas de Manufactura a las 10 preguntas de la ficha.
-
-## [2026-11-05] bi | NS Plantas: resultados de las consultas de validación
-
-- Script ejecutable en `bi-origen/bi-ns-plantas/sql/validacion-fase1.sql` (paso 0 con la tabla temporal `#ns`, consultas 1 a 8 y limpieza opcional).
-- Confirmado: 27 908 OP sin duplicados, ninguna sin fecha ideal; 18 familias con un amortiguador cada una, cuatro sin grupo (`ESPGAB`, `MBL CEFI`, `MBLP`, `PFZ-CEMA`); `@FIR_FECHAS_PROD` guarda días no laborables.
-- Nivel de servicio mensual entre 55 % y 84 % (tabla en [la ficha](bi/ns-plantas.md#resultados-ejecutadas-por-el-desarrollador-el-2026-11-05)); noviembre de 2025 incompleto por la ventana de 12 meses.
-- Hallazgos: solo 456 de 7 170 OP incumplidas tienen razón de retraso (pregunta 11). Hay demasiados sábados y domingos en `@FIR_FECHAS_PROD` para un año: `pendiente` la consulta 8 (fechas repetidas).
-
-## [2026-11-05] bi | NS Plantas: consulta 8 (calendario de días no laborables)
-
-- `@FIR_FECHAS_PROD` no tiene fechas repetidas: 268 filas y 268 fechas distintas entre el 2025-11-08 y el 2028-01-01. Los sábados y domingos de más de la consulta 7 son fechas futuras ya cargadas. No tiene columna de planta.
-- Nuevo riesgo en [la ficha](bi/ns-plantas.md): el calendario vence el 2028-01-01. Se amplió la pregunta 1 (quién lo mantiene).
-- Las consultas de validación de la fase 1 quedan completas; falta la validación de Manufactura.
-
-## [2026-11-17] bi | NS Plantas: validación de Manufactura y propuesta de tabla (fases 1 y 2)
-
-- Respuestas de Manufactura registradas en [la ficha](bi/ns-plantas.md#respuestas-de-manufactura-recibidas-el-2026-11-17): se confirman la regla de la fecha ideal y la del sábado; historia completa; meta del 90 % por planta y general; se elimina la página duplicada; el filtro abre en el mes en curso; 8 plantas (4 grupos y 4 familias sin agrupar); solo OP con pedido; actualización a las 6:00 y a las 17:00; la gráfica de razones se conserva.
-- `pendiente`: aclarar la pregunta 3 (si las OP abiertas en plazo cuentan en el %) y la 11 (barra "Sin razón registrada"). No cambian la tabla.
-- Propuesta de la fase 2 en la ficha: `Planos_Symphony.dbo.Informe_ns_plantas`, una fila por OP (`DocEntry`), fecha ideal calculada por conjuntos, recarga de OP abiertas o modificadas en 7 días, completa semanal, bitácora `dbo.Cargas_Log`. Consultas previas en `bi-origen/bi-ns-plantas/sql/validacion-fase2-previa.sql`.
 
 ## [2026-11-18] bi | NS Plantas: aclaraciones de Manufactura (preguntas 3 y 11)
 
@@ -835,6 +855,61 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - D14: las ventas proyectadas incluyen Viventta. V7: no hay ventas entre compañías en `Informe_ventas` ni facturas de Firplak a Viventta desde 2025, así que no se resta nada en ventas.
 - Hallazgo abierto para la fase 6: las ventas del BI superan a las de `Informe_ventas` en 27.658 mil en 2025 (V6 sin ejecutar).
 
+## [2026-11-20] bi | Liberación: razones desde la app de Logística
+
+- El Excel `Razones incumplimiento lib.xlsx` se migró a la app de Logística (proyecto aparte, Supabase Manufactura, schema `logistica`): una razón por OP, 40 492 OP de histórico más lo que se registre en el formulario.
+- Decisión del desarrollador: opción A. Las razones vigentes se sincronizan a una tabla en `Planos_Symphony` y la API las cruza en SQL. Se descartó consultar Supabase en cada petición. Diseño y pendientes en [la ficha](bi/liberacion.md#razones-de-planeación-decisión-del-desarrollador-2026-11-20).
+- Pregunta 1 respondida en parte (falta la fecha de corte del Excel con Logística); la 8 ya no aplica. Nuevas preguntas 15 (cumple con cambio de fecha) y 16 (fecha programada de la app).
+- El script del SP quedó enlazado en la ficha: `bi-origen/bi-liberacion/sql/FPK_INDICADOR_LIBERACION.sql`.
+- Decisión del desarrollador: se construye con Supabase sin esperar la fecha de corte del Excel.
+
+## [2026-11-20] bi | Liberación: fase 2, scripts de tablas, envío de razones y endpoint
+
+- Plan aprobado por el desarrollador. Se avanza sin la validación de Logística de la fase 1: las tablas no guardan reglas de cumplimiento.
+- `sql/liberacion/01_informe_liberacion.sql`: `dbo.Informe_liberacion` con tipos reales y `dbo.sp_Actualizar_Informe_liberacion` (`MERGE` desde `Indicador_Liberacion`; conserva las OP que salen de la ventana de 365 días). `03_job_liberacion.sql`: job `BI - Liberacion carga`, lunes a viernes 17:15.
+- Razones: el desarrollador descartó un servidor vinculado o un driver en ITPLAKINFO. Supabase (`pg_cron` + `pg_net`) envía la vista `logistica.razones_lib_vigentes` a `POST /api/v1/liberacion/razones` cada 15 minutos si cambió. La API reemplaza `dbo.Informe_liberacion_razones` con `dbo.sp_Cargar_Informe_liberacion_razones` (`02_razones_liberacion.sql`). Token propio `LIBERACION_RAZONES_TOKEN`; el usuario de la API solo recibe `EXECUTE` sobre el SP y el tipo.
+- Validación hecha: la API compila; pruebas locales de la ruta (401 sin token o con otro token, 400 por JSON o versión inválidos, 413 por tamaño, 404 en GET); la vista probada en PGlite con un caso por regla; el JSON que arma Supabase pasa la validación de la API. Nada se ejecutó en SQL Server ni en Supabase.
+- `pendiente` (desarrollador): ejecutar los scripts y pegar los resultados de las consultas 0 y 4 en la ficha; desplegar la API con `LIBERACION_RAZONES_TOKEN`; aplicar la migración de Supabase y crear los secretos en Vault.
+- Rollback: al inicio de cada script y de la migración.
+- Consultas previas 0.1 a 0.3 de `01_informe_liberacion.sql` ejecutadas por el desarrollador: los nombres y el orden de las columnas coinciden, el formato de las 29 942 filas es válido y los textos caben. El SP no necesita cambios.
+- Primera carga de `Informe_liberacion` (29 942 OP en 3 s) y validaciones 4.1 a 4.4 correctas. Octubre de 2026 perdió 16 OP en el origen entre el 4 y el 20 de noviembre: los meses cerrados cambian en `Indicador_Liberacion` (pregunta 12). Detalle en la ficha.
+- El desarrollador ejecutó `02_razones_liberacion.sql`, los `GRANT EXECUTE` al usuario de la API (`informes`, que solo tenía `db_datareader`) y el job `BI - Liberacion carga`.
+- Rama local `deploy/2026-11-20` en `reporting-api`: `deploy/2026-11-19` (Estados Financieros, NS Plantas) más `bi/liberacion`. Conflictos de "ambos agregaron" en `src/server.ts` y `README.md`; compila y la ruta nueva responde. Sin push.
+- Paquete de despliegue de la API: `reporting-api-dist-2b6f75b.zip` (en el escritorio, fuera de los repositorios), desde la rama local `deploy/2026-11-20` = `deploy/2026-11-19` + `bi/liberacion`. Verificado: `dist/server.js` tiene la ruta `/api/v1/liberacion/razones` y las de NS Plantas, balance y consolidado comercial. Sin dependencias nuevas. Variable nueva en el servidor: `LIBERACION_RAZONES_TOKEN`.
+- API desplegada por el desarrollador (`reporting-api-dist-2b6f75b.zip`). Verificado desde fuera: `POST /api/v1/liberacion/razones` sin token responde 401 (la ruta existe y `LIBERACION_RAZONES_TOKEN` está configurado); `/health` 200; `/api/v1/ns-plantas` sin token 401, como antes.
+- Supabase: secretos en Vault, migración `20261120_logistica_razones_lib_envio_liberacion.sql` aplicada por el desarrollador y primer envío forzado: la API respondió 200 con `received` 40 492 y `replaced` 0 (tabla vacía). Desde ahora `pg_cron` envía cada 15 minutos si hubo cambios. `pendiente`: validaciones 5.1 a 5.3 de `02_razones_liberacion.sql`.
+- Validaciones 5.1 y 5.2 de las razones correctas: SQL Server y Supabase coinciden en las 44 razones (40 492 OP, 6 798 con cambio de fecha).
+- Validación 5.3: las OP del indicador cruzan con sus razones; en los meses cerrados la cobertura se acerca a las incumplidas por fechas. La fase 2 cierra con la primera ejecución programada del job (2026-11-20 17:15).
+- % de cumplimiento por mes con la regla completa del BI, calculado en SQL: agosto 85,4 %, septiembre 79,7 %, octubre 88,5 % de 2026. `pendiente`: compararlo con el Power BI.
+- Comparación con el Power BI: agosto (85,43 %) y septiembre (79,68 %) de 2026 iguales con dos decimales. Octubre: portal 88,52 %, Power BI 88,45 % (1 o 2 OP de diferencia); hipótesis de fotos distintas, `pendiente` de confirmar con la hora de actualización y los conteos del Power BI.
+- Power BI actualizado por el desarrollador antes de las 17:00: octubre de 2026 da 88,52 %, igual al portal (antes 88,45 %, por una actualización anterior). Agosto, septiembre y octubre coinciden con dos decimales.
+
+## [2026-11-20] bi | Liberación: borrador del contrato del endpoint (fase 3)
+
+- `GET /api/v1/liberacion` en la [ficha](bi/liberacion.md#3-contrato-del-endpoint): estado `ok`, `no`, `sinLiberar` o `noMedir` calculado en SQL con la regla validada; vistas `detalle`, `razones` (tabla de "Razones Día") y `control`; resumen con %, meta del 98 % (línea fija `0.98` en los visuales del Power BI), series diaria, mensual y anual, y cascada de razones de las OP `no`.
+- Decisiones A a E `pendiente` de aprobación del desarrollador; las respuestas de Logística pueden cambiar reglas después.
+- Contrato aprobado por el desarrollador (decisiones A a E).
+
+## [2026-11-20] bi | Liberación: endpoint GET /api/v1/liberacion (fase 4)
+
+- `reporting-api`, rama `bi/liberacion`: `src/liberacion.ts` con `buildReleaseQuery` y `getReleaseReport`; ruta en `src/server.ts`. Compila; prueba local de autenticación correcta.
+- `sql/liberacion/04_validacion_endpoint.sql`: la consulta del endpoint para octubre de 2026, para correrla en SSMS antes de desplegar.
+- Paquete `reporting-api-dist-d5a34f6.zip` desde `deploy/2026-11-20`. `pendiente`: validación en SSMS y despliegue.
+- Consulta del endpoint validada en SSMS por el desarrollador (octubre de 2026): totales, series diaria, mensual y anual y cascada de razones cuadran entre sí y con la comparación contra el Power BI.
+- API desplegada con `reporting-api-dist-d5a34f6.zip`. Verificado desde fuera: `GET /api/v1/liberacion` 401 sin token (la ruta existe); `POST /api/v1/liberacion/razones`, NS Plantas, balance y facturación 401; `/health` 200.
+
+## [2026-11-20] bi | Liberación: dashboard con las 5 páginas del Power BI (fase 5)
+
+- Pedido del desarrollador: lo más parecido posible al Power BI. Estructura tomada del `.pbip` y de sus capturas: columnas 100 % con "META: 98 %", acumulado por año, trimestre o mes, Pareto con línea del 80 % (la cascada del Power BI la tiene fija) y las tablas de Razones Día y Control.
+- Rutas `/liberacion`, `/acumulado`, `/razones`, `/razones-dia` y `/control`; proxy `/api/liberacion`; informe `liberacion` en el área Logística. Colores del manual de identidad, no los del Power BI.
+- Lint y build sin errores. `pendiente`: revisión con datos reales en 375, 820 y 1440 px y permiso en `/admin/permisos`.
+
+## [2026-11-20] bi | Liberación: conciliación con el Power BI (fase 6)
+
+- `sql/liberacion/05_conciliacion.sql`: % por mes y por día, Pareto por mes y OP sin razón, de septiembre a noviembre de 2026. Regla: comparar el mismo día antes de las 17:00.
+- Agosto, septiembre y octubre iguales al decimal. Hallazgo `pendiente`: la captura diaria de octubre difiere en 6 de 20 días por 1 a 3 OP; probablemente el Power BI se actualizó después de la recarga de las 17:00 y el portal seguía con la de las 12:12 (octubre habría cambiado en el origen en un día, pregunta 12).
+- Revisión responsive del dashboard aplazada por el desarrollador.
+
 ## [2026-11-23] migracion | PKT, fase 2 (script de tabla y SP)
 
 - Scripts [`sql/pkt/01_informe_pkt.sql`](../sql/pkt/01_informe_pkt.sql) y [`02_job_pkt.sql`](../sql/pkt/02_job_pkt.sql): tablas `Informe_pkt_saldos` (fin de mes × compañía × concepto) e `Informe_pkt_intercompania`, SP `sp_Actualizar_Informe_pkt` con carga completa diaria y job `BI - PKT carga diaria` a la 1:00 p. m. Bitácora en `Cargas_Log`.
@@ -882,3 +957,20 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 ## [2026-11-23] migracion | PKT, fase 6 cerrada
 
 - Claudia Lorena Duque Alzate (Dirección Financiera) aprueba la conciliación por chat de Teams (2026-11-23, 2:46 p. m.). Periodos: octubre de 2026, agosto de 2026 y diciembre de 2025; hallazgos H1 a H4 en la [ficha](bi/pkt.md#hallazgos). H3 sigue pendiente de revisión por Contabilidad, sin efecto en el PKT.
+
+## [2026-11-24] bi | Liberación: cierre de la fase 2
+
+- El job `BI - Liberacion carga` corrió solo el 2026-11-20 y el 2026-11-23 a las 17:15, sin error (3 s; 5 y 2 OP borradas por salir del origen dentro de la ventana, es decir, canceladas o fuera de los filtros del SP de origen). Con eso queda cerrada la fase 2.
+
+## [2026-11-24] bi | Liberación: conciliación del mismo día
+
+- Septiembre (79,68 %) y octubre (88,56 %) de 2026 iguales al Power BI. Octubre cambió desde el 20 (88,52 %) en los dos sistemas: hallazgo del 20 resuelto y riesgo de la pregunta 12 confirmado.
+- Noviembre: portal 88,64 %, Power BI 90,51 %. Causa probable: razones registradas en el Excel después de la última carga a Supabase (2026-11-20 09:55). `pendiente`: recargar Supabase desde el Excel y comparar de nuevo.
+- Supabase recargado desde el Excel del 2026-11-23 12:44 (48 OP nuevas, 38 de ellas CUMPLE, y 1 editada). Confirma la causa de la diferencia de noviembre. `pendiente`: comparar de nuevo cuando Supabase envíe las razones al portal.
+- Supabase envió las razones a las 9:00 (`Cargas_Log` Id 4010, 40 540). Noviembre quedó en 90,51 % (1 593 OK / 167 NO), igual al Power BI. Septiembre, octubre y noviembre coinciden al decimal; falta la firma de Logística para cerrar la fase 6.
+
+## [2026-11-24] bi | Liberación: recarga automática y fase 7
+
+- Recarga automática del Excel de razones a Supabase en el equipo del desarrollador (lunes a viernes 16:30, con verificación antes de cargar); detalle en el log del proyecto Logística.
+- Fase 7 iniciada por decisión del desarrollador, con la firma de Logística pendiente. Ramas `bi/liberacion` subidas en los dos repositorios; el merge a `main` lo hace el desarrollador. [Reporting API](components/reporting-api.md) documentada. Estado, pendientes y rollback en la [ficha](bi/liberacion.md#7-despliegue-y-retiro).
+- VibeWorkFlow (FIRPLAK, área Logística): flujo estándar «Consulta del indicador de liberación» (`ac9788e4-83d4-4853-8d24-aac1722fe74b`), con 5 acciones encadenadas, responsables por rol y el KPI. Pendiente: revisión del desarrollador.

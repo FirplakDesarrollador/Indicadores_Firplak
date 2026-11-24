@@ -1,0 +1,63 @@
+/* Dashboard de liberación de órdenes (las 5 páginas del Power BI). Reutiliza las clases billing-* y solo agrega lo propio. Tokens: app/globals.css */
+
+/* El orden de billing.css es de facturación; aquí manda el orden del DOM. */
+.release-shell .billing-content > * { order: 0; }
+
+.release-panel-note { color: var(--color-text-muted); font-size: .8125rem; margin-top: var(--space-1); }
+.release-muted { color: var(--color-text-muted); }
+
+/* Resumen del periodo sobre los gráficos de cumplimiento. */
+.release-summary { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); display: grid; gap: var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--space-4); }
+.release-summary > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.release-summary span { color: var(--color-text-muted); font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.release-summary strong { color: var(--color-text-strong); font-size: 1.5rem; font-variant-numeric: tabular-nums; font-weight: 600; line-height: 1.25; }
+.release-summary small { color: var(--color-text-muted); font-size: .8125rem; }
+.release-summary a { color: var(--color-accent-text); font-weight: 600; text-underline-offset: 3px; }
+.release-summary-skeleton { grid-column: 1 / -1; height: 56px; }
+
+/* Gráficos: alto fijo y desplazamiento horizontal cuando hay muchas columnas. */
+.release-chart-scroll { margin-top: var(--space-4); overflow-x: auto; overscroll-behavior-x: contain; }
+.release-chart { height: 380px; width: 100%; }
+.release-chart-pareto { height: 440px; }
+.release-chart-pareto.compact { height: 420px; }
+.release-chart-skeleton { margin-top: var(--space-4); }
+
+/* Leyenda: OK, NO y meta (la identidad no depende solo del color). */
+.billing-chart-legend .release-legend-ok { background: var(--navy-700); }
+.billing-chart-legend .release-legend-no { background: var(--sage-500); }
+.billing-chart-legend .release-legend-target { border-radius: 0; border-top: 2px dashed var(--danger); height: 0; width: 20px; }
+
+.release-chart-tooltip { display: flex; flex-direction: column; gap: var(--space-1); min-width: 200px; padding: var(--space-3); }
+.release-chart-tooltip strong { color: var(--color-text); font-weight: 600; margin-bottom: var(--space-1); }
+.release-chart-tooltip div { display: flex; gap: var(--space-4); justify-content: space-between; }
+.release-chart-tooltip span { color: var(--color-text-muted); }
+.release-chart-tooltip b { color: var(--color-text); font-variant-numeric: tabular-nums; font-weight: 500; }
+
+/* Niveles del acumulado: Año › Trimestre › Mes. */
+.release-level-switch { border: 1px solid var(--color-border-control); border-radius: var(--radius-sm); display: inline-flex; overflow: hidden; }
+.release-level-switch button { background: var(--color-surface); border: 0; color: var(--color-text); font-size: .875rem; font-weight: 500; min-height: 44px; padding: 0 var(--space-4); }
+.release-level-switch button + button { border-left: 1px solid var(--color-border-control); }
+.release-level-switch button.active { background: var(--navy-700); color: var(--white); }
+.release-level-switch button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+
+/* Estado de cumplimiento: icono + texto + color de estado. */
+.release-status { align-items: center; border-radius: var(--radius-pill); display: inline-flex; font-size: .75rem; font-weight: 600; gap: var(--space-1); padding: 2px 10px; white-space: nowrap; }
+.release-status.success { background: rgb(61 110 85 / .08); color: var(--success); }
+.release-status.danger { background: rgb(158 67 53 / .08); color: var(--danger); }
+.release-status.neutral { background: var(--sage-50); color: var(--sage-800); }
+.release-drawer-status { align-items: center; color: var(--color-text-muted); display: flex; font-size: .875rem; gap: var(--space-3); margin-bottom: var(--space-4); }
+
+/* Tablas visibles en este dashboard (billing.css oculta .billing-table-panel fuera de la vista de detalle). */
+.release-table-panel { overflow: hidden; padding: var(--space-5) 0 0; }
+.release-table-panel .billing-table-scroll { margin-top: var(--space-4); }
+
+/* Razones por día: tabla y Pareto lado a lado en pantallas amplias, como en el Power BI. */
+.release-two-column { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
+
+@container (min-width: 760px) {
+  .release-summary { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@container (min-width: 1120px) {
+  .release-two-column { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}

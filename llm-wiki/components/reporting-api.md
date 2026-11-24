@@ -1,6 +1,6 @@
 ---
 status: active
-updated: 2026-11-11
+updated: 2026-11-24
 sources:
   - https://github.com/Firplak/firplak-reporting-api/blob/main/src/server.ts
   - https://github.com/Firplak/firplak-reporting-api/blob/main/src/db.ts
@@ -82,6 +82,18 @@ Agregados el 2026-11-11 en la rama `feat/facturacion-metas-empresa`. Despliegue 
 - Los números salen de SQL como texto con punto decimal (`CONVERT(varchar(60), decimal(38, 6))`) y se escriben como celdas numéricas con formato `#,##0.00`. Las fechas se escriben como fecha de Excel (`yyyy-mm-dd`, tipo `date` agregado a `src/xlsx.ts`).
 - Código: `openBillingExport` (con `exportColumnFor`), `openDeliveryExport` y `deliveryExportColumns` en `src/db.ts`; `exportRoutes` y `streamXlsx` en `src/server.ts`.
 
+### `GET /api/v1/liberacion` y `POST /api/v1/liberacion/razones`
+
+Agregados en la rama `bi/liberacion` (módulo `src/liberacion.ts`, con sus tipos, como Estados Financieros) y desplegados el 2026-11-20 desde la rama local `deploy/2026-11-20` (paquete `reporting-api-dist-d5a34f6.zip`).
+
+- **`GET /api/v1/liberacion`**, con el mismo Bearer token. Consulta `Informe_liberacion` (`REPORT_LIBERACION_TABLE`) cruzada con `Informe_liberacion_razones` (`REPORT_LIBERACION_RAZONES_TABLE`). El estado de cada OP (`ok`, `no`, `sinLiberar`, `noMedir`) se calcula en SQL en cada consulta.
+  - Filtros de periodo por la fecha recomendada: `anio`, `mes`, `dia`, `fechaDesde` y `fechaHasta`.
+  - Solo filtran `rows`: `vista` (`detalle`, `razones` o `control`), `cumplimiento`, `razon` y `search`.
+  - Respuesta: `summary` con el %, la meta del 98 %, conteos, `withoutReason`, series diaria, mensual y anual y Pareto de razones; además `loadedAt` y `reasonsSyncedAt`.
+  - Código: `buildReleaseQuery` y `getReleaseReport`; `releaseFiltersFrom` en `src/server.ts`.
+- **`POST /api/v1/liberacion/razones`**: lo llama Supabase (`pg_net`, proyecto Manufactura) con un token propio, `LIBERACION_RAZONES_TOKEN`, que solo abre esta ruta. Recibe todas las razones vigentes (hasta 25 MB), valida cada fila (400 sin guardar nada si una falla) y reemplaza `Informe_liberacion_razones` con `dbo.sp_Cargar_Informe_liberacion_razones` (parámetro de tabla `dbo.TipoRazonLiberacion`). El usuario de la API (`informes`) solo tiene `EXECUTE` sobre ese SP y el tipo, además de `db_datareader`.
+- Reglas: [ficha de Liberación](../bi/liberacion.md#3-contrato-del-endpoint).
+
 ## Configuración SQL
 
 ```env
@@ -94,6 +106,8 @@ REPORTING_API_TOKEN=<secreto>
 ```
 
 La tabla de entregas se configura con `REPORT_DELIVERIES_TABLE_SCHEMA=dbo` y `REPORT_DELIVERIES_TABLE=Informe_entregas`.
+
+Las tablas de liberación se configuran con `REPORT_LIBERACION_TABLE_SCHEMA=dbo`, `REPORT_LIBERACION_TABLE=Informe_liberacion` y `REPORT_LIBERACION_RAZONES_TABLE=Informe_liberacion_razones` (valores por defecto en el código). El envío de razones usa `LIBERACION_RAZONES_TOKEN=<secreto>`, distinto de `REPORTING_API_TOKEN`.
 
 La tabla de costo de PT se configura con `REPORT_COSTO_PT_TABLE_SCHEMA=dbo` y `REPORT_COSTO_PT_TABLE=Informe_costo_pt`. Las descargas usan `REPORT_DB_EXPORT_TIMEOUT_MS=600000`.
 

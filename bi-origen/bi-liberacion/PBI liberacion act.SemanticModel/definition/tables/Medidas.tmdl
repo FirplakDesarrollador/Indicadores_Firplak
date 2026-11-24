@@ -1,0 +1,38 @@
+table Medidas
+	lineageTag: e74c13b7-6552-42b7-9d22-d845225e3334
+
+	measure Cumplimiento = COUNT(BD[Cumplimiento])
+		formatString: 0
+		lineageTag: e43e7488-4211-499f-8c35-da25054cd872
+
+	measure TotalCumplimiento = CALCULATE(COUNTA(BD[Cumplimiento]), ALLSELECTED())
+		formatString: 0
+		lineageTag: 92c3e4be-caaa-42aa-8cfa-8907f3f7535f
+
+	measure %Cumplimiento = DIVIDE([Cumplimiento],[TotalCumplimiento])
+		formatString: 0\ %;-0\ %;0\ %
+		lineageTag: d70bcb04-f249-47bb-9409-f8b308c3568f
+
+		changedProperty = FormatString
+
+	measure 'Tiene razon' = IF(COUNT(RazonesIncumplimiento[No Orden])>0,"OK", "NO")
+		lineageTag: 0b34d2e3-8e0c-4f07-8faa-cf7265f2a844
+
+	column Columna1
+		dataType: string
+		lineageTag: 08d400e5-3184-4311-8e25-bc1a64865c27
+		summarizeBy: none
+		sourceColumn: Columna1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Medidas-09f3e9ab-27f3-4e9e-9080-514021feaa44 = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t])
+				in
+				    Origen
+
+	annotation PBI_ResultType = Table
+
