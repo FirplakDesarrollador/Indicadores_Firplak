@@ -63,6 +63,7 @@ SP o proceso de actualización periódica
 ### Proyectos
 
 - [Consolidado comercial SAP](proyectos/consolidado-comercial.md): ofertas + OV + tránsito + facturación neta desde SAP B1 (proyecto nuevo, en descubrimiento).
+- [Semáforo de producción](proyectos/semaforo-produccion.md): SP `dbo.SEMAFORO` (liberación, producción y entrega por OP) llevado a tabla de reporte + job para la API; problemas de lógica L1–L12, rendimiento y contrato propuesto de `/api/v1/semaforo-produccion` (2026-11-23, scripts sin ejecutar).
 
 ### Decisiones
 

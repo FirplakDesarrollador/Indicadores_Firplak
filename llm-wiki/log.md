@@ -805,3 +805,20 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Se trajo `main` a `bi/ns-plantas` (catálogo de informes, permisos por cargo y componentes comunes).
 - Dashboard `/ns-plantas` y `/ns-plantas/detalle` con proxy, tipos, estilos propios y registro en `lib/reports.ts` (área Operaciones). Lint y build sin errores.
 - `pendiente`: revisión visual con datos reales y permisos del usuario de Manufactura.
+
+## [2026-11-23] proyecto | Semáforo de producción: análisis, SP optimizado y contrato propuesto
+
+- Fuente: SP `Planos_Symphony.dbo.SEMAFORO`, copiado sin cambios en [`proyectos/semaforo-produccion/fuentes/SEMAFORO_original.sql`](../proyectos/semaforo-produccion/fuentes/SEMAFORO_original.sql). Rama `proyecto/semaforo-produccion`.
+- [Ficha](proyectos/semaforo-produccion.md): 12 problemas de lógica corregidos (L1–L12), 6 comportamientos conservados a confirmar (R1–R6) y 7 problemas de rendimiento (P1–P7).
+- Scripts en [`sql/semaforo-produccion/`](../sql/semaforo-produccion/): tabla `dbo.Informe_semaforo_produccion`, SP `dbo.sp_Actualizar_Informe_semaforo_produccion` (por conjuntos sobre `dbo.Calendario_Laboral`, sin cursor), job cada 15 min de 6:00 a 20:00 y a las 0:05, y validación contra el original.
+- `pendiente`: dueño de negocio, consultas previas (parte A), primera carga y comparación (parte B), aprobación del contrato de `/api/v1/semaforo-produccion`.
+- Parte A ejecutada por el desarrollador: sin claves repetidas, unión por `DocNum` correcta (R2 cerrado), 23 lotes vacíos, tipo de pedido 2 con 0 días de distribución (L6 afecta a 631 OP), 55 OP sin tipo de orden y calendario cubierto. A2 falló (error 130) y se corrigió en [`03_validacion.sql`](../sql/semaforo-produccion/03_validacion.sql); `pendiente` repetirla.
+- A2 repetida: 2.950 OP, 77 sin familia (23 sin pedido), 0 sin molde, amortiguador ni componentes: R1 y R4 cerrados. Primera carga del SP nuevo: 2.876 OP en 2 s, sin error (`Cargas_Log` 3924). La parte B falló por intercalación (tempdb `CP850` frente a `CP1` de `Planos_Symphony`, error 451); `#orig` pasa a `COLLATE DATABASE_DEFAULT`.
+- Parte B: nuevo 1,8 s frente a 8,6 s del original; mismas 2.876 OP; cantidades, molde y amortiguador idénticos. Fechas recomendadas (95 = 67 L2 + 28 L3), ideal (8, L1) y prometida (630, L6) cuadran con las causas. B4 se cortó en 500 filas: se agregan B5 (diferencias por columna y causa) y B6 (detalle de `Revisar`) en [`03_validacion.sql`](../sql/semaforo-produccion/03_validacion.sql).
+- Comparación cerrada (segunda corrida): 2.880 OP en los dos, nuevo 1,6 s frente a 7,3 s del original, B5 con todas las diferencias explicadas (L1, L2, L3, L6, L7, L8, L9 y derivadas) y 0 `Revisar`. Siguiente: job, validación de Manufactura y aprobación del contrato del endpoint.
+
+## [2026-11-24] proyecto | Semáforo de producción: job cada hora
+
+- El desarrollador cambia la frecuencia del job a cada hora de 6:00 a 20:00, y se mantiene la corrida de las 0:05. Actualizados [`02_job_semaforo_produccion.sql`](../sql/semaforo-produccion/02_job_semaforo_produccion.sql) (con `sp_update_schedule` por si el job ya existe) y la [ficha](proyectos/semaforo-produccion.md).
+- Job creado por el desarrollador. Contrato de `/api/v1/semaforo-produccion` aprobado, con descarga en Excel. Implementado en `reporting-api`, rama `proyecto/semaforo-produccion` (`src/semaforo.ts`, tipos, ruta, `.env.example` y README); `npm run build` sin errores. `pendiente`: prueba local contra SQL Server, commit y despliegue. Detalle en la [ficha](proyectos/semaforo-produccion.md#endpoint-implementación).
+- Paquete `reporting-api-dist-d4a4d32.zip` desde la rama local `deploy/2026-11-24` (deploy/2026-11-19 + `bi/pkt` + semáforo). Hallazgo: el zip de PKT del 2026-11-23 no incluía NS Plantas, consolidado ni estados financieros. Detalle en la [ficha](proyectos/semaforo-produccion.md#paquete-de-despliegue-2026-11-24).
