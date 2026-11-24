@@ -880,3 +880,7 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - `sql/liberacion/05_conciliacion.sql`: % por mes y por día, Pareto por mes y OP sin razón, de septiembre a noviembre de 2026. Regla: comparar el mismo día antes de las 17:00.
 - Agosto, septiembre y octubre iguales al decimal. Hallazgo `pendiente`: la captura diaria de octubre difiere en 6 de 20 días por 1 a 3 OP; probablemente el Power BI se actualizó después de la recarga de las 17:00 y el portal seguía con la de las 12:12 (octubre habría cambiado en el origen en un día, pregunta 12).
 - Revisión responsive del dashboard aplazada por el desarrollador.
+
+## [2026-11-24] bi | Liberación: cierre de la fase 2
+
+- El job `BI - Liberacion carga` corrió solo el 2026-11-20 y el 2026-11-23 a las 17:15, sin error (3 s; 5 y 2 OP borradas por salir del origen dentro de la ventana, es decir, canceladas o fuera de los filtros del SP de origen). Con eso queda cerrada la fase 2.
