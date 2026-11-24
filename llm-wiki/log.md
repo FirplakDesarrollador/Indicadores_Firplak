@@ -973,3 +973,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - Recarga automática del Excel de razones a Supabase en el equipo del desarrollador (lunes a viernes 16:30, con verificación antes de cargar); detalle en el log del proyecto Logística.
 - Fase 7 iniciada por decisión del desarrollador, con la firma de Logística pendiente. Ramas `bi/liberacion` subidas en los dos repositorios; el merge a `main` lo hace el desarrollador. [Reporting API](components/reporting-api.md) documentada. Estado, pendientes y rollback en la [ficha](bi/liberacion.md#7-despliegue-y-retiro).
+- VibeWorkFlow (FIRPLAK, área Logística): flujo estándar «Consulta del indicador de liberación» (`ac9788e4-83d4-4853-8d24-aac1722fe74b`), con 5 acciones encadenadas, responsables por rol y el KPI. Pendiente: revisión del desarrollador.
