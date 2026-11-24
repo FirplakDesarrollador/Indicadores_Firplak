@@ -891,3 +891,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Noviembre: portal 88,64 %, Power BI 90,51 %. Causa probable: razones registradas en el Excel después de la última carga a Supabase (2026-11-20 09:55). `pendiente`: recargar Supabase desde el Excel y comparar de nuevo.
 - Supabase recargado desde el Excel del 2026-11-23 12:44 (48 OP nuevas, 38 de ellas CUMPLE, y 1 editada). Confirma la causa de la diferencia de noviembre. `pendiente`: comparar de nuevo cuando Supabase envíe las razones al portal.
 - Supabase envió las razones a las 9:00 (`Cargas_Log` Id 4010, 40 540). Noviembre quedó en 90,51 % (1 593 OK / 167 NO), igual al Power BI. Septiembre, octubre y noviembre coinciden al decimal; falta la firma de Logística para cerrar la fase 6.
+
+## [2026-11-24] bi | Liberación: recarga automática y fase 7
+
+- Recarga automática del Excel de razones a Supabase en el equipo del desarrollador (lunes a viernes 16:30, con verificación antes de cargar); detalle en el log del proyecto Logística.
+- Fase 7 iniciada por decisión del desarrollador, con la firma de Logística pendiente. Ramas `bi/liberacion` subidas en los dos repositorios; el merge a `main` lo hace el desarrollador. [Reporting API](components/reporting-api.md) documentada. Estado, pendientes y rollback en la [ficha](bi/liberacion.md#7-despliegue-y-retiro).

@@ -59,7 +59,7 @@ SP o proceso de actualización periódica
   - [Facturación diaria: metas, empresas y entregas](bi/facturacion-diaria.md): metas mensuales por empresa en Supabase, días laborales, filtro Empresa (Firplak/Viventta/CEFI), cards de cumplimiento y detalle de entregas (2026-11-09; devoluciones en entregas `pendiente`).
   - [Costo actual de producto terminado](bi/costo-actual-pt.md): en migración (fases 1 a 5 cerradas; fase 6 conciliada, a la espera de la aprobación de Contabilidad; fase 7 prevista para el 2026-11-10). Usa el query optimizado del desarrollador, con reglas corregidas y la explosión de todos los niveles (D9).
   - [NS Plantas](bi/ns-plantas.md): en migración (fase 2 aprobada el 2026-11-18: tabla `Informe_ns_plantas` cargada y jobs corriendo; contrato aprobado; endpoint desplegado; dashboard `/ns-plantas` construido, en revisión visual).
-  - [Liberación](bi/liberacion.md): en migración (fase 2: scripts de `Informe_liberacion` y de razones listos para ejecutar; Supabase empuja las razones a la API; falta la validación de Logística de la fase 1).
+  - [Liberación](bi/liberacion.md): en migración (fase 7: tablas, envío de razones desde Supabase, API y dashboard listos; conciliación de septiembre a noviembre de 2026 igual al Power BI; falta la firma de Logística, el merge a `main` y VibeWorkFlow).
 
 ### Proyectos
 

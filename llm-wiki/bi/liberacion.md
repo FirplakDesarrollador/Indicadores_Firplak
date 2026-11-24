@@ -1,7 +1,7 @@
 ---
 status: en-migracion
-fase: 4
-updated: 2026-11-20
+fase: 7
+updated: 2026-11-24
 sources:
   - ../../bi-origen/bi-liberacion/
   - ../../bi-origen/bi-liberacion/sql/FPK_INDICADOR_LIBERACION.sql
@@ -731,4 +731,23 @@ Script de solo lectura: [`sql/liberacion/05_conciliacion.sql`](../../sql/liberac
 
 ## 7. Despliegue y retiro
 
-`pendiente`
+Iniciada el 2026-11-24 por decisión del desarrollador, con la firma de Logística de la fase 6 `pendiente`.
+
+| Pieza | Estado |
+|---|---|
+| SQL Server | Tablas, SP, permisos y job en producción desde el 2026-11-20 (scripts en [`sql/liberacion/`](../../sql/liberacion/)) |
+| Supabase (Manufactura) | Vista, función de envío y job `liberacion-enviar-razones` activos desde el 2026-11-20 |
+| Recarga del Excel a Supabase | Automática desde el 2026-11-24: tarea «Logistica - Recarga razones liberacion» en el equipo del desarrollador, lunes a viernes 16:30, con verificación antes de cargar (proyecto Logística, `scripts/recargar-razones.mjs`). Se retira cuando Logística registre las razones en su app |
+| Reporting API | Desplegada el 2026-11-20 (`reporting-api-dist-d5a34f6.zip`). Rama `bi/liberacion` subida a GitHub; el merge a `main` lo hace el desarrollador |
+| Frontend | Rama `bi/liberacion` subida a GitHub; el merge a `main` lo hace el desarrollador. `pendiente`: despliegue en Vercel con el merge, asignar el permiso `liberacion` en `/admin/permisos` y la revisión en 375 y 820 px |
+| Documentación | Ficha, [Reporting API](../components/reporting-api.md), [Frontend](../components/frontend.md) y log al día. VibeWorkFlow: `pendiente` |
+| Firma de Logística (fase 6) y respuestas a las 16 preguntas | `pendiente` |
+| Retiro del Power BI | `pendiente`: después de la firma y de un periodo en paralelo |
+
+Rollback:
+
+- Frontend: quitar el informe `liberacion` de `lib/reports.ts` o revertir el merge; el Power BI sigue funcionando porque no se tocó nada de su origen.
+- API: desplegar el paquete anterior a `reporting-api-dist-2b6f75b.zip`.
+- SQL Server: deshabilitar el job `BI - Liberacion carga` y aplicar el rollback de cada script. `FPK_INDICADOR_LIBERACION` e `Indicador_Liberacion` no cambian.
+- Supabase: `select cron.unschedule(liberacion-enviar-razones);` y el rollback de la migración.
+- Recarga automática: `Unregister-ScheduledTask -TaskName "Logistica - Recarga razones liberacion"`.
