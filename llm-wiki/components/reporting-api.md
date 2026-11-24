@@ -63,6 +63,14 @@ Agregados en la rama `bi/costo-actual-pt` (commit `a28da32`, creada desde `bi/no
 - Código: `getProductCostReport`, `getProductCostExportInfo` y `openProductCostExport` en `src/db.ts`; `productCostFiltersFrom` y `sendProductCostExport` en `src/server.ts`.
 - Reglas: [ficha de Costo actual de PT](../bi/costo-actual-pt.md#3-contrato-del-endpoint).
 
+### `GET /api/v1/pkt`
+
+Agregado en la rama `bi/pkt` de `reporting-api` (2026-11-23, sin commit ni despliegue todavía). PKT consolidado de Firplak y Viventta de un mes cerrado: lee `Informe_pkt_saldos` (`REPORT_PKT_TABLE`), que recalcula cada día el SP `sp_Actualizar_Informe_pkt`, y las ventas netas de `Informe_ventas` (todas las compañías). Mismo Bearer token.
+
+- Parámetros: `anio` y `mes`, juntos o ninguno (último corte cargado). `400` si falta uno o si el periodo no está cargado.
+- Respuesta: `period`, `periods`, `summary`, `statement`, `series.annualClose`, `series.monthly`, `source` y `updatedAt` (hora de la última carga). Sin paginación.
+- Reglas y contrato: [ficha PKT](../bi/pkt.md#3-contrato-del-endpoint).
+
 ### `GET /api/v1/facturacion-diaria/export` y `/api/v1/entregas/export`
 
 Agregados el 2026-11-11 en la rama `feat/facturacion-metas-empresa`. Despliegue `pendiente`; no se probaron contra SQL Server porque no hay `.env` local de la API.
