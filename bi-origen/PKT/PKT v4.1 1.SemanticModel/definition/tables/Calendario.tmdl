@@ -1,0 +1,31 @@
+table Calendario
+	lineageTag: f70a2f7a-9593-466f-8d25-0164cc03b6f2
+
+	column Fecha
+		formatString: General Date
+		lineageTag: b361f823-284a-45e8-a7e2-a6d3ebd905c2
+		summarizeBy: none
+		sourceColumn: [Date]
+
+		variation Variación
+			isDefault
+			relationship: ee37e4ad-12e7-4d67-ba12-d77a3b720c77
+			defaultHierarchy: LocalDateTable_19a2c403-d5c0-4148-8166-58549d2df34b.'Jerarquía de fechas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column NroMes = ```
+			MONTH(Calendario[Fecha]) 
+			```
+		formatString: 0
+		lineageTag: ef01805d-92d6-42e0-8a7c-9ead1514d2d0
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendario-b153d5a7-6b34-482a-a73e-237dcb1d1464 = calculated
+		mode: import
+		source = CALENDAR("01/01/2020",CONCATENATE("31/12/", VALUE(YEAR(TODAY()))))
+
+	annotation PBI_Id = bf739e6b30444344b7f67162b0465eef
+

@@ -1,0 +1,31 @@
+table PKT
+	lineageTag: da5734d5-3d08-472a-97be-8a96d09ab635
+
+	measure 'A.A PKT' = DIVIDE([A.A KTNO],[ventasProyectadasAA])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 121a710d-4ccd-4d38-90fc-1315c0b625aa
+
+	measure 'Label PKT' = "PKT"
+		lineageTag: d67d9d8d-9503-4e1a-b1c1-77a90a36a835
+
+	measure PKT = DIVIDE([KTNO],[ventasProyectadas])
+		formatString: 0.0\ %;-0.0\ %;0.0\ %
+		lineageTag: 1aedf921-ab9d-45d7-a65b-4f5c185be9f4
+
+	measure 'PKT GF' = CALCULATE(PKT[PKT], MONTH(Calendario[Fecha]) = 12)
+		lineageTag: 9aa592d6-a947-4958-bbb7-dc5447c73697
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition PKT = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Columna1", type text}}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Tipo cambiado",{"Columna1"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,217 @@
+table 'Proveedores de bienes y servicios'
+	lineageTag: 5533c89e-7ffd-4700-baa8-8ce7bf7292e3
+
+	measure 'A.A. Proveedores de bienes y servicios' = CALCULATE([Proveedores de bienes y servicios], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Proveedores de Bienes y Servicios
+		lineageTag: fce20db4-092d-4f3a-b871-192c7c75f8eb
+
+	measure 'A.A. Costos y Gastos por pagar' = CALCULATE([Costos y Gastos por pagar], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Costos y Gastos por pagar
+		lineageTag: 8411179a-bd9d-42ba-8026-16a9d90e518f
+
+	measure 'Costos y Gastos por pagar' = CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 2335, ISBLANK(CapitalTrabajo[Lvl4])) - CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 23359515) - CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 23359525) - CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 23359530)
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Costos y Gastos por pagar
+		lineageTag: 4d278015-31cc-4e1e-a222-f8691b161679
+
+	measure 'Impuestos por pagar' =
+			
+			CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 24040505)
+		displayFolder: Impuestos por pagar
+		lineageTag: 0a7e3754-3a26-42aa-90b5-3dbe4c532827
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Label Costos y Gastos por pagar' = "Costos y Gastos por pagar"
+		displayFolder: Costos y Gastos por pagar
+		lineageTag: 4596408e-edfd-4ec8-9f00-a82c489b6753
+
+	measure 'Label Proveedores de Bienes y Servicios' = "Proveedores de Bienes y Servicios"
+		displayFolder: Proveedores de Bienes y Servicios
+		lineageTag: 268d5791-3b8a-452e-9956-5dc6863b8016
+
+	measure 'Obligaciones laborales' = CALCULATE(MAX(CapitalTrabajo[Saldo Final]),CapitalTrabajo[Lvl2] = 25, ISBLANK(CapitalTrabajo[Lvl3]))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Obligaciones laborales
+		lineageTag: b23e09d3-934a-4d0e-b8c2-09f51f6372a8
+
+	measure 'Otras cuentas por pagar operativas' = CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 2365, ISBLANK(CapitalTrabajo[Lvl4])) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 2408, ISBLANK(CapitalTrabajo[Lvl4])) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 2367, ISBLANK(CapitalTrabajo[Lvl4])) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 2368, ISBLANK(CapitalTrabajo[Lvl4])) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 2370, ISBLANK(CapitalTrabajo[Lvl4])) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 2380, ISBLANK(CapitalTrabajo[Lvl4])) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 2805, ISBLANK(CapitalTrabajo[Lvl4]))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Otras cuentas por pagar operativas
+		lineageTag: 650c9b4f-c8dd-4948-bab1-134c94bbbeeb
+
+	measure 'Pasivos estimados y provisiones' = ```
+			CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl2] = 26, ISBLANK(CapitalTrabajo[Lvl3])) 
+			```
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Pasivos estimados y provisiones
+		lineageTag: 3d6ef6e6-1cba-41ae-a5a2-f87a53780e1a
+
+	measure Proveedores = CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl2] = 22, ISBLANK(CapitalTrabajo[Lvl3]))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Proveedores
+		lineageTag: c67b1dcf-ad65-4127-9af2-b0d1112512d4
+
+	measure 'Proveedores de bienes y servicios' = [Costos y Gastos por pagar] + [Impuestos por pagar] + [Obligaciones laborales] + [Otras cuentas por pagar operativas] + [Pasivos estimados y provisiones] + [Proveedores] + [Confirming]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Proveedores de Bienes y Servicios
+		lineageTag: 83874c1d-f0a6-4733-944d-181ff8584add
+
+	measure 'Variacion % Proveedores de bienes y servicios' = DIVIDE([Variacion $ Capital de Trabajo], [A.A. Proveedores de bienes y servicios])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Proveedores de Bienes y Servicios
+		lineageTag: ef6f32d5-2047-4eda-a341-0a80245fb2d9
+
+	measure 'Variacion $ Proveedores de bienes y servicios' = [Proveedores de bienes y servicios] - [A.A. Proveedores de bienes y servicios]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Proveedores de Bienes y Servicios
+		lineageTag: 4cca17d9-dc2d-47f5-9a58-a1e621a6d5c4
+
+	measure 'Variacion $ Costos y Gastos por pagar' = [Costos y Gastos por pagar] - [A.A. Costos y Gastos por pagar]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Costos y Gastos por pagar
+		lineageTag: 6b95c106-c8cd-4023-8775-f894fd691683
+
+	measure 'Variacion % Costos y Gastos por pagar' = DIVIDE([Variacion $ Costos y Gastos por pagar], [A.A. Costos y Gastos por pagar])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Costos y Gastos por pagar
+		lineageTag: 54b0602d-5a9f-4a69-9ef2-cf5d4380a5cd
+
+	measure 'Label Impuestos por pagar' = "Impuestos por pagar"
+		displayFolder: Impuestos por pagar
+		lineageTag: ba5ac74e-663d-4c11-9352-7efa089daff3
+
+	measure 'A.A. Impuestos por pagar' = CALCULATE([Impuestos por pagar], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Impuestos por pagar
+		lineageTag: 134f716e-d850-4bea-bb61-ebf2baf87a3e
+
+	measure 'Variacion $ Impuestos por pagar' = [Impuestos por pagar] - [A.A. Impuestos por pagar]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Impuestos por pagar
+		lineageTag: ec117849-e6d8-464b-a198-de4c07b993e1
+
+	measure 'Variacion % Impuestos por pagar' = DIVIDE([Variacion $ Impuestos por pagar], [A.A. Impuestos por pagar])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Impuestos por pagar
+		lineageTag: 7a42e04c-b683-436d-aef8-4b7b6696e2c2
+
+	measure 'Label Obligaciones laborales' = "Obligaciones laborales"
+		displayFolder: Obligaciones laborales
+		lineageTag: aac26db0-e51f-41be-9b5c-d1a73b71e994
+
+	measure 'A.A. Obligaciones laborales' = CALCULATE([Obligaciones laborales], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Obligaciones laborales
+		lineageTag: 0b596317-f105-4a2e-b039-c85664c8778c
+
+	measure 'Variacion $ Obligaciones laborales' = [Obligaciones laborales] - [A.A. Obligaciones laborales]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Obligaciones laborales
+		lineageTag: 27d0a9fe-1d55-4db6-8ed0-b605463a522c
+
+	measure 'Variacion % Obligaciones laborales' = DIVIDE([Variacion $ Obligaciones laborales], [A.A. Obligaciones laborales])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Obligaciones laborales
+		lineageTag: 6491c595-2e37-4f7a-8f82-b2f6fd19749b
+
+	measure 'Label Otras cuentas por pagar operativas' = "Otras cuentas por pagar operativas"
+		displayFolder: Otras cuentas por pagar operativas
+		lineageTag: fd786705-12a7-4aa0-bed7-7a00efbce6a2
+
+	measure 'A.A. Otras cuentas por pagar operativas' = CALCULATE([Otras cuentas por pagar operativas], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Otras cuentas por pagar operativas
+		lineageTag: 5ecbf19f-3244-422d-82ce-9bf07780e36a
+
+	measure 'Variacion $ Otras cuentas por pagar operativas' = [Otras cuentas por pagar operativas] - [A.A. Otras cuentas por pagar operativas]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Otras cuentas por pagar operativas
+		lineageTag: c12f6a52-d046-4d6c-8187-19b597dced16
+
+	measure 'Variacion % Otras cuentas por pagar operativas' = DIVIDE([Variacion $ Otras cuentas por pagar operativas], [A.A. Otras cuentas por pagar operativas])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Otras cuentas por pagar operativas
+		lineageTag: ca11d89c-b281-49bc-97e0-bbdb1a8f7ee5
+
+	measure 'Label Pasivos estimados y provisiones' = "Pasivos estimados y provisiones"
+		displayFolder: Pasivos estimados y provisiones
+		lineageTag: a09819e7-dc4d-4afe-8d70-cc4ae0edc6e4
+
+	measure 'A.A. Pasivos estimados y provisiones' = CALCULATE([Pasivos estimados y provisiones], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: 0
+		displayFolder: Pasivos estimados y provisiones
+		lineageTag: 69dda0e3-024b-4e53-bb3d-932e45837102
+
+	measure 'Variacion $ Pasivos estimados y provisiones' = [Pasivos estimados y provisiones] - [A.A. Pasivos estimados y provisiones]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Pasivos estimados y provisiones
+		lineageTag: 7e6108f8-f3e4-424f-a51f-39fbcd60d204
+
+	measure 'Variacion % Pasivos estimados y provisiones' = DIVIDE([Variacion $ Pasivos estimados y provisiones], [A.A. Pasivos estimados y provisiones])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Pasivos estimados y provisiones
+		lineageTag: 790ebe4e-8c4f-46c6-bcc2-9b48f9772d41
+
+	measure 'Label Proveedores' = "Proveedores"
+		displayFolder: Proveedores
+		lineageTag: d26aac65-4655-4886-bb04-4a866295351e
+
+	measure 'A.A. Proveedores' = CALCULATE([Proveedores], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Proveedores
+		lineageTag: 98905a18-85d3-47b1-87a3-ea06b21764a9
+
+	measure 'Variacion $ Proveedores' = 'Proveedores de bienes y servicios'[Proveedores] - [A.A. Proveedores]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Proveedores
+		lineageTag: 0f90ebeb-92e7-4ebe-95dd-5f8a14198f86
+
+	measure 'Variacion % Proveedores' = DIVIDE([Variacion $ Proveedores], [A.A. Proveedores])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Proveedores
+		lineageTag: f4be3b43-143d-4771-bb85-b6d1fa4b4e86
+
+	measure Confirming =
+			CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 21051040)
+			+ CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 21051045)
+		formatString: 0
+		displayFolder: Confirming
+		lineageTag: c6191a2f-84e4-4d48-a80f-9bcb3ea969b0
+
+	measure 'A.A. Confirming' = CALCULATE([Confirming], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		displayFolder: Confirming
+		lineageTag: 0db32f6b-19b0-4def-b374-b1cecf8748d2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Variacion % confirming' = DIVIDE([Variacion $ confirming], [A.A. Confirming])
+		displayFolder: Confirming
+		lineageTag: 6f6f4ad9-90a4-4af7-983d-94caa53ef3a6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Variacion $ confirming' = [Confirming]- [A.A. Confirming]
+		displayFolder: Confirming
+		lineageTag: fcb90dbf-e61d-49ce-ad91-a5240002e38a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Label confirming' = "Ob. Fras. Prov. - Confirming"
+		displayFolder: Confirming
+		lineageTag: 414e806e-3416-45c8-b07b-b62ddfaae6b7
+
+	partition 'Proveedores de bienes y servicios' = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Columna1", type text}}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Tipo cambiado",{"Columna1"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+

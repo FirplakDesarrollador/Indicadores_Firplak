@@ -1,4 +1,4 @@
-import { Boxes, Factory, FileMinus, Handshake, ShieldCheck, Table2, Target, TrendingUp, Truck, type LucideIcon } from "lucide-react";
+import { BarChart3, Boxes, CalendarRange, ChartColumnStacked, ClipboardList, Factory, FileMinus, Gauge, Handshake, ListOrdered, ShieldCheck, Table2, Target, TrendingUp, Truck, type LucideIcon } from "lucide-react";
 
 export type DashboardNavItem = { href: string; label: string; icon: LucideIcon };
 export type DashboardNavGroup = { label: string; items: DashboardNavItem[] };
@@ -39,6 +39,31 @@ export const productCostNavigation: DashboardNavGroup[] = [
 export const nsPlantsNavigation: DashboardNavGroup[] = [
   { label: "MENÚ PRINCIPAL", items: [{ href: "/ns-plantas", label: "Nivel de servicio", icon: Factory }] },
   { label: "ANÁLISIS", items: [{ href: "/ns-plantas/detalle", label: "Detalle de órdenes", icon: Table2 }] },
+];
+
+// PKT: la matriz con las tarjetas en la vista principal y las gráficas en su propia página.
+export const pktNavigation: DashboardNavGroup[] = [
+  { label: "MENÚ PRINCIPAL", items: [{ href: "/pkt", label: "PKT", icon: Gauge }] },
+  { label: "ANÁLISIS", items: [{ href: "/pkt/graficas", label: "Gráficas del PKT", icon: BarChart3 }] },
+];
+
+// Las 5 páginas del Power BI, en el mismo orden.
+export const releaseNavigation: DashboardNavGroup[] = [
+  {
+    label: "MENÚ PRINCIPAL",
+    items: [
+      { href: "/liberacion", label: "Cumplimiento liberación", icon: ChartColumnStacked },
+      { href: "/liberacion/acumulado", label: "Cumplimiento acumulado", icon: CalendarRange },
+    ],
+  },
+  {
+    label: "ANÁLISIS",
+    items: [
+      { href: "/liberacion/razones-dia", label: "Razones por día", icon: ListOrdered },
+      { href: "/liberacion/razones", label: "Razones de incumplimiento", icon: BarChart3 },
+      { href: "/liberacion/control", label: "Control", icon: ClipboardList },
+    ],
+  },
 ];
 
 export const adminNavigation: DashboardNavGroup[] = [

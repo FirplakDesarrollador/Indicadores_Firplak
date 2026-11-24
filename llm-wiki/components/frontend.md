@@ -24,7 +24,7 @@ sources:
 
 ## Rutas
 
-- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver, agrupados por área (catálogo en `lib/reports.ts`). El perfil del encabezado (nombre y correo) abre, solo para administradores, el menú con "Permisos de informes"; la barra lateral de los dashboards tiene el mismo menú en el perfil.
+- `/`: portal de accesos. Solo muestra los informes que el usuario puede ver, agrupados por área (catálogo en `lib/reports.ts`: ventas, contabilidad y finanzas —una sola categoría desde el 2026-11-23—, operaciones y logística). El perfil del encabezado (nombre y correo) abre, solo para administradores, el menú con "Permisos de informes"; la barra lateral de los dashboards tiene el mismo menú en el perfil.
 - `/login`: inicio de sesión Microsoft 365.
 - `/facturacion-diaria`: dashboard comercial.
 - `/facturacion-diaria/detalle`: página independiente para el detalle paginado de documentos de facturación.
@@ -42,8 +42,12 @@ sources:
 - `/consolidado-comercial/detalle`: detalle paginado de las líneas abiertas de A–C, con pestañas por etapa, búsqueda y panel lateral.
 - `/api/consolidado-comercial`: proxy server-side hacia `GET /api/v1/consolidado-comercial`.
 - `/ns-plantas`: nivel de servicio de plantas para Manufactura ([`NsPlantasDashboard.tsx`](../../components/NsPlantasDashboard.tsx); reglas en la [ficha del BI](../bi/ns-plantas.md)). Abre en el mes en curso: nivel de servicio con meta del 90 %, órdenes medidas, incumplidas y en plazo, series diaria y mensual (año completo), tabla por planta frente a la meta e incumplidas por razón de retraso.
+- `/liberacion`: liberación de órdenes de producción para Logística ([`LiberacionDashboard.tsx`](../../components/LiberacionDashboard.tsx); reglas en la [ficha del BI](../bi/liberacion.md)). Las 5 páginas del Power BI: cumplimiento por día (`/liberacion`), acumulado por año, trimestre o mes (`/acumulado`), Pareto de razones (`/razones`), razones por día con tabla y Pareto (`/razones-dia`) y control de OP sin razón (`/control`). Abre en el mes en curso; meta del 98 %.
 - `/ns-plantas/detalle`: detalle paginado de órdenes de fabricación, abre en las incumplidas; filtro de cumplimiento, búsqueda y panel lateral.
 - `/api/ns-plantas`: proxy server-side hacia `GET /api/v1/ns-plantas`.
+- `/pkt`: PKT (productividad del capital de trabajo) consolidado de Firplak y Viventta para Dirección Financiera ([`PktDashboard.tsx`](../../components/PktDashboard.tsx); reglas en la [ficha del BI](../bi/pkt.md)). Abre en el último mes cerrado: tarjetas de ventas, matriz de capital de trabajo, proveedores de bienes y servicios y KTNO frente al 31 de diciembre anterior, y tarjetas del PKT.
+- `/pkt/graficas`: gráficas del PKT (cierre por año y meses del año elegido), con el mismo filtro de periodo.
+- `/api/pkt`: proxy server-side hacia `GET /api/v1/pkt`.
 - `/admin/permisos`: administración de permisos por cargo, con excepciones e historial con soporte; solo para administradores ([Seguridad](../concepts/security-and-secrets.md#permisos-por-informe)).
 
 ## Comportamiento del dashboard

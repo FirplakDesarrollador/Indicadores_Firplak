@@ -228,10 +228,11 @@ Repositorio `reporting-api`, rama `proyecto/semaforo-produccion` (desde `main`),
 
 ### Paquete de despliegue (2026-11-24)
 
-- Rama `deploy/2026-11-24` de `reporting-api` (local, sin push): `origin/deploy/2026-11-19` (NS Plantas, consolidado comercial, estados financieros) + `bi/pkt` + `proyecto/semaforo-produccion`. Commit `d4a4d32`.
-- Paquete: `reporting-api-dist-d4a4d32.zip` en la carpeta padre de los repositorios (12 archivos de `dist/`, incluidos `estados-financieros.js` y `semaforo.js`).
-- Verificado: `npm run build` sin errores; arranque local con `/health` = 200, `/api/v1/semaforo-produccion`, `/export`, `/pkt` y `/ns-plantas` = 401 sin token (rutas registradas) y ruta inexistente = 404.
-- **Hallazgo:** el paquete anterior `reporting-api-dist-bi-pkt-20261123.zip` se armó desde `bi/pkt`, que sale de `main`: no trae NS Plantas, consolidado comercial ni estados financieros. Si se instaló, esos endpoints dejaron de responder (404). El paquete nuevo los incluye.
+- Rama `proyecto/semaforo-produccion` de `reporting-api` rebasada sobre `origin/main` (que ya trae Liberación, PR #6): commit `58654a1`.
+- Rama `deploy/2026-11-24` (local, sin push) = `origin/deploy/2026-11-23` (último despliegue: NS Plantas, consolidado comercial, estados financieros, Liberación y PKT) + semáforo. Commit `c8b0a42`. Frente a `deploy/2026-11-23` solo cambia lo del semáforo (`semaforo.ts`, tipos, ruta, `export` de helpers, `.env.example` y README).
+- Paquete: `reporting-api-dist-c8b0a42.zip` en la carpeta padre de los repositorios (14 archivos de `dist/`, incluidos `liberacion.js` y `semaforo.js`).
+- Verificado: `npm run build` sin errores; arranque local con `/health` = 200; semáforo, `/export`, liberación, PKT y NS Plantas = 401 sin token; ruta inexistente = 404.
+- Corrección: un primer paquete (`d4a4d32`, borrado) partía de `deploy/2026-11-19` porque el `fetch` había fallado por credenciales, y no traía Liberación. Con el `fetch` hecho (sesión de `gh`) apareció `deploy/2026-11-23`, que sí trae todo; la alerta sobre el zip de PKT del 2026-11-23 no aplica al despliegue real.
 - `pendiente`: instalación en el servidor y prueba con token.
 
 ## Preguntas para Manufactura

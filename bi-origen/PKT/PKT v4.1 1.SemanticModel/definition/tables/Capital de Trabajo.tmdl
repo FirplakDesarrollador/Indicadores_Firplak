@@ -1,0 +1,234 @@
+table 'Capital de Trabajo'
+	lineageTag: 52adf279-0fa8-44ab-926b-776595257d62
+
+	measure 'Anticipos de impuestos o saldos a favor' = CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl3] = 1355, ISBLANK(CapitalTrabajo[Lvl4]))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Anticipos de impuestos o saldos a favor
+		lineageTag: f16a84dd-7285-47e8-9d2e-a1ce9b1d9a0a
+
+	measure Clientes = ```
+			CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 13050505) 
+			            + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 13051005) 
+			            + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Account] = 13051010)
+			```
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Clientes
+		lineageTag: 5f4bd13f-ede6-447e-b156-93e6dffe2d51
+
+	measure Inventarios = CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl2] = 14, ISBLANK(CapitalTrabajo[Lvl3]))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Inventarios
+		lineageTag: d90182d3-4dad-4c7d-8be2-bb72d2b0795b
+
+	measure 'Otras cuentas por cobrar operativas' = (CALCULATE(MAX(CapitalTrabajo[Saldo Final]),CapitalTrabajo[Lvl3] = 1330, ISBLANK(CapitalTrabajo[Lvl4])) - CALCULATE(MAX(CapitalTrabajo[Saldo Final]),CapitalTrabajo[Account] = 13300515)) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]),CapitalTrabajo[Lvl3] = 1365, ISBLANK(CapitalTrabajo[Lvl4]))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Otras cuentas por cobrar operativas
+		lineageTag: 9fc115c9-2971-47a3-b904-ee21d5e5e4cd
+
+	measure 'Provisión (Deterioro) CxC (Vr. negativo)' = CALCULATE(MAX(CapitalTrabajo[Saldo Final]),CapitalTrabajo[Account] = 13050590) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]),CapitalTrabajo[Account] = 13051090) + CALCULATE(MAX(CapitalTrabajo[Saldo Final]), CapitalTrabajo[Lvl4] = 139905, ISBLANK(CapitalTrabajo[Account]))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Provisión (Deterioro) CxC (Vr. negativo)
+		lineageTag: 39513cf8-be14-438d-b9f1-c59df9f604ca
+
+	measure 'Capital Trabajo' = [Anticipos de impuestos o saldos a favor] + [Clientes] + [Inventarios] + [Otras cuentas por cobrar operativas] + [Provisión (Deterioro) CxC (Vr. negativo)]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Capital de Trabajo
+		lineageTag: 95afbea3-e8c5-466e-b673-fb40f9b3b668
+
+	measure 'Label Capital trabajo' = "Capital de Trabajo"
+		displayFolder: Capital de Trabajo
+		lineageTag: d1914a27-2fd0-43ed-8e95-d84b7d0de281
+
+	measure 'A.A. Capital Trabajo' = CALCULATE([Capital Trabajo], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Capital de Trabajo
+		lineageTag: 43453a5b-f1c3-46fd-9da9-3f5cbf4d55ab
+
+	measure 'Label Clientes' = "Clientes"
+		displayFolder: Clientes
+		lineageTag: 5aac06be-c1fe-45f0-a2cc-a37ab64db0a4
+
+	measure 'A.A. Clientes' = CALCULATE([Clientes], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Clientes
+		lineageTag: febf2210-5d4b-43b2-af39-84c74722c502
+
+	measure 'Variacion $ Clientes' = [Clientes] - [A.A. Clientes]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Clientes
+		lineageTag: c838add3-0a03-48b3-82f8-b3787e8a36e5
+
+	measure 'Variacion % Clientes' = DIVIDE([Variacion $ Clientes],[A.A. Clientes])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Clientes
+		lineageTag: 5452cfe3-bfc2-4047-8b54-2de9c43b0da7
+
+	measure 'Variacion $ Capital de Trabajo' = [Capital Trabajo] - [A.A. Capital Trabajo]
+		displayFolder: Capital de Trabajo
+		lineageTag: 4b065d70-e373-47f5-88fa-c82b87c0b505
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Variacion % Capital de Trabajo' = DIVIDE([Variacion $ Capital de Trabajo], [A.A. Capital Trabajo])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Capital de Trabajo
+		lineageTag: df487f36-2ee8-408e-a863-d90d395075d1
+
+	measure 'Label Anticipos de impuestos o saldos a favor' = "Anticipos de impuestos o saldos a favor"
+		displayFolder: Anticipos de impuestos o saldos a favor
+		lineageTag: 34faa8e6-339f-4ff3-9f4d-e41218960078
+
+	measure 'A.A Anticipos de impuestos o saldos a favor' = CALCULATE([Anticipos de impuestos o saldos a favor], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Anticipos de impuestos o saldos a favor
+		lineageTag: ac650f00-e067-4528-8bdb-4a40dbe7e6da
+
+	measure 'Variacion $ Anticipos de impuestos o saldos a favor' = [Anticipos de impuestos o saldos a favor] - [A.A Anticipos de impuestos o saldos a favor]
+		displayFolder: Anticipos de impuestos o saldos a favor
+		lineageTag: 69c74f12-0620-4100-9462-d86384cb0ce5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Variacion % Anticipos de impuestos o saldos a favor' = DIVIDE([Variacion $ Anticipos de impuestos o saldos a favor], [A.A Anticipos de impuestos o saldos a favor])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Anticipos de impuestos o saldos a favor
+		lineageTag: f53cc676-33b1-4414-86c1-453299e8c944
+
+	measure 'Label Inventarios' = "Inventarios"
+		displayFolder: Inventarios
+		lineageTag: 0f5e229f-3e96-494a-8064-b120dacf5546
+
+	measure 'A.A. Inventarios' = CALCULATE([Inventarios], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Inventarios
+		lineageTag: e7aaa5e0-98fb-4050-a63e-e97b6f02641a
+
+	measure 'Variacion $ Inventarios' = [Inventarios] - [A.A. Inventarios]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Inventarios
+		lineageTag: 1e0a64fb-5ec0-4e48-b920-77837498161d
+
+	measure 'Variacion % Inventarios' = DIVIDE([Variacion $ Inventarios], [A.A. Inventarios])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Inventarios
+		lineageTag: 55c1ece3-011c-41fa-9b25-99074666c3d6
+
+	measure 'Label Otras cuentas por cobrar operativas' = "Otras cuentas por cobrar operativas"
+		displayFolder: Otras cuentas por cobrar operativas
+		lineageTag: 893832b7-2307-4827-a380-c2e99efd4e92
+
+	measure 'A.A. Otras cuentas por cobrar operativas' = CALCULATE([Otras cuentas por cobrar operativas], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Otras cuentas por cobrar operativas
+		lineageTag: 778b1e1d-1034-4acf-ad4c-fd0ed3f33bf5
+
+	measure 'Variacion $ Otras cuentas por cobrar operativas' = [Otras cuentas por cobrar operativas] - [A.A. Otras cuentas por cobrar operativas]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Otras cuentas por cobrar operativas
+		lineageTag: 7d3791fd-7006-4a63-ba42-9ba88cf8c3ed
+
+	measure 'Variacion % Otras cuentas por cobrar operativas' = DIVIDE([Variacion $ Otras cuentas por cobrar operativas], [A.A. Otras cuentas por cobrar operativas])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Otras cuentas por cobrar operativas
+		lineageTag: dca58f17-aba8-4e7e-88ad-f9916d2d8b3d
+
+	measure 'Label Provisión (Deterioro) CxC (Vr. negativo)' = "Provisión (Deterioro) CxC (Vr. negativo)"
+		displayFolder: Provisión (Deterioro) CxC (Vr. negativo)
+		lineageTag: e4095c15-1ef0-4afd-b9cc-1b97785fbeed
+
+	measure 'A.A. Provisión (Deterioro) CxC (Vr. negativo)' = CALCULATE([Provisión (Deterioro) CxC (Vr. negativo)], MONTH(Calendario[Fecha]) = 12, YEAR(Calendario[Fecha]) = (SELECTEDVALUE(Calendario[Fecha].[Año])-1))
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Provisión (Deterioro) CxC (Vr. negativo)
+		lineageTag: 55b6f19f-b729-4c7d-9c5d-2d1ee03b58c6
+
+	measure 'Variacion $ Provisión (Deterioro) CxC (Vr. negativo)' = [Provisión (Deterioro) CxC (Vr. negativo)] - [A.A. Provisión (Deterioro) CxC (Vr. negativo)]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Provisión (Deterioro) CxC (Vr. negativo)
+		lineageTag: 0e68ddf8-7ec2-45d7-90c5-19a120d4e27d
+
+	measure 'Variacion % Provisión (Deterioro) CxC (Vr. negativo)' = DIVIDE([Variacion $ Provisión (Deterioro) CxC (Vr. negativo)], [A.A. Provisión (Deterioro) CxC (Vr. negativo)])
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		displayFolder: Provisión (Deterioro) CxC (Vr. negativo)
+		lineageTag: bec7edd6-3850-48ac-8365-79104e7f5b66
+
+	measure 'Año Anterior' =
+			
+			IF(HASONEVALUE('NombresMedidas'[Nivel 2]),
+			    SWITCH(
+			        VALUES('NombresMedidas'[Nivel 2]),
+			            "Clientes", [A.A. Clientes],
+			            "Inventarios", [A.A. Inventarios],
+			            "Anticipos de impuestos o saldos a favor", [A.A Anticipos de impuestos o saldos a favor],
+			            "Otras cuentas por cobrar operativas", [A.A. Otras cuentas por cobrar operativas],
+			            "Provisión (Deterioro) CxC (Vr. negativo)", [A.A. Provisión (Deterioro) CxC (Vr. negativo)],
+			            "Costos y Gastos por pagar", [A.A. Costos y Gastos por pagar],
+			            "Impuestos por pagar", [A.A. Impuestos por pagar],
+			            "Obligaciones laborales", [A.A. Obligaciones laborales],
+			            "Otras cuentas por pagar operativas", [A.A. Otras cuentas por pagar operativas],
+			            "Pasivos estimados y provisiones", [A.A. Pasivos estimados y provisiones],
+			            "Proveedores", [A.A. Proveedores],
+			            "Ob. Fras. Prov. - Confirming",[A.A. Confirming]
+			        ),
+			IF(HASONEVALUE('NombresMedidas'[Nivel 1]),
+			    SWITCH(
+			        VALUES('NombresMedidas'[Nivel 1]),
+			        "Capital de Trabajo", [A.A. Capital Trabajo],
+			        "Proveedores de bienes y servicios", [A.A. Proveedores de bienes y servicios],
+			        "z KTNO", [A.A KTNO]
+			   )))
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 01545ab6-5796-477c-9453-afc2d97bd7e2
+
+	measure 'Año Actual' =
+			
+			IF(HASONEVALUE('NombresMedidas'[Nivel 2]),
+			    SWITCH(
+			        VALUES('NombresMedidas'[Nivel 2]),
+			            "Clientes", [Clientes],
+			            "Inventarios", [Inventarios],
+			            "Anticipos de impuestos o saldos a favor", [Anticipos de impuestos o saldos a favor],
+			            "Otras cuentas por cobrar operativas", [Otras cuentas por cobrar operativas],
+			            "Provisión (Deterioro) CxC (Vr. negativo)", [Provisión (Deterioro) CxC (Vr. negativo)],
+			            "Costos y Gastos por pagar", [Costos y Gastos por pagar],
+			            "Impuestos por pagar", [Impuestos por pagar],
+			            "Obligaciones laborales", [Obligaciones laborales],
+			            "Otras cuentas por pagar operativas", [Otras cuentas por pagar operativas],
+			            "Pasivos estimados y provisiones", [Pasivos estimados y provisiones],
+			            "Proveedores", [Proveedores],
+			            "Ob. Fras. Prov. - Confirming", [Confirming]
+			        ),
+			IF(HASONEVALUE('NombresMedidas'[Nivel 1]),
+			    SWITCH(
+			        VALUES('NombresMedidas'[Nivel 1]),
+			        "Capital de Trabajo", [Capital Trabajo],
+			        "Proveedores de bienes y servicios", [Proveedores de bienes y servicios],
+			        "z KTNO", [KTNO]
+			   )))
+		lineageTag: 209d24ad-ce21-4a4d-bf13-a46538af728f
+
+		formatStringDefinition = "\$#,0;(\$#,0);\$#,0"
+
+	measure Variacion = [Año Actual] - [Año Anterior]
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: f4fd0843-91f4-4ccf-8d56-42285175a6e6
+
+	measure % = DIVIDE([Variacion], [Año Anterior], 0)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 0f3d4459-f48f-442a-81e2-82d69ecd4e25
+
+	measure Prueba = HASONEVALUE('NombresMedidas'[Nivel 2])
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a6ff550e-48d5-47b8-87ef-b8fa5d9ab41c
+
+	partition 'Capital de Trabajo-d1bf6603-63df-402c-98e5-5ed26b9b3f02' = m
+		mode: import
+		source =
+				let
+				    Origen = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Columna1 = _t]),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(Origen,{{"Columna1", type text}}),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Tipo cambiado",{"Columna1"})
+				in
+				    #"Columnas quitadas"
+
+	annotation PBI_ResultType = Table
+

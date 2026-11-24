@@ -1,4 +1,4 @@
-import { Boxes, Factory, FileMinus, Handshake, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
+import { Boxes, ClipboardCheck, Factory, FileMinus, Gauge, Handshake, Layers, ReceiptText, Target, type LucideIcon } from "lucide-react";
 
 // Catálogo de informes del portal. El slug es el que se guarda en public.report_permissions.
 // Un informe nuevo no lo ve nadie hasta que un administrador lo agrega a un cargo o lo asigna a una persona en /admin/permisos.
@@ -6,9 +6,9 @@ import { Boxes, Factory, FileMinus, Handshake, Layers, ReceiptText, Target, type
 // Áreas que agrupan los informes en el portal y en la administración, en este orden.
 export const reportAreas = [
   { id: "ventas", label: "Informes de ventas", short: "Ventas" },
-  { id: "contabilidad", label: "Informes de contabilidad", short: "Contabilidad" },
+  // Contabilidad y finanzas van juntas (decisión del desarrollador, 2026-11-23).
+  { id: "contabilidad-finanzas", label: "Informes de contabilidad y finanzas", short: "Contabilidad y finanzas" },
   { id: "operaciones", label: "Informes de operaciones", short: "Operaciones" },
-  { id: "financiera", label: "Informes financieros", short: "Financiera" },
   { id: "logistica", label: "Informes de logística", short: "Logística" },
 ] as const;
 
@@ -75,7 +75,7 @@ export const reports: ReportDefinition[] = [
   },
   {
     slug: "costo-actual-pt",
-    area: "contabilidad",
+    area: "contabilidad-finanzas",
     title: "Costo de producto terminado",
     subtitle: "Costo actual en MP, MO y CIF por lista de materiales",
     href: "/costo-actual-pt",
@@ -104,6 +104,28 @@ export const reports: ReportDefinition[] = [
     icon: Factory,
     pagePaths: ["/ns-plantas"],
     apiPaths: ["/api/ns-plantas"],
+  },
+  {
+    // Migración del Power BI "PKT" (dueño: Dirección Financiera): llm-wiki/bi/pkt.md.
+    slug: "pkt",
+    area: "contabilidad-finanzas",
+    title: "PKT",
+    subtitle: "Productividad del capital de trabajo de Firplak y Viventta",
+    href: "/pkt",
+    icon: Gauge,
+    pagePaths: ["/pkt", "/pkt/graficas"],
+    apiPaths: ["/api/pkt"],
+  },
+  {
+    // Migración del Power BI "PBI liberacion act" (dueño: Logística): llm-wiki/bi/liberacion.md.
+    slug: "liberacion",
+    area: "logistica",
+    title: "Liberación de órdenes",
+    subtitle: "Órdenes de producción liberadas a tiempo y razones de incumplimiento",
+    href: "/liberacion",
+    icon: ClipboardCheck,
+    pagePaths: ["/liberacion"],
+    apiPaths: ["/api/liberacion"],
   },
 ];
 
