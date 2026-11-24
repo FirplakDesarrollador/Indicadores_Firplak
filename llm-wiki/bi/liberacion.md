@@ -712,6 +712,18 @@ Script de solo lectura: [`sql/liberacion/05_conciliacion.sql`](../../sql/liberac
 
 **Hallazgo (2026-11-20), `pendiente` de confirmar.** La captura diaria de octubre del Power BI coincide en 14 de 20 días y difiere por 1 a 3 OP en los días 7, 21, 23, 26, 27, 28 y 29 (por ejemplo, el 27: portal 44 OK / 15 NO = 74,58 %; Power BI 73,33 %, que equivale a 44 / 16). El Acum de octubre de esa captura dio 88,31 %, cuando una hora antes había dado 88,52 %, y el Pareto difiere en el mismo sentido. Hipótesis: la captura se tomó con el Power BI actualizado después de la recarga de las 17:00, mientras el portal seguía con la carga de las 12:12. Si es así, octubre cambió en el origen en un solo día, lo que confirma el riesgo de la pregunta 12. Se confirma comparando de nuevo después de la carga del portal de las 17:15.
 
+**Comparación del mismo día (desarrollador, 2026-11-24, antes de las 17:00; portal con la carga del 2026-11-23 17:15):**
+
+| Mes 2026 | Portal (resultado 1 de `05_conciliacion.sql`) | Power BI | Diferencia |
+|---|---|---|---|
+| Septiembre | 1 863 OK / 475 NO = 79,68 % | 79,68 % | 0 |
+| Octubre | 1 989 OK / 257 NO = 88,56 % | 88,56 % | 0 |
+| Noviembre | 1 561 OK / 200 NO = 88,64 % | 90,51 % | 1,87 puntos |
+
+- **Hallazgo del 2026-11-20, resuelto:** octubre pasó de 88,52 % (1 989 / 258) a 88,56 % (1 989 / 257) en los dos sistemas. La diferencia diaria venía de comparar fotos de horas distintas, y confirma que en el origen los meses cerrados cambian (pregunta 12).
+- **Hallazgo nuevo, noviembre (`pendiente` de confirmar):** con el mismo total, el 90,51 % del Power BI equivale a unas 1 594 OK y 167 NO, unas 33 OP más con `CUMPLE`. Causa probable: el Power BI lee el Excel de razones en vivo y Supabase se cargó desde el Excel por última vez el 2026-11-20 09:55; Logística sigue diligenciando el Excel y lo nuevo no ha llegado al portal. Septiembre y octubre ya estaban justificados antes de esa carga. Se confirma recargando Supabase desde el Excel del día (proceso de la app de Logística) y comparando de nuevo antes de las 17:00.
+- **Consecuencia:** mientras Logística use el Excel, el mes en curso del portal se atrasa hasta la siguiente recarga manual de Supabase. Se resuelve cuando Logística registre las razones en la app (Supabase como única fuente) o, mientras tanto, automatizando la recarga del Excel.
+
 **Firma del dueño de negocio:** Logística — fecha — `pendiente`.
 
 ## 7. Despliegue y retiro

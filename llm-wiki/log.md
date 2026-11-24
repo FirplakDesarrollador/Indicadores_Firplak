@@ -884,3 +884,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 ## [2026-11-24] bi | Liberación: cierre de la fase 2
 
 - El job `BI - Liberacion carga` corrió solo el 2026-11-20 y el 2026-11-23 a las 17:15, sin error (3 s; 5 y 2 OP borradas por salir del origen dentro de la ventana, es decir, canceladas o fuera de los filtros del SP de origen). Con eso queda cerrada la fase 2.
+
+## [2026-11-24] bi | Liberación: conciliación del mismo día
+
+- Septiembre (79,68 %) y octubre (88,56 %) de 2026 iguales al Power BI. Octubre cambió desde el 20 (88,52 %) en los dos sistemas: hallazgo del 20 resuelto y riesgo de la pregunta 12 confirmado.
+- Noviembre: portal 88,64 %, Power BI 90,51 %. Causa probable: razones registradas en el Excel después de la última carga a Supabase (2026-11-20 09:55). `pendiente`: recargar Supabase desde el Excel y comparar de nuevo.
