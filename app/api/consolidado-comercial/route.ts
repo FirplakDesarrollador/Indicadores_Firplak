@@ -8,7 +8,8 @@ export async function GET(request: NextRequest) {
     const reportingApiUrl = process.env.REPORTING_API_URL?.replace(/\/+$/, "");
     if (reportingApiUrl) {
       const target = new URL(`${reportingApiUrl}/api/v1/consolidado-comercial`);
-      request.nextUrl.searchParams.forEach((value, key) => target.searchParams.set(key, value));
+      // append y no set: los filtros de selección múltiple repiten el parámetro (canal=A&canal=B).
+      request.nextUrl.searchParams.forEach((value, key) => target.searchParams.append(key, value));
       const headers = new Headers({ Accept: "application/json" });
       const apiToken = process.env.REPORTING_API_TOKEN;
       if (apiToken) headers.set("Authorization", `Bearer ${apiToken}`);
