@@ -718,11 +718,14 @@ Script de solo lectura: [`sql/liberacion/05_conciliacion.sql`](../../sql/liberac
 |---|---|---|---|
 | Septiembre | 1 863 OK / 475 NO = 79,68 % | 79,68 % | 0 |
 | Octubre | 1 989 OK / 257 NO = 88,56 % | 88,56 % | 0 |
-| Noviembre | 1 561 OK / 200 NO = 88,64 % | 90,51 % | 1,87 puntos |
+| Noviembre (antes de recargar Supabase) | 1 561 OK / 200 NO = 88,64 % | 90,51 % | 1,87 puntos |
+| Noviembre (después de recargar Supabase) | 1 593 OK / 167 NO = 90,51 % | 90,51 % | 0 |
 
 - **Hallazgo del 2026-11-20, resuelto:** octubre pasó de 88,52 % (1 989 / 258) a 88,56 % (1 989 / 257) en los dos sistemas. La diferencia diaria venía de comparar fotos de horas distintas, y confirma que en el origen los meses cerrados cambian (pregunta 12).
-- **Hallazgo nuevo, noviembre (`pendiente` de confirmar):** con el mismo total, el 90,51 % del Power BI equivale a unas 1 594 OK y 167 NO, unas 33 OP más con `CUMPLE`. Causa probable: el Power BI lee el Excel de razones en vivo y Supabase se cargó desde el Excel por última vez el 2026-11-20 09:55; Logística sigue diligenciando el Excel y lo nuevo no ha llegado al portal. Septiembre y octubre ya estaban justificados antes de esa carga. Se confirma recargando Supabase desde el Excel del día (proceso de la app de Logística) y comparando de nuevo antes de las 17:00.
+- **Hallazgo de noviembre, resuelto el mismo día:** con el mismo total, el 90,51 % del Power BI equivale a unas 1 594 OK y 167 NO, unas 33 OP más con `CUMPLE`. Causa probable: el Power BI lee el Excel de razones en vivo y Supabase se cargó desde el Excel por última vez el 2026-11-20 09:55; Logística sigue diligenciando el Excel y lo nuevo no ha llegado al portal. Septiembre y octubre ya estaban justificados antes de esa carga. Confirmado: el Excel del 2026-11-23 12:44 traía 48 OP nuevas (38 `CUMPLE`, 4 `NO MEDIR`) y 1 editada. Se recargó Supabase, Supabase envió las razones al portal a las 9:00 (`Cargas_Log` Id 4010, 40 540 razones) y noviembre quedó en 90,51 %, igual al Power BI.
 - **Consecuencia:** mientras Logística use el Excel, el mes en curso del portal se atrasa hasta la siguiente recarga manual de Supabase. Se resuelve cuando Logística registre las razones en la app (Supabase como única fuente) o, mientras tanto, automatizando la recarga del Excel.
+
+**Resultado:** septiembre, octubre y noviembre de 2026 coinciden con el Power BI al decimal, con el Power BI y el portal comparados el mismo día y las razones al día. Las diferencias encontradas se explican por la hora de la foto o por razones del Excel que aún no estaban en Supabase, nunca por la regla.
 
 **Firma del dueño de negocio:** Logística — fecha — `pendiente`.
 

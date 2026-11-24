@@ -890,3 +890,4 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Septiembre (79,68 %) y octubre (88,56 %) de 2026 iguales al Power BI. Octubre cambió desde el 20 (88,52 %) en los dos sistemas: hallazgo del 20 resuelto y riesgo de la pregunta 12 confirmado.
 - Noviembre: portal 88,64 %, Power BI 90,51 %. Causa probable: razones registradas en el Excel después de la última carga a Supabase (2026-11-20 09:55). `pendiente`: recargar Supabase desde el Excel y comparar de nuevo.
 - Supabase recargado desde el Excel del 2026-11-23 12:44 (48 OP nuevas, 38 de ellas CUMPLE, y 1 editada). Confirma la causa de la diferencia de noviembre. `pendiente`: comparar de nuevo cuando Supabase envíe las razones al portal.
+- Supabase envió las razones a las 9:00 (`Cargas_Log` Id 4010, 40 540). Noviembre quedó en 90,51 % (1 593 OK / 167 NO), igual al Power BI. Septiembre, octubre y noviembre coinciden al decimal; falta la firma de Logística para cerrar la fase 6.
