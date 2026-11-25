@@ -87,11 +87,15 @@ function ShareTooltip({ active, payload, label }: TooltipProps<number, string>) 
   </div>;
 }
 
-// Etiqueta dentro de cada tramo, como "Porcentaje del total" del Power BI; se oculta si la columna es angosta.
+// Etiqueta dentro de cada tramo, como "Porcentaje del total" del Power BI. Baja a 10 px si la columna es angosta y
+// solo se oculta si el tramo es muy bajo o no cabe ni así (el valor sigue en el tooltip).
 function ShareLabel(props: { x?: number | string; y?: number | string; width?: number | string; height?: number | string; value?: number | string }) {
   const x = Number(props.x), y = Number(props.y), width = Number(props.width), height = Number(props.height), value = Number(props.value);
-  if (!value || width < 46 || height < 18) return null;
-  return <text x={x + width / 2} y={y + height / 2} fill={chartColors.surface} textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight={600}>{percentTwo.format(value)}</text>;
+  if (!value || height < 16) return null;
+  const text = percentTwo.format(value);
+  if (width < text.length * 5.6) return null;
+  const fontSize = width >= text.length * 6.2 ? 11 : 10;
+  return <text x={x + width / 2} y={y + height / 2} fill={chartColors.surface} textAnchor="middle" dominantBaseline="central" fontSize={fontSize} fontWeight={600}>{text}</text>;
 }
 
 function ShareChart({ points, target, ariaLabel, axisLabel }: { points: SharePoint[]; target: number | null; ariaLabel: string; axisLabel: string }) {
@@ -100,9 +104,9 @@ function ShareChart({ points, target, ariaLabel, axisLabel }: { points: SharePoi
     return { ...point, okShare: measured ? point.ok / measured : 0, noShare: measured ? point.no / measured : 0 };
   });
   // Con muchas columnas, el gráfico se desplaza en horizontal en lugar de comprimirlas. Cada columna mide al menos lo
-  // que ocupa su etiqueta del eje (unos 7 px por carácter a 12 px), para que las fechas no se monten.
+  // que ocupa su etiqueta del eje (unos 7 px por carácter a 12 px) y 60 px para que el porcentaje quepa dentro.
   const longestLabel = Math.max(0, ...data.map((point) => point.label.length));
-  const minWidth = Math.max(data.length * Math.max(44, longestLabel * 7 + 14), 320) + 96;
+  const minWidth = Math.max(data.length * Math.max(60, longestLabel * 7 + 14), 320) + 96;
   // La etiqueta de la meta va a la derecha del gráfico, fuera de las columnas.
   return <div className="release-chart-scroll"><div className="release-chart release-chart-share" style={{ minWidth }} role="img" aria-label={ariaLabel}><ResponsiveContainer width="100%" height="100%"><BarChart data={data} margin={{ top: 16, right: 84, left: 12, bottom: 8 }} barCategoryGap="12%">
     <CartesianGrid vertical={false} stroke={chartColors.grid} />
