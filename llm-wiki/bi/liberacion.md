@@ -727,21 +727,22 @@ Script de solo lectura: [`sql/liberacion/05_conciliacion.sql`](../../sql/liberac
 
 **Resultado:** septiembre, octubre y noviembre de 2026 coinciden con el Power BI al decimal, con el Power BI y el portal comparados el mismo día y las razones al día. Las diferencias encontradas se explican por la hora de la foto o por razones del Excel que aún no estaban en Supabase, nunca por la regla.
 
-**Firma del dueño de negocio:** Logística — fecha — `pendiente`.
+**Firma del dueño de negocio:** Logística — 2026-11-25 — aprobada (confirmada por el desarrollador). **Fase 6 cerrada.**
 
 ## 7. Despliegue y retiro
 
-Iniciada el 2026-11-24 por decisión del desarrollador, con la firma de Logística de la fase 6 `pendiente`.
+Iniciada el 2026-11-24 por decisión del desarrollador. La firma de Logística de la fase 6 llegó el 2026-11-25.
 
 | Pieza | Estado |
 |---|---|
 | SQL Server | Tablas, SP, permisos y job en producción desde el 2026-11-20 (scripts en [`sql/liberacion/`](../../sql/liberacion/)) |
 | Supabase (Manufactura) | Vista, función de envío y job `liberacion-enviar-razones` activos desde el 2026-11-20 |
 | Recarga del Excel a Supabase | Automática desde el 2026-11-24: tarea «Logistica - Recarga razones liberacion» en el equipo del desarrollador, lunes a viernes 16:30, con verificación antes de cargar (proyecto Logística, `scripts/recargar-razones.mjs`). Se retira cuando Logística registre las razones en su app |
-| Reporting API | Desplegada el 2026-11-20 (`reporting-api-dist-d5a34f6.zip`). Rama `bi/liberacion` subida a GitHub; el merge a `main` lo hace el desarrollador |
-| Frontend | Rama `bi/liberacion` subida a GitHub; el merge a `main` lo hace el desarrollador. `pendiente`: despliegue en Vercel con el merge, asignar el permiso `liberacion` en `/admin/permisos` y la revisión en 375 y 820 px |
+| Reporting API | Desplegada el 2026-11-20 (`reporting-api-dist-d5a34f6.zip`). Rama `bi/liberacion` unida a `main` el 2026-11-24 (PR #6). Ojo: `main` no tiene todavía NS Plantas, Estados Financieros ni el consolidado comercial, que sí están desplegados; el próximo paquete debe salir de una rama que los incluya |
+| Frontend | Rama `bi/liberacion` unida a `main` el 2026-11-24 (PR #15), que despliega Vercel. Permiso `liberacion` asignado a `practiplaneacion@firplak.com` en `/admin/permisos` (desarrollador, 2026-11-24). Revisión en celular (desarrollador, 2026-11-25): las fechas del eje se montaban y los porcentajes desaparecían; corregido en PR #19 (fecha corta `3/11` en el eje y completa en el tooltip, columnas de 60 px como mínimo y porcentaje a 10 px si hace falta) |
 | Documentación | Ficha, [Reporting API](../components/reporting-api.md), [Frontend](../components/frontend.md) y log al día. VibeWorkFlow (entorno FIRPLAK, área Logística): flujo estándar «Consulta del indicador de liberación», id `ac9788e4-83d4-4853-8d24-aac1722fe74b`, creado el 2026-11-24: 5 acciones (origen en SAP, razones de Planeación, carga a SQL Server, Reporting API y portal) con su documento, responsables por rol (Logística y Desarrollador del portal de Indicadores) y el KPI del % liberado a tiempo. `pendiente`: revisión del desarrollador en VibeWorkFlow |
-| Firma de Logística (fase 6) y respuestas a las 16 preguntas | `pendiente` |
+| Firma de Logística (fase 6) | Aprobada el 2026-11-25 |
+| Respuestas de Logística a las 16 preguntas | `pendiente` |
 | Retiro del Power BI | `pendiente`: después de la firma y de un periodo en paralelo |
 
 Rollback:

@@ -975,6 +975,10 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Fase 7 iniciada por decisión del desarrollador, con la firma de Logística pendiente. Ramas `bi/liberacion` subidas en los dos repositorios; el merge a `main` lo hace el desarrollador. [Reporting API](components/reporting-api.md) documentada. Estado, pendientes y rollback en la [ficha](bi/liberacion.md#7-despliegue-y-retiro).
 - VibeWorkFlow (FIRPLAK, área Logística): flujo estándar «Consulta del indicador de liberación» (`ac9788e4-83d4-4853-8d24-aac1722fe74b`), con 5 acciones encadenadas, responsables por rol y el KPI. Pendiente: revisión del desarrollador.
 
+## [2026-11-18] proyecto | Consolidado comercial SAP: dashboard en main
+
+- PR #12 unido a `main` (merge `7e6762b`). Falta asignar el informe en `/admin/permisos`, revisarlo en producción y la conciliación de la solicitante. reporting-api queda sin commit por decisión del desarrollador.
+
 ## [2026-11-23] proyecto | Semáforo de producción: análisis, SP optimizado y contrato propuesto
 
 - Fuente: SP `Planos_Symphony.dbo.SEMAFORO`, copiado sin cambios en [`proyectos/semaforo-produccion/fuentes/SEMAFORO_original.sql`](../proyectos/semaforo-produccion/fuentes/SEMAFORO_original.sql). Rama `proyecto/semaforo-produccion`.
@@ -993,10 +997,6 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Paquete `reporting-api-dist-d4a4d32.zip` desde la rama local `deploy/2026-11-24` (deploy/2026-11-19 + `bi/pkt` + semáforo). Hallazgo: el zip de PKT del 2026-11-23 no incluía NS Plantas, consolidado ni estados financieros. Detalle en la [ficha](proyectos/semaforo-produccion.md#paquete-de-despliegue-2026-11-24).
 - Corrección: el `fetch` de la API había fallado por credenciales; con la sesión de `gh` aparecieron `deploy/2026-11-20`, `deploy/2026-11-23` y el endpoint de Liberación en `main`. El paquete `d4a4d32` (sin Liberación) se borró y se reemplazó por `reporting-api-dist-c8b0a42.zip` = `deploy/2026-11-23` + semáforo. La alerta sobre el zip de PKT no aplica: `deploy/2026-11-23` trae todos los endpoints. Rama del semáforo rebasada sobre el `main` nuevo de la API y `main` del portal unido en `proyecto/semaforo-produccion`.
 - Ramas subidas: `reporting-api` `proyecto/semaforo-produccion` y `deploy/2026-11-24`; portal `proyecto/semaforo-produccion`. PR abiertos: Firplak/firplak-reporting-api#7 y FirplakDesarrollador/Indicadores_Firplak#16.
-
-## [2026-11-18] proyecto | Consolidado comercial SAP: dashboard en main
-
-- PR #12 unido a `main` (merge `7e6762b`). Falta asignar el informe en `/admin/permisos`, revisarlo en producción y la conciliación de la solicitante. reporting-api queda sin commit por decisión del desarrollador.
 
 ## [2026-11-24] proyecto | Consolidado comercial SAP: cierre
 
@@ -1019,3 +1019,19 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 - Ofertas filtradas por fecha de cierre (`U_FechaCierre`, única fecha de oferta con datos: 566 de 1.432 líneas). Columna `FechaCierre` en la tabla y el SP (script 01, sección 2b) y en el filtro de la API; paquete rehecho a las 16:38. `pendiente`: correr 01, desplegar y verificar.
 - Verificado: con el filtro de fecha las ofertas salen por fecha de cierre (noviembre: 49 ofertas, 103,81 M en todos los canales; 6 / 9,64 M en la vista acordada). Detalle = A + B + C; exportación y demás rutas bien.
 - Commits y push: reporting-api `820848a` (`proyecto/consolidado-comercial`) y rama `deploy/2026-11-24b` (`90eb062`, idéntica al paquete desplegado); portal `76a4f63`. Los próximos despliegues de la API deben partir de `deploy/2026-11-24b`.
+
+## [2026-11-24] bi | Liberación: merge a main y permiso
+
+- Portal: `bi/liberacion` unida a `main` (PR #15). API: `bi/liberacion` unida a `main` (PR #6). Permiso `liberacion` asignado a Logística (`practiplaneacion@firplak.com`).
+- Ojo con la API: `main` no tiene NS Plantas, Estados Financieros ni el consolidado comercial, que sí están desplegados (`deploy/2026-11-20`). Un paquete armado solo desde `main` los quitaría.
+- Pendientes de Logística: firma de la conciliación (fase 6), las 16 preguntas y la fecha de retiro del Power BI. Pendiente del desarrollador: revisión del dashboard en 375 y 820 px.
+
+## [2026-11-25] fix | Liberación: gráfico por día en celular
+
+- Revisión del desarrollador en celular: las fechas del eje ("3 de nov") se montaban y los porcentajes dentro de las columnas se ocultaban por falta de ancho.
+- `components/LiberacionDashboard.tsx` (PR #19, en `main`): fecha corta en el eje (`3/11`) y completa en el tooltip; cada columna mide al menos lo que ocupa su etiqueta y 60 px; el porcentaje baja a 10 px antes de ocultarse y solo se oculta en tramos de menos de 16 px de alto. Si no caben las columnas, el gráfico se desplaza en horizontal.
+
+## [2026-11-25] bi | Liberación: conciliación firmada por Logística
+
+- Logística aprobó la conciliación (septiembre, octubre y noviembre de 2026 iguales al Power BI), según confirmó el desarrollador. Fase 6 cerrada.
+- Siguen abiertos: respuestas a las 16 preguntas, fecha de retiro del Power BI y paso del Excel a la app de Logística.
