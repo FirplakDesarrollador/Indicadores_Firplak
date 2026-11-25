@@ -1030,3 +1030,8 @@ Este archivo es cronológico y append-only. Cada entrada registra una ingesta, c
 
 - Revisión del desarrollador en celular: las fechas del eje ("3 de nov") se montaban y los porcentajes dentro de las columnas se ocultaban por falta de ancho.
 - `components/LiberacionDashboard.tsx` (PR #19, en `main`): fecha corta en el eje (`3/11`) y completa en el tooltip; cada columna mide al menos lo que ocupa su etiqueta y 60 px; el porcentaje baja a 10 px antes de ocultarse y solo se oculta en tramos de menos de 16 px de alto. Si no caben las columnas, el gráfico se desplaza en horizontal.
+
+## [2026-11-25] bi | Liberación: conciliación firmada por Logística
+
+- Logística aprobó la conciliación (septiembre, octubre y noviembre de 2026 iguales al Power BI), según confirmó el desarrollador. Fase 6 cerrada.
+- Siguen abiertos: respuestas a las 16 preguntas, fecha de retiro del Power BI y paso del Excel a la app de Logística.

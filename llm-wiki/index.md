@@ -60,7 +60,7 @@ SP o proceso de actualización periódica
   - [Costo actual de producto terminado](bi/costo-actual-pt.md): en migración (fases 1 a 5 cerradas; fase 6 conciliada, a la espera de la aprobación de Contabilidad; fase 7 prevista para el 2026-11-10). Usa el query optimizado del desarrollador, con reglas corregidas y la explosión de todos los niveles (D9).
   - [NS Plantas](bi/ns-plantas.md): en migración (fase 2 aprobada el 2026-11-18: tabla `Informe_ns_plantas` cargada y jobs corriendo; contrato aprobado; endpoint desplegado; dashboard `/ns-plantas` construido, en revisión visual).
   - [PKT](bi/pkt.md): en migración, fase 1 cerrada el 2026-11-19 (validada por Dirección Financiera); fases 2 a 5 hechas (tabla, endpoint `/api/v1/pkt` y páginas `/pkt` y `/pkt/graficas`); fase 6 cerrada el 2026-11-23 (conciliación aprobada por Dirección Financiera); fase 7 (despliegue) en curso. PKT consolidado Firplak + Viventta con saldos contables de SAP y ventas de `Informe_ventas`. Prioridad baja.
-  - [Liberación](bi/liberacion.md): en migración (fase 7: tablas, envío de razones desde Supabase, API y dashboard listos; conciliación de septiembre a noviembre de 2026 igual al Power BI; en `main` y con permiso asignado; falta la firma de Logística y retirar el Power BI).
+  - [Liberación](bi/liberacion.md): en migración (fase 7: tablas, envío de razones desde Supabase, API y dashboard listos; conciliación de septiembre a noviembre de 2026 igual al Power BI; en `main` y con permiso asignado; conciliación firmada por Logística el 2026-11-25; faltan las respuestas a las 16 preguntas y retirar el Power BI).
 
 ### Proyectos
 
