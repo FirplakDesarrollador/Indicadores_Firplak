@@ -22,7 +22,8 @@ export async function proxyXlsxExport(request: NextRequest, { apiPath, fileName,
   try {
     const target = new URL(`${reportingApiUrl}${apiPath}`);
     request.nextUrl.searchParams.forEach((value, key) => {
-      if (key !== "page" && key !== "pageSize") target.searchParams.set(key, value);
+      // append: los filtros de selección múltiple repiten el parámetro (canal=A&canal=B).
+      if (key !== "page" && key !== "pageSize") target.searchParams.append(key, value);
     });
     const headers = new Headers({ Accept: xlsxContentType });
     const apiToken = process.env.REPORTING_API_TOKEN;
