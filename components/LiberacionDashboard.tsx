@@ -10,7 +10,7 @@ import TablePager from "@/components/dashboard/TablePager";
 import { chartColors, chartTooltipStyle } from "@/lib/brand";
 import { readJsonPayload } from "@/lib/dashboard/fetch";
 import { releaseNavigation } from "@/lib/dashboard/navigation";
-import { dateValue, formatDate, formatDateTime, formatMonthName, formatNumber, formatPercent } from "@/lib/dashboard/format";
+import { dateValue, formatDateTime, formatMonthName, formatNumber, formatPercent } from "@/lib/dashboard/format";
 import { toOptions, type FilterOption } from "@/lib/dashboard/options";
 import type { ReleaseCompliance, ReleaseFilterOptions, ReleasePayload, ReleaseRow, ReleaseSummary, ReleaseView } from "@/lib/liberacion/types";
 
@@ -61,6 +61,12 @@ function fullDate(value: string | null) {
   return new Intl.DateTimeFormat("es-CO", { day: "2-digit", month: "short", year: "numeric" }).format(dateValue(value)).replace(".", "");
 }
 
+// Día y mes en números (03/11): cabe bajo una columna de 44 px; el texto "3 de nov" se montaba con el vecino.
+const shortDateFormat = new Intl.DateTimeFormat("es-CO", { day: "2-digit", month: "2-digit" });
+function shortDate(value: string) {
+  return shortDateFormat.format(dateValue(value));
+}
+
 function shortMonth(month: number) {
   const name = new Intl.DateTimeFormat("es-CO", { month: "short" }).format(new Date(2026, month - 1, 1)).replace(".", "");
   return name.charAt(0).toUpperCase() + name.slice(1);
@@ -68,12 +74,13 @@ function shortMonth(month: number) {
 
 /* ───────────── Gráfico de columnas 100 % (páginas Cumplimiento y Acum) ───────────── */
 
-type SharePoint = { key: string; label: string; ok: number; no: number };
+// label va en el eje (corto, para que quepa bajo la columna); tooltipLabel, completo, en el tooltip.
+type SharePoint = { key: string; label: string; tooltipLabel?: string; ok: number; no: number };
 
 function ShareTooltip({ active, payload, label }: TooltipProps<number, string>) {
   if (!active || !payload?.length) return null;
   const data = payload[0].payload as SharePoint & { okShare: number };
-  return <div style={chartTooltipStyle} className="release-chart-tooltip"><strong>{label}</strong>
+  return <div style={chartTooltipStyle} className="release-chart-tooltip"><strong>{data.tooltipLabel ?? label}</strong>
     <div><span>Cumplimiento</span><b>{percentTwo.format(data.okShare)}</b></div>
     <div><span>Cumplen</span><b>{formatNumber(data.ok)}</b></div>
     <div><span>No cumplen</span><b>{formatNumber(data.no)}</b></div>
@@ -92,8 +99,10 @@ function ShareChart({ points, target, ariaLabel, axisLabel }: { points: SharePoi
     const measured = point.ok + point.no;
     return { ...point, okShare: measured ? point.ok / measured : 0, noShare: measured ? point.no / measured : 0 };
   });
-  // Con muchas columnas, el gráfico se desplaza en horizontal en lugar de comprimirlas.
-  const minWidth = Math.max(data.length * 44, 320);
+  // Con muchas columnas, el gráfico se desplaza en horizontal en lugar de comprimirlas. Cada columna mide al menos lo
+  // que ocupa su etiqueta del eje (unos 7 px por carácter a 12 px), para que las fechas no se monten.
+  const longestLabel = Math.max(0, ...data.map((point) => point.label.length));
+  const minWidth = Math.max(data.length * Math.max(44, longestLabel * 7 + 14), 320) + 96;
   // La etiqueta de la meta va a la derecha del gráfico, fuera de las columnas.
   return <div className="release-chart-scroll"><div className="release-chart release-chart-share" style={{ minWidth }} role="img" aria-label={ariaLabel}><ResponsiveContainer width="100%" height="100%"><BarChart data={data} margin={{ top: 16, right: 84, left: 12, bottom: 8 }} barCategoryGap="12%">
     <CartesianGrid vertical={false} stroke={chartColors.grid} />
@@ -289,7 +298,7 @@ export default function LiberacionDashboard({ mode }: { mode: ReleaseMode }) {
   const reasonOptions = useMemo(() => toOptions((filterOptions?.reasons ?? []).filter((reason) => reason !== "CUMPLE")), [filterOptions]);
   const hasPendingFilters = !sameFilters(normalizeFilters(draftFilters), appliedFilters);
   const target = summary?.target ?? null;
-  const dailyPoints = useMemo<SharePoint[]>(() => (summary?.daily ?? []).map((item) => ({ key: item.date, label: formatDate(item.date), ok: item.ok, no: item.no })), [summary]);
+  const dailyPoints = useMemo<SharePoint[]>(() => (summary?.daily ?? []).map((item) => ({ key: item.date, label: shortDate(item.date), tooltipLabel: fullDate(item.date), ok: item.ok, no: item.no })), [summary]);
   const groupedPoints = useMemo(() => groupDaily(summary?.daily ?? [], level), [summary, level]);
 
   const updateDraft = (key: keyof DashboardFilters) => (value: string) => setDraftFilters((current) => ({ ...current, [key]: value }));
